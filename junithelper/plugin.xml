@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension-point id="org.eclipse.ui.views" name="org.eclipse.ui.views"/>
+
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="com.googlecode.plugin.junithelper.command.category"
+            name="JUnit Helper">
+      </category>
+      <command
+            id="com.googlecode.plugin.junithelper.action.OpenTestCaseActionCommand"
+            categoryId="com.googlecode.plugin.junithelper.command.category"
+            name="Open TestCase">
+      </command>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="com.googlecode.plugin.junithelper.handler.OpenTestCaseHandler"
+            commandId="com.googlecode.plugin.junithelper.action.OpenTestCaseActionCommand" >
+      </handler>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="com.googlecode.plugin.junithelper.action.OpenTestCaseActionCommand"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+8">
+      </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+         <menu
+               label="JUnit Helper"
+               mnemonic="M"
+               id="com.googlecode.plugin.junithelper.menu.JUnitHelperMenu">
+            <command
+                  commandId="com.googlecode.plugin.junithelper.action.OpenTestCaseActionCommand"
+                  mnemonic="U"
+                  id="com.googlecode.plugin.junithelper.action.OpenTestCaseActionCommand">
+            </command>
+         </menu>
+      </menuContribution>
+   </extension>
+
+   <extension point="org.eclipse.ui.preferencePages">
+      <page
+            category="JUnitHelper"
+            class="com.googlecode.plugin.junithelper.page.JUnitHelperPreferencePage"
+            id="com.googlecode.plugin.junithelper.page.JUnitHelperPreferencePage"
+            name="JUnit Helper"/>
+   </extension>
+   <extension point="org.eclipse.core.runtime.preferences">
+      <initializer 
+      		class="com.googlecode.plugin.junithelper.page.JUnitHelperPreferencePageInitializer"
+      	/>
+   </extension>
+
+	<!-- create new test class -->
+	<extension point="org.eclipse.ui.popupMenus">
+
+		<!-- package explorer -->
+		<objectContribution
+			id="com.googlecode.plugin.junithelper.popupmenu.contribution"
+			objectClass="org.eclipse.jdt.core.IJavaElement">
+			<menu
+				id="com.googlecode.plugin.junithelper.popupmenu"
+				label="JUnit Helper"
+				path="additions">
+			</menu>
+			<action
+		         class="com.googlecode.plugin.junithelper.action.OpenTestCaseAction"
+		         icon="icons/rss.jpg"
+		         id="com.googlecode.plugin.junithelper.action.OpenTestCaseAction.object"
+		         label="Open TestCase Ctrl+8"
+		         menubarPath="com.googlecode.plugin.junithelper.popupmenu/additions" >
+			</action>
+		</objectContribution>
+
+		<!-- navigator -->
+		<objectContribution
+			id="com.googlecode.plugin.junithelper.popupmenu.contribution"
+			nameFilter="*.java"
+			objectClass="org.eclipse.core.resource.IResource">
+			<menu
+				id="com.googlecode.plugin.junithelper.popupmenu"
+				label="JUnit Helper"
+				path="additions">
+			</menu>
+			<action
+		         class="com.googlecode.plugin.junithelper.action.OpenTestCaseAction"
+		         icon="icons/rss.jpg"
+		         id="com.googlecode.plugin.junithelper.action.OpenTestCaseAction.object"
+		         label="Open TestCase Ctrl+8"
+		         menubarPath="com.googlecode.plugin.junithelper.popupmenu/additions" >
+			</action>
+		</objectContribution>
+
+		<!-- java editor -->
+		<viewerContribution
+			targetID="#CompilationUnitEditorContext"
+			id="com.googlecode.plugin.junithelper.test.framework.create">
+			<action
+				label="Open TestCase Ctrl+8"
+				class="com.googlecode.plugin.junithelper.action.OpenTestCaseAction"
+				id="com.googlecode.plugin.junithelper.action.OpenTestCaseAction.viewer">
+			</action>
+		</viewerContribution>
+
+	</extension>
+
+</plugin>
