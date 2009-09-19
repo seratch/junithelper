@@ -90,6 +90,7 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 							.getActiveWorkbenchWindow().getActivePage();
 					selected = activePage.getActiveEditor().getTitleToolTip();
 					String[] dirArr = selected.split(IConstants.DIR_SEPARATOR);
+					projectName = dirArr[0];
 					selected = "";
 					for (int i = 1; i < dirArr.length; i++)
 					{
@@ -105,6 +106,7 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 				} else if (structuredSelection.getFirstElement() instanceof File)
 				{
 					// navigator
+					projectName = selection.toString().split("/")[1];
 					String resourceStr = selection.toString().split("src")[1].replace(
 							"]", IConstants.EMPTY_STIRNG);
 					String[] dirSepArr = resourceStr.split(IConstants.DIR_SEPARATOR);
@@ -128,6 +130,7 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 					// package explorer
 					String classInfoStr = selection.toString();
 					selected = classInfoStr.split("\\[in")[1].trim();
+					projectName = classInfoStr.split("\\[in")[3].trim().split("]")[0];
 					selected = selected.replaceAll("\\.", IConstants.DIR_SEPARATOR);
 					testTargetClassname = classInfoStr.split(IConstants.RegExp.JAVA_EXP)[0]
 							.replaceAll("(\\[|\\])", IConstants.EMPTY_STIRNG).replaceAll(
@@ -142,24 +145,20 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 				}
 
 				// get workspace path on os file system
-				String projectRootPath = System.getProperty("user.dir");
-				// for develpment
-				if (projectRootPath.matches(".*eclipse$"))
+				String projectRootPath = "";
+				String baseDirDev = System.getProperty("osgi.logfile");
+				// C:\works\galileo_plugin\runtime-EclipseApplication\.metadata\.log
+				baseDirDev = baseDirDev.replaceAll(IConstants.WINDOWS_DIR_SEPARATOR,
+						IConstants.DIR_SEPARATOR);
+				String wsDirArr[] = baseDirDev.split(IConstants.DIR_SEPARATOR);
+				projectRootPath = "";
+				for (int i = 0; i < wsDirArr.length; i++)
 				{
-					String baseDirDev = System.getProperty("osgi.logfile");
-					// C:\works\galileo_plugin\runtime-EclipseApplication\.metadata\.log
-					baseDirDev = baseDirDev.replaceAll(IConstants.WINDOWS_DIR_SEPARATOR,
-							IConstants.DIR_SEPARATOR);
-					String dirArr[] = baseDirDev.split(IConstants.DIR_SEPARATOR);
-					projectRootPath = "";
-					for (int i = 0; i < dirArr.length; i++)
-					{
-						if (dirArr[i].equals(".metadata"))
-							break;
-						projectRootPath += dirArr[i] + IConstants.DIR_SEPARATOR;
-					}
-					projectRootPath += "sample" + IConstants.DIR_SEPARATOR;
+					if (wsDirArr[i].equals(".metadata"))
+						break;
+					projectRootPath += wsDirArr[i] + IConstants.DIR_SEPARATOR;
 				}
+				projectRootPath += projectName + IConstants.DIR_SEPARATOR;
 
 				String[] tmpStrArr = projectRootPath.split(IConstants.DIR_SEPARATOR);
 				projectName = tmpStrArr[tmpStrArr.length - 1];

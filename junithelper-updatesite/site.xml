@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/com.googlecode.plugin.junithelper.feature_0.0.2.jar" id="com.googlecode.plugin.junithelper.feature" version="0.0.2">
+   <feature url="features/com.googlecode.plugin.junithelper.feature_0.0.3.jar" id="com.googlecode.plugin.junithelper.feature" version="0.0.3">
       <category name="JUnit Helper"/>
    </feature>
    <category-def name="JUnit Helper" label="JUnit Helper">

@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?eclipse version="3.2"?>
+<?eclipse version="3.3"?>
 <plugin>
-   <extension-point id="org.eclipse.ui.views" name="org.eclipse.ui.views"/>
 
-   <extension
-         point="org.eclipse.ui.commands">
+   <extension point="org.eclipse.ui.commands">
       <category
             id="com.googlecode.plugin.junithelper.command.category"
             name="JUnit Helper">
@@ -47,41 +45,6 @@
       </key>
    </extension>
    
-   <!--
-   <extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
-         <menu
-               label="JUnit Helper"
-               mnemonic="M"
-               id="com.googlecode.plugin.junithelper.menu.JUnitHelperMenu">
-            <command
-                  commandId="com.googlecode.plugin.junithelper.action.OpenTestCaseActionCommand"
-                  mnemonic="U"
-                  id="com.googlecode.plugin.junithelper.action.OpenTestCaseActionCommand">
-            </command>
-         </menu>
-      </menuContribution>
-   </extension>
-   -->
-   
-   <!--
-   <extension point="org.eclipse.ui.preferencePages">
-      <page
-            category="JUnit Helper"
-            class="com.googlecode.plugin.junithelper.page.JUnitHelperPreferencePage"
-            id="com.googlecode.plugin.junithelper.page.JUnitHelperPreferencePage"
-            name="JUnit Helper"/>
-   </extension>
-
-   <extension point="org.eclipse.core.runtime.preferences">
-      <initializer 
-      		class="com.googlecode.plugin.junithelper.page.JUnitHelperPreferencePageInitializer"
-      	/>
-   </extension>
-   -->
-
 	<!-- create new test class -->
 	<extension point="org.eclipse.ui.popupMenus">
 
@@ -147,5 +110,44 @@
 		</viewerContribution>
 
 	</extension>
+
+<!--
+   <extension-point id="org.eclipse.ui.views" name="org.eclipse.ui.views"/>
+-->
+
+   <!--
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+         <menu
+               label="JUnit Helper"
+               mnemonic="M"
+               id="com.googlecode.plugin.junithelper.menu.JUnitHelperMenu">
+            <command
+                  commandId="com.googlecode.plugin.junithelper.action.OpenTestCaseActionCommand"
+                  mnemonic="U"
+                  id="com.googlecode.plugin.junithelper.action.OpenTestCaseActionCommand">
+            </command>
+         </menu>
+      </menuContribution>
+   </extension>
+   -->
+   
+   <!--
+   <extension point="org.eclipse.ui.preferencePages">
+      <page
+            category="JUnit Helper"
+            class="com.googlecode.plugin.junithelper.page.JUnitHelperPreferencePage"
+            id="com.googlecode.plugin.junithelper.page.JUnitHelperPreferencePage"
+            name="JUnit Helper"/>
+   </extension>
+
+   <extension point="org.eclipse.core.runtime.preferences">
+      <initializer 
+      		class="com.googlecode.plugin.junithelper.page.JUnitHelperPreferencePageInitializer"
+      	/>
+   </extension>
+   -->
 
 </plugin>
