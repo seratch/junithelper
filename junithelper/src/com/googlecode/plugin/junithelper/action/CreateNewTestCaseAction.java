@@ -88,37 +88,23 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 					// java editor
 					IWorkbenchPage activePage = PlatformUI.getWorkbench()
 							.getActiveWorkbenchWindow().getActivePage();
-					// TODO : learn more to get file path
-					String testClassPath = activePage.getActiveEditor().getTitleToolTip();
-
-					String[] dirArr = testClassPath.split(IConstants.DIR_SEPARATOR);
-					testCaseFilename = dirArr[dirArr.length - 1].replace(
-							IConstants.JAVA_EXP, "Test" + IConstants.JAVA_EXP);
-					testTargetClassname = dirArr[dirArr.length - 1].replace(
-							IConstants.JAVA_EXP, IConstants.EMPTY_STIRNG);
+					selected = activePage.getActiveEditor().getTitleToolTip();
+					String[] dirArr = selected.split(IConstants.DIR_SEPARATOR);
+					selected = "";
+					for (int i = 1; i < dirArr.length; i++)
+					{
+						selected += dirArr[i] + IConstants.DIR_SEPARATOR;
+					}
+					selected = selected.replace(".java/", ".java");
+					testTargetClassname = dirArr[dirArr.length - 1].replace(".java",
+							IConstants.EMPTY_STIRNG);
+					testCaseFilename = testTargetClassname + "Test" + IConstants.JAVA_EXP;
 					testCaseClassname = testCaseFilename.replace(IConstants.JAVA_EXP,
 							IConstants.EMPTY_STIRNG);
-					// TODO: judge class path top
-					for (int i = 2; i < dirArr.length - 1; i++)
-					{
-						selected += IConstants.DIR_SEPARATOR + dirArr[i];
-					}
-					selected += IConstants.DIR_SEPARATOR + "test";
 
 				} else if (structuredSelection.getFirstElement() instanceof File)
 				{
 					// navigator
-
-					// File javaFile = (File)resourceObject;
-					// javaFileIStream = javaFile.getContents();
-					// BufferedReader br = new BufferedReader(new
-					// InputStreamReader(javaFileIStream));
-					// String line = "";
-					// while ( (line = br.readLine()) != null ) {
-					// // package取得
-					// }
-					// br.close();
-
 					String resourceStr = selection.toString().split("src")[1].replace(
 							"]", IConstants.EMPTY_STIRNG);
 					String[] dirSepArr = resourceStr.split(IConstants.DIR_SEPARATOR);
@@ -128,8 +114,8 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 							IConstants.JAVA_EXP, "Test" + IConstants.JAVA_EXP);
 					testCaseClassname = testCaseFilename.replace(IConstants.JAVA_EXP,
 							IConstants.EMPTY_STIRNG);
-					dirSepArr[dirSepArr.length - 1] = "test";
-					selected = IConstants.EMPTY_STIRNG;
+
+					selected = "src";
 					for (String each : dirSepArr)
 					{
 						if (each != null && !each.equals(IConstants.EMPTY_STIRNG))
@@ -138,11 +124,8 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 
 				} else if (structuredSelection.getFirstElement() instanceof CompilationUnit)
 				{
+
 					// package explorer
-
-					// CompilationUnit unit = (CompilationUnit)resourceObject;
-					// String source = unit.getSource();
-
 					String classInfoStr = selection.toString();
 					selected = classInfoStr.split("\\[in")[1].trim();
 					selected = selected.replaceAll("\\.", IConstants.DIR_SEPARATOR);
@@ -150,28 +133,52 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 							.replaceAll("(\\[|\\])", IConstants.EMPTY_STIRNG).replaceAll(
 									"Working copy ", IConstants.EMPTY_STIRNG).trim();
 					testCaseFilename = testTargetClassname + "Test" + IConstants.JAVA_EXP;
-					testCaseClassname = testTargetClassname + "Test";
-					selected = IConstants.DIR_SEPARATOR + selected
-							+ IConstants.DIR_SEPARATOR + "test";
+					testCaseClassname = testCaseFilename.replace(IConstants.JAVA_EXP,
+							IConstants.EMPTY_STIRNG);
+
+					selected = "src/main/java/" + selected + IConstants.DIR_SEPARATOR
+							+ testTargetClassname + ".java";
 
 				}
 
-				// TODO
-				String baseDir = System.getProperty("user.dir");
-				baseDir = baseDir.toString().replaceAll(IConstants.WINDOWS_DIR_SEPARATOR,
-						IConstants.DIR_SEPARATOR);
-				String[] tmpStrArr = baseDir.split(IConstants.DIR_SEPARATOR);
-				projectName = tmpStrArr[tmpStrArr.length - 1];
-				String rootDir = baseDir + IConstants.DIR_SEPARATOR + "src";
+				// get workspace path on os file system
+				String projectRootPath = System.getProperty("user.dir");
+				// for develpment
+				if (projectRootPath.matches(".*eclipse$"))
+				{
+					String baseDirDev = System.getProperty("osgi.logfile");
+					// C:\works\galileo_plugin\runtime-EclipseApplication\.metadata\.log
+					baseDirDev = baseDirDev.replaceAll(IConstants.WINDOWS_DIR_SEPARATOR,
+							IConstants.DIR_SEPARATOR);
+					String dirArr[] = baseDirDev.split(IConstants.DIR_SEPARATOR);
+					projectRootPath = "";
+					for (int i = 0; i < dirArr.length; i++)
+					{
+						if (dirArr[i].equals(".metadata"))
+							break;
+						projectRootPath += dirArr[i] + IConstants.DIR_SEPARATOR;
+					}
+					projectRootPath += "sample" + IConstants.DIR_SEPARATOR;
+				}
 
-				testCaseResource = "src" + selected + IConstants.DIR_SEPARATOR
-						+ testCaseFilename;
-				testCaseDirResource = "src" + selected;
-				testCaseCreateDirpath = rootDir + selected;
+				String[] tmpStrArr = projectRootPath.split(IConstants.DIR_SEPARATOR);
+				projectName = tmpStrArr[tmpStrArr.length - 1];
+
+				testCaseResource = selected.replace("src/main/java", "src/test/java")
+						.replace(".java", "Test.java");
+				String[] selectedDirArr = selected.split(IConstants.DIR_SEPARATOR);
+				testCaseDirResource = "";
+				for (int i = 0; i < selectedDirArr.length - 1; i++)
+				{
+					testCaseDirResource += selectedDirArr[i] + IConstants.DIR_SEPARATOR;
+				}
+				testCaseDirResource = testCaseDirResource.replace("src/main/java",
+						"src/test/java");
+				testCaseCreateDirpath = projectRootPath + testCaseDirResource;
 
 				java.io.File testDir = new java.io.File(testCaseCreateDirpath);
 
-				// どの階層から既に存在するか確認
+				// check directory exist
 				String[] dirArr = testCaseCreateDirpath.split(IConstants.DIR_SEPARATOR);
 				String tmpDirPath = "";
 				String tmpResourceDirPath = "";
@@ -180,41 +187,34 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 					tmpDirPath += IConstants.DIR_SEPARATOR + each;
 					java.io.File tmpDir = new java.io.File(tmpDirPath);
 
-					// baseDirに届くまでは何もしない
-					if (tmpDir.getPath().length() <= baseDir.length())
-					{
+					// skip until project root dir
+					if (tmpDir.getPath().length() <= projectRootPath.length())
 						continue;
-					}
-					tmpResourceDirPath += IConstants.DIR_SEPARATOR + each;
 
+					tmpResourceDirPath += IConstants.DIR_SEPARATOR + each;
 					if (!tmpDir.exists())
 					{
 						if (!tmpDir.mkdir())
-						{
 							System.err.println("create directory error : "
 									+ tmpDir.getPath());
-						}
 						if (!ResourceSynchronizerUtil.accessSynchronizeServer(null,
 								projectName + IConstants.DIR_SEPARATOR
 										+ tmpResourceDirPath + "/.." + "=INFINITE"))
 						{
-							MessageDialog
-									.openWarning(
-											new Shell(),
-											IConstants.Dialog.Common.TITLE,
-											IConstants.Dialog.Common.RESOURCE_SYNC_SERVER_NOT_RUNNING);
+							String msg = IConstants.Dialog.Common.RESOURCE_SYNC_SERVER_NOT_RUNNING;
+							MessageDialog.openWarning(new Shell(),
+									IConstants.Dialog.Common.TITLE, msg);
 							System.err
 									.println("access error : ResourceSynchronizer server");
 						}
 					}
 				}
 
-				// ディレクトリ作成
+				// execute create directory
 				if (!testDir.mkdirs())
-				{
 					System.err.println("test directory create error or already exist");
-				}
-				// リソース更新
+
+				// resource sync
 				if (!ResourceSynchronizerUtil.accessSynchronizeServer(null, projectName
 						+ IConstants.DIR_SEPARATOR + testCaseDirResource + "=ONE"))
 				{
@@ -240,82 +240,30 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 								testCaseCreateDirpath + IConstants.DIR_SEPARATOR
 										+ testCaseFilename));
 
-						String testPackageString = selected.substring(1).replace(
-								IConstants.DIR_SEPARATOR, ".");
-						String targetClassPackageString = testPackageString.replace(
-								"test", "");
+						StringBuffer sb = new StringBuffer();
 
-						testFileOSWriter.write("package " + testPackageString + ";"
-								+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
-						testFileOSWriter.write("" + IConstants.CARRIAGE_RETURN
-								+ IConstants.LINE_FEED);
-						testFileOSWriter
-								.write("import static org.junit.Assert.assertNotNull;"
-										+ IConstants.CARRIAGE_RETURN
-										+ IConstants.LINE_FEED);
-						testFileOSWriter
-								.write("import junit.framework.JUnit4TestAdapter;"
-										+ IConstants.CARRIAGE_RETURN
-										+ IConstants.LINE_FEED);
-						testFileOSWriter.write("import org.junit.runner.RunWith;"
-								+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
-						testFileOSWriter
-								.write("import org.seasar.framework.unit.Seasar2;"
-										+ IConstants.CARRIAGE_RETURN
-										+ IConstants.LINE_FEED);
-						testFileOSWriter.write("import " + targetClassPackageString
-								+ testTargetClassname + ";" + IConstants.CARRIAGE_RETURN
-								+ IConstants.LINE_FEED);
-						testFileOSWriter.write("import test.framework.AbstractBaseTest;"
-								+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
-						testFileOSWriter.write("" + IConstants.CARRIAGE_RETURN
-								+ IConstants.LINE_FEED);
-						testFileOSWriter.write("@RunWith(Seasar2.class)"
-								+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
-						testFileOSWriter.write("public class " + testCaseClassname
-								+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
-						testFileOSWriter.write("	extends AbstractBaseTest {"
-								+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
-						testFileOSWriter.write("" + IConstants.CARRIAGE_RETURN
-								+ IConstants.LINE_FEED);
-						testFileOSWriter.write("	private " + testTargetClassname
-								+ " testTarget;" + IConstants.CARRIAGE_RETURN
-								+ IConstants.LINE_FEED);
-						testFileOSWriter.write("" + IConstants.CARRIAGE_RETURN
-								+ IConstants.LINE_FEED);
-						testFileOSWriter
-								.write("	public static junit.framework.Test suite() {"
-										+ IConstants.CARRIAGE_RETURN
-										+ IConstants.LINE_FEED);
-						testFileOSWriter.write("		return new JUnit4TestAdapter("
-								+ testCaseClassname + ".class);"
-								+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
-						testFileOSWriter.write("	}" + IConstants.CARRIAGE_RETURN
-								+ IConstants.LINE_FEED);
-						testFileOSWriter.write("" + IConstants.CARRIAGE_RETURN
-								+ IConstants.LINE_FEED);
-						testFileOSWriter.write("	// Excelシートの雛形を作成"
-								+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
-						testFileOSWriter.write("	// src/test/resourcesの配下に出力されます"
-								+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
-						testFileOSWriter
-								.write("	public void readyForTest() throws Exception {"
-										+ IConstants.CARRIAGE_RETURN
-										+ IConstants.LINE_FEED);
-						testFileOSWriter
-								.write("		assertNotNull(\"test target is null!!\",testTarget);"
-										+ IConstants.CARRIAGE_RETURN
-										+ IConstants.LINE_FEED);
-						testFileOSWriter.write("		this.readyForTestMain();"
-								+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
-						testFileOSWriter.write("		return;" + IConstants.CARRIAGE_RETURN
-								+ IConstants.LINE_FEED);
-						testFileOSWriter.write("	}" + IConstants.CARRIAGE_RETURN
-								+ IConstants.LINE_FEED);
-						testFileOSWriter.write("" + IConstants.CARRIAGE_RETURN
-								+ IConstants.LINE_FEED);
-						testFileOSWriter.write("}" + IConstants.CARRIAGE_RETURN
-								+ IConstants.LINE_FEED);
+						String CRLF = IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED;
+
+						// get package
+						String testPackageString = IConstants.EMPTY_STIRNG;
+						String[] tmpDirArr = selected.split(IConstants.DIR_SEPARATOR);
+						for (int i = 3; i < tmpDirArr.length - 2; i++)
+							testPackageString += tmpDirArr[i] + ".";
+						testPackageString += tmpDirArr[tmpDirArr.length - 2];
+
+						sb.append("package " + testPackageString + ";" + CRLF);
+
+						sb.append("" + CRLF);
+						sb.append("import junit.framework.TestCase;" + CRLF);
+						sb.append("" + CRLF);
+						sb.append("public class " + testCaseClassname
+								+ " extends TestCase {" + CRLF);
+						sb.append("" + CRLF);
+						sb.append("" + CRLF);
+						sb.append("" + CRLF);
+						sb.append("}" + CRLF);
+
+						testFileOSWriter.write(sb.toString());
 					}
 
 				} catch (FileNotFoundException fnfe)
@@ -324,8 +272,6 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 				}
 			}
 
-			// } catch (CoreException cre) {
-			// cre.printStackTrace();
 		} catch (Exception e)
 		{
 			e.printStackTrace();

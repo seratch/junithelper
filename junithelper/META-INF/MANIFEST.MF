@@ -5,30 +5,7 @@ Bundle-SymbolicName: com.googlecode.plugin.junithelper;singleton:=true
 Bundle-Version: 0.0.1
 Bundle-Localization: plugin
 Bundle-ClassPath: .,
- lib/commons-codec-1.3.jar,
- lib/commons-httpclient-3.1.jar,
- lib/commons-logging-1.1.1.jar,
- lib/xercesImpl.jar,
- lib/informa.jar,
- lib/antlr.jar,
- lib/asm.jar,
- lib/asm-attrs.jar,
- lib/cglib-nodep.jar,
- lib/commons-beanutils.jar,
- lib/commons-collections.jar,
- lib/commons-lang.jar,
- lib/commons-logging.jar,
- lib/dom4j.jar,
- lib/ehcache.jar,
- lib/hibernate3.jar,
- lib/hsqldb.jar,
- lib/jdom.jar,
- lib/jta.jar,
- lib/junit.jar,
- lib/log4j.jar,
- lib/lucene.jar,
- lib/spring.jar,
- lib/spring-mock.jar
+ lib/commons-httpclient-3.1.jar
 Bundle-Activator: com.googlecode.plugin.junithelper.Activator
 Bundle-Vendor: Kazuhiro Sera
 Require-Bundle: org.eclipse.ui,
@@ -42,9 +19,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.workbench.texteditor,
  org.eclipse.compare,
  org.eclipse.core.expressions,
+ org.apache.commons.httpclient,
  org.seasar.resource.synchronizer,
  org.eclipse.jdt.core
-Eclipse-LazyStart: true
 Export-Package: com.googlecode.plugin.junithelper,
  com.googlecode.plugin.junithelper.action,
  com.googlecode.plugin.junithelper.handler,
