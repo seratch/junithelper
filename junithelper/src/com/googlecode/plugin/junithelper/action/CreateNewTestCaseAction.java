@@ -44,14 +44,12 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 
 		InputStream javaFileIStream = null;
 		OutputStreamWriter testFileOSWriter = null;
-		OutputStreamWriter testDiconOSWriter = null;
 		String projectName = null;
 		boolean refreshFlag = true;
 		String testTargetClassname = null;
 		String testCaseFilename = null;
 		String testCaseClassname = null;
 		String testCaseCreateDirpath = null;
-		String testDiconFilename = null;
 		String testCaseResource = null;
 		String testCaseDirResource = null;
 
@@ -67,14 +65,14 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 
 			if (structuredSelection != null && structuredSelection.size() == 0)
 			{
-				// 選択して下さい
+				// required select
 				Shell shell = new Shell();
 				MessageDialog.openWarning(shell, IConstants.Dialog.Common.TITLE,
 						IConstants.Dialog.Common.REQUIRED);
 				refreshFlag = false;
 			} else if (structuredSelection != null && structuredSelection.size() > 1)
 			{
-				// 一つしか選べません
+				// select one only
 				Shell shell = new Shell();
 				MessageDialog.openWarning(shell, IConstants.Dialog.Common.TITLE,
 						IConstants.Dialog.Common.SELECT_ONLY_ONE);
@@ -96,8 +94,6 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 					String[] dirArr = testClassPath.split(IConstants.DIR_SEPARATOR);
 					testCaseFilename = dirArr[dirArr.length - 1].replace(
 							IConstants.JAVA_EXP, "Test" + IConstants.JAVA_EXP);
-					testDiconFilename = dirArr[dirArr.length - 1].replace(
-							IConstants.JAVA_EXP, "Test" + IConstants.DICON_EXP);
 					testTargetClassname = dirArr[dirArr.length - 1].replace(
 							IConstants.JAVA_EXP, IConstants.EMPTY_STIRNG);
 					testCaseClassname = testCaseFilename.replace(IConstants.JAVA_EXP,
@@ -130,8 +126,6 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 							IConstants.JAVA_EXP, IConstants.EMPTY_STIRNG);
 					testCaseFilename = dirSepArr[dirSepArr.length - 1].replace(
 							IConstants.JAVA_EXP, "Test" + IConstants.JAVA_EXP);
-					testDiconFilename = dirSepArr[dirSepArr.length - 1].replace(
-							IConstants.JAVA_EXP, "Test" + IConstants.DICON_EXP);
 					testCaseClassname = testCaseFilename.replace(IConstants.JAVA_EXP,
 							IConstants.EMPTY_STIRNG);
 					dirSepArr[dirSepArr.length - 1] = "test";
@@ -156,8 +150,6 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 							.replaceAll("(\\[|\\])", IConstants.EMPTY_STIRNG).replaceAll(
 									"Working copy ", IConstants.EMPTY_STIRNG).trim();
 					testCaseFilename = testTargetClassname + "Test" + IConstants.JAVA_EXP;
-					testDiconFilename = testTargetClassname + "Test"
-							+ IConstants.DICON_EXP;
 					testCaseClassname = testTargetClassname + "Test";
 					selected = IConstants.DIR_SEPARATOR + selected
 							+ IConstants.DIR_SEPARATOR + "test";
@@ -166,226 +158,169 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 
 				// TODO
 				String baseDir = System.getProperty("user.dir");
-				if (baseDir == IConstants.EMPTY_STIRNG)
+				baseDir = baseDir.toString().replaceAll(IConstants.WINDOWS_DIR_SEPARATOR,
+						IConstants.DIR_SEPARATOR);
+				String[] tmpStrArr = baseDir.split(IConstants.DIR_SEPARATOR);
+				projectName = tmpStrArr[tmpStrArr.length - 1];
+				String rootDir = baseDir + IConstants.DIR_SEPARATOR + "src";
+
+				testCaseResource = "src" + selected + IConstants.DIR_SEPARATOR
+						+ testCaseFilename;
+				testCaseDirResource = "src" + selected;
+				testCaseCreateDirpath = rootDir + selected;
+
+				java.io.File testDir = new java.io.File(testCaseCreateDirpath);
+
+				// どの階層から既に存在するか確認
+				String[] dirArr = testCaseCreateDirpath.split(IConstants.DIR_SEPARATOR);
+				String tmpDirPath = "";
+				String tmpResourceDirPath = "";
+				for (String each : dirArr)
 				{
-					Shell shell = new Shell();
-					MessageDialog.openWarning(shell, IConstants.Dialog.Common.TITLE,
-							IConstants.Dialog.TestCase.UNSETTING_UP_TEST_PJT_ROOT_DIR
-									+ IConstants.LINE_FEED + IConstants.LINE_FEED
-									+ IConstants.Dialog.Common.EXECUTE_AFTER_SETTING);
+					tmpDirPath += IConstants.DIR_SEPARATOR + each;
+					java.io.File tmpDir = new java.io.File(tmpDirPath);
 
-				} else
+					// baseDirに届くまでは何もしない
+					if (tmpDir.getPath().length() <= baseDir.length())
+					{
+						continue;
+					}
+					tmpResourceDirPath += IConstants.DIR_SEPARATOR + each;
+
+					if (!tmpDir.exists())
+					{
+						if (!tmpDir.mkdir())
+						{
+							System.err.println("create directory error : "
+									+ tmpDir.getPath());
+						}
+						if (!ResourceSynchronizerUtil.accessSynchronizeServer(null,
+								projectName + IConstants.DIR_SEPARATOR
+										+ tmpResourceDirPath + "/.." + "=INFINITE"))
+						{
+							MessageDialog
+									.openWarning(
+											new Shell(),
+											IConstants.Dialog.Common.TITLE,
+											IConstants.Dialog.Common.RESOURCE_SYNC_SERVER_NOT_RUNNING);
+							System.err
+									.println("access error : ResourceSynchronizer server");
+						}
+					}
+				}
+
+				// ディレクトリ作成
+				if (!testDir.mkdirs())
 				{
+					System.err.println("test directory create error or already exist");
+				}
+				// リソース更新
+				if (!ResourceSynchronizerUtil.accessSynchronizeServer(null, projectName
+						+ IConstants.DIR_SEPARATOR + testCaseDirResource + "=ONE"))
+				{
+					MessageDialog.openWarning(new Shell(),
+							IConstants.Dialog.Common.TITLE,
+							IConstants.Dialog.Common.RESOURCE_SYNC_SERVER_NOT_RUNNING);
+					System.err.println("access error - ResourceSynchronizer server");
+				}
 
-					baseDir = baseDir.toString().replaceAll(
-							IConstants.WINDOWS_DIR_SEPARATOR, IConstants.DIR_SEPARATOR);
-					String[] tmpStrArr = baseDir.split(IConstants.DIR_SEPARATOR);
-					projectName = tmpStrArr[tmpStrArr.length - 1];
-					String rootDir = baseDir + IConstants.DIR_SEPARATOR + "src";
-
-					testCaseResource = "src" + selected + IConstants.DIR_SEPARATOR
-							+ testCaseFilename;
-					testCaseDirResource = "src" + selected;
-					testCaseCreateDirpath = rootDir + selected;
-
-					java.io.File testDir = new java.io.File(testCaseCreateDirpath);
-
-					// どの階層から既に存在するか確認
-					String[] dirArr = testCaseCreateDirpath
-							.split(IConstants.DIR_SEPARATOR);
-					String tmpDirPath = "";
-					String tmpResourceDirPath = "";
-					for (String each : dirArr)
+				try
+				{
+					// 既に存在する場合上書き確認
+					java.io.File outputFile = new java.io.File(testCaseCreateDirpath
+							+ IConstants.DIR_SEPARATOR + testCaseFilename);
+					if (!outputFile.exists()
+							|| MessageDialog.openConfirm(new Shell(),
+									IConstants.Dialog.Common.TITLE, testCaseFilename
+											+ IConstants.Dialog.Common.ALREADY_EXIST))
 					{
-						tmpDirPath += IConstants.DIR_SEPARATOR + each;
-						java.io.File tmpDir = new java.io.File(tmpDirPath);
 
-						// baseDirに届くまでは何もしない
-						if (tmpDir.getPath().length() <= baseDir.length())
-						{
-							continue;
-						}
-						tmpResourceDirPath += IConstants.DIR_SEPARATOR + each;
+						// test class generator
+						testFileOSWriter = new OutputStreamWriter(new FileOutputStream(
+								testCaseCreateDirpath + IConstants.DIR_SEPARATOR
+										+ testCaseFilename));
 
-						if (!tmpDir.exists())
-						{
-							if (!tmpDir.mkdir())
-							{
-								System.err.println("create directory error : "
-										+ tmpDir.getPath());
-							}
-							if (!ResourceSynchronizerUtil.accessSynchronizeServer(null,
-									projectName + IConstants.DIR_SEPARATOR
-											+ tmpResourceDirPath + "/.." + "=INFINITE"))
-							{
-								MessageDialog
-										.openWarning(
-												new Shell(),
-												IConstants.Dialog.Common.TITLE,
-												IConstants.Dialog.EncodingJBossToolsHTMLEditor.RESOURCE_SYNC_SERVER_NOT_RUNNING);
-								System.err
-										.println("access error : ResourceSynchronizer server");
-							}
-						}
+						String testPackageString = selected.substring(1).replace(
+								IConstants.DIR_SEPARATOR, ".");
+						String targetClassPackageString = testPackageString.replace(
+								"test", "");
+
+						testFileOSWriter.write("package " + testPackageString + ";"
+								+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
+						testFileOSWriter.write("" + IConstants.CARRIAGE_RETURN
+								+ IConstants.LINE_FEED);
+						testFileOSWriter
+								.write("import static org.junit.Assert.assertNotNull;"
+										+ IConstants.CARRIAGE_RETURN
+										+ IConstants.LINE_FEED);
+						testFileOSWriter
+								.write("import junit.framework.JUnit4TestAdapter;"
+										+ IConstants.CARRIAGE_RETURN
+										+ IConstants.LINE_FEED);
+						testFileOSWriter.write("import org.junit.runner.RunWith;"
+								+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
+						testFileOSWriter
+								.write("import org.seasar.framework.unit.Seasar2;"
+										+ IConstants.CARRIAGE_RETURN
+										+ IConstants.LINE_FEED);
+						testFileOSWriter.write("import " + targetClassPackageString
+								+ testTargetClassname + ";" + IConstants.CARRIAGE_RETURN
+								+ IConstants.LINE_FEED);
+						testFileOSWriter.write("import test.framework.AbstractBaseTest;"
+								+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
+						testFileOSWriter.write("" + IConstants.CARRIAGE_RETURN
+								+ IConstants.LINE_FEED);
+						testFileOSWriter.write("@RunWith(Seasar2.class)"
+								+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
+						testFileOSWriter.write("public class " + testCaseClassname
+								+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
+						testFileOSWriter.write("	extends AbstractBaseTest {"
+								+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
+						testFileOSWriter.write("" + IConstants.CARRIAGE_RETURN
+								+ IConstants.LINE_FEED);
+						testFileOSWriter.write("	private " + testTargetClassname
+								+ " testTarget;" + IConstants.CARRIAGE_RETURN
+								+ IConstants.LINE_FEED);
+						testFileOSWriter.write("" + IConstants.CARRIAGE_RETURN
+								+ IConstants.LINE_FEED);
+						testFileOSWriter
+								.write("	public static junit.framework.Test suite() {"
+										+ IConstants.CARRIAGE_RETURN
+										+ IConstants.LINE_FEED);
+						testFileOSWriter.write("		return new JUnit4TestAdapter("
+								+ testCaseClassname + ".class);"
+								+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
+						testFileOSWriter.write("	}" + IConstants.CARRIAGE_RETURN
+								+ IConstants.LINE_FEED);
+						testFileOSWriter.write("" + IConstants.CARRIAGE_RETURN
+								+ IConstants.LINE_FEED);
+						testFileOSWriter.write("	// Excelシートの雛形を作成"
+								+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
+						testFileOSWriter.write("	// src/test/resourcesの配下に出力されます"
+								+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
+						testFileOSWriter
+								.write("	public void readyForTest() throws Exception {"
+										+ IConstants.CARRIAGE_RETURN
+										+ IConstants.LINE_FEED);
+						testFileOSWriter
+								.write("		assertNotNull(\"test target is null!!\",testTarget);"
+										+ IConstants.CARRIAGE_RETURN
+										+ IConstants.LINE_FEED);
+						testFileOSWriter.write("		this.readyForTestMain();"
+								+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
+						testFileOSWriter.write("		return;" + IConstants.CARRIAGE_RETURN
+								+ IConstants.LINE_FEED);
+						testFileOSWriter.write("	}" + IConstants.CARRIAGE_RETURN
+								+ IConstants.LINE_FEED);
+						testFileOSWriter.write("" + IConstants.CARRIAGE_RETURN
+								+ IConstants.LINE_FEED);
+						testFileOSWriter.write("}" + IConstants.CARRIAGE_RETURN
+								+ IConstants.LINE_FEED);
 					}
 
-					// ディレクトリ作成
-					if (!testDir.mkdirs())
-					{
-						System.err
-								.println("test directory create error or already exist");
-					}
-					// リソース更新
-					if (!ResourceSynchronizerUtil.accessSynchronizeServer(null,
-							projectName + IConstants.DIR_SEPARATOR + testCaseDirResource
-									+ "=ONE"))
-					{
-						MessageDialog
-								.openWarning(
-										new Shell(),
-										IConstants.Dialog.Common.TITLE,
-										IConstants.Dialog.EncodingJBossToolsHTMLEditor.RESOURCE_SYNC_SERVER_NOT_RUNNING);
-						System.err.println("access error - ResourceSynchronizer server");
-					}
-
-					try
-					{
-						// 既に存在する場合上書き確認
-						java.io.File outputFile = new java.io.File(testCaseCreateDirpath
-								+ IConstants.DIR_SEPARATOR + testCaseFilename);
-						if (!outputFile.exists()
-								|| MessageDialog.openConfirm(new Shell(),
-										IConstants.Dialog.Common.TITLE, testCaseFilename
-												+ IConstants.Dialog.Common.ALREADY_EXIST))
-						{
-
-							// test class generator
-							testFileOSWriter = new OutputStreamWriter(
-									new FileOutputStream(testCaseCreateDirpath
-											+ IConstants.DIR_SEPARATOR + testCaseFilename));
-
-							String testPackageString = selected.substring(1).replace(
-									IConstants.DIR_SEPARATOR, ".");
-							String targetClassPackageString = testPackageString.replace(
-									"test", "");
-
-							testFileOSWriter.write("package " + testPackageString + ";"
-									+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
-							testFileOSWriter.write("" + IConstants.CARRIAGE_RETURN
-									+ IConstants.LINE_FEED);
-							testFileOSWriter
-									.write("import static org.junit.Assert.assertNotNull;"
-											+ IConstants.CARRIAGE_RETURN
-											+ IConstants.LINE_FEED);
-							testFileOSWriter
-									.write("import junit.framework.JUnit4TestAdapter;"
-											+ IConstants.CARRIAGE_RETURN
-											+ IConstants.LINE_FEED);
-							testFileOSWriter.write("import org.junit.runner.RunWith;"
-									+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
-							testFileOSWriter
-									.write("import org.seasar.framework.unit.Seasar2;"
-											+ IConstants.CARRIAGE_RETURN
-											+ IConstants.LINE_FEED);
-							testFileOSWriter.write("import " + targetClassPackageString
-									+ testTargetClassname + ";"
-									+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
-							testFileOSWriter
-									.write("import test.framework.AbstractBaseTest;"
-											+ IConstants.CARRIAGE_RETURN
-											+ IConstants.LINE_FEED);
-							testFileOSWriter.write("" + IConstants.CARRIAGE_RETURN
-									+ IConstants.LINE_FEED);
-							testFileOSWriter.write("@RunWith(Seasar2.class)"
-									+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
-							testFileOSWriter.write("public class " + testCaseClassname
-									+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
-							testFileOSWriter.write("	extends AbstractBaseTest {"
-									+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
-							testFileOSWriter.write("" + IConstants.CARRIAGE_RETURN
-									+ IConstants.LINE_FEED);
-							testFileOSWriter.write("	private " + testTargetClassname
-									+ " testTarget;" + IConstants.CARRIAGE_RETURN
-									+ IConstants.LINE_FEED);
-							testFileOSWriter.write("" + IConstants.CARRIAGE_RETURN
-									+ IConstants.LINE_FEED);
-							testFileOSWriter
-									.write("	public static junit.framework.Test suite() {"
-											+ IConstants.CARRIAGE_RETURN
-											+ IConstants.LINE_FEED);
-							testFileOSWriter.write("		return new JUnit4TestAdapter("
-									+ testCaseClassname + ".class);"
-									+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
-							testFileOSWriter.write("	}" + IConstants.CARRIAGE_RETURN
-									+ IConstants.LINE_FEED);
-							testFileOSWriter.write("" + IConstants.CARRIAGE_RETURN
-									+ IConstants.LINE_FEED);
-							testFileOSWriter.write("	// Excelシートの雛形を作成"
-									+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
-							testFileOSWriter.write("	// src/test/resourcesの配下に出力されます"
-									+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
-							testFileOSWriter
-									.write("	public void readyForTest() throws Exception {"
-											+ IConstants.CARRIAGE_RETURN
-											+ IConstants.LINE_FEED);
-							testFileOSWriter
-									.write("		assertNotNull(\"test target is null!!\",testTarget);"
-											+ IConstants.CARRIAGE_RETURN
-											+ IConstants.LINE_FEED);
-							testFileOSWriter.write("		this.readyForTestMain();"
-									+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
-							testFileOSWriter.write("		return;"
-									+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
-							testFileOSWriter.write("	}" + IConstants.CARRIAGE_RETURN
-									+ IConstants.LINE_FEED);
-							testFileOSWriter.write("" + IConstants.CARRIAGE_RETURN
-									+ IConstants.LINE_FEED);
-							testFileOSWriter.write("}" + IConstants.CARRIAGE_RETURN
-									+ IConstants.LINE_FEED);
-
-							// test dicon generator
-							testDiconOSWriter = new OutputStreamWriter(
-									new FileOutputStream(testCaseCreateDirpath
-											+ IConstants.DIR_SEPARATOR
-											+ testDiconFilename));
-							testDiconOSWriter
-									.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-											+ IConstants.CARRIAGE_RETURN
-											+ IConstants.LINE_FEED);
-							testDiconOSWriter
-									.write("<!DOCTYPE components PUBLIC \"-//SEASAR//DTD S2Container 2.4//EN\""
-											+ IConstants.CARRIAGE_RETURN
-											+ IConstants.LINE_FEED);
-							testDiconOSWriter
-									.write("  \"http://www.seasar.org/dtd/components24.dtd\">"
-											+ IConstants.CARRIAGE_RETURN
-											+ IConstants.LINE_FEED);
-							testDiconOSWriter.write("<components>"
-									+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
-							testDiconOSWriter.write("	<include path=\"common.dicon\"/>"
-									+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
-							testDiconOSWriter.write("" + IConstants.CARRIAGE_RETURN
-									+ IConstants.LINE_FEED);
-							testDiconOSWriter.write("	<!-- page -->"
-									+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
-							testDiconOSWriter.write("	<component name=\"testTarget\""
-									+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
-							testDiconOSWriter.write("		class=\""
-									+ targetClassPackageString + testTargetClassname
-									+ "\"" + IConstants.CARRIAGE_RETURN
-									+ IConstants.LINE_FEED);
-							testDiconOSWriter.write("		instance=\"prototype\">"
-									+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
-							testDiconOSWriter.write("	</component>"
-									+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
-							testDiconOSWriter.write("</components>"
-									+ IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED);
-						}
-
-					} catch (FileNotFoundException fnfe)
-					{
-						fnfe.printStackTrace();
-					}
+				} catch (FileNotFoundException fnfe)
+				{
+					fnfe.printStackTrace();
 				}
 			}
 
@@ -402,8 +337,6 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 					javaFileIStream.close();
 				if (testFileOSWriter != null)
 					testFileOSWriter.close();
-				if (testDiconOSWriter != null)
-					testDiconOSWriter.close();
 			} catch (Exception e)
 			{
 				e.printStackTrace();
@@ -417,11 +350,8 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 						projectName + IConstants.DIR_SEPARATOR + testCaseDirResource
 								+ "/.." + "=INFINITE"))
 		{
-			MessageDialog
-					.openWarning(
-							new Shell(),
-							IConstants.Dialog.Common.TITLE,
-							IConstants.Dialog.EncodingJBossToolsHTMLEditor.RESOURCE_SYNC_SERVER_NOT_RUNNING);
+			MessageDialog.openWarning(new Shell(), IConstants.Dialog.Common.TITLE,
+					IConstants.Dialog.Common.RESOURCE_SYNC_SERVER_NOT_RUNNING);
 			System.err.println("access error - ResourceSynchronizer server");
 
 		} else

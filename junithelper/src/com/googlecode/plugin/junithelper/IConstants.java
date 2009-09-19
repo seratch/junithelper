@@ -11,7 +11,7 @@ public interface IConstants
 	public static final String LINE_FEED = "\n";
 	public static final String ENCODING_UTF_8 = "UTF-8";
 	public static final String JAVA_EXP = ".java";
-	public static final String DICON_EXP = ".dicon";
+	public static final String PROPERTIES_EXP = ".properties";
 
 	public static class RegExp
 	{
@@ -34,28 +34,16 @@ public interface IConstants
 			public static final String ALREADY_EXIST = "は既に存在しています。";
 			public static final String NOT_EXIST = "は存在しません。";
 			public static final String COMFIRM_CREATE_NEW_FILE = "新しく作成しますか？";
-		}
-
-		public static class RssFeed
-		{
-			public static final String FAIL_TO_GET_FEED = "フィードの取得に失敗しました。";
-			public static final String HTTP_STATUS_ERROR = "HTTPステータスコード : ";
+			public static final String RESOURCE_SYNC_SERVER_NOT_RUNNING = "ResourceSynchronizerがインストールされていない、もしくは同期サーバが起動していません。";
 		}
 
 		public static class TestCase
 		{
-			public static final String UNSETTING_UP_TEST_PJT_ROOT_DIR = "テストモジュールを配置するプロジェクトのルートディレクトリ指定がされていません。";
 			public static final String SELECT_JAVA_FILE = "このコマンドはJavaファイルを選択してから実行して下さい。";
 			public static final String NOT_TEST_CLASS = "このコマンドはテストクラスを選択して実行して下さい。";
 			public static final String ALREAY_OPEN_TEST_CLASS = "既にテストクラスを開いています。";
 		}
 
-		public static class EncodingJBossToolsHTMLEditor
-		{
-			public static final String WORK_CONTENT = "JBossTools HTML EditorのEncoding指定を一括更新します。";
-			public static final String UNSETTING_UP_WAR_PJT_ROOT_DIR = "実行対象のwarプロジェクトのルートディレクトリ指定がされていません。";
-			public static final String RESOURCE_SYNC_SERVER_NOT_RUNNING = "ResourceSynchronizerがインストールされていない、もしくは同期サーバが起動していません。";
-		}
 	}
 
 	public static class Preference
