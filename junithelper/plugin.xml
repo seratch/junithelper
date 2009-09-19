@@ -12,7 +12,12 @@
       <command
             id="com.googlecode.plugin.junithelper.action.OpenTestCaseActionCommand"
             categoryId="com.googlecode.plugin.junithelper.command.category"
-            name="Open TestCase">
+            name="Open Test Class">
+      </command>
+      <command
+            id="com.googlecode.plugin.junithelper.action.OpenTestTargetActionCommand"
+            categoryId="com.googlecode.plugin.junithelper.command.category"
+            name="Open Test Target">
       </command>
    </extension>
    
@@ -21,6 +26,10 @@
       <handler
             class="com.googlecode.plugin.junithelper.handler.OpenTestCaseHandler"
             commandId="com.googlecode.plugin.junithelper.action.OpenTestCaseActionCommand" >
+      </handler>
+      <handler
+            class="com.googlecode.plugin.junithelper.handler.OpenTestTargetHandler"
+            commandId="com.googlecode.plugin.junithelper.action.OpenTestTargetActionCommand" >
       </handler>
    </extension>
    
@@ -31,7 +40,14 @@
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+8">
       </key>
+      <key
+            commandId="com.googlecode.plugin.junithelper.action.OpenTestTargetActionCommand"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+9">
+      </key>
    </extension>
+   
+   <!--
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
@@ -48,10 +64,11 @@
          </menu>
       </menuContribution>
    </extension>
-
+   -->
+   
    <extension point="org.eclipse.ui.preferencePages">
       <page
-            category="JUnitHelper"
+            category="JUnit Helper"
             class="com.googlecode.plugin.junithelper.page.JUnitHelperPreferencePage"
             id="com.googlecode.plugin.junithelper.page.JUnitHelperPreferencePage"
             name="JUnit Helper"/>
@@ -76,10 +93,14 @@
 			</menu>
 			<action
 		         class="com.googlecode.plugin.junithelper.action.OpenTestCaseAction"
-		         icon="icons/rss.jpg"
 		         id="com.googlecode.plugin.junithelper.action.OpenTestCaseAction.object"
-		         label="Open TestCase Ctrl+8"
+		         label="Open Test Class Ctrl+8"
 		         menubarPath="com.googlecode.plugin.junithelper.popupmenu/additions" >
+			</action>
+			<action
+				label="Open Test Target Ctrl+9"
+				class="com.googlecode.plugin.junithelper.action.OpenTestCaseAction"
+				id="com.googlecode.plugin.junithelper.action.OpenTestTargetAction.viewer">
 			</action>
 		</objectContribution>
 
@@ -95,10 +116,14 @@
 			</menu>
 			<action
 		         class="com.googlecode.plugin.junithelper.action.OpenTestCaseAction"
-		         icon="icons/rss.jpg"
 		         id="com.googlecode.plugin.junithelper.action.OpenTestCaseAction.object"
-		         label="Open TestCase Ctrl+8"
+		         label="Open Test Class Ctrl+8"
 		         menubarPath="com.googlecode.plugin.junithelper.popupmenu/additions" >
+			</action>
+			<action
+				label="Open Test Target Ctrl+9"
+				class="com.googlecode.plugin.junithelper.action.OpenTestCaseAction"
+				id="com.googlecode.plugin.junithelper.action.OpenTestTargetAction.viewer">
 			</action>
 		</objectContribution>
 
@@ -107,9 +132,14 @@
 			targetID="#CompilationUnitEditorContext"
 			id="com.googlecode.plugin.junithelper.test.framework.create">
 			<action
-				label="Open TestCase Ctrl+8"
+				label="Open Test Class Ctrl+8"
 				class="com.googlecode.plugin.junithelper.action.OpenTestCaseAction"
 				id="com.googlecode.plugin.junithelper.action.OpenTestCaseAction.viewer">
+			</action>
+			<action
+				label="Open Test Target Ctrl+9"
+				class="com.googlecode.plugin.junithelper.action.OpenTestCaseAction"
+				id="com.googlecode.plugin.junithelper.action.OpenTestTargetAction.viewer">
 			</action>
 		</viewerContribution>
 
