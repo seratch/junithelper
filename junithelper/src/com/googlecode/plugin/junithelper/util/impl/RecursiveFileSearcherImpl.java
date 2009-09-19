@@ -26,14 +26,13 @@ public class RecursiveFileSearcherImpl implements RecursiveFileSearcher
 	}
 
 	public File[] listFiles(String directoryPath, String fileNamePattern, int type,
-	        boolean isRecursive, int period)
+			boolean isRecursive, int period)
 	{
 
 		File dir = new File(directoryPath);
 		if (!dir.isDirectory())
 		{
-			throw new IllegalArgumentException("引数で指定されたパス[" + dir.getAbsolutePath()
-			        + "]はディレクトリではありません。");
+			throw new IllegalArgumentException("Not directory : " + dir.getAbsolutePath());
 		}
 		File[] files = dir.listFiles();
 		// その出力
@@ -45,7 +44,7 @@ public class RecursiveFileSearcherImpl implements RecursiveFileSearcher
 			if (isRecursive && file.isDirectory())
 			{
 				listFiles(file.getAbsolutePath(), fileNamePattern, type, isRecursive,
-				        period);
+						period);
 			}
 		}
 		return (File[]) set.toArray(new File[set.size()]);
@@ -79,14 +78,14 @@ public class RecursiveFileSearcherImpl implements RecursiveFileSearcher
 			// ファイル更新日付
 			Date lastModifiedDate = new Date(file.lastModified());
 			String lastModifiedDateStr = new SimpleDateFormat("yyyyMMdd")
-			        .format(lastModifiedDate);
+					.format(lastModifiedDate);
 
 			// 指定の日付（１日をミリ秒で計算）
 			long oneDayTime = 24L * 60L * 60L * 1000L;
 			long periodTime = oneDayTime * Math.abs(period);
 			Date designatedDate = new Date(System.currentTimeMillis() - periodTime);
 			String designatedDateStr = new SimpleDateFormat("yyyyMMdd")
-			        .format(designatedDate);
+					.format(designatedDate);
 			if (period > 0)
 			{
 				if (lastModifiedDateStr.compareTo(designatedDateStr) < 0)

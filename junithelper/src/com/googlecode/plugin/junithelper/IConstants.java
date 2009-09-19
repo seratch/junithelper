@@ -25,23 +25,23 @@ public interface IConstants
 		public static class Common
 		{
 			public static final String TITLE = "JUnit Helper";
-			public static final String EXCUTE_QUESTION = "実行してもよろしいですか？";
-			public static final String EXECUTE_AFTER_SETTING = "設定後に再度、実行して下さい。";
-			public static final String NORMAL_END = "正常に完了しました。";
-			public static final String ABNORMAL_END = "異常終了しました。";
-			public static final String REQUIRED = "対象を選択して下さい。";
-			public static final String SELECT_ONLY_ONE = "選択できる対象は1件のみです。";
-			public static final String ALREADY_EXIST = "は既に存在しています。";
-			public static final String NOT_EXIST = "は存在しません。";
-			public static final String COMFIRM_CREATE_NEW_FILE = "新しく作成しますか？";
-			public static final String RESOURCE_SYNC_SERVER_NOT_RUNNING = "ResourceSynchronizerがインストールされていない、もしくは同期サーバが起動していません。";
+			public static final String EXCUTE_QUESTION = "Execute OK?";
+			public static final String EXECUTE_AFTER_SETTING = "Execute after setting.";
+			public static final String NORMAL_END = "Normal end.";
+			public static final String ABNORMAL_END = "Error end.";
+			public static final String REQUIRED = "Please select command target.";
+			public static final String SELECT_ONLY_ONE = "Please select only one target.";
+			public static final String ALREADY_EXIST = "Already exist";
+			public static final String NOT_EXIST = "Not exist.";
+			public static final String COMFIRM_CREATE_NEW_FILE = "New file create?";
+			public static final String RESOURCE_SYNC_SERVER_NOT_RUNNING = "Not running : ResourceSynchronizer";
 		}
 
 		public static class TestCase
 		{
-			public static final String SELECT_JAVA_FILE = "このコマンドはJavaファイルを選択してから実行して下さい。";
-			public static final String NOT_TEST_CLASS = "このコマンドはテストクラスを選択して実行して下さい。";
-			public static final String ALREAY_OPEN_TEST_CLASS = "既にテストクラスを開いています。";
+			public static final String SELECT_JAVA_FILE = "Please select *.java file.";
+			public static final String NOT_TEST_CLASS = "Please select test class file.";
+			public static final String ALREAY_OPEN_TEST_CLASS = "This is a test class.";
 		}
 
 	}

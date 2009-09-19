@@ -66,6 +66,7 @@
    </extension>
    -->
    
+   <!--
    <extension point="org.eclipse.ui.preferencePages">
       <page
             category="JUnit Helper"
@@ -73,11 +74,13 @@
             id="com.googlecode.plugin.junithelper.page.JUnitHelperPreferencePage"
             name="JUnit Helper"/>
    </extension>
+
    <extension point="org.eclipse.core.runtime.preferences">
       <initializer 
       		class="com.googlecode.plugin.junithelper.page.JUnitHelperPreferencePageInitializer"
       	/>
    </extension>
+   -->
 
 	<!-- create new test class -->
 	<extension point="org.eclipse.ui.popupMenus">

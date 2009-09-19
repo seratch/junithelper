@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: JUnitHelper
+Bundle-Name: JUnit Helper
 Bundle-SymbolicName: com.googlecode.plugin.junithelper;singleton:=true
 Bundle-Version: 0.0.1
 Bundle-Localization: plugin
