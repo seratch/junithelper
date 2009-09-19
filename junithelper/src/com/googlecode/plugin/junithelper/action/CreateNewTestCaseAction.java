@@ -1,17 +1,16 @@
 package com.googlecode.plugin.junithelper.action;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 
-import org.eclipse.core.internal.resources.File;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.jdt.internal.core.CompilationUnit;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -24,7 +23,8 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 
-import com.googlecode.plugin.junithelper.IConstants;
+import com.googlecode.plugin.junithelper.STR;
+import com.googlecode.plugin.junithelper.util.ResourcePathUtil;
 import com.googlecode.plugin.junithelper.util.ResourceSynchronizerUtil;
 
 public class CreateNewTestCaseAction extends Action implements IActionDelegate
@@ -44,17 +44,19 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 
 		InputStream javaFileIStream = null;
 		OutputStreamWriter testFileOSWriter = null;
-		String projectName = null;
 		boolean refreshFlag = true;
-		String testTargetClassname = null;
-		String testCaseFilename = null;
-		String testCaseClassname = null;
-		String testCaseCreateDirpath = null;
-		String testCaseResource = null;
+		String projectName = null;
 		String testCaseDirResource = null;
+		String testCaseResource = null;
 
 		try
 		{
+			IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+
+			String testTargetClassname = null;
+			String testCaseFilename = null;
+			String testCaseClassname = null;
+			String testCaseCreateDirpath = null;
 
 			StructuredSelection structuredSelection = null;
 			if (selection instanceof StructuredSelection)
@@ -67,142 +69,90 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 			{
 				// required select
 				Shell shell = new Shell();
-				MessageDialog.openWarning(shell, IConstants.Dialog.Common.TITLE,
-						IConstants.Dialog.Common.REQUIRED);
+				MessageDialog.openWarning(shell, STR.Dialog.Common.TITLE,
+						STR.Dialog.Common.REQUIRED);
 				refreshFlag = false;
 			} else if (structuredSelection != null && structuredSelection.size() > 1)
 			{
 				// select one only
 				Shell shell = new Shell();
-				MessageDialog.openWarning(shell, IConstants.Dialog.Common.TITLE,
-						IConstants.Dialog.Common.SELECT_ONLY_ONE);
+				MessageDialog.openWarning(shell, STR.Dialog.Common.TITLE,
+						STR.Dialog.Common.SELECT_ONLY_ONE);
 				refreshFlag = false;
 			} else
 			{
 
-				// get test case file create filesystem path
-				String selected = "";
+				// path started from project root
+				String pathFromProjectRoot = ResourcePathUtil
+						.getPathStartsFromProjectRoot(structuredSelection);
 
-				if (structuredSelection == null)
-				{
-					// java editor
-					IWorkbenchPage activePage = PlatformUI.getWorkbench()
-							.getActiveWorkbenchWindow().getActivePage();
-					selected = activePage.getActiveEditor().getTitleToolTip();
-					String[] dirArr = selected.split(IConstants.DIR_SEPARATOR);
-					projectName = dirArr[0];
-					selected = "";
-					for (int i = 1; i < dirArr.length; i++)
-					{
-						selected += dirArr[i] + IConstants.DIR_SEPARATOR;
-					}
-					selected = selected.replace(".java/", ".java");
-					testTargetClassname = dirArr[dirArr.length - 1].replace(".java",
-							IConstants.EMPTY_STIRNG);
-					testCaseFilename = testTargetClassname + "Test" + IConstants.JAVA_EXP;
-					testCaseClassname = testCaseFilename.replace(IConstants.JAVA_EXP,
-							IConstants.EMPTY_STIRNG);
+				// path started from project root
+				// ex. /{projectName}/src/main/java/hoge/foo/var/TestTarget.java
+				String[] dirArrFromProjectRoot = pathFromProjectRoot
+						.split(STR.DIR_SEPARATOR);
+				// test case file create filesystem path
+				String selected = STR.EMPTY_STIRNG;
+				int len = dirArrFromProjectRoot.length;
+				for (int i = 2; i < len; i++)
+					selected += dirArrFromProjectRoot[i] + STR.DIR_SEPARATOR;
 
-				} else if (structuredSelection.getFirstElement() instanceof File)
-				{
-					// navigator
-					projectName = selection.toString().split("/")[1];
-					String resourceStr = selection.toString().split("src")[1].replace(
-							"]", IConstants.EMPTY_STIRNG);
-					String[] dirSepArr = resourceStr.split(IConstants.DIR_SEPARATOR);
-					testTargetClassname = dirSepArr[dirSepArr.length - 1].replace(
-							IConstants.JAVA_EXP, IConstants.EMPTY_STIRNG);
-					testCaseFilename = dirSepArr[dirSepArr.length - 1].replace(
-							IConstants.JAVA_EXP, "Test" + IConstants.JAVA_EXP);
-					testCaseClassname = testCaseFilename.replace(IConstants.JAVA_EXP,
-							IConstants.EMPTY_STIRNG);
+				// current project name
+				projectName = dirArrFromProjectRoot[1];
 
-					selected = "src";
-					for (String each : dirSepArr)
-					{
-						if (each != null && !each.equals(IConstants.EMPTY_STIRNG))
-							selected += IConstants.DIR_SEPARATOR + each;
-					}
+				// last element is test class file name
+				String testTargetClassFilename = dirArrFromProjectRoot[dirArrFromProjectRoot.length - 1];
+				testTargetClassname = testTargetClassFilename.replace(STR.JAVA_EXP,
+						STR.EMPTY_STIRNG);
 
-				} else if (structuredSelection.getFirstElement() instanceof CompilationUnit)
-				{
-
-					// package explorer
-					String classInfoStr = selection.toString();
-					selected = classInfoStr.split("\\[in")[1].trim();
-					projectName = classInfoStr.split("\\[in")[3].trim().split("]")[0];
-					selected = selected.replaceAll("\\.", IConstants.DIR_SEPARATOR);
-					testTargetClassname = classInfoStr.split(IConstants.RegExp.JAVA_EXP)[0]
-							.replaceAll("(\\[|\\])", IConstants.EMPTY_STIRNG).replaceAll(
-									"Working copy ", IConstants.EMPTY_STIRNG).trim();
-					testCaseFilename = testTargetClassname + "Test" + IConstants.JAVA_EXP;
-					testCaseClassname = testCaseFilename.replace(IConstants.JAVA_EXP,
-							IConstants.EMPTY_STIRNG);
-
-					selected = "src/main/java/" + selected + IConstants.DIR_SEPARATOR
-							+ testTargetClassname + ".java";
-
-				}
+				// test class name to create
+				testCaseClassname = testTargetClassname + STR.SUFFIX_OF_TESTCASE;
+				// test case name to open
+				testCaseFilename = testCaseClassname + STR.JAVA_EXP;
 
 				// get workspace path on os file system
-				String projectRootPath = "";
-				String baseDirDev = System.getProperty("osgi.logfile");
-				// C:\works\galileo_plugin\runtime-EclipseApplication\.metadata\.log
-				baseDirDev = baseDirDev.replaceAll(IConstants.WINDOWS_DIR_SEPARATOR,
-						IConstants.DIR_SEPARATOR);
-				String wsDirArr[] = baseDirDev.split(IConstants.DIR_SEPARATOR);
-				projectRootPath = "";
-				for (int i = 0; i < wsDirArr.length; i++)
-				{
-					if (wsDirArr[i].equals(".metadata"))
-						break;
-					projectRootPath += wsDirArr[i] + IConstants.DIR_SEPARATOR;
-				}
-				projectRootPath += projectName + IConstants.DIR_SEPARATOR;
+				String projectRootPath = workspaceRoot.getLocation() + STR.DIR_SEPARATOR
+						+ projectName + STR.DIR_SEPARATOR;
 
-				String[] tmpStrArr = projectRootPath.split(IConstants.DIR_SEPARATOR);
-				projectName = tmpStrArr[tmpStrArr.length - 1];
-
-				testCaseResource = selected.replace("src/main/java", "src/test/java")
-						.replace(".java", "Test.java");
-				String[] selectedDirArr = selected.split(IConstants.DIR_SEPARATOR);
+				testCaseResource = selected.replace(STR.SRC_MAIN_JAVA, STR.SRC_TEST_JAVA)
+						.replace(STR.JAVA_EXP, STR.SUFFIX_OF_TESTCASE + STR.JAVA_EXP);
+				String[] selectedDirArr = selected.split(STR.DIR_SEPARATOR);
 				testCaseDirResource = "";
 				for (int i = 0; i < selectedDirArr.length - 1; i++)
 				{
-					testCaseDirResource += selectedDirArr[i] + IConstants.DIR_SEPARATOR;
+					testCaseDirResource += selectedDirArr[i] + STR.DIR_SEPARATOR;
 				}
-				testCaseDirResource = testCaseDirResource.replace("src/main/java",
-						"src/test/java");
+				testCaseDirResource = testCaseDirResource.replace(STR.SRC_MAIN_JAVA,
+						STR.SRC_TEST_JAVA);
 				testCaseCreateDirpath = projectRootPath + testCaseDirResource;
 
-				java.io.File testDir = new java.io.File(testCaseCreateDirpath);
+				File testDir = new File(testCaseCreateDirpath);
 
 				// check directory exist
-				String[] dirArr = testCaseCreateDirpath.split(IConstants.DIR_SEPARATOR);
-				String tmpDirPath = "";
-				String tmpResourceDirPath = "";
+				String[] dirArr = testCaseCreateDirpath.split(STR.DIR_SEPARATOR);
+				String tmpDirPath = STR.EMPTY_STIRNG;
+				String tmpResourceDirPath = STR.EMPTY_STIRNG;
 				for (String each : dirArr)
 				{
-					tmpDirPath += IConstants.DIR_SEPARATOR + each;
+					tmpDirPath += STR.DIR_SEPARATOR + each;
 					java.io.File tmpDir = new java.io.File(tmpDirPath);
 
 					// skip until project root dir
 					if (tmpDir.getPath().length() <= projectRootPath.length())
 						continue;
 
-					tmpResourceDirPath += IConstants.DIR_SEPARATOR + each;
+					tmpResourceDirPath += STR.DIR_SEPARATOR + each;
 					if (!tmpDir.exists())
 					{
 						if (!tmpDir.mkdir())
 							System.err.println("create directory error : "
 									+ tmpDir.getPath());
 						if (!ResourceSynchronizerUtil.accessSynchronizeServer(null,
-								projectName + IConstants.DIR_SEPARATOR
-										+ tmpResourceDirPath + "/.." + "=INFINITE"))
+								projectName + STR.DIR_SEPARATOR + tmpResourceDirPath
+										+ "/.." + "=INFINITE"))
 						{
-							String msg = IConstants.Dialog.Common.RESOURCE_SYNC_SERVER_NOT_RUNNING;
+							String msg = STR.Dialog.Common.RESOURCE_SYNC_SERVER_NOT_RUNNING;
 							MessageDialog.openWarning(new Shell(),
-									IConstants.Dialog.Common.TITLE, msg);
+									STR.Dialog.Common.TITLE, msg);
 							System.err
 									.println("access error : ResourceSynchronizer server");
 						}
@@ -215,11 +165,10 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 
 				// resource sync
 				if (!ResourceSynchronizerUtil.accessSynchronizeServer(null, projectName
-						+ IConstants.DIR_SEPARATOR + testCaseDirResource + "=ONE"))
+						+ STR.DIR_SEPARATOR + testCaseDirResource + "=ONE"))
 				{
-					MessageDialog.openWarning(new Shell(),
-							IConstants.Dialog.Common.TITLE,
-							IConstants.Dialog.Common.RESOURCE_SYNC_SERVER_NOT_RUNNING);
+					MessageDialog.openWarning(new Shell(), STR.Dialog.Common.TITLE,
+							STR.Dialog.Common.RESOURCE_SYNC_SERVER_NOT_RUNNING);
 					System.err.println("access error - ResourceSynchronizer server");
 				}
 
@@ -227,40 +176,40 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 				{
 					// 既に存在する場合上書き確認
 					java.io.File outputFile = new java.io.File(testCaseCreateDirpath
-							+ IConstants.DIR_SEPARATOR + testCaseFilename);
+							+ STR.DIR_SEPARATOR + testCaseFilename);
 					if (!outputFile.exists()
 							|| MessageDialog.openConfirm(new Shell(),
-									IConstants.Dialog.Common.TITLE,
-									IConstants.Dialog.Common.ALREADY_EXIST + " ("
+									STR.Dialog.Common.TITLE,
+									STR.Dialog.Common.ALREADY_EXIST + " ("
 											+ testCaseFilename + ")"))
 					{
 
 						// test class generator
 						testFileOSWriter = new OutputStreamWriter(new FileOutputStream(
-								testCaseCreateDirpath + IConstants.DIR_SEPARATOR
+								testCaseCreateDirpath + STR.DIR_SEPARATOR
 										+ testCaseFilename));
 
 						StringBuffer sb = new StringBuffer();
 
-						String CRLF = IConstants.CARRIAGE_RETURN + IConstants.LINE_FEED;
+						String CRLF = STR.CARRIAGE_RETURN + STR.LINE_FEED;
 
 						// get package
-						String testPackageString = IConstants.EMPTY_STIRNG;
-						String[] tmpDirArr = selected.split(IConstants.DIR_SEPARATOR);
+						String testPackageString = STR.EMPTY_STIRNG;
+						String[] tmpDirArr = selected.split(STR.DIR_SEPARATOR);
 						for (int i = 3; i < tmpDirArr.length - 2; i++)
 							testPackageString += tmpDirArr[i] + ".";
 						testPackageString += tmpDirArr[tmpDirArr.length - 2];
 
 						sb.append("package " + testPackageString + ";" + CRLF);
 
-						sb.append("" + CRLF);
+						sb.append(STR.EMPTY_STIRNG + CRLF);
 						sb.append("import junit.framework.TestCase;" + CRLF);
-						sb.append("" + CRLF);
+						sb.append(STR.EMPTY_STIRNG + CRLF);
 						sb.append("public class " + testCaseClassname
 								+ " extends TestCase {" + CRLF);
-						sb.append("" + CRLF);
-						sb.append("" + CRLF);
-						sb.append("" + CRLF);
+						sb.append(STR.EMPTY_STIRNG + CRLF);
+						sb.append(STR.EMPTY_STIRNG + CRLF);
+						sb.append(STR.EMPTY_STIRNG + CRLF);
 						sb.append("}" + CRLF);
 
 						testFileOSWriter.write(sb.toString());
@@ -293,11 +242,11 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 		if (refreshFlag
 				&& !ResourceSynchronizerUtil.accessSynchronizeServer(null,
 				// projectName + "=INFINITE") ) {
-						projectName + IConstants.DIR_SEPARATOR + testCaseDirResource
-								+ "/.." + "=INFINITE"))
+						projectName + STR.DIR_SEPARATOR + testCaseDirResource + "/.."
+								+ "=INFINITE"))
 		{
-			MessageDialog.openWarning(new Shell(), IConstants.Dialog.Common.TITLE,
-					IConstants.Dialog.Common.RESOURCE_SYNC_SERVER_NOT_RUNNING);
+			MessageDialog.openWarning(new Shell(), STR.Dialog.Common.TITLE,
+					STR.Dialog.Common.RESOURCE_SYNC_SERVER_NOT_RUNNING);
 			System.err.println("access error - ResourceSynchronizer server");
 
 		} else
@@ -348,7 +297,6 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 	public void selectionChanged(IAction action, ISelection selection)
 	{
 		this.selection = selection;
-		// TODO : popup menu enable/disable
 	}
 
 }

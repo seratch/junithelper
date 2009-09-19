@@ -1,6 +1,6 @@
 package com.googlecode.plugin.junithelper;
 
-public interface IConstants
+public interface STR
 {
 	public static final String ENCODING = "encoding";
 	public static final String WINDOWS_DIR_SEPARATOR = "\\\\";
@@ -13,9 +13,14 @@ public interface IConstants
 	public static final String JAVA_EXP = ".java";
 	public static final String PROPERTIES_EXP = ".properties";
 
+	public static final String SUFFIX_OF_TESTCASE = "Test";
+	public static final String SRC_MAIN_JAVA = "src/main/java";
+	public static final String SRC_TEST_JAVA = "src/test/java";
+
 	public static class RegExp
 	{
 
+		public static final String DOT = "\\.";
 		public static final String JAVA_EXP = "\\.java";
 
 	}

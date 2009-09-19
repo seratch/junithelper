@@ -6,7 +6,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.googlecode.plugin.junithelper.Activator;
-import com.googlecode.plugin.junithelper.IConstants;
+import com.googlecode.plugin.junithelper.STR;
 
 public class PreferencePage extends FieldEditorPreferencePage implements
         IWorkbenchPreferencePage
@@ -16,7 +16,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 	{
 
 		super(FieldEditorPreferencePage.GRID);
-		setDescription(IConstants.Preference.Common.DESCRIPTION);
+		setDescription(STR.Preference.Common.DESCRIPTION);
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
 	}
 
@@ -28,7 +28,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 	protected void createFieldEditors()
 	{
 		{
-			addField(new DirectoryFieldEditor(IConstants.Preference.LANG, "Language",
+			addField(new DirectoryFieldEditor(STR.Preference.LANG, "Language",
 			        getFieldEditorParent()));
 		}
 	}
