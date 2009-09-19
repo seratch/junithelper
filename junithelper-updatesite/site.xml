@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/com.googlecode.plugin.junithelper_0.0.1.jar" id="com.googlecode.plugin.junithelper" version="0.0.1"/>
+</site>
