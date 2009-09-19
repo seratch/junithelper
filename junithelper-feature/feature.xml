@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="com.googlecode.plugin.junithelper"
+      id="com.googlecode.plugin.junithelper.feature"
       label="JUnit Helper"
-      version="0.0.1"
+      version="0.0.2"
       provider-name="Kazuhiro Sera"
       plugin="com.googlecode.plugin.junithelper">
 
@@ -42,7 +42,7 @@
          id="com.googlecode.plugin.junithelper"
          download-size="0"
          install-size="0"
-         version="0.0.1"
+         version="0.0.2"
          unpack="false"/>
 
 </feature>

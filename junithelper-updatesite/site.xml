@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/com.googlecode.plugin.junithelper_0.0.1.jar" id="com.googlecode.plugin.junithelper" version="0.0.1"/>
+   <feature url="features/com.googlecode.plugin.junithelper.feature_0.0.2.jar" id="com.googlecode.plugin.junithelper.feature" version="0.0.2">
+      <category name="JUnit Helper"/>
+   </feature>
+   <category-def name="JUnit Helper" label="JUnit Helper">
+      <description>
+         JUnit Helper
+      </description>
+   </category-def>
 </site>

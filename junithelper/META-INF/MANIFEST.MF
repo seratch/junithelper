@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JUnit Helper
 Bundle-SymbolicName: com.googlecode.plugin.junithelper;singleton:=true
-Bundle-Version: 0.0.1
+Bundle-Version: 0.0.2
 Bundle-Localization: plugin
 Bundle-ClassPath: .,
  lib/commons-httpclient-3.1.jar

@@ -231,8 +231,9 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 							+ IConstants.DIR_SEPARATOR + testCaseFilename);
 					if (!outputFile.exists()
 							|| MessageDialog.openConfirm(new Shell(),
-									IConstants.Dialog.Common.TITLE, testCaseFilename
-											+ IConstants.Dialog.Common.ALREADY_EXIST))
+									IConstants.Dialog.Common.TITLE,
+									IConstants.Dialog.Common.ALREADY_EXIST + " ("
+											+ testCaseFilename + ")"))
 					{
 
 						// test class generator
