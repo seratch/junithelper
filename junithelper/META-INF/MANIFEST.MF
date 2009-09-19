@@ -27,4 +27,6 @@ Export-Package: com.googlecode.plugin.junithelper,
  com.googlecode.plugin.junithelper.handler,
  com.googlecode.plugin.junithelper.page,
  com.googlecode.plugin.junithelper.util,
- com.googlecode.plugin.junithelper.util.impl
+ com.googlecode.plugin.junithelper.util.impl,
+ org.apache.commons.httpclient,
+ org.apache.commons.httpclient.methods
