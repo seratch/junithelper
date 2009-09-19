@@ -2,14 +2,18 @@ package com.googlecode.plugin.junithelper;
 
 public interface STR
 {
-	public static final String ENCODING = "encoding";
-	public static final String WINDOWS_DIR_SEPARATOR = "\\\\";
-	public static final String DIR_SEPARATOR = "/";
-	public static final String EMPTY_STIRNG = "";
-	public static final String COMMA_STIRNG = ",";
+
+	public static final String WINDOWS_DIR_SEP = "\\\\";
+
+	public static final String DIR_SEP = "/";
+	public static final String EMPTY = "";
+	public static final String COMMA = ",";
+	public static final String DOT = ".";
+	public static final String ASTERISK = "*";
+
 	public static final String CARRIAGE_RETURN = "\r";
 	public static final String LINE_FEED = "\n";
-	public static final String ENCODING_UTF_8 = "UTF-8";
+
 	public static final String JAVA_EXP = ".java";
 	public static final String PROPERTIES_EXP = ".properties";
 

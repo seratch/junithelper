@@ -13,7 +13,7 @@ public class ResourcePathUtil
 	public static String getPathStartsFromProjectRoot(StructuredSelection structuredSelection)
 	{
 
-		String pathFromProjectRoot = STR.EMPTY_STIRNG;
+		String pathFromProjectRoot = STR.EMPTY;
 		if (structuredSelection == null)
 		{
 			// ----------------------------------------
@@ -21,7 +21,7 @@ public class ResourcePathUtil
 			// ----------------------------------------
 			IWorkbenchPage activePage = PlatformUI.getWorkbench()
 					.getActiveWorkbenchWindow().getActivePage();
-			pathFromProjectRoot = STR.DIR_SEPARATOR
+			pathFromProjectRoot = STR.DIR_SEP
 					+ activePage.getActiveEditor().getTitleToolTip();
 
 		} else if (structuredSelection.getFirstElement() instanceof org.eclipse.core.internal.resources.File)
@@ -30,7 +30,7 @@ public class ResourcePathUtil
 			// navigator
 			// ----------------------------------------
 			pathFromProjectRoot = structuredSelection.toString().replace("[L",
-					STR.EMPTY_STIRNG).replace("]", STR.EMPTY_STIRNG);
+					STR.EMPTY).replace("]", STR.EMPTY);
 
 		} else if (structuredSelection.getFirstElement() instanceof org.eclipse.jdt.internal.core.CompilationUnit)
 		{
@@ -40,14 +40,14 @@ public class ResourcePathUtil
 			// TODO better implementation
 			String cuToString = structuredSelection.toString();
 			String packagePath = cuToString.split("\\[in")[1].trim().replaceAll("\\.",
-					STR.DIR_SEPARATOR);
+					STR.DIR_SEP);
 			String projectName = cuToString.split("\\[in")[3].trim().split("]")[0];
 			String testTargetClassname = cuToString.split(STR.RegExp.JAVA_EXP)[0]
-					.replaceAll("(\\[|\\])", STR.EMPTY_STIRNG).replaceAll(
-							"Working copy ", STR.EMPTY_STIRNG).trim();
-			pathFromProjectRoot = STR.DIR_SEPARATOR + projectName + STR.DIR_SEPARATOR
-					+ STR.SRC_MAIN_JAVA + STR.DIR_SEPARATOR + packagePath
-					+ STR.DIR_SEPARATOR + testTargetClassname + STR.JAVA_EXP;
+					.replaceAll("(\\[|\\])", STR.EMPTY).replaceAll(
+							"Working copy ", STR.EMPTY).trim();
+			pathFromProjectRoot = STR.DIR_SEP + projectName + STR.DIR_SEP
+					+ STR.SRC_MAIN_JAVA + STR.DIR_SEP + packagePath
+					+ STR.DIR_SEP + testTargetClassname + STR.JAVA_EXP;
 
 		}
 		return pathFromProjectRoot;

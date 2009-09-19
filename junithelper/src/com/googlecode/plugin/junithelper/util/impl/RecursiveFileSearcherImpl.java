@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TreeSet;
 
+import com.googlecode.plugin.junithelper.STR;
 import com.googlecode.plugin.junithelper.util.RecursiveFileSearcher;
 
 public class RecursiveFileSearcherImpl implements RecursiveFileSearcher
@@ -16,11 +17,11 @@ public class RecursiveFileSearcherImpl implements RecursiveFileSearcher
 
 	public File[] listFiles(String directoryPath, String fileName)
 	{
-		// ワイルドカード文字として*を正規表現に変換
+		// replace * to wildcard
 		if (fileName != null)
 		{
-			fileName = fileName.replace(".", "\\.");
-			fileName = fileName.replace("*", ".*");
+			fileName = fileName.replace(STR.DOT, STR.RegExp.DOT);
+			fileName = fileName.replace(STR.ASTERISK, STR.DOT + STR.ASTERISK);
 		}
 		return listFiles(directoryPath, fileName, TYPE_FILE, true, 0);
 	}
@@ -35,12 +36,12 @@ public class RecursiveFileSearcherImpl implements RecursiveFileSearcher
 			throw new IllegalArgumentException("Not directory : " + dir.getAbsolutePath());
 		}
 		File[] files = dir.listFiles();
-		// その出力
 		for (int i = 0; i < files.length; i++)
 		{
 			File file = files[i];
 			addFile(type, fileNamePattern, set, file, period);
-			// 再帰的に検索＆ディレクトリならば再帰的にリストに追加
+			// recursive search
+			// add to list if target is directory
 			if (isRecursive && file.isDirectory())
 			{
 				listFiles(file.getAbsolutePath(), fileNamePattern, type, isRecursive,
@@ -68,19 +69,19 @@ public class RecursiveFileSearcherImpl implements RecursiveFileSearcher
 			}
 			break;
 		}
+
 		if (match != null && !file.getName().matches(match))
-		{
 			return;
-		}
-		// 指定日数経過しているかどうかの指定がある場合
+
+		// if specified modified date
 		if (period != 0)
 		{
-			// ファイル更新日付
+			// modified date
 			Date lastModifiedDate = new Date(file.lastModified());
 			String lastModifiedDateStr = new SimpleDateFormat("yyyyMMdd")
 					.format(lastModifiedDate);
 
-			// 指定の日付（１日をミリ秒で計算）
+			// specified date (milli sec)
 			long oneDayTime = 24L * 60L * 60L * 1000L;
 			long periodTime = oneDayTime * Math.abs(period);
 			Date designatedDate = new Date(System.currentTimeMillis() - periodTime);
@@ -100,7 +101,7 @@ public class RecursiveFileSearcherImpl implements RecursiveFileSearcher
 				}
 			}
 		}
-		// 全ての条件に該当する場合リストに格納
+		// add to list if matched all conditions
 		set.add(file);
 
 	}
