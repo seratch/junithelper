@@ -5,7 +5,7 @@ Bundle-SymbolicName: com.googlecode.plugin.junithelper;singleton:=true
 Bundle-Version: 0.0.4
 Bundle-Localization: plugin
 Bundle-ClassPath: .
-Bundle-Activator: com.googlecode.plugin.junithelper.Activator
+Bundle-Activator: org.junithelper.plugin.Activator
 Bundle-Vendor: Kazuhiro Sera
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -19,8 +19,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.compare,
  org.eclipse.core.expressions,
  org.eclipse.jdt.core
-Export-Package: com.googlecode.plugin.junithelper,
- com.googlecode.plugin.junithelper.action,
- com.googlecode.plugin.junithelper.handler,
- com.googlecode.plugin.junithelper.page,
- com.googlecode.plugin.junithelper.util
+Export-Package: org.junithelper.plugin,
+ org.junithelper.plugin.action,
+ org.junithelper.plugin.handler,
+ org.junithelper.plugin.page,
+ org.junithelper.plugin.util

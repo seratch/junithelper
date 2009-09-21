@@ -1,4 +1,4 @@
-package com.googlecode.plugin.junithelper.util;
+package org.junithelper.plugin.util;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;

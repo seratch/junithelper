@@ -2,19 +2,33 @@
 <?eclipse version="3.3"?>
 <plugin>
 
+   <extension point="org.eclipse.ui.preferencePages">
+      <page
+            category="JUnit Helper"
+            class="org.junithelper.plugin.page.JUnitHelperPreferencePage"
+            id="org.junithelper.plugin.page.JUnitHelperPreferencePage"
+            name="JUnit Helper"/>
+   </extension>
+
+   <extension point="org.eclipse.core.runtime.preferences">
+      <initializer 
+      		class="org.junithelper.plugin.page.JUnitHelperPreferencePageInitializer"
+      	/>
+   </extension>
+
    <extension point="org.eclipse.ui.commands">
       <category
-            id="com.googlecode.plugin.junithelper.command.category"
+            id="org.junithelper.plugin.command.category"
             name="JUnit Helper">
       </category>
       <command
-            id="com.googlecode.plugin.junithelper.action.OpenTestCaseActionCommand"
-            categoryId="com.googlecode.plugin.junithelper.command.category"
+            id="org.junithelper.plugin.action.OpenTestCaseActionCommand"
+            categoryId="org.junithelper.plugin.command.category"
             name="Open Test Class">
       </command>
       <command
-            id="com.googlecode.plugin.junithelper.action.OpenTestTargetActionCommand"
-            categoryId="com.googlecode.plugin.junithelper.command.category"
+            id="org.junithelper.plugin.action.OpenTestTargetActionCommand"
+            categoryId="org.junithelper.plugin.command.category"
             name="Open Test Target">
       </command>
    </extension>
@@ -22,24 +36,24 @@
    <extension
          point="org.eclipse.ui.handlers">
       <handler
-            class="com.googlecode.plugin.junithelper.handler.OpenTestCaseHandler"
-            commandId="com.googlecode.plugin.junithelper.action.OpenTestCaseActionCommand" >
+            class="org.junithelper.plugin.handler.OpenTestCaseHandler"
+            commandId="org.junithelper.plugin.action.OpenTestCaseActionCommand" >
       </handler>
       <handler
-            class="com.googlecode.plugin.junithelper.handler.OpenTestTargetHandler"
-            commandId="com.googlecode.plugin.junithelper.action.OpenTestTargetActionCommand" >
+            class="org.junithelper.plugin.handler.OpenTestTargetHandler"
+            commandId="org.junithelper.plugin.action.OpenTestTargetActionCommand" >
       </handler>
    </extension>
    
    <extension
          point="org.eclipse.ui.bindings">
       <key
-            commandId="com.googlecode.plugin.junithelper.action.OpenTestTargetActionCommand"
+            commandId="org.junithelper.plugin.action.OpenTestTargetActionCommand"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+8">
       </key>
       <key
-            commandId="com.googlecode.plugin.junithelper.action.OpenTestCaseActionCommand"
+            commandId="org.junithelper.plugin.action.OpenTestCaseActionCommand"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+9">
       </key>
@@ -50,62 +64,62 @@
 
 		<!-- package explorer -->
 		<objectContribution
-			id="com.googlecode.plugin.junithelper.popupmenu.contribution"
+			id="org.junithelper.plugin.popupmenu.contribution"
 			objectClass="org.eclipse.jdt.core.IJavaElement">
 			<menu
-				id="com.googlecode.plugin.junithelper.popupmenu"
+				id="org.junithelper.plugin.popupmenu"
 				label="JUnit Helper"
 				path="additions">
 			</menu>
 			<action
 				label="Open Test Target Ctrl+8"
-				class="com.googlecode.plugin.junithelper.action.OpenTestTargetAction"
-				id="com.googlecode.plugin.junithelper.action.OpenTestTargetAction.viewer">
+				class="org.junithelper.plugin.action.OpenTestTargetAction"
+				id="org.junithelper.plugin.action.OpenTestTargetAction.viewer">
 			</action>
 			<action
-		         class="com.googlecode.plugin.junithelper.action.OpenTestCaseAction"
-		         id="com.googlecode.plugin.junithelper.action.OpenTestCaseAction.object"
+		         class="org.junithelper.plugin.action.OpenTestCaseAction"
+		         id="org.junithelper.plugin.action.OpenTestCaseAction.object"
 		         label="Open Test Class Ctrl+9"
-		         menubarPath="com.googlecode.plugin.junithelper.popupmenu/additions" >
+		         menubarPath="org.junithelper.plugin.popupmenu/additions" >
 			</action>
 		</objectContribution>
 
 		<!-- navigator -->
 		<objectContribution
-			id="com.googlecode.plugin.junithelper.popupmenu.contribution"
+			id="org.junithelper.plugin.popupmenu.contribution"
 			nameFilter="*.java"
 			objectClass="org.eclipse.core.resource.IResource">
 			<menu
-				id="com.googlecode.plugin.junithelper.popupmenu"
+				id="org.junithelper.plugin.popupmenu"
 				label="JUnit Helper"
 				path="additions">
 			</menu>
 			<action
 				label="Open Test Target Ctrl+8"
-				class="com.googlecode.plugin.junithelper.action.OpenTestTargetAction"
-				id="com.googlecode.plugin.junithelper.action.OpenTestTargetAction.viewer">
+				class="org.junithelper.plugin.action.OpenTestTargetAction"
+				id="org.junithelper.plugin.action.OpenTestTargetAction.viewer">
 			</action>
 			<action
-		         class="com.googlecode.plugin.junithelper.action.OpenTestCaseAction"
-		         id="com.googlecode.plugin.junithelper.action.OpenTestCaseAction.object"
+		         class="org.junithelper.plugin.action.OpenTestCaseAction"
+		         id="org.junithelper.plugin.action.OpenTestCaseAction.object"
 		         label="Open Test Class Ctrl+9"
-		         menubarPath="com.googlecode.plugin.junithelper.popupmenu/additions" >
+		         menubarPath="org.junithelper.plugin.popupmenu/additions" >
 			</action>
 		</objectContribution>
 
 		<!-- java editor -->
 		<viewerContribution
 			targetID="#CompilationUnitEditorContext"
-			id="com.googlecode.plugin.junithelper.test.framework.create">
+			id="org.junithelper.plugin.test.framework.create">
 			<action
 				label="Open Test Target Ctrl+8"
-				class="com.googlecode.plugin.junithelper.action.OpenTestTargetAction"
-				id="com.googlecode.plugin.junithelper.action.OpenTestTargetAction.viewer">
+				class="org.junithelper.plugin.action.OpenTestTargetAction"
+				id="org.junithelper.plugin.action.OpenTestTargetAction.viewer">
 			</action>
 			<action
 				label="Open Test Class Ctrl+9"
-				class="com.googlecode.plugin.junithelper.action.OpenTestCaseAction"
-				id="com.googlecode.plugin.junithelper.action.OpenTestCaseAction.viewer">
+				class="org.junithelper.plugin.action.OpenTestCaseAction"
+				id="org.junithelper.plugin.action.OpenTestCaseAction.viewer">
 			</action>
 		</viewerContribution>
 
@@ -123,31 +137,15 @@
          <menu
                label="JUnit Helper"
                mnemonic="M"
-               id="com.googlecode.plugin.junithelper.menu.JUnitHelperMenu">
+               id="org.junithelper.plugin.menu.JUnitHelperMenu">
             <command
-                  commandId="com.googlecode.plugin.junithelper.action.OpenTestCaseActionCommand"
+                  commandId="org.junithelper.plugin.action.OpenTestCaseActionCommand"
                   mnemonic="U"
-                  id="com.googlecode.plugin.junithelper.action.OpenTestCaseActionCommand">
+                  id="org.junithelper.plugin.action.OpenTestCaseActionCommand">
             </command>
          </menu>
       </menuContribution>
    </extension>
    -->
    
-   <!--
-   <extension point="org.eclipse.ui.preferencePages">
-      <page
-            category="JUnit Helper"
-            class="com.googlecode.plugin.junithelper.page.JUnitHelperPreferencePage"
-            id="com.googlecode.plugin.junithelper.page.JUnitHelperPreferencePage"
-            name="JUnit Helper"/>
-   </extension>
-
-   <extension point="org.eclipse.core.runtime.preferences">
-      <initializer 
-      		class="com.googlecode.plugin.junithelper.page.JUnitHelperPreferencePageInitializer"
-      	/>
-   </extension>
-   -->
-
 </plugin>

@@ -1,13 +1,15 @@
-package com.googlecode.plugin.junithelper.action;
+package org.junithelper.plugin.action;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -22,10 +24,10 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
-
-import com.googlecode.plugin.junithelper.STR;
-import com.googlecode.plugin.junithelper.util.ResourcePathUtil;
-import com.googlecode.plugin.junithelper.util.ResourceRefreshUtil;
+import org.junithelper.plugin.STR;
+import org.junithelper.plugin.util.ResourcePathUtil;
+import org.junithelper.plugin.util.ResourceRefreshUtil;
+import org.junithelper.plugin.util.TestCaseGenerateUtil;
 
 public class CreateNewTestCaseAction extends Action implements IActionDelegate
 {
@@ -91,8 +93,9 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 				// test case file create filesystem path
 				String selected = STR.EMPTY;
 				int len = dirArrFromProjectRoot.length;
-				for (int i = 2; i < len; i++)
+				for (int i = 2; i < len - 1; i++)
 					selected += dirArrFromProjectRoot[i] + STR.DIR_SEP;
+				selected += dirArrFromProjectRoot[len - 1];
 
 				// current project name
 				projectName = dirArrFromProjectRoot[1];
@@ -181,7 +184,16 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 											+ testCaseFilename + ")"))
 					{
 
-						// test class generator
+						// TODO
+						// get public methods
+						String targetClass = "/" + projectName + "/" + selected;
+						IResource targetClassResource = workspaceRoot
+								.findMember(targetClass);
+						IFile file = (IFile) targetClassResource;
+						List<String> testMethods = TestCaseGenerateUtil
+								.getTestMethodsFromTarget(file);
+
+						// generate test class
 						testFileOSWriter = new OutputStreamWriter(new FileOutputStream(
 								testCaseCreateDirpath + STR.DIR_SEP + testCaseFilename));
 
@@ -204,8 +216,14 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 						sb.append("public class " + testCaseClassname
 								+ " extends TestCase {" + CRLF);
 						sb.append(STR.EMPTY + CRLF);
-						sb.append(STR.EMPTY + CRLF);
-						sb.append(STR.EMPTY + CRLF);
+						for (String testMethod : testMethods)
+						{
+							sb.append("\tpublic void " + testMethod
+									+ "() throws Exception {" + CRLF);
+							sb.append(STR.EMPTY + CRLF);
+							sb.append("\t}" + CRLF);
+							sb.append(STR.EMPTY + CRLF);
+						}
 						sb.append("}" + CRLF);
 
 						testFileOSWriter.write(sb.toString());

@@ -1,10 +1,10 @@
-package com.googlecode.plugin.junithelper.util;
+package org.junithelper.plugin.util;
 
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
+import org.junithelper.plugin.STR;
 
-import com.googlecode.plugin.junithelper.STR;
 
 public class ResourcePathUtil
 {

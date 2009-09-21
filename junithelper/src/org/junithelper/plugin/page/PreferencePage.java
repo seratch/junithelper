@@ -1,12 +1,12 @@
-package com.googlecode.plugin.junithelper.page;
+package org.junithelper.plugin.page;
 
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.junithelper.plugin.Activator;
+import org.junithelper.plugin.STR;
 
-import com.googlecode.plugin.junithelper.Activator;
-import com.googlecode.plugin.junithelper.STR;
 
 public class PreferencePage extends FieldEditorPreferencePage implements
         IWorkbenchPreferencePage

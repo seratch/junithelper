@@ -1,4 +1,4 @@
-package com.googlecode.plugin.junithelper;
+package org.junithelper.plugin;
 
 public interface STR
 {

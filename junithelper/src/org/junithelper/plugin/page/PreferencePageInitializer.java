@@ -1,9 +1,9 @@
-package com.googlecode.plugin.junithelper.page;
+package org.junithelper.plugin.page;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.junithelper.plugin.Activator;
 
-import com.googlecode.plugin.junithelper.Activator;
 
 public class PreferencePageInitializer extends AbstractPreferenceInitializer
 {

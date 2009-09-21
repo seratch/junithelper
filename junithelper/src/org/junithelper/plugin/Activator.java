@@ -1,4 +1,4 @@
-package com.googlecode.plugin.junithelper;
+package org.junithelper.plugin;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
