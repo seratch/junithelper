@@ -43,7 +43,7 @@ public interface STR
 			public static final String ALREADY_EXIST = "Already exist";
 			public static final String NOT_EXIST = "Not exist.";
 			public static final String COMFIRM_CREATE_NEW_FILE = "New file create?";
-			public static final String RESOURCE_SYNC_SERVER_NOT_RUNNING = "Not running : ResourceSynchronizer";
+			public static final String RESOURCE_REFRESH_ERROR = "Resource refresh error!";
 		}
 
 		public static class TestCase

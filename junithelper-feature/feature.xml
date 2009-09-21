@@ -2,7 +2,7 @@
 <feature
       id="com.googlecode.plugin.junithelper.feature"
       label="JUnit Helper"
-      version="0.0.3"
+      version="0.0.4"
       provider-name="Kazuhiro Sera"
       plugin="com.googlecode.plugin.junithelper"
       image="icon/junithelper.png">
@@ -251,7 +251,7 @@ Install from following update site
    </license>
 
    <url>
-      <discovery/>
+      <discovery label="Project website" url="http://code.google.com/p/junithelper/"/>
    </url>
 
    <requires>
@@ -265,8 +265,6 @@ Install from following update site
       <import plugin="org.eclipse.ui.workbench.texteditor"/>
       <import plugin="org.eclipse.compare"/>
       <import plugin="org.eclipse.core.expressions"/>
-      <import plugin="org.apache.commons.httpclient"/>
-      <import plugin="org.seasar.resource.synchronizer"/>
       <import plugin="org.eclipse.jdt.core"/>
    </requires>
 
@@ -274,7 +272,7 @@ Install from following update site
          id="com.googlecode.plugin.junithelper"
          download-size="0"
          install-size="0"
-         version="0.0.3"
+         version="0.0.4"
          unpack="false"/>
 
 </feature>

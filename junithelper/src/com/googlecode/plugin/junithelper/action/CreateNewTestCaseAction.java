@@ -25,7 +25,7 @@ import org.eclipse.ui.ide.IDE;
 
 import com.googlecode.plugin.junithelper.STR;
 import com.googlecode.plugin.junithelper.util.ResourcePathUtil;
-import com.googlecode.plugin.junithelper.util.ResourceSynchronizerUtil;
+import com.googlecode.plugin.junithelper.util.ResourceRefreshUtil;
 
 public class CreateNewTestCaseAction extends Action implements IActionDelegate
 {
@@ -144,11 +144,10 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 						if (!tmpDir.mkdir())
 							System.err.println("create directory error : "
 									+ tmpDir.getPath());
-						if (!ResourceSynchronizerUtil.accessSynchronizeServer(null,
-								projectName + STR.DIR_SEP + tmpResourceDirPath + "/.."
-										+ "=INFINITE"))
+						if (!ResourceRefreshUtil.refreshLocal(null, projectName
+								+ STR.DIR_SEP + tmpResourceDirPath + "/.."))
 						{
-							String msg = STR.Dialog.Common.RESOURCE_SYNC_SERVER_NOT_RUNNING;
+							String msg = STR.Dialog.Common.RESOURCE_REFRESH_ERROR;
 							MessageDialog.openWarning(new Shell(),
 									STR.Dialog.Common.TITLE, msg);
 							System.err
@@ -162,11 +161,11 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 					System.err.println("test directory create error or already exist");
 
 				// resource sync
-				if (!ResourceSynchronizerUtil.accessSynchronizeServer(null, projectName
-						+ STR.DIR_SEP + testCaseDirResource + "=ONE"))
+				if (!ResourceRefreshUtil.refreshLocal(null, projectName + STR.DIR_SEP
+						+ testCaseDirResource))
 				{
 					MessageDialog.openWarning(new Shell(), STR.Dialog.Common.TITLE,
-							STR.Dialog.Common.RESOURCE_SYNC_SERVER_NOT_RUNNING);
+							STR.Dialog.Common.RESOURCE_REFRESH_ERROR);
 					System.err.println("access error - ResourceSynchronizer server");
 				}
 
@@ -242,12 +241,12 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 		}
 
 		// access ResourceSynchronizer server
-		if (refreshFlag && !ResourceSynchronizerUtil.accessSynchronizeServer(null,
+		if (refreshFlag && !ResourceRefreshUtil.refreshLocal(null,
 		// projectName + "=INFINITE") ) {
-				projectName + STR.DIR_SEP + testCaseDirResource + "/.." + "=INFINITE"))
+				projectName + STR.DIR_SEP + testCaseDirResource + "/.."))
 		{
 			MessageDialog.openWarning(new Shell(), STR.Dialog.Common.TITLE,
-					STR.Dialog.Common.RESOURCE_SYNC_SERVER_NOT_RUNNING);
+					STR.Dialog.Common.RESOURCE_REFRESH_ERROR);
 			System.err.println("access error - ResourceSynchronizer server");
 
 		} else
