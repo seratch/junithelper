@@ -18,8 +18,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.workbench.texteditor,
  org.eclipse.compare,
  org.eclipse.core.expressions,
- org.apache.commons.httpclient,
- org.seasar.resource.synchronizer,
  org.eclipse.jdt.core
 Export-Package: com.googlecode.plugin.junithelper,
  com.googlecode.plugin.junithelper.action,
