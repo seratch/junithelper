@@ -17,7 +17,7 @@ public class PreferencePageInitializer extends AbstractPreferenceInitializer
 		store.setDefault(STR.Preference.TestMethodAutoGenerate.ARGS, true);
 		store.setDefault(STR.Preference.TestMethodAutoGenerate.ARGS_PREFIX, "A");
 		store.setDefault(STR.Preference.TestMethodAutoGenerate.ARGS_DELIMITER, "$");
-		store.setDefault(STR.Preference.TestMethodAutoGenerate.RETURN, true);
+		store.setDefault(STR.Preference.TestMethodAutoGenerate.RETURN, false);
 		store.setDefault(STR.Preference.TestMethodAutoGenerate.RETURN_PREFIX, "R");
 		store.setDefault(STR.Preference.TestMethodAutoGenerate.RETURN_DELIMITER, "$");
 	}
