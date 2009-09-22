@@ -19,6 +19,10 @@ public class TestCaseGenerateUtil
 
 	static IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 
+	static String RXP_WS = STR.RegExp.WHITE_AND_SPACE;
+	static String RXP_ANY_RQ = STR.RegExp.ANY_WORDS_REQUIRED;
+	static String RXP_ANY_NRQ = STR.RegExp.ANY_WORDS_NOT_REQUIRED;
+
 	public static List<String> getUnimplementedTestMethodNames(IFile testTarget,
 			IFile testCase) throws Exception
 	{
@@ -60,7 +64,7 @@ public class TestCaseGenerateUtil
 			br = new BufferedReader(new InputStreamReader(is));
 			String line = null;
 			while ((line = br.readLine()) != null)
-				lines.add(line.replace("\r", ""));
+				lines.add(line.replace("\r", STR.EMPTY));
 		} finally
 		{
 			if (is != null)
@@ -104,16 +108,21 @@ public class TestCaseGenerateUtil
 				String[] publics = allSrc.split("public");
 				for (String publicsEach : publics)
 				{
-					// TODO ??inner class support
-					if (publicsEach
-							.matches("\\s*.+?\\s*.+?\\s*\\(.*?\\)\\s*.*?\\s*.*?\\s*\\{.+"))
+					if (publicsEach.matches(RXP_WS + RXP_ANY_RQ + "\\s+" + RXP_ANY_RQ
+							+ RXP_WS + "\\(" + RXP_ANY_NRQ + "\\)" + RXP_WS + RXP_ANY_NRQ
+							+ RXP_WS + RXP_ANY_NRQ + "\\{.+"))
 					{
 						Matcher matcher = Pattern.compile(
-								"\\s*.+?\\s+(.+?)\\s*\\(.*?\\)\\s*.*?\\s*.*?\\s*\\{.+")
+								RXP_WS + "(" + RXP_ANY_RQ + ")\\s+(" + RXP_ANY_RQ + ")"
+										+ RXP_WS + "\\((" + RXP_ANY_NRQ + ")\\)" + RXP_WS
+										+ RXP_ANY_NRQ + RXP_WS + RXP_ANY_NRQ + "\\{.+")
 								.matcher(publicsEach);
 						if (matcher.find())
 						{
-							String methodName = matcher.group(1);
+							String methodReturnType = matcher.group(1);
+							String methodName = matcher.group(2);
+							if (methodReturnType.equals("static"))
+								methodName = methodName.split("\\s")[1];
 							methodNames.add(methodName);
 						}
 					}
@@ -180,22 +189,28 @@ public class TestCaseGenerateUtil
 				for (String publicsEach : publics)
 				{
 					// TODO ??inner class support
-					if (publicsEach.matches("\\s*.+?\\s*.+?\\s*\\(.*?\\)\\s*\\{.+"))
+					if (publicsEach.matches(RXP_WS + RXP_ANY_RQ + "\\s+" + RXP_ANY_RQ
+							+ RXP_WS + "\\(" + RXP_ANY_NRQ + "\\)" + RXP_WS + RXP_ANY_NRQ
+							+ RXP_WS + RXP_ANY_NRQ + "\\{.+"))
 					{
 						Matcher matcher = Pattern.compile(
-								"\\s*(.+?)\\s+(.+?)\\s*\\((.*?)\\)\\s*\\{.+").matcher(
-								publicsEach);
+								RXP_WS + "(" + RXP_ANY_RQ + ")\\s+(" + RXP_ANY_RQ + ")"
+										+ RXP_WS + "\\((" + RXP_ANY_NRQ + ")\\)" + RXP_WS
+										+ RXP_ANY_NRQ + RXP_WS + RXP_ANY_NRQ + "\\{.+")
+								.matcher(publicsEach);
 						if (matcher.find())
 						{
 							String methodReturnType = matcher.group(1);
 							String methodName = matcher.group(2);
+							if (methodReturnType.equals("static"))
+								methodName = methodName.split("\\s")[1];
 							String args = matcher.group(3);
 							String[] argArr = args.split("\\s");
-							String argTypes = "";
+							String argTypes = STR.EMPTY;
 							for (int i = 0; i < argArr.length; i += 2)
 							{
-								String arg = "";
-								arg = argArr[i].replaceAll("<.+?>", "");
+								String arg = STR.EMPTY;
+								arg = argArr[i].replaceAll("<.+?>", STR.EMPTY);
 								arg = arg.replaceAll("\\.\\.\\.", "Array").replaceAll(
 										"\\[\\]", "Array");
 								argTypes += argsDelimiter + arg;
@@ -204,7 +219,7 @@ public class TestCaseGenerateUtil
 							if (enabledReturn)
 							{
 								methodReturnType = methodReturnType.replaceAll("<.+?>",
-										"");
+										STR.EMPTY);
 								testMethodName += delimiter + returnPrefix
 										+ returnDelimiter + methodReturnType;
 							}
