@@ -194,12 +194,20 @@ public class TestCaseGenerateUtil
 							String argTypes = "";
 							for (int i = 0; i < argArr.length; i += 2)
 							{
-								argTypes += argsDelimiter + argArr[i];
+								String arg = "";
+								arg = argArr[i].replaceAll("<.+?>", "");
+								arg = arg.replaceAll("\\.\\.\\.", "Array").replaceAll(
+										"\\[\\]", "Array");
+								argTypes += argsDelimiter + arg;
 							}
 							String testMethodName = "test" + delimiter + methodName;
 							if (enabledReturn)
+							{
+								methodReturnType = methodReturnType.replaceAll("<.+?>",
+										"");
 								testMethodName += delimiter + returnPrefix
 										+ returnDelimiter + methodReturnType;
+							}
 							if (enabledArgs)
 								testMethodName += delimiter + argsPrefix + argTypes;
 							testMethods.add(testMethodName);
