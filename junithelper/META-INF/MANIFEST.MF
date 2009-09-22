@@ -24,3 +24,4 @@ Export-Package: org.junithelper.plugin,
  org.junithelper.plugin.handler,
  org.junithelper.plugin.page,
  org.junithelper.plugin.util
+Bundle-ActivationPolicy: lazy

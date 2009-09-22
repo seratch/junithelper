@@ -153,8 +153,7 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 							String msg = STR.Dialog.Common.RESOURCE_REFRESH_ERROR;
 							MessageDialog.openWarning(new Shell(),
 									STR.Dialog.Common.TITLE, msg);
-							System.err
-									.println("access error : ResourceSynchronizer server");
+							System.err.println("Resource refresh error!");
 						}
 					}
 				}
@@ -169,7 +168,7 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 				{
 					MessageDialog.openWarning(new Shell(), STR.Dialog.Common.TITLE,
 							STR.Dialog.Common.RESOURCE_REFRESH_ERROR);
-					System.err.println("access error - ResourceSynchronizer server");
+					System.err.println("Resource refresh error!");
 				}
 
 				try
@@ -220,7 +219,7 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 						{
 							sb.append("\tpublic void " + testMethod
 									+ "() throws Exception {" + CRLF);
-							sb.append(STR.EMPTY + CRLF);
+							sb.append("\t\t// TODO" + CRLF);
 							sb.append("\t}" + CRLF);
 							sb.append(STR.EMPTY + CRLF);
 						}
@@ -232,6 +231,15 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 				} catch (FileNotFoundException fnfe)
 				{
 					fnfe.printStackTrace();
+				} finally
+				{
+					if (testFileOSWriter != null)
+						try
+						{
+							testFileOSWriter.close();
+						} catch (Exception ignore)
+						{
+						}
 				}
 			}
 
@@ -258,14 +266,14 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 			}
 		}
 
-		// access ResourceSynchronizer server
-		if (refreshFlag && !ResourceRefreshUtil.refreshLocal(null,
-		// projectName + "=INFINITE") ) {
-				projectName + STR.DIR_SEP + testCaseDirResource + "/.."))
+		// resource refresh
+		if (refreshFlag
+				&& !ResourceRefreshUtil.refreshLocal(null, projectName + STR.DIR_SEP
+						+ testCaseDirResource + "/.."))
 		{
 			MessageDialog.openWarning(new Shell(), STR.Dialog.Common.TITLE,
 					STR.Dialog.Common.RESOURCE_REFRESH_ERROR);
-			System.err.println("access error - ResourceSynchronizer server");
+			System.err.println("Resource refresh error!");
 
 		} else
 		{

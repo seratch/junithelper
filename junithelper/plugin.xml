@@ -1,151 +1,151 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?eclipse version="3.3"?>
+<?eclipse version="3.2"?>
 <plugin>
 
-   <extension point="org.eclipse.ui.preferencePages">
-      <page
-            category="JUnit Helper"
-            class="org.junithelper.plugin.page.JUnitHelperPreferencePage"
-            id="org.junithelper.plugin.page.JUnitHelperPreferencePage"
-            name="JUnit Helper"/>
-   </extension>
+	<!-- preference -->
+	<extension point="org.eclipse.ui.preferencePages">
+		<page
+			class="org.junithelper.plugin.page.PreferencePage"
+			id="org.junithelper.plugin.page.PreferencePage"
+			name="JUnit Helper"/>
+	</extension>
 
-   <extension point="org.eclipse.core.runtime.preferences">
-      <initializer 
-      		class="org.junithelper.plugin.page.JUnitHelperPreferencePageInitializer"
-      	/>
-   </extension>
+	<extension point="org.eclipse.core.runtime.preferences">
+		<initializer 
+			class="org.junithelper.plugin.page.PreferencePageInitializer" />
+	</extension>
 
-   <extension point="org.eclipse.ui.commands">
-      <category
-            id="org.junithelper.plugin.command.category"
-            name="JUnit Helper">
-      </category>
-      <command
-            id="org.junithelper.plugin.action.OpenTestCaseActionCommand"
-            categoryId="org.junithelper.plugin.command.category"
-            name="Open Test Class">
-      </command>
-      <command
-            id="org.junithelper.plugin.action.OpenTestTargetActionCommand"
-            categoryId="org.junithelper.plugin.command.category"
-            name="Open Test Target">
-      </command>
-   </extension>
-   
-   <extension
-         point="org.eclipse.ui.handlers">
-      <handler
-            class="org.junithelper.plugin.handler.OpenTestCaseHandler"
-            commandId="org.junithelper.plugin.action.OpenTestCaseActionCommand" >
-      </handler>
-      <handler
-            class="org.junithelper.plugin.handler.OpenTestTargetHandler"
-            commandId="org.junithelper.plugin.action.OpenTestTargetActionCommand" >
-      </handler>
-   </extension>
-   
-   <extension
-         point="org.eclipse.ui.bindings">
-      <key
-            commandId="org.junithelper.plugin.action.OpenTestTargetActionCommand"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="M1+8">
-      </key>
-      <key
-            commandId="org.junithelper.plugin.action.OpenTestCaseActionCommand"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="M1+9">
-      </key>
-   </extension>
-   
+	<!-- command -->
+	<extension point="org.eclipse.ui.commands">
+		<category
+			id="org.junithelper.plugin.category"
+			name="JUnit Helper">
+		</category>
+		<command
+			id="org.junithelper.plugin.action.OpenTestCaseActionCommand"
+			categoryId="org.junithelper.plugin.category"
+			name="Open Test Class">
+		</command>
+		<command
+			id="org.junithelper.plugin.action.OpenTestTargetActionCommand"
+			categoryId="org.junithelper.plugin.category"
+			name="Open Test Target">
+		</command>
+	</extension>
+
+	<extension
+		point="org.eclipse.ui.handlers">
+		<handler
+			class="org.junithelper.plugin.handler.OpenTestCaseHandler"
+			commandId="org.junithelper.plugin.action.OpenTestCaseActionCommand" >
+		</handler>
+		<handler
+			class="org.junithelper.plugin.handler.OpenTestTargetHandler"
+			commandId="org.junithelper.plugin.action.OpenTestTargetActionCommand" >
+		</handler>
+	</extension>
+
+	<extension
+		point="org.eclipse.ui.bindings">
+		<key
+			commandId="org.junithelper.plugin.action.OpenTestTargetActionCommand"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			sequence="M1+8">
+		</key>
+		<key
+			commandId="org.junithelper.plugin.action.OpenTestCaseActionCommand"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			sequence="M1+9">
+		</key>
+	</extension>
+
 	<!-- create new test class -->
 	<extension point="org.eclipse.ui.popupMenus">
 
-		<!-- package explorer -->
-		<objectContribution
-			id="org.junithelper.plugin.popupmenu.contribution"
-			objectClass="org.eclipse.jdt.core.IJavaElement">
-			<menu
-				id="org.junithelper.plugin.popupmenu"
-				label="JUnit Helper"
-				path="additions">
-			</menu>
-			<action
-				label="Open Test Target Ctrl+8"
-				class="org.junithelper.plugin.action.OpenTestTargetAction"
-				id="org.junithelper.plugin.action.OpenTestTargetAction.viewer">
-			</action>
-			<action
-		         class="org.junithelper.plugin.action.OpenTestCaseAction"
-		         id="org.junithelper.plugin.action.OpenTestCaseAction.object"
-		         label="Open Test Class Ctrl+9"
-		         menubarPath="org.junithelper.plugin.popupmenu/additions" >
-			</action>
-		</objectContribution>
+	<!-- package explorer -->
+	<objectContribution
+		id="org.junithelper.plugin.popupmenu.contribution"
+		objectClass="org.eclipse.jdt.core.IJavaElement">
+		<menu
+			id="org.junithelper.plugin.popupmenu"
+			label="JUnit Helper"
+			path="additions">
+		</menu>
+		<action
+			label="Open Test Target Ctrl+8"
+			class="org.junithelper.plugin.action.OpenTestTargetAction"
+			id="org.junithelper.plugin.action.OpenTestTargetAction.viewer">
+		</action>
+		<action
+			class="org.junithelper.plugin.action.OpenTestCaseAction"
+			id="org.junithelper.plugin.action.OpenTestCaseAction.object"
+			label="Open Test Class Ctrl+9"
+			menubarPath="org.junithelper.plugin.popupmenu/additions" >
+		</action>
+	</objectContribution>
 
-		<!-- navigator -->
-		<objectContribution
-			id="org.junithelper.plugin.popupmenu.contribution"
-			nameFilter="*.java"
-			objectClass="org.eclipse.core.resource.IResource">
-			<menu
-				id="org.junithelper.plugin.popupmenu"
-				label="JUnit Helper"
-				path="additions">
-			</menu>
-			<action
-				label="Open Test Target Ctrl+8"
-				class="org.junithelper.plugin.action.OpenTestTargetAction"
-				id="org.junithelper.plugin.action.OpenTestTargetAction.viewer">
-			</action>
-			<action
-		         class="org.junithelper.plugin.action.OpenTestCaseAction"
-		         id="org.junithelper.plugin.action.OpenTestCaseAction.object"
-		         label="Open Test Class Ctrl+9"
-		         menubarPath="org.junithelper.plugin.popupmenu/additions" >
-			</action>
-		</objectContribution>
+	<!-- navigator -->
+	<objectContribution
+		id="org.junithelper.plugin.popupmenu.contribution"
+		nameFilter="*.java"
+		objectClass="org.eclipse.core.resource.IResource">
+		<menu
+			id="org.junithelper.plugin.popupmenu"
+			label="JUnit Helper"
+			path="additions">
+		</menu>
+		<action
+			label="Open Test Target Ctrl+8"
+			class="org.junithelper.plugin.action.OpenTestTargetAction"
+			id="org.junithelper.plugin.action.OpenTestTargetAction.viewer">
+		</action>
+		<action
+			class="org.junithelper.plugin.action.OpenTestCaseAction"
+			id="org.junithelper.plugin.action.OpenTestCaseAction.object"
+			label="Open Test Class Ctrl+9"
+			menubarPath="org.junithelper.plugin.popupmenu/additions" >
+		</action>
+	</objectContribution>
 
-		<!-- java editor -->
-		<viewerContribution
-			targetID="#CompilationUnitEditorContext"
-			id="org.junithelper.plugin.test.framework.create">
-			<action
-				label="Open Test Target Ctrl+8"
-				class="org.junithelper.plugin.action.OpenTestTargetAction"
-				id="org.junithelper.plugin.action.OpenTestTargetAction.viewer">
-			</action>
-			<action
-				label="Open Test Class Ctrl+9"
-				class="org.junithelper.plugin.action.OpenTestCaseAction"
-				id="org.junithelper.plugin.action.OpenTestCaseAction.viewer">
-			</action>
-		</viewerContribution>
+	<!-- java editor -->
+	<viewerContribution
+		targetID="#CompilationUnitEditorContext"
+		id="org.junithelper.plugin.test.framework.create">
+		<action
+			label="Open Test Target Ctrl+8"
+			class="org.junithelper.plugin.action.OpenTestTargetAction"
+			id="org.junithelper.plugin.action.OpenTestTargetAction.viewer">
+		</action>
+		<action
+			label="Open Test Class Ctrl+9"
+			class="org.junithelper.plugin.action.OpenTestCaseAction"
+			id="org.junithelper.plugin.action.OpenTestCaseAction.viewer">
+		</action>
+	</viewerContribution>
 
 	</extension>
 
-<!--
-   <extension-point id="org.eclipse.ui.views" name="org.eclipse.ui.views"/>
--->
+	<!--
+	<extension-point id="org.eclipse.ui.views" name="org.eclipse.ui.views"/>
+	-->
 
-   <!--
-   <extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
-         <menu
-               label="JUnit Helper"
-               mnemonic="M"
-               id="org.junithelper.plugin.menu.JUnitHelperMenu">
-            <command
-                  commandId="org.junithelper.plugin.action.OpenTestCaseActionCommand"
-                  mnemonic="U"
-                  id="org.junithelper.plugin.action.OpenTestCaseActionCommand">
-            </command>
-         </menu>
-      </menuContribution>
-   </extension>
-   -->
-   
+	<!--
+	<extension
+		point="org.eclipse.ui.menus">
+		<menuContribution
+			locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+			<menu
+				label="JUnit Helper"
+				mnemonic="M"
+				id="org.junithelper.plugin.menu.JUnitHelperMenu">
+				<command
+					commandId="org.junithelper.plugin.action.OpenTestCaseActionCommand"
+					mnemonic="U"
+					id="org.junithelper.plugin.action.OpenTestCaseActionCommand">
+				</command>
+			</menu>
+		</menuContribution>
+	</extension>
+	-->
+
 </plugin>

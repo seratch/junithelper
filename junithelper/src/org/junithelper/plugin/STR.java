@@ -58,12 +58,27 @@ public interface STR
 	public static class Preference
 	{
 
-		public static final String LANG = "lang";
+		public static final String LANG = "Language";
 
 		public static class Common
 		{
-			public static final String DESCRIPTION = "JUnit Helper Prefernce";
+			public static final String DESCRIPTION = "JUnit Helper Prefernces.";
 		}
+
+		public static class TestMethodAutoGenerate
+		{
+			public static final String ENABLE = "Test Method Auto Generate";
+			public static final String DELIMITER = "Delimiter";
+
+			public static final String ARGS = "Includes Method Args";
+			public static final String ARGS_PREFIX = "Args Prefix";
+			public static final String ARGS_DELIMITER = "Args Delimiter";
+
+			public static final String RETURN = "Includes Method Return";
+			public static final String RETURN_PREFIX = "Return Prefix";
+			public static final String RETURN_DELIMITER = "Return Delimiter";
+		}
+
 	}
 
 }
