@@ -205,14 +205,16 @@ public class TestCaseGenerateUtil
 							if (methodReturnType.equals("static"))
 								methodName = methodName.split("\\s")[1];
 							String args = matcher.group(3);
-							String[] argArr = args.split("\\s");
+							String[] argArr = args.split(",");
 							String argTypes = STR.EMPTY;
-							for (int i = 0; i < argArr.length; i += 2)
+							for (int i = 0; i < argArr.length; i++)
 							{
 								String arg = STR.EMPTY;
 								arg = argArr[i].replaceAll("<.+?>", STR.EMPTY);
+								arg = arg.trim();
 								arg = arg.replaceAll("\\.\\.\\.", "Array").replaceAll(
 										"\\[\\]", "Array");
+								arg = arg.split("\\s+")[0];
 								argTypes += argsDelimiter + arg;
 							}
 							String testMethodName = "test" + delimiter + methodName;

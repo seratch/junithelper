@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.junithelper.plugin.feature"
-      label="JUnit Helper Plugin"
-      version="0.0.6"
+      label="JUnit Helper"
+      version="0.0.7"
       provider-name="Kazuhiro Sera"
       plugin="org.junithelper.plugin"
       image="icon/junithelper.png">
@@ -272,7 +272,7 @@ Install from following update site
          id="org.junithelper.plugin"
          download-size="0"
          install-size="0"
-         version="0.0.6"
+         version="0.0.7"
          unpack="false"/>
 
 </feature>
