@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JUnit Helper Plugin
 Bundle-SymbolicName: org.junithelper.plugin;singleton:=true
-Bundle-Version: 0.0.5
+Bundle-Version: 0.0.6
 Bundle-Localization: plugin
 Bundle-ClassPath: .
 Bundle-Activator: org.junithelper.plugin.Activator
