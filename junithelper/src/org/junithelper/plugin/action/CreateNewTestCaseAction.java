@@ -20,6 +20,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
+import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -31,7 +32,8 @@ import org.junithelper.plugin.util.ResourceRefreshUtil;
 import org.junithelper.plugin.util.TestCaseGenerateUtil;
 import org.junithelper.plugin.util.ThreadUtil;
 
-public class CreateNewTestCaseAction extends Action implements IActionDelegate
+public class CreateNewTestCaseAction extends Action implements IActionDelegate,
+		IEditorActionDelegate
 {
 
 	private ISelection selection = null;
@@ -318,6 +320,12 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 	public void selectionChanged(IAction action, ISelection selection)
 	{
 		this.selection = selection;
+	}
+
+	public void setActiveEditor(IAction action, IEditorPart targetEditor)
+	{
+		// TODO Auto-generated method stub
+
 	}
 
 }
