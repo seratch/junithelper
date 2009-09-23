@@ -38,22 +38,19 @@ public interface STR
 		{
 			public static final String TITLE = "JUnit Helper";
 			public static final String EXCUTE_QUESTION = "Execute OK?";
-			public static final String EXECUTE_AFTER_SETTING = "Execute after setting.";
-			public static final String NORMAL_END = "Normal end.";
-			public static final String ABNORMAL_END = "Error end.";
-			public static final String REQUIRED = "Please select command target.";
+			public static final String REQUIRED = "Please select target.";
 			public static final String SELECT_ONLY_ONE = "Please select only one target.";
-			public static final String ALREADY_EXIST = "Already exist";
+			public static final String ALREADY_EXIST = "Already exist.";
 			public static final String NOT_EXIST = "Not exist.";
-			public static final String COMFIRM_CREATE_NEW_FILE = "New file create?";
+			public static final String CONFIRM_PROCEED = "Proceed OK?";
+			public static final String COMFIRM_CREATE_NEW_FILE = "Create new test case file?";
 			public static final String RESOURCE_REFRESH_ERROR = "Resource refresh error!";
 		}
 
 		public static class TestCase
 		{
-			public static final String SELECT_JAVA_FILE = "Please select *.java file.";
+			public static final String SELECT_JAVA_FILE = "Please select java source file(*.java).";
 			public static final String NOT_TEST_CLASS = "Please select test class file.";
-			public static final String ALREAY_OPEN_TEST_CLASS = "This is a test class.";
 		}
 
 	}

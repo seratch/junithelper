@@ -178,14 +178,13 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 					// confirm if already exist
 					File outputFile = new File(testCaseCreateDirpath + STR.DIR_SEP
 							+ testCaseFilename);
+					String msg = STR.Dialog.Common.ALREADY_EXIST + " ("
+							+ testCaseFilename + ")" + STR.LINE_FEED
+							+ STR.Dialog.Common.CONFIRM_PROCEED;
 					if (!outputFile.exists()
 							|| MessageDialog.openConfirm(new Shell(),
-									STR.Dialog.Common.TITLE,
-									STR.Dialog.Common.ALREADY_EXIST + " ("
-											+ testCaseFilename + ")"))
+									STR.Dialog.Common.TITLE, msg))
 					{
-
-						// TODO
 						// get public methods
 						String targetClass = "/" + projectName + "/" + selected;
 						IResource targetClassResource = workspaceRoot
