@@ -25,9 +25,11 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.junithelper.plugin.STR;
+import org.junithelper.plugin.util.FileResourceUtil;
 import org.junithelper.plugin.util.ResourcePathUtil;
 import org.junithelper.plugin.util.ResourceRefreshUtil;
 import org.junithelper.plugin.util.TestCaseGenerateUtil;
+import org.junithelper.plugin.util.ThreadUtil;
 
 public class CreateNewTestCaseAction extends Action implements IActionDelegate
 {
@@ -45,6 +47,7 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 
 		InputStream javaFileIStream = null;
 		OutputStreamWriter testFileOSWriter = null;
+		FileOutputStream fos = null;
 		boolean refreshFlag = true;
 		String projectName = null;
 		String testCaseDirResource = null;
@@ -118,10 +121,9 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 						.replace(STR.JAVA_EXP, STR.SUFFIX_OF_TESTCASE + STR.JAVA_EXP);
 				String[] selectedDirArr = selected.split(STR.DIR_SEP);
 				testCaseDirResource = "";
-				for (int i = 0; i < selectedDirArr.length - 1; i++)
-				{
+				int selectedDirArrLength = selectedDirArr.length;
+				for (int i = 0; i < selectedDirArrLength - 1; i++)
 					testCaseDirResource += selectedDirArr[i] + STR.DIR_SEP;
-				}
 				testCaseDirResource = testCaseDirResource.replace(STR.SRC_MAIN_JAVA,
 						STR.SRC_TEST_JAVA);
 				testCaseCreateDirpath = projectRootPath + testCaseDirResource;
@@ -135,7 +137,7 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 				for (String each : dirArr)
 				{
 					tmpDirPath += STR.DIR_SEP + each;
-					java.io.File tmpDir = new java.io.File(tmpDirPath);
+					File tmpDir = new File(tmpDirPath);
 
 					// skip until project root dir
 					if (tmpDir.getPath().length() <= projectRootPath.length())
@@ -193,8 +195,9 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 								.getTestMethodsFromTarget(file);
 
 						// generate test class
-						testFileOSWriter = new OutputStreamWriter(new FileOutputStream(
-								testCaseCreateDirpath + STR.DIR_SEP + testCaseFilename));
+						fos = new FileOutputStream(testCaseCreateDirpath + STR.DIR_SEP
+								+ testCaseFilename);
+						testFileOSWriter = new OutputStreamWriter(fos);
 
 						StringBuffer sb = new StringBuffer();
 
@@ -203,27 +206,50 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 						// get package
 						String testPackageString = STR.EMPTY;
 						String[] tmpDirArr = selected.split(STR.DIR_SEP);
-						for (int i = 3; i < tmpDirArr.length - 2; i++)
-							testPackageString += tmpDirArr[i] + ".";
-						testPackageString += tmpDirArr[tmpDirArr.length - 2];
+						StringBuffer dirSb = new StringBuffer();
+						int tmpDirArrLenth = tmpDirArr.length;
+						for (int i = 3; i < tmpDirArrLenth - 2; i++)
+						{
+							dirSb.append(tmpDirArr[i]);
+							dirSb.append(".");
+						}
+						dirSb.append(tmpDirArr[tmpDirArr.length - 2]);
+						testPackageString = dirSb.toString();
 
-						sb.append("package " + testPackageString + ";" + CRLF);
+						sb.append("package ");
+						sb.append(testPackageString);
+						sb.append(";");
+						sb.append(CRLF);
 
-						sb.append(STR.EMPTY + CRLF);
-						sb.append("import junit.framework.TestCase;" + CRLF);
-						sb.append(STR.EMPTY + CRLF);
-						sb.append("public class " + testCaseClassname
-								+ " extends TestCase {" + CRLF);
-						sb.append(STR.EMPTY + CRLF);
+						sb.append("import junit.framework.TestCase;");
+						sb.append(CRLF);
+
+						sb.append(CRLF);
+
+						sb.append("public class ");
+						sb.append(testCaseClassname);
+						sb.append(" extends TestCase {");
+						sb.append(CRLF);
+
+						sb.append(CRLF);
+
 						for (String testMethod : testMethods)
 						{
-							sb.append("\tpublic void " + testMethod
-									+ "() throws Exception {" + CRLF);
-							sb.append("\t\t// TODO" + CRLF);
-							sb.append("\t}" + CRLF);
-							sb.append(STR.EMPTY + CRLF);
+							sb.append("\tpublic void ");
+							sb.append(testMethod);
+							sb.append("() throws Exception {");
+							sb.append(CRLF);
+
+							sb.append("\t\t// TODO");
+							sb.append(CRLF);
+
+							sb.append("\t}");
+							sb.append(CRLF);
+
+							sb.append(CRLF);
 						}
-						sb.append("}" + CRLF);
+						sb.append("}");
+						sb.append(CRLF);
 
 						testFileOSWriter.write(sb.toString());
 					}
@@ -233,13 +259,8 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 					fnfe.printStackTrace();
 				} finally
 				{
-					if (testFileOSWriter != null)
-						try
-						{
-							testFileOSWriter.close();
-						} catch (Exception ignore)
-						{
-						}
+					FileResourceUtil.close(testFileOSWriter);
+					FileResourceUtil.close(fos);
 				}
 			}
 
@@ -248,22 +269,8 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 			e.printStackTrace();
 		} finally
 		{
-			try
-			{
-				if (javaFileIStream != null)
-					javaFileIStream.close();
-			} catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-			try
-			{
-				if (testFileOSWriter != null)
-					testFileOSWriter.close();
-			} catch (Exception e)
-			{
-				e.printStackTrace();
-			}
+			FileResourceUtil.close(javaFileIStream);
+			FileResourceUtil.close(testFileOSWriter);
 		}
 
 		// resource refresh
@@ -281,12 +288,7 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 			// open test case
 			int retryCount = 0;
 			IEditorPart editorPart = null;
-			try
-			{
-				Thread.sleep(1500);
-			} catch (InterruptedException irte)
-			{
-			}
+			ThreadUtil.sleep(1500);
 			while (true)
 			{
 				try
@@ -308,12 +310,7 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 					retryCount++;
 					if (retryCount > 3)
 						break;
-					try
-					{
-						Thread.sleep(1500);
-					} catch (InterruptedException irte)
-					{
-					}
+					ThreadUtil.sleep(1500);
 				}
 			}
 			editorPart.setFocus();

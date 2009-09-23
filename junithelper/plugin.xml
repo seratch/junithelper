@@ -74,12 +74,13 @@
 		<action
 			label="Open Test Target Ctrl+8"
 			class="org.junithelper.plugin.action.OpenTestTargetAction"
-			id="org.junithelper.plugin.action.OpenTestTargetAction.viewer">
+			id="org.junithelper.plugin.action.OpenTestTargetAction.pe"
+			menubarPath="org.junithelper.plugin.popupmenu/additions">
 		</action>
 		<action
-			class="org.junithelper.plugin.action.OpenTestCaseAction"
-			id="org.junithelper.plugin.action.OpenTestCaseAction.object"
 			label="Open Test Class Ctrl+9"
+			class="org.junithelper.plugin.action.OpenTestCaseAction"
+			id="org.junithelper.plugin.action.OpenTestCaseAction.pe"
 			menubarPath="org.junithelper.plugin.popupmenu/additions" >
 		</action>
 	</objectContribution>
@@ -97,12 +98,13 @@
 		<action
 			label="Open Test Target Ctrl+8"
 			class="org.junithelper.plugin.action.OpenTestTargetAction"
-			id="org.junithelper.plugin.action.OpenTestTargetAction.viewer">
+			id="org.junithelper.plugin.action.OpenTestTargetAction.nvg"
+			menubarPath="org.junithelper.plugin.popupmenu/additions">
 		</action>
 		<action
-			class="org.junithelper.plugin.action.OpenTestCaseAction"
-			id="org.junithelper.plugin.action.OpenTestCaseAction.object"
 			label="Open Test Class Ctrl+9"
+			class="org.junithelper.plugin.action.OpenTestCaseAction"
+			id="org.junithelper.plugin.action.OpenTestCaseAction.nvg"
 			menubarPath="org.junithelper.plugin.popupmenu/additions" >
 		</action>
 	</objectContribution>
@@ -114,12 +116,12 @@
 		<action
 			label="Open Test Target Ctrl+8"
 			class="org.junithelper.plugin.action.OpenTestTargetAction"
-			id="org.junithelper.plugin.action.OpenTestTargetAction.viewer">
+			id="org.junithelper.plugin.action.OpenTestTargetAction.je">
 		</action>
 		<action
 			label="Open Test Class Ctrl+9"
 			class="org.junithelper.plugin.action.OpenTestCaseAction"
-			id="org.junithelper.plugin.action.OpenTestCaseAction.viewer">
+			id="org.junithelper.plugin.action.OpenTestCaseAction.je">
 		</action>
 	</viewerContribution>
 

@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.junithelper.plugin.Activator;
 import org.junithelper.plugin.STR;
 
@@ -40,7 +41,7 @@ public class TestCaseGenerateUtil
 				for (String actual : actualList)
 				{
 					String escapedExp = expected.replaceAll("\\$", "\\\\\\$");
-					if (actual.matches(".*" + escapedExp + ".*"))
+					if (actual.matches(escapedExp + ".*"))
 					{
 						exist = true;
 						break;
@@ -67,23 +68,18 @@ public class TestCaseGenerateUtil
 				lines.add(line.replace("\r", STR.EMPTY));
 		} finally
 		{
-			if (is != null)
-				try
-				{
-					is.close();
-				} catch (Exception ignore)
-				{
-				}
-			if (br != null)
-				try
-				{
-					br.close();
-				} catch (Exception ignore)
-				{
-				}
+			FileResourceUtil.close(is);
+			FileResourceUtil.close(br);
 		}
 		return lines;
 	}
+
+	static String RXP_SEARCH_METHOD = RXP_WS + RXP_ANY_RQ + "\\s+" + RXP_ANY_RQ + RXP_WS
+			+ "\\(" + RXP_ANY_NRQ + "\\)" + RXP_WS + RXP_ANY_NRQ + RXP_WS + RXP_ANY_NRQ
+			+ "\\{.+";
+	static Pattern PAT_SEARCH_GROUP_METHOD = Pattern.compile(RXP_WS + "(" + RXP_ANY_RQ
+			+ ")\\s+(" + RXP_ANY_RQ + ")" + RXP_WS + "\\((" + RXP_ANY_NRQ + ")\\)"
+			+ RXP_WS + RXP_ANY_NRQ + RXP_WS + RXP_ANY_NRQ + "\\{.+");
 
 	public static List<String> getMethodNames(IFile javaFile) throws Exception
 	{
@@ -95,11 +91,13 @@ public class TestCaseGenerateUtil
 		if (enabled)
 		{
 			InputStream is = null;
+			InputStreamReader isr = null;
 			BufferedReader br = null;
 			try
 			{
 				is = javaFile.getContents();
-				br = new BufferedReader(new InputStreamReader(is));
+				isr = new InputStreamReader(is);
+				br = new BufferedReader(isr);
 				StringBuffer tmpsb = new StringBuffer();
 				String line = null;
 				while ((line = br.readLine()) != null)
@@ -108,15 +106,9 @@ public class TestCaseGenerateUtil
 				String[] publics = allSrc.split("public");
 				for (String publicsEach : publics)
 				{
-					if (publicsEach.matches(RXP_WS + RXP_ANY_RQ + "\\s+" + RXP_ANY_RQ
-							+ RXP_WS + "\\(" + RXP_ANY_NRQ + "\\)" + RXP_WS + RXP_ANY_NRQ
-							+ RXP_WS + RXP_ANY_NRQ + "\\{.+"))
+					if (publicsEach.matches(RXP_SEARCH_METHOD))
 					{
-						Matcher matcher = Pattern.compile(
-								RXP_WS + "(" + RXP_ANY_RQ + ")\\s+(" + RXP_ANY_RQ + ")"
-										+ RXP_WS + "\\((" + RXP_ANY_NRQ + ")\\)" + RXP_WS
-										+ RXP_ANY_NRQ + RXP_WS + RXP_ANY_NRQ + "\\{.+")
-								.matcher(publicsEach);
+						Matcher matcher = PAT_SEARCH_GROUP_METHOD.matcher(publicsEach);
 						if (matcher.find())
 						{
 							String methodReturnType = matcher.group(1);
@@ -129,20 +121,9 @@ public class TestCaseGenerateUtil
 				}
 			} finally
 			{
-				if (is != null)
-					try
-					{
-						is.close();
-					} catch (Exception ignore)
-					{
-					}
-				if (br != null)
-					try
-					{
-						br.close();
-					} catch (Exception ignore)
-					{
-					}
+				FileResourceUtil.close(br);
+				FileResourceUtil.close(isr);
+				FileResourceUtil.close(is);
 			}
 
 		}
@@ -154,32 +135,34 @@ public class TestCaseGenerateUtil
 
 		List<String> testMethods = new ArrayList<String>();
 
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		// enable public method test
-		boolean enabled = Activator.getDefault().getPreferenceStore().getBoolean(
-				STR.Preference.TestMethodAutoGenerate.ENABLE);
-		String delimiter = Activator.getDefault().getPreferenceStore().getString(
-				STR.Preference.TestMethodAutoGenerate.DELIMITER);
-		boolean enabledArgs = Activator.getDefault().getPreferenceStore().getBoolean(
-				STR.Preference.TestMethodAutoGenerate.ARGS);
-		String argsPrefix = Activator.getDefault().getPreferenceStore().getString(
-				STR.Preference.TestMethodAutoGenerate.ARGS_PREFIX);
-		String argsDelimiter = Activator.getDefault().getPreferenceStore().getString(
-				STR.Preference.TestMethodAutoGenerate.ARGS_DELIMITER);
-		boolean enabledReturn = Activator.getDefault().getPreferenceStore().getBoolean(
-				STR.Preference.TestMethodAutoGenerate.RETURN);
-		String returnPrefix = Activator.getDefault().getPreferenceStore().getString(
-				STR.Preference.TestMethodAutoGenerate.RETURN_PREFIX);
-		String returnDelimiter = Activator.getDefault().getPreferenceStore().getString(
-				STR.Preference.TestMethodAutoGenerate.RETURN_DELIMITER);
+		boolean enabled = store.getBoolean(STR.Preference.TestMethodAutoGenerate.ENABLE);
+		String delimiter = store
+				.getString(STR.Preference.TestMethodAutoGenerate.DELIMITER);
+		boolean enabledArgs = store
+				.getBoolean(STR.Preference.TestMethodAutoGenerate.ARGS);
+		String argsPrefix = store
+				.getString(STR.Preference.TestMethodAutoGenerate.ARGS_PREFIX);
+		String argsDelimiter = store
+				.getString(STR.Preference.TestMethodAutoGenerate.ARGS_DELIMITER);
+		boolean enabledReturn = store
+				.getBoolean(STR.Preference.TestMethodAutoGenerate.RETURN);
+		String returnPrefix = store
+				.getString(STR.Preference.TestMethodAutoGenerate.RETURN_PREFIX);
+		String returnDelimiter = store
+				.getString(STR.Preference.TestMethodAutoGenerate.RETURN_DELIMITER);
 
 		if (enabled)
 		{
 			InputStream is = null;
+			InputStreamReader isr = null;
 			BufferedReader br = null;
 			try
 			{
 				is = javaFile.getContents();
-				br = new BufferedReader(new InputStreamReader(is));
+				isr = new InputStreamReader(is);
+				br = new BufferedReader(isr);
 				StringBuffer tmpsb = new StringBuffer();
 				String line = null;
 				while ((line = br.readLine()) != null)
@@ -189,15 +172,9 @@ public class TestCaseGenerateUtil
 				for (String publicsEach : publics)
 				{
 					// TODO ??inner class support
-					if (publicsEach.matches(RXP_WS + RXP_ANY_RQ + "\\s+" + RXP_ANY_RQ
-							+ RXP_WS + "\\(" + RXP_ANY_NRQ + "\\)" + RXP_WS + RXP_ANY_NRQ
-							+ RXP_WS + RXP_ANY_NRQ + "\\{.+"))
+					if (publicsEach.matches(RXP_SEARCH_METHOD))
 					{
-						Matcher matcher = Pattern.compile(
-								RXP_WS + "(" + RXP_ANY_RQ + ")\\s+(" + RXP_ANY_RQ + ")"
-										+ RXP_WS + "\\((" + RXP_ANY_NRQ + ")\\)" + RXP_WS
-										+ RXP_ANY_NRQ + RXP_WS + RXP_ANY_NRQ + "\\{.+")
-								.matcher(publicsEach);
+						Matcher matcher = PAT_SEARCH_GROUP_METHOD.matcher(publicsEach);
 						if (matcher.find())
 						{
 							String methodReturnType = matcher.group(1);
@@ -207,16 +184,21 @@ public class TestCaseGenerateUtil
 							String args = matcher.group(3);
 							String[] argArr = args.split(",");
 							String argTypes = STR.EMPTY;
-							for (int i = 0; i < argArr.length; i++)
+
+							if (enabledArgs)
 							{
-								String arg = STR.EMPTY;
-								arg = argArr[i].replaceAll("<.+?>", STR.EMPTY);
-								arg = arg.trim();
-								arg = arg.replaceAll("\\.\\.\\.", "Array").replaceAll(
-										"\\[\\]", "Array");
-								arg = arg.split("\\s+")[0];
-								argTypes += argsDelimiter + arg;
+								int argArrLen = argArr.length;
+								for (int i = 0; i < argArrLen; i++)
+								{
+									String arg = STR.EMPTY;
+									arg = argArr[i].replaceAll("<.+?>", STR.EMPTY);
+									arg = arg.replaceAll("\\.\\.\\.", "Array")
+											.replaceAll("\\[\\]", "Array");
+									arg = arg.trim().split("\\s+")[0];
+									argTypes += argsDelimiter + arg;
+								}
 							}
+
 							String testMethodName = "test" + delimiter + methodName;
 							if (enabledReturn)
 							{
@@ -233,20 +215,9 @@ public class TestCaseGenerateUtil
 				}
 			} finally
 			{
-				if (is != null)
-					try
-					{
-						is.close();
-					} catch (Exception ignore)
-					{
-					}
-				if (br != null)
-					try
-					{
-						br.close();
-					} catch (Exception ignore)
-					{
-					}
+				FileResourceUtil.close(br);
+				FileResourceUtil.close(isr);
+				FileResourceUtil.close(is);
 			}
 
 		}

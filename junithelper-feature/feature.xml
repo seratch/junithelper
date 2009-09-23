@@ -2,9 +2,13 @@
 <feature
       id="org.junithelper.plugin.feature"
       label="JUnit Helper"
-      version="0.0.7"
+      version="0.0.8"
       provider-name="Kazuhiro Sera"
       plugin="org.junithelper.plugin"
+      os="win32"
+      ws="win32"
+      nl="en"
+      arch="x86"
       image="icon/junithelper.png">
 
    <description url="http://code.google.com/p/junithelper/">
@@ -251,6 +255,7 @@ Install from following update site
    </license>
 
    <url>
+      <update url="http://seratch.appspot.com/java/eclipse/plugins/site.xml"/>
       <discovery label="Project website" url="http://code.google.com/p/junithelper/"/>
    </url>
 
@@ -272,7 +277,7 @@ Install from following update site
          id="org.junithelper.plugin"
          download-size="0"
          install-size="0"
-         version="0.0.7"
+         version="0.0.8"
          unpack="false"/>
 
 </feature>
