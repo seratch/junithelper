@@ -12,6 +12,12 @@ public class PreferencePageInitializer extends AbstractPreferenceInitializer
 	public void initializeDefaultPreferences()
 	{
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+
+		// common
+		store.setDefault(STR.Preference.Common.SRC_MAIN_PATH, "src/main/java");
+		store.setDefault(STR.Preference.Common.SRC_TEST_PATH, "src/test/java");
+
+		// generating test methods
 		store.setDefault(STR.Preference.TestMethodAutoGenerate.ENABLE, true);
 		store.setDefault(STR.Preference.TestMethodAutoGenerate.DELIMITER, "_");
 		store.setDefault(STR.Preference.TestMethodAutoGenerate.ARGS, true);

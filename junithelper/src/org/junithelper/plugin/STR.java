@@ -18,8 +18,10 @@ public interface STR
 	public static final String PROPERTIES_EXP = ".properties";
 
 	public static final String SUFFIX_OF_TESTCASE = "Test";
-	public static final String SRC_MAIN_JAVA = "src/main/java";
-	public static final String SRC_TEST_JAVA = "src/test/java";
+	public static final String SRC_MAIN_JAVA = Activator.getDefault()
+			.getPreferenceStore().getString(STR.Preference.Common.SRC_MAIN_PATH);
+	public static final String SRC_TEST_JAVA = Activator.getDefault()
+			.getPreferenceStore().getString(STR.Preference.Common.SRC_TEST_PATH);
 
 	public static class RegExp
 	{
@@ -63,6 +65,8 @@ public interface STR
 		public static class Common
 		{
 			public static final String DESCRIPTION = "JUnit Helper Prefernces.";
+			public static final String SRC_MAIN_PATH = "Main Source Folder";
+			public static final String SRC_TEST_PATH = "Test Source Folder";
 		}
 
 		public static class TestMethodAutoGenerate

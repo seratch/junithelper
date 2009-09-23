@@ -8,6 +8,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.junithelper.plugin.Activator;
@@ -34,28 +35,63 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 	{
 		{
 			Composite parent = getFieldEditorParent();
+
+			Group commonPrentGroup = new Group(parent, 0);
+			{
+				FillLayout parentLayout = new FillLayout(256);
+				parentLayout.marginHeight = 2;
+				parentLayout.marginWidth = 4;
+				commonPrentGroup.setLayout(parentLayout);
+				commonPrentGroup.setText("Common");
+
+				GridData gd = new GridData(768);
+				commonPrentGroup.setLayoutData(gd);
+				Composite grp = new Composite(commonPrentGroup, 0);
+				grp.setLayout(new GridLayout(2, false));
+
+				Label label = new Label(grp, 0);
+				label.setText("If you changed, restart Eclipse.");
+				gd = new GridData(768);
+				gd.horizontalSpan = 2;
+				label.setLayoutData(gd);
+
+				// src/main/java
+				addField(new StringFieldEditor(STR.Preference.Common.SRC_MAIN_PATH,
+						STR.Preference.Common.SRC_MAIN_PATH, grp));
+				// src/test/java
+				addField(new StringFieldEditor(STR.Preference.Common.SRC_TEST_PATH,
+						STR.Preference.Common.SRC_TEST_PATH, grp));
+			}
+
+			// generating test methods
 			// enable
 			BooleanFieldEditor enable = new BooleanFieldEditor(
 					STR.Preference.TestMethodAutoGenerate.ENABLE,
 					STR.Preference.TestMethodAutoGenerate.ENABLE, parent);
 			addField(enable);
-			Group parentGroup = new Group(parent, 0);
+			Group genTestMethodsParentGroup = new Group(parent, 0);
 			{
 				FillLayout parentLayout = new FillLayout(256);
 				parentLayout.marginHeight = 2;
 				parentLayout.marginWidth = 4;
-				parentGroup.setLayout(parentLayout);
-				parentGroup.setText("Test Method Auto Generate");
+				genTestMethodsParentGroup.setLayout(parentLayout);
+				genTestMethodsParentGroup.setText("Test Method Auto Generate");
 
 				GridData gd = new GridData(768);
-				parentGroup.setLayoutData(gd);
-				Composite grp = new Composite(parentGroup, 0);
+				genTestMethodsParentGroup.setLayoutData(gd);
+				Composite grp = new Composite(genTestMethodsParentGroup, 0);
 				grp.setLayout(new GridLayout(2, false));
+
+				Label label = new Label(grp, 0);
+				label.setText("If you don't need, diable the checkboxes.");
+				gd = new GridData(768);
+				gd.horizontalSpan = 2;
+				label.setLayoutData(gd);
 			}
 
 			{
 				// delimiter
-				Group group = new Group(parentGroup, 0);
+				Group group = new Group(genTestMethodsParentGroup, 0);
 
 				FillLayout layout = new FillLayout(256);
 				layout.marginHeight = 4;
@@ -68,7 +104,6 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				group.setLayoutData(gd);
 				Composite grp = new Composite(group, 0);
 				grp.setLayout(new GridLayout(2, false));
-				// TODO
 				// delimiter
 				addField(new StringFieldEditor(
 						STR.Preference.TestMethodAutoGenerate.DELIMITER,
@@ -79,11 +114,12 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				// enable args
 				BooleanFieldEditor enableArgs = new BooleanFieldEditor(
 						STR.Preference.TestMethodAutoGenerate.ARGS,
-						STR.Preference.TestMethodAutoGenerate.ARGS, parentGroup);
+						STR.Preference.TestMethodAutoGenerate.ARGS,
+						genTestMethodsParentGroup);
 
 				addField(enableArgs);
 
-				Group group = new Group(parentGroup, 0);
+				Group group = new Group(genTestMethodsParentGroup, 0);
 
 				FillLayout layout = new FillLayout(256);
 				layout.marginHeight = 4;
@@ -104,19 +140,15 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 						STR.Preference.TestMethodAutoGenerate.ARGS_DELIMITER, grp);
 				addField(argsPrefix);
 				addField(argsDelimiter);
-				// Label label = new Label(grp, 0);
-				// label.setText("something message.");
-				// gd = new GridData(768);
-				// gd.horizontalSpan = 2;
-				// label.setLayoutData(gd);
 			}
 			{
 				// enable return
 				addField(new BooleanFieldEditor(
 						STR.Preference.TestMethodAutoGenerate.RETURN,
-						STR.Preference.TestMethodAutoGenerate.RETURN, parentGroup));
+						STR.Preference.TestMethodAutoGenerate.RETURN,
+						genTestMethodsParentGroup));
 
-				Group group = new Group(parentGroup, 0);
+				Group group = new Group(genTestMethodsParentGroup, 0);
 
 				FillLayout layout = new FillLayout(256);
 				layout.marginHeight = 4;
@@ -137,12 +169,6 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 						STR.Preference.TestMethodAutoGenerate.RETURN_DELIMITER, grp);
 				addField(argsPrefix);
 				addField(argsDelimiter);
-				// Label label = new Label(grp, 0);
-				// label.setText("something message.");
-				// gd = new GridData(768);
-				// gd.horizontalSpan = 2;
-				// label.setLayoutData(gd);
-
 			}
 		}
 	}
