@@ -64,10 +64,8 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 
 			StructuredSelection structuredSelection = null;
 			if (selection instanceof StructuredSelection)
-			{
 				// viewer
 				structuredSelection = (StructuredSelection) selection;
-			}
 
 			if (structuredSelection != null && structuredSelection.size() == 0)
 			{
@@ -207,13 +205,13 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate
 						String testPackageString = STR.EMPTY;
 						String[] tmpDirArr = selected.split(STR.DIR_SEP);
 						StringBuffer dirSb = new StringBuffer();
-						int tmpDirArrLenth = tmpDirArr.length;
-						for (int i = 3; i < tmpDirArrLenth - 2; i++)
+						int packageArrLen = tmpDirArr.length - 2;
+						for (int i = 3; i < packageArrLen; i++)
 						{
 							dirSb.append(tmpDirArr[i]);
 							dirSb.append(".");
 						}
-						dirSb.append(tmpDirArr[tmpDirArr.length - 2]);
+						dirSb.append(tmpDirArr[packageArrLen]);
 						testPackageString = dirSb.toString();
 
 						sb.append("package ");
