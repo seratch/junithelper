@@ -220,6 +220,8 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 						sb.append(";");
 						sb.append(CRLF);
 
+						sb.append(CRLF);
+
 						sb.append("import junit.framework.TestCase;");
 						sb.append(CRLF);
 
