@@ -2,7 +2,7 @@
 <feature
       id="org.junithelper.plugin.feature"
       label="JUnit Helper"
-      version="0.0.10"
+      version="0.0.11"
       provider-name="Kazuhiro Sera"
       plugin="org.junithelper.plugin"
       os="win32"
@@ -277,7 +277,7 @@ Install from following update site
          id="org.junithelper.plugin"
          download-size="0"
          install-size="0"
-         version="0.0.10"
+         version="0.0.11"
          unpack="false"/>
 
 </feature>
