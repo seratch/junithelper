@@ -74,12 +74,42 @@ public class TestCaseGenerateUtil
 		return lines;
 	}
 
-	static String RXP_SEARCH_METHOD = RXP_WS + RXP_ANY_RQ + "\\s+" + RXP_ANY_RQ + RXP_WS
-			+ "\\(" + RXP_ANY_NRQ + "\\)" + RXP_WS + RXP_ANY_NRQ + RXP_WS + RXP_ANY_NRQ
-			+ "\\{.+";
-	static Pattern PAT_SEARCH_GROUP_METHOD = Pattern.compile(RXP_WS + "(" + RXP_ANY_RQ
-			+ ")\\s+(" + RXP_ANY_RQ + ")" + RXP_WS + "\\((" + RXP_ANY_NRQ + ")\\)"
-			+ RXP_WS + RXP_ANY_NRQ + RXP_WS + RXP_ANY_NRQ + "\\{.+");
+	private static String RXP_SEARCH_METHOD = "";
+	static
+	{
+		// prefix white and space
+		RXP_SEARCH_METHOD += RXP_WS;
+		// method modifiers
+		// no need to support abstract methods
+		RXP_SEARCH_METHOD += "[static|final|\\s]*";
+		// return type
+		RXP_SEARCH_METHOD += RXP_ANY_RQ + "\\s+";
+		// method ex.doSomething(String arg)
+		RXP_SEARCH_METHOD += RXP_ANY_RQ + RXP_WS + "\\(" + RXP_ANY_NRQ + "\\)";
+		// throws exception
+		RXP_SEARCH_METHOD += RXP_WS + RXP_ANY_NRQ + RXP_WS + RXP_ANY_NRQ;
+		// method start and so on
+		RXP_SEARCH_METHOD += "\\{.+";
+	}
+	private static String RXP_SEARCH_GROUP_METHOD = "";
+	static
+	{
+		// prefix white and space
+		RXP_SEARCH_GROUP_METHOD += RXP_WS;
+		// method modifiers
+		// TODO exclude abstract methods
+		RXP_SEARCH_GROUP_METHOD += "[static|final|\\s]*";
+		// return type
+		RXP_SEARCH_GROUP_METHOD += "(" + RXP_ANY_RQ + ")" + "\\s+";
+		// method ex.doSomething(String arg)
+		RXP_SEARCH_GROUP_METHOD += "(" + RXP_ANY_RQ + ")" + RXP_WS + "\\((" + RXP_ANY_NRQ
+				+ ")\\)";
+		// throws exception
+		RXP_SEARCH_GROUP_METHOD += RXP_WS + RXP_ANY_NRQ + RXP_WS + RXP_ANY_NRQ;
+		// method start and so on
+		RXP_SEARCH_GROUP_METHOD += "\\{.+";
+	}
+	static Pattern PAT_SEARCH_GROUP_METHOD = Pattern.compile(RXP_SEARCH_GROUP_METHOD);
 
 	public static List<String> getMethodNames(IFile javaFile) throws Exception
 	{
