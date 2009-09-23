@@ -21,8 +21,8 @@ public class TestCaseGenerateUtil
 	static IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 
 	static String RXP_WS = STR.RegExp.WHITE_AND_SPACE;
-	static String RXP_ANY_RQ = STR.RegExp.ANY_WORDS_REQUIRED;
-	static String RXP_ANY_NRQ = STR.RegExp.ANY_WORDS_NOT_REQUIRED;
+	static String RXP_NOT_S_RQ = STR.RegExp.NOT_S_REQUIRED;
+	static String RXP_NOT_S_NRQ = STR.RegExp.NOT_S_NOREQUIRED;
 
 	public static List<String> getUnimplementedTestMethodNames(IFile testTarget,
 			IFile testCase) throws Exception
@@ -75,19 +75,22 @@ public class TestCaseGenerateUtil
 	}
 
 	private static String RXP_SEARCH_METHOD = "";
+	private static final String RXP_METHOD_MODIFIERS = "[<\\w+?>|static|final|\\s]*";
 	static
 	{
 		// prefix white and space
 		RXP_SEARCH_METHOD += RXP_WS;
 		// method modifiers
 		// no need to support abstract methods
-		RXP_SEARCH_METHOD += "[static|final|\\s]*";
+		RXP_SEARCH_METHOD += RXP_METHOD_MODIFIERS;
 		// return type
-		RXP_SEARCH_METHOD += RXP_ANY_RQ + "\\s+";
+		RXP_SEARCH_METHOD += RXP_NOT_S_RQ + "\\s+";
 		// method ex.doSomething(String arg)
-		RXP_SEARCH_METHOD += RXP_ANY_RQ + RXP_WS + "\\(" + RXP_ANY_NRQ + "\\)";
+		RXP_SEARCH_METHOD += RXP_NOT_S_RQ + RXP_WS;
+		// method args
+		RXP_SEARCH_METHOD += "\\(" + "[^\\)]*?" + "\\)";
 		// throws exception
-		RXP_SEARCH_METHOD += RXP_WS + RXP_ANY_NRQ + RXP_WS + RXP_ANY_NRQ;
+		RXP_SEARCH_METHOD += RXP_WS + ".*?" + RXP_WS;
 		// method start and so on
 		RXP_SEARCH_METHOD += "\\{.+";
 	}
@@ -98,14 +101,15 @@ public class TestCaseGenerateUtil
 		RXP_SEARCH_GROUP_METHOD += RXP_WS;
 		// method modifiers
 		// TODO exclude abstract methods
-		RXP_SEARCH_GROUP_METHOD += "[static|final|\\s]*";
+		RXP_SEARCH_GROUP_METHOD += RXP_METHOD_MODIFIERS;
 		// return type
-		RXP_SEARCH_GROUP_METHOD += "(" + RXP_ANY_RQ + ")" + "\\s+";
-		// method ex.doSomething(String arg)
-		RXP_SEARCH_GROUP_METHOD += "(" + RXP_ANY_RQ + ")" + RXP_WS + "\\((" + RXP_ANY_NRQ
-				+ ")\\)";
+		RXP_SEARCH_GROUP_METHOD += "(" + RXP_NOT_S_RQ + ")" + "\\s+";
+		// method ex.doSomething
+		RXP_SEARCH_GROUP_METHOD += "(" + RXP_NOT_S_RQ + ")" + RXP_WS;
+		// method args
+		RXP_SEARCH_GROUP_METHOD += "\\((" + "[^\\)]*?" + ")\\)";
 		// throws exception
-		RXP_SEARCH_GROUP_METHOD += RXP_WS + RXP_ANY_NRQ + RXP_WS + RXP_ANY_NRQ;
+		RXP_SEARCH_GROUP_METHOD += RXP_WS + ".*?" + RXP_WS;
 		// method start and so on
 		RXP_SEARCH_GROUP_METHOD += "\\{.+";
 	}

@@ -25,8 +25,8 @@ public interface STR
 	{
 
 		public static final String DOT = "\\.";
-		public static final String ANY_WORDS_NOT_REQUIRED = ".*?";
-		public static final String ANY_WORDS_REQUIRED = ".+?";
+		public static final String NOT_S_NOREQUIRED = "[^\\s]*?";
+		public static final String NOT_S_REQUIRED = "[^\\s]+?";
 		public static final String WHITE_AND_SPACE = "\\s*";
 		public static final String JAVA_EXP = "\\.java";
 
