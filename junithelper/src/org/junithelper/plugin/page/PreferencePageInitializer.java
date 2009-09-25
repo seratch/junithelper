@@ -19,13 +19,18 @@ public class PreferencePageInitializer extends AbstractPreferenceInitializer
 
 		// generating test methods
 		store.setDefault(STR.Preference.TestMethodAutoGenerate.ENABLE, true);
+
 		store.setDefault(STR.Preference.TestMethodAutoGenerate.DELIMITER, "_");
+
 		store.setDefault(STR.Preference.TestMethodAutoGenerate.ARGS, true);
 		store.setDefault(STR.Preference.TestMethodAutoGenerate.ARGS_PREFIX, "A");
 		store.setDefault(STR.Preference.TestMethodAutoGenerate.ARGS_DELIMITER, "$");
+
 		store.setDefault(STR.Preference.TestMethodAutoGenerate.RETURN, false);
 		store.setDefault(STR.Preference.TestMethodAutoGenerate.RETURN_PREFIX, "R");
 		store.setDefault(STR.Preference.TestMethodAutoGenerate.RETURN_DELIMITER, "$");
+
+		store.setDefault(STR.Preference.TestMethodAutoGenerate.METHOD_SAMPLE_IMPLEMENTATION, false);
 	}
 
 }

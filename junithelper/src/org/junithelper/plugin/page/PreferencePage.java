@@ -170,6 +170,15 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				addField(argsPrefix);
 				addField(argsDelimiter);
 			}
+			{
+				// enable generate not blank methods
+				BooleanFieldEditor enableArgs = new BooleanFieldEditor(
+						STR.Preference.TestMethodAutoGenerate.METHOD_SAMPLE_IMPLEMENTATION,
+						STR.Preference.TestMethodAutoGenerate.METHOD_SAMPLE_IMPLEMENTATION,
+						genTestMethodsParentGroup);
+
+				addField(enableArgs);
+			}
 		}
 	}
 

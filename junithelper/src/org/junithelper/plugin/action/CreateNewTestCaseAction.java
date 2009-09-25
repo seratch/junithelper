@@ -25,7 +25,9 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
+import org.junithelper.plugin.Activator;
 import org.junithelper.plugin.STR;
+import org.junithelper.plugin.bean.GeneratingMethodInfo;
 import org.junithelper.plugin.util.FileResourceUtil;
 import org.junithelper.plugin.util.ResourcePathUtil;
 import org.junithelper.plugin.util.ResourceRefreshUtil;
@@ -190,7 +192,7 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 						IResource targetClassResource = workspaceRoot
 								.findMember(targetClass);
 						IFile file = (IFile) targetClassResource;
-						List<String> testMethods = TestCaseGenerateUtil
+						List<GeneratingMethodInfo> testMethods = TestCaseGenerateUtil
 								.getTestMethodsFromTarget(file);
 
 						// generate test class
@@ -224,7 +226,24 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 
 						sb.append("import junit.framework.TestCase;");
 						sb.append(CRLF);
+						boolean enabledNotBlankMethods = Activator
+								.getDefault()
+								.getPreferenceStore()
+								.getBoolean(
+										STR.Preference.TestMethodAutoGenerate.METHOD_SAMPLE_IMPLEMENTATION);
+						if (enabledNotBlankMethods)
+						{
+							sb.append(CRLF);
+							List<String> importedPackageList = testMethods.get(0).importList;
+							for (String importedPackage : importedPackageList)
+							{
+								sb.append("import ");
+								sb.append(importedPackage);
+								sb.append(";");
+								sb.append(CRLF);
+							}
 
+						}
 						sb.append(CRLF);
 
 						sb.append("public class ");
@@ -234,15 +253,24 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 
 						sb.append(CRLF);
 
-						for (String testMethod : testMethods)
+						for (GeneratingMethodInfo testMethod : testMethods)
 						{
 							sb.append("\tpublic void ");
-							sb.append(testMethod);
+							sb.append(testMethod.testMethodName);
 							sb.append("() throws Exception {");
 							sb.append(CRLF);
 
-							sb.append("\t\t// TODO");
+							sb.append("\t\t//");
+							sb.append(STR.AUTO_GEN_MSG_TODO);
 							sb.append(CRLF);
+
+							if (enabledNotBlankMethods)
+							{
+								String notBlankSourceCode = TestCaseGenerateUtil
+										.getNotBlankTestMethodSource(testMethod,
+												testMethods, testTargetClassname);
+								sb.append(notBlankSourceCode);
+							}
 
 							sb.append("\t}");
 							sb.append(CRLF);
