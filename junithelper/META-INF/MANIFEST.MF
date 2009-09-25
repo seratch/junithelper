@@ -2,11 +2,11 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JUnit Helper
 Bundle-SymbolicName: org.junithelper.plugin;singleton:=true
-Bundle-Version: 0.0.17
+Bundle-Version: 0.0.18
 Bundle-Localization: plugin
 Bundle-ClassPath: .
 Bundle-Activator: org.junithelper.plugin.Activator
-Bundle-Vendor: Kazuhiro Sera
+Bundle-Vendor: junithelper.org
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.views,
