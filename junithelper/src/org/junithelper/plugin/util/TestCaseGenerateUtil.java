@@ -101,6 +101,8 @@ public class TestCaseGenerateUtil
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		// enable public method test
 		boolean enabled = store.getBoolean(STR.Preference.TestMethodGen.ENABLE);
+		boolean enabledNotBlankMethods = store
+				.getBoolean(STR.Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION);
 		// enable public method test
 		if (enabled)
 		{
@@ -121,6 +123,28 @@ public class TestCaseGenerateUtil
 				}
 				if (!exist)
 					unimplementedMethodNames.add(expected);
+			}
+			// imported types
+			if (enabledNotBlankMethods)
+			{
+				List<String> notImportedList = new ArrayList<String>();
+				List<String> expImportedList = expectedList.get(0).importList;
+				List<String> actImportedList = actualList.get(0).importList;
+				for (String expImported : expImportedList)
+				{
+					boolean found = false;
+					for (String actImported : actImportedList)
+					{
+						if (expImported.equals(actImported))
+						{
+							found = true;
+							break;
+						}
+					}
+					if (!found)
+						notImportedList.add(expImported);
+				}
+				unimplementedMethodNames.get(0).importList = notImportedList;
 			}
 		}
 		return unimplementedMethodNames;
@@ -154,6 +178,8 @@ public class TestCaseGenerateUtil
 		// enable public method test
 		boolean enabled = Activator.getDefault().getPreferenceStore().getBoolean(
 				STR.Preference.TestMethodGen.ENABLE);
+		boolean enabledNotBlankMethods = Activator.getDefault().getPreferenceStore()
+				.getBoolean(STR.Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION);
 		if (enabled)
 		{
 			InputStream is = null;
@@ -203,6 +229,21 @@ public class TestCaseGenerateUtil
 						}
 					}
 				}
+				// imported types
+				if (enabledNotBlankMethods)
+				{
+					String[] importStartLines = allSrc.split("import\\s+");
+					for (String importStartLine : importStartLines)
+					{
+						// not package or not comment
+						if (!importStartLine
+								.matches("^\\s*package.*?|^\\s*/\\*.*?|^\\s*//.*?"))
+						{
+							String importedPackage = importStartLine.split(";")[0];
+							methodStringInfos.get(0).importList.add(importedPackage);
+						}
+					}
+				}
 			} finally
 			{
 				FileResourceUtil.close(br);
@@ -224,23 +265,18 @@ public class TestCaseGenerateUtil
 		// enable public method test
 		boolean enabled = store.getBoolean(STR.Preference.TestMethodGen.ENABLE);
 
-		boolean enabledArgs = store
-				.getBoolean(STR.Preference.TestMethodGen.ARGS);
-		boolean enabledReturn = store
-				.getBoolean(STR.Preference.TestMethodGen.RETURN);
+		boolean enabledArgs = store.getBoolean(STR.Preference.TestMethodGen.ARGS);
+		boolean enabledReturn = store.getBoolean(STR.Preference.TestMethodGen.RETURN);
 		boolean enabledNotBlankMethods = store
 				.getBoolean(STR.Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION);
 		boolean enableExcludesAccessors = store
 				.getBoolean(STR.Preference.TestMethodGen.EXLCUDES_ACCESSORS);
 
-		String delimiter = store
-				.getString(STR.Preference.TestMethodGen.DELIMITER);
-		String argsPrefix = store
-				.getString(STR.Preference.TestMethodGen.ARGS_PREFIX);
+		String delimiter = store.getString(STR.Preference.TestMethodGen.DELIMITER);
+		String argsPrefix = store.getString(STR.Preference.TestMethodGen.ARGS_PREFIX);
 		String argsDelimiter = store
 				.getString(STR.Preference.TestMethodGen.ARGS_DELIMITER);
-		String returnPrefix = store
-				.getString(STR.Preference.TestMethodGen.RETURN_PREFIX);
+		String returnPrefix = store.getString(STR.Preference.TestMethodGen.RETURN_PREFIX);
 		String returnDelimiter = store
 				.getString(STR.Preference.TestMethodGen.RETURN_DELIMITER);
 
@@ -352,7 +388,7 @@ public class TestCaseGenerateUtil
 						}
 					}
 				}
-				// TODO if generate not blank methods
+				// imported types
 				if (enabledNotBlankMethods)
 				{
 					String[] importStartLines = allSrc.split("import\\s+");
