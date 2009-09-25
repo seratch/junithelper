@@ -4,7 +4,8 @@ Bundle-Name: JUnit Helper
 Bundle-SymbolicName: org.junithelper.plugin;singleton:=true
 Bundle-Version: 0.0.19
 Bundle-Localization: plugin
-Bundle-ClassPath: .
+Bundle-ClassPath: .,
+ lib/juniversalchardet-1.0.3.jar
 Bundle-Activator: org.junithelper.plugin.Activator
 Bundle-Vendor: junithelper.org
 Require-Bundle: org.eclipse.ui,

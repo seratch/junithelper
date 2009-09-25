@@ -3,6 +3,7 @@ package org.junithelper.plugin.util;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -15,6 +16,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.junithelper.plugin.Activator;
 import org.junithelper.plugin.STR;
 import org.junithelper.plugin.bean.GeneratingMethodInfo;
+import org.mozilla.universalchardet.UniversalDetector;
 
 public class TestCaseGenerateUtil
 {
@@ -188,7 +190,20 @@ public class TestCaseGenerateUtil
 			try
 			{
 				is = javaFile.getContents();
-				isr = new InputStreamReader(is);
+
+				// detect charset
+				UniversalDetector detector = new UniversalDetector(null);
+				byte[] buf = new byte[4096];
+				int nread;
+				while ((nread = is.read(buf)) > 0 && !detector.isDone())
+					detector.handleData(buf, 0, nread);
+				detector.dataEnd();
+				String encoding = detector.getDetectedCharset();
+				if (encoding == null)
+					encoding = Charset.defaultCharset().name();
+
+				is = javaFile.getContents();
+				isr = new InputStreamReader(is, encoding);
 				br = new BufferedReader(isr);
 				StringBuffer tmpsb = new StringBuffer();
 				String line = null;
@@ -232,6 +247,8 @@ public class TestCaseGenerateUtil
 				// imported types
 				if (enabledNotBlankMethods)
 				{
+					if (methodStringInfos.size() <= 0 || methodStringInfos.get(0) == null)
+						methodStringInfos.add(new GeneratingMethodInfo());
 					String[] importStartLines = allSrc.split("import\\s+");
 					for (String importStartLine : importStartLines)
 					{
@@ -287,8 +304,20 @@ public class TestCaseGenerateUtil
 			BufferedReader br = null;
 			try
 			{
+				// detect charset
 				is = javaFile.getContents();
-				isr = new InputStreamReader(is);
+				UniversalDetector detector = new UniversalDetector(null);
+				byte[] buf = new byte[4096];
+				int nread;
+				while ((nread = is.read(buf)) > 0 && !detector.isDone())
+					detector.handleData(buf, 0, nread);
+				detector.dataEnd();
+				String encoding = detector.getDetectedCharset();
+				if (encoding == null)
+					encoding = Charset.defaultCharset().name();
+
+				is = javaFile.getContents();
+				isr = new InputStreamReader(is, encoding);
 				br = new BufferedReader(isr);
 				StringBuffer tmpsb = new StringBuffer();
 				String line = null;
@@ -391,6 +420,8 @@ public class TestCaseGenerateUtil
 				// imported types
 				if (enabledNotBlankMethods)
 				{
+					if (testMethods.size() <= 0 || testMethods.get(0) == null)
+						testMethods.add(new GeneratingMethodInfo());
 					String[] importStartLines = allSrc.split("import\\s+");
 					for (String importStartLine : importStartLines)
 					{
