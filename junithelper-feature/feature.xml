@@ -2,14 +2,16 @@
 <feature
       id="org.junithelper.plugin.feature"
       label="JUnit Helper"
-      version="0.0.15"
+      version="0.0.17"
       provider-name="Kazuhiro Sera"
       plugin="org.junithelper.plugin"
       os="win32"
       ws="win32"
       nl="en"
       arch="x86"
-      image="icon/junithelper.png">
+      image="icon/junithelper.png"
+      exclusive="true"
+      colocation-affinity="org.junithelper.plugin.feature">
 
    <description url="http://code.google.com/p/junithelper/">
       &quot;JUnit Helper&quot; is a Eclipse plugin for JUnit testing. 
@@ -255,7 +257,7 @@ Install from following update site
    </license>
 
    <url>
-      <update url="http://seratch.appspot.com/java/eclipse/plugins/site.xml"/>
+      <update label="http://junithelper.org/eclipse/plugins/site.xml" url="http://junithelper.org/eclipse/plugins/site.xml"/>
       <discovery label="Project website" url="http://code.google.com/p/junithelper/"/>
    </url>
 
@@ -277,7 +279,7 @@ Install from following update site
          id="org.junithelper.plugin"
          download-size="0"
          install-size="0"
-         version="0.0.15"
+         version="0.0.17"
          unpack="false"/>
 
 </feature>
