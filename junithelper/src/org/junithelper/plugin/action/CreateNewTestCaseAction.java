@@ -226,12 +226,15 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 
 						sb.append("import junit.framework.TestCase;");
 						sb.append(CRLF);
+						boolean enabledTestMethodsGen = Activator.getDefault()
+								.getPreferenceStore().getBoolean(
+										STR.Preference.TestMethodGen.ENABLE);
 						boolean enabledNotBlankMethods = Activator
 								.getDefault()
 								.getPreferenceStore()
 								.getBoolean(
 										STR.Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION);
-						if (enabledNotBlankMethods)
+						if (enabledTestMethodsGen && enabledNotBlankMethods)
 						{
 							sb.append(CRLF);
 							List<String> importedPackageList = testMethods.get(0).importList;
@@ -253,29 +256,32 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 
 						sb.append(CRLF);
 
-						for (GeneratingMethodInfo testMethod : testMethods)
+						if (enabledTestMethodsGen)
 						{
-							sb.append("\tpublic void ");
-							sb.append(testMethod.testMethodName);
-							sb.append("() throws Exception {");
-							sb.append(CRLF);
-
-							sb.append("\t\t//");
-							sb.append(STR.AUTO_GEN_MSG_TODO);
-							sb.append(CRLF);
-
-							if (enabledNotBlankMethods)
+							for (GeneratingMethodInfo testMethod : testMethods)
 							{
-								String notBlankSourceCode = TestCaseGenerateUtil
-										.getNotBlankTestMethodSource(testMethod,
-												testMethods, testTargetClassname);
-								sb.append(notBlankSourceCode);
+								sb.append("\tpublic void ");
+								sb.append(testMethod.testMethodName);
+								sb.append("() throws Exception {");
+								sb.append(CRLF);
+
+								sb.append("\t\t//");
+								sb.append(STR.AUTO_GEN_MSG_TODO);
+								sb.append(CRLF);
+
+								if (enabledNotBlankMethods)
+								{
+									String notBlankSourceCode = TestCaseGenerateUtil
+											.getNotBlankTestMethodSource(testMethod,
+													testMethods, testTargetClassname);
+									sb.append(notBlankSourceCode);
+								}
+
+								sb.append("\t}");
+								sb.append(CRLF);
+
+								sb.append(CRLF);
 							}
-
-							sb.append("\t}");
-							sb.append(CRLF);
-
-							sb.append(CRLF);
 						}
 						sb.append("}");
 						sb.append(CRLF);
