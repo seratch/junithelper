@@ -50,7 +50,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				grp.setLayout(new GridLayout(2, false));
 
 				Label label = new Label(grp, 0);
-				label.setText("If you changed, restart Eclipse.");
+				label.setText("If you changed this section, please restart Eclipse.");
 				gd = new GridData(768);
 				gd.horizontalSpan = 2;
 				label.setLayoutData(gd);
@@ -66,8 +66,8 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 			// generating test methods
 			// enable
 			BooleanFieldEditor enable = new BooleanFieldEditor(
-					STR.Preference.TestMethodAutoGenerate.ENABLE,
-					STR.Preference.TestMethodAutoGenerate.ENABLE, parent);
+					STR.Preference.TestMethodGen.ENABLE,
+					STR.Preference.TestMethodGen.ENABLE, parent);
 			addField(enable);
 			Group genTestMethodsParentGroup = new Group(parent, 0);
 			{
@@ -82,11 +82,6 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				Composite grp = new Composite(genTestMethodsParentGroup, 0);
 				grp.setLayout(new GridLayout(2, false));
 
-				Label label = new Label(grp, 0);
-				label.setText("If you don't need, diable the checkboxes.");
-				gd = new GridData(768);
-				gd.horizontalSpan = 2;
-				label.setLayoutData(gd);
 			}
 
 			{
@@ -105,17 +100,15 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				Composite grp = new Composite(group, 0);
 				grp.setLayout(new GridLayout(2, false));
 				// delimiter
-				addField(new StringFieldEditor(
-						STR.Preference.TestMethodAutoGenerate.DELIMITER,
-						STR.Preference.TestMethodAutoGenerate.DELIMITER, grp));
+				addField(new StringFieldEditor(STR.Preference.TestMethodGen.DELIMITER,
+						STR.Preference.TestMethodGen.DELIMITER, grp));
 			}
 
 			{
 				// enable args
 				BooleanFieldEditor enableArgs = new BooleanFieldEditor(
-						STR.Preference.TestMethodAutoGenerate.ARGS,
-						STR.Preference.TestMethodAutoGenerate.ARGS,
-						genTestMethodsParentGroup);
+						STR.Preference.TestMethodGen.ARGS,
+						STR.Preference.TestMethodGen.ARGS, genTestMethodsParentGroup);
 
 				addField(enableArgs);
 
@@ -133,20 +126,18 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				Composite grp = new Composite(group, 0);
 				grp.setLayout(new GridLayout(2, false));
 				StringFieldEditor argsPrefix = new StringFieldEditor(
-						STR.Preference.TestMethodAutoGenerate.ARGS_PREFIX,
-						STR.Preference.TestMethodAutoGenerate.ARGS_PREFIX, grp);
+						STR.Preference.TestMethodGen.ARGS_PREFIX,
+						STR.Preference.TestMethodGen.ARGS_PREFIX, grp);
 				StringFieldEditor argsDelimiter = new StringFieldEditor(
-						STR.Preference.TestMethodAutoGenerate.ARGS_DELIMITER,
-						STR.Preference.TestMethodAutoGenerate.ARGS_DELIMITER, grp);
+						STR.Preference.TestMethodGen.ARGS_DELIMITER,
+						STR.Preference.TestMethodGen.ARGS_DELIMITER, grp);
 				addField(argsPrefix);
 				addField(argsDelimiter);
 			}
 			{
 				// enable return
-				addField(new BooleanFieldEditor(
-						STR.Preference.TestMethodAutoGenerate.RETURN,
-						STR.Preference.TestMethodAutoGenerate.RETURN,
-						genTestMethodsParentGroup));
+				addField(new BooleanFieldEditor(STR.Preference.TestMethodGen.RETURN,
+						STR.Preference.TestMethodGen.RETURN, genTestMethodsParentGroup));
 
 				Group group = new Group(genTestMethodsParentGroup, 0);
 
@@ -162,22 +153,31 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				Composite grp = new Composite(group, 0);
 				grp.setLayout(new GridLayout(2, false));
 				StringFieldEditor argsPrefix = new StringFieldEditor(
-						STR.Preference.TestMethodAutoGenerate.RETURN_PREFIX,
-						STR.Preference.TestMethodAutoGenerate.RETURN_PREFIX, grp);
+						STR.Preference.TestMethodGen.RETURN_PREFIX,
+						STR.Preference.TestMethodGen.RETURN_PREFIX, grp);
 				StringFieldEditor argsDelimiter = new StringFieldEditor(
-						STR.Preference.TestMethodAutoGenerate.RETURN_DELIMITER,
-						STR.Preference.TestMethodAutoGenerate.RETURN_DELIMITER, grp);
+						STR.Preference.TestMethodGen.RETURN_DELIMITER,
+						STR.Preference.TestMethodGen.RETURN_DELIMITER, grp);
 				addField(argsPrefix);
 				addField(argsDelimiter);
 			}
 			{
-				// enable generate not blank methods
-				BooleanFieldEditor enableArgs = new BooleanFieldEditor(
-						STR.Preference.TestMethodAutoGenerate.METHOD_SAMPLE_IMPLEMENTATION,
-						STR.Preference.TestMethodAutoGenerate.METHOD_SAMPLE_IMPLEMENTATION,
+				// enable excluding accessors
+				BooleanFieldEditor execludesAccessors = new BooleanFieldEditor(
+						STR.Preference.TestMethodGen.EXLCUDES_ACCESSORS,
+						STR.Preference.TestMethodGen.EXLCUDES_ACCESSORS,
 						genTestMethodsParentGroup);
 
-				addField(enableArgs);
+				addField(execludesAccessors);
+			}
+			{
+				// enable generate not blank methods
+				BooleanFieldEditor enableGenerateSample = new BooleanFieldEditor(
+						STR.Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION,
+						STR.Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION,
+						genTestMethodsParentGroup);
+
+				addField(enableGenerateSample);
 			}
 		}
 	}

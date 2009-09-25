@@ -100,7 +100,7 @@ public class TestCaseGenerateUtil
 
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		// enable public method test
-		boolean enabled = store.getBoolean(STR.Preference.TestMethodAutoGenerate.ENABLE);
+		boolean enabled = store.getBoolean(STR.Preference.TestMethodGen.ENABLE);
 		// enable public method test
 		if (enabled)
 		{
@@ -153,7 +153,7 @@ public class TestCaseGenerateUtil
 
 		// enable public method test
 		boolean enabled = Activator.getDefault().getPreferenceStore().getBoolean(
-				STR.Preference.TestMethodAutoGenerate.ENABLE);
+				STR.Preference.TestMethodGen.ENABLE);
 		if (enabled)
 		{
 			InputStream is = null;
@@ -222,25 +222,27 @@ public class TestCaseGenerateUtil
 
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		// enable public method test
-		boolean enabled = store.getBoolean(STR.Preference.TestMethodAutoGenerate.ENABLE);
+		boolean enabled = store.getBoolean(STR.Preference.TestMethodGen.ENABLE);
 
 		boolean enabledArgs = store
-				.getBoolean(STR.Preference.TestMethodAutoGenerate.ARGS);
+				.getBoolean(STR.Preference.TestMethodGen.ARGS);
 		boolean enabledReturn = store
-				.getBoolean(STR.Preference.TestMethodAutoGenerate.RETURN);
+				.getBoolean(STR.Preference.TestMethodGen.RETURN);
 		boolean enabledNotBlankMethods = store
-				.getBoolean(STR.Preference.TestMethodAutoGenerate.METHOD_SAMPLE_IMPLEMENTATION);
+				.getBoolean(STR.Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION);
+		boolean enableExcludesAccessors = store
+				.getBoolean(STR.Preference.TestMethodGen.EXLCUDES_ACCESSORS);
 
 		String delimiter = store
-				.getString(STR.Preference.TestMethodAutoGenerate.DELIMITER);
+				.getString(STR.Preference.TestMethodGen.DELIMITER);
 		String argsPrefix = store
-				.getString(STR.Preference.TestMethodAutoGenerate.ARGS_PREFIX);
+				.getString(STR.Preference.TestMethodGen.ARGS_PREFIX);
 		String argsDelimiter = store
-				.getString(STR.Preference.TestMethodAutoGenerate.ARGS_DELIMITER);
+				.getString(STR.Preference.TestMethodGen.ARGS_DELIMITER);
 		String returnPrefix = store
-				.getString(STR.Preference.TestMethodAutoGenerate.RETURN_PREFIX);
+				.getString(STR.Preference.TestMethodGen.RETURN_PREFIX);
 		String returnDelimiter = store
-				.getString(STR.Preference.TestMethodAutoGenerate.RETURN_DELIMITER);
+				.getString(STR.Preference.TestMethodGen.RETURN_DELIMITER);
 
 		if (enabled)
 		{
@@ -290,6 +292,42 @@ public class TestCaseGenerateUtil
 									each.argTypeNames.add(getType(argArr[i]));
 									each.argTypeNamesInMethodName
 											.add(getTypeAvailableInMethodName(argArr[i]));
+								}
+							}
+							// exlucdes accessors
+							if (enableExcludesAccessors)
+							{
+								String fieldName = null;
+								String fieldType = null;
+								if (each.methodName.matches("^set.+"))
+								{
+									// target field name
+									fieldName = each.methodName.substring(3);
+									fieldName = fieldName.substring(0, 1).toLowerCase()
+											+ fieldName.substring(1);
+									fieldType = each.argTypeNames.get(0);
+								} else if (each.methodName.matches("^get.+"))
+								{
+									// target field name
+									fieldName = each.methodName.substring(3);
+									fieldName = fieldName.substring(0, 1).toLowerCase()
+											+ fieldName.substring(1);
+									fieldType = each.returnTypeName;
+								} else if (each.methodName.matches("^is.+"))
+								{
+									// target field name
+									fieldName = each.methodName.substring(2);
+									fieldName = fieldName.substring(0, 1).toLowerCase()
+											+ fieldName.substring(1);
+									fieldType = each.returnTypeName;
+								}
+
+								if (fieldName != null)
+								{
+									String searchRegexp = ".+?private\\s+" + fieldType
+											+ "\\s+" + fieldName + ".+?";
+									if (allSrc.matches(searchRegexp))
+										continue;
 								}
 							}
 							each.testMethodName = "test_" + each.methodName;

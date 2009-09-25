@@ -230,7 +230,7 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 								.getDefault()
 								.getPreferenceStore()
 								.getBoolean(
-										STR.Preference.TestMethodAutoGenerate.METHOD_SAMPLE_IMPLEMENTATION);
+										STR.Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION);
 						if (enabledNotBlankMethods)
 						{
 							sb.append(CRLF);

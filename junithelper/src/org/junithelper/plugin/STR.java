@@ -71,7 +71,7 @@ public interface STR
 			public static final String SRC_TEST_PATH = "Test Source Folder";
 		}
 
-		public static class TestMethodAutoGenerate
+		public static class TestMethodGen
 		{
 			public static final String ENABLE = "Test Method Auto Generate";
 			public static final String DELIMITER = "Delimiter";
@@ -84,6 +84,7 @@ public interface STR
 			public static final String RETURN_PREFIX = "Return Prefix";
 			public static final String RETURN_DELIMITER = "Return Delimiter";
 
+			public static final String EXLCUDES_ACCESSORS = "Exculdes Accessors(setter/getter)";
 			public static final String METHOD_SAMPLE_IMPLEMENTATION = "Generate Sample Implementation";
 
 		}
