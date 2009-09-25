@@ -1,3 +1,18 @@
+/* 
+ * Copyright 2009 junithelper.org. 
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at 
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0 
+ * 
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+ * either express or implied. See the License for the specific language 
+ * governing permissions and limitations under the License. 
+ */
 package org.junithelper.plugin.page;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
@@ -14,10 +29,20 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.junithelper.plugin.Activator;
 import org.junithelper.plugin.STR;
 
+/**
+ * PreferencePage<br>
+ * <br>
+ * 
+ * @author Kazuhiro Sera
+ * @version 1.0
+ */
 public class PreferencePage extends FieldEditorPreferencePage implements
 		IWorkbenchPreferencePage
 {
 
+	/**
+	 * Constructor
+	 */
 	public PreferencePage()
 	{
 
@@ -26,16 +51,24 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
 	}
 
+	/**
+	 * Init
+	 */
 	public void init(IWorkbench workbench)
 	{
 	}
 
+	/**
+	 * Create field editors
+	 */
 	@Override
 	protected void createFieldEditors()
 	{
 		{
+			// parent group
 			Composite parent = getFieldEditorParent();
 
+			// common group
 			Group commonPrentGroup = new Group(parent, 0);
 			{
 				FillLayout parentLayout = new FillLayout(256);
@@ -63,8 +96,8 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 						STR.Preference.Common.SRC_TEST_PATH, grp));
 			}
 
-			// generating test methods
-			// enable
+			// generating test methods group
+			// enable test methods gen
 			BooleanFieldEditor enable = new BooleanFieldEditor(
 					STR.Preference.TestMethodGen.ENABLE,
 					STR.Preference.TestMethodGen.ENABLE, parent);

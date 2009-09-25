@@ -1,3 +1,19 @@
+/* 
+ * Copyright 2009 junithelper.org. 
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at 
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0 
+ * 
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+ * either express or implied. See the License for the specific language 
+ * governing permissions and limitations under the License. 
+ */
+
 package org.junithelper.plugin.action;
 
 import java.io.File;
@@ -34,18 +50,37 @@ import org.junithelper.plugin.util.ResourceRefreshUtil;
 import org.junithelper.plugin.util.TestCaseGenerateUtil;
 import org.junithelper.plugin.util.ThreadUtil;
 
+/**
+ * CreateNewTestCaseAction<br>
+ * <br>
+ * Create new test case file.<br>
+ * 
+ * @author Kazuhiro Sera
+ * @version 1.0
+ */
 public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 		IEditorActionDelegate
 {
 
 	private ISelection selection = null;
 
+	/**
+	 * Run method to invoked.
+	 * 
+	 * @param action
+	 * @param selection
+	 */
 	public void run(IAction action, ISelection selection)
 	{
 		this.selection = selection;
 		this.run(action);
 	}
 
+	/**
+	 * Run method to invoked.
+	 * 
+	 * @param action
+	 */
 	public void run(IAction action)
 	{
 
@@ -237,7 +272,6 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 										STR.Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION);
 						if (enabledTestMethodsGen && enabledNotBlankMethods)
 						{
-							sb.append(CRLF);
 							List<String> importedPackageList = testMethods.get(0).importList;
 							for (String importedPackage : importedPackageList)
 							{
@@ -246,7 +280,6 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 								sb.append(";");
 								sb.append(CRLF);
 							}
-
 						}
 						sb.append(CRLF);
 
@@ -261,6 +294,10 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 						{
 							for (GeneratingMethodInfo testMethod : testMethods)
 							{
+								if (testMethod.testMethodName == null
+										|| testMethod.testMethodName.equals(STR.EMPTY))
+									continue;
+
 								sb.append("\tpublic void ");
 								sb.append(testMethod.testMethodName);
 								sb.append("() throws Exception {");
@@ -353,15 +390,19 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 		}
 	}
 
+	/**
+	 * Method to catch the event selection has been changed.
+	 */
 	public void selectionChanged(IAction action, ISelection selection)
 	{
 		this.selection = selection;
 	}
 
+	/**
+	 * Required in IEditorActionDelegate(ex. Java editor)
+	 */
 	public void setActiveEditor(IAction action, IEditorPart targetEditor)
 	{
-		// TODO Auto-generated method stub
-
 	}
 
 }

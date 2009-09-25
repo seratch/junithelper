@@ -1,5 +1,5 @@
 /* 
- * Copyright 2009 Kazuhiro Sera. 
+ * Copyright 2009 junithelper.org. 
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -13,7 +13,6 @@
  * either express or implied. See the License for the specific language 
  * governing permissions and limitations under the License. 
  */
-
 package org.junithelper.plugin.util;
 
 import java.io.BufferedInputStream;
@@ -38,6 +37,13 @@ import org.mozilla.universalchardet.UniversalDetector;
 public class FileResourceUtil
 {
 
+	/**
+	 * Get detected encoding charset name
+	 * 
+	 * @param file
+	 * @return encoding charset name
+	 * @throws Exception
+	 */
 	public static String detectEncoding(IFile file) throws Exception
 	{
 		InputStream is = null;

@@ -1,3 +1,18 @@
+/* 
+ * Copyright 2009 junithelper.org. 
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at 
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0 
+ * 
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+ * either express or implied. See the License for the specific language 
+ * governing permissions and limitations under the License. 
+ */
 package org.junithelper.plugin.util;
 
 import java.io.BufferedReader;
@@ -17,6 +32,13 @@ import org.junithelper.plugin.Activator;
 import org.junithelper.plugin.STR;
 import org.junithelper.plugin.bean.GeneratingMethodInfo;
 
+/**
+ * TestCaseGenerateUtil<br>
+ * <br>
+ * 
+ * @author Kazuhiro Sera
+ * @version 1.0
+ */
 public class TestCaseGenerateUtil
 {
 
@@ -94,6 +116,14 @@ public class TestCaseGenerateUtil
 	}
 	static Pattern PAT_SEARCH_GROUP_METHOD = Pattern.compile(RXP_SEARCH_GROUP_METHOD);
 
+	/**
+	 * Get the information on the unimplemented test methods.
+	 * 
+	 * @param testTarget
+	 * @param testCase
+	 * @return the information on the unimplemented test methods
+	 * @throws Exception
+	 */
 	public static List<GeneratingMethodInfo> getUnimplementedTestMethodNames(
 			IFile testTarget, IFile testCase) throws Exception
 	{
@@ -151,6 +181,13 @@ public class TestCaseGenerateUtil
 		return unimplementedMethodNames;
 	}
 
+	/**
+	 * Get source code lines.
+	 * 
+	 * @param javaFile
+	 * @return source code lines
+	 * @throws Exception
+	 */
 	public static List<String> getAllSourceCodeLineList(IFile javaFile) throws Exception
 	{
 		List<String> lines = new ArrayList<String>();
@@ -177,6 +214,13 @@ public class TestCaseGenerateUtil
 		return lines;
 	}
 
+	/**
+	 * Get the information on the methods.
+	 * 
+	 * @param javaFile
+	 * @return the information on the methods
+	 * @throws Exception
+	 */
 	public static List<GeneratingMethodInfo> getMethodNames(IFile javaFile)
 			throws Exception
 	{
@@ -269,6 +313,14 @@ public class TestCaseGenerateUtil
 		return methodStringInfos;
 	}
 
+	/**
+	 * Get the information on the test methods corresponded the developing
+	 * public methods.
+	 * 
+	 * @param javaFile
+	 * @return the information on the test methods
+	 * @throws Exception
+	 */
 	public static List<GeneratingMethodInfo> getTestMethodsFromTarget(IFile javaFile)
 			throws Exception
 	{
@@ -433,6 +485,14 @@ public class TestCaseGenerateUtil
 		return testMethods;
 	}
 
+	/**
+	 * Get sample implementation source code of the test methods.
+	 * 
+	 * @param testMethod
+	 * @param testMethods
+	 * @param testTargetClassname
+	 * @return sample implementation source code
+	 */
 	public static String getNotBlankTestMethodSource(GeneratingMethodInfo testMethod,
 			List<GeneratingMethodInfo> testMethods, String testTargetClassname)
 	{
@@ -578,20 +638,30 @@ public class TestCaseGenerateUtil
 		return sb.toString();
 	}
 
+	/**
+	 * Get type.
+	 * 
+	 * @param arg
+	 * @return
+	 */
 	private static String getType(String arg)
 	{
 		arg = arg.trim().split("\\s+")[0];
 		return arg;
-
 	}
 
+	/**
+	 * Get type converted.
+	 * 
+	 * @param arg
+	 * @return
+	 */
 	private static String getTypeAvailableInMethodName(String arg)
 	{
 		arg = arg.replaceAll("<.+?>", STR.EMPTY);
 		arg = arg.replaceAll("\\.\\.\\.", "Array").replaceAll("\\[\\]", "Array");
 		arg = arg.trim().split("\\s+")[0];
 		return arg;
-
 	}
 
 }
