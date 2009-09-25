@@ -349,6 +349,7 @@ public class TestCaseGenerateUtil
 		sb.append("\t\t");
 
 		String returnType = testMethod.returnTypeName;
+		Object returnDefaultValue = null;
 		if (!returnType.equals("void"))
 		{
 			returnType = returnType.replaceAll("<[a-zA-Z0-9,\\$_]+?>", STR.EMPTY);
@@ -356,15 +357,24 @@ public class TestCaseGenerateUtil
 			boolean returnTypeFound = false;
 			try
 			{
-				try
+				if (PrimitiveTypeUtil.isPrimitive(returnTypeToCheck))
 				{
-					Class.forName("java.lang." + returnTypeToCheck);
 					returnTypeFound = true;
-				} catch (Exception ignore)
+					if (!returnType.matches(".+?\\[\\]$"))
+						returnDefaultValue = PrimitiveTypeUtil
+								.getPrimitiveDefaultValue(returnTypeToCheck);
+				} else
 				{
+					try
+					{
+						Class.forName("java.lang." + returnTypeToCheck);
+						returnTypeFound = true;
+					} catch (Exception ignore)
+					{
+					}
+					if (!returnTypeFound)
+						Class.forName(returnTypeToCheck);
 				}
-				if (!returnTypeFound)
-					Class.forName(returnTypeToCheck);
 			} catch (Exception e)
 			{
 				// class not found
@@ -387,7 +397,6 @@ public class TestCaseGenerateUtil
 		// ex. TestTarget target = new TestTarget();
 		if (!testMethod.isStatic)
 		{
-			// TODO constructor
 			sb.append(testTargetClassname);
 			sb.append(" target = new ");
 			sb.append(testTargetClassname);
@@ -396,36 +405,72 @@ public class TestCaseGenerateUtil
 			sb.append("\t\t");
 		}
 
+		if (!returnType.equals("void"))
+		{
+			sb.append(returnType);
+			sb.append(" expected = ");
+			sb.append(returnDefaultValue);
+			sb.append(";");
+			sb.append(CRLF);
+			sb.append("\t\t");
+		}
+		// args define
+		// ex. String arg0 = null;
+		// int arg1 = 0;
+		List<String> argTypes = testMethod.argTypeNames;
+		List<String> args = new ArrayList<String>();
+		int argTypesLen = argTypes.size();
+		if (argTypesLen > 0 && argTypes.get(0) != null
+				&& !argTypes.get(0).equals(STR.EMPTY))
+		{
+			for (int i = 0; i < argTypesLen; i++)
+			{
+				// flexible length args
+				if (argTypes.get(i).matches(".+\\.\\.\\."))
+					argTypes.set(i, argTypes.get(i).replaceAll("\\.\\.\\.", "[]"));
+				sb.append(argTypes.get(i));
+				sb.append(" arg");
+				sb.append(i);
+				sb.append(" = ");
+				if (PrimitiveTypeUtil.isPrimitive(argTypes.get(i)))
+				{
+					Object primitiveDefault = PrimitiveTypeUtil
+							.getPrimitiveDefaultValue(argTypes.get(i));
+					sb.append(primitiveDefault);
+				} else
+					sb.append("null");
+				sb.append(";");
+				sb.append(CRLF);
+				sb.append("\t\t");
+				args.add("arg" + i);
+			}
+		}
+
 		// execute target method
 		// ex. SampleUtil.doSomething(null, null);
 		// ex. String expected = null;
 		// String actual = target.doSomething();
 		if (!returnType.equals("void"))
 		{
-			// TODO primitive types
-			sb.append(returnType);
-			sb.append(" expected = null;");
-			sb.append(CRLF);
-
-			sb.append("\t\t");
 			sb.append(returnType);
 			sb.append(" actual = ");
 		}
 		if (testMethod.isStatic)
 			sb.append(testTargetClassname);
 		else
-		{
 			sb.append("target");
-		}
+
 		sb.append(".");
 		sb.append(testMethod.methodName);
 		sb.append("(");
-		List<String> argTypes = testMethod.argTypeNames;
-		int argTypesLen = argTypes.size();
-		if (argTypesLen > 0 && argTypes.get(0) != null && !argTypes.get(0).equals(""))
-			sb.append("null");
+		if (argTypesLen > 0 && argTypes.get(0) != null
+				&& !argTypes.get(0).equals(STR.EMPTY))
+			sb.append(args.get(0));
 		for (int i = 1; i < argTypes.size(); i++)
-			sb.append(", null");
+		{
+			sb.append(", ");
+			sb.append(args.get(i));
+		}
 		sb.append(");");
 		sb.append(CRLF);
 
