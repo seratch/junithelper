@@ -16,7 +16,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.junithelper.plugin.Activator;
 import org.junithelper.plugin.STR;
 import org.junithelper.plugin.bean.GeneratingMethodInfo;
-import org.mozilla.universalchardet.UniversalDetector;
 
 public class TestCaseGenerateUtil
 {
@@ -159,8 +158,14 @@ public class TestCaseGenerateUtil
 		BufferedReader br = null;
 		try
 		{
+			// detect charset
 			is = javaFile.getContents();
-			br = new BufferedReader(new InputStreamReader(is));
+			String encoding = FileResourceUtil.detectEncoding(javaFile);
+			if (encoding == null)
+				encoding = Charset.defaultCharset().name();
+
+			is = javaFile.getContents();
+			br = new BufferedReader(new InputStreamReader(is, encoding));
 			String line = null;
 			while ((line = br.readLine()) != null)
 				lines.add(line.replace("\r", STR.EMPTY));
@@ -192,15 +197,7 @@ public class TestCaseGenerateUtil
 				is = javaFile.getContents();
 
 				// detect charset
-				UniversalDetector detector = new UniversalDetector(null);
-				byte[] buf = new byte[4096];
-				int nread;
-				while ((nread = is.read(buf)) > 0 && !detector.isDone())
-					detector.handleData(buf, 0, nread);
-				detector.dataEnd();
-				String encoding = detector.getDetectedCharset();
-				if (encoding == null)
-					encoding = Charset.defaultCharset().name();
+				String encoding = FileResourceUtil.detectEncoding(javaFile);
 
 				is = javaFile.getContents();
 				isr = new InputStreamReader(is, encoding);
@@ -305,16 +302,7 @@ public class TestCaseGenerateUtil
 			try
 			{
 				// detect charset
-				is = javaFile.getContents();
-				UniversalDetector detector = new UniversalDetector(null);
-				byte[] buf = new byte[4096];
-				int nread;
-				while ((nread = is.read(buf)) > 0 && !detector.isDone())
-					detector.handleData(buf, 0, nread);
-				detector.dataEnd();
-				String encoding = detector.getDetectedCharset();
-				if (encoding == null)
-					encoding = Charset.defaultCharset().name();
+				String encoding = FileResourceUtil.detectEncoding(javaFile);
 
 				is = javaFile.getContents();
 				isr = new InputStreamReader(is, encoding);

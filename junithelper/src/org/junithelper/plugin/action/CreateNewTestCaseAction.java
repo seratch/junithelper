@@ -196,9 +196,10 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 								.getTestMethodsFromTarget(file);
 
 						// generate test class
+						String writeEncoding = FileResourceUtil.detectEncoding(file);
 						fos = new FileOutputStream(testCaseCreateDirpath + STR.DIR_SEP
 								+ testCaseFilename);
-						testFileOSWriter = new OutputStreamWriter(fos);
+						testFileOSWriter = new OutputStreamWriter(fos, writeEncoding);
 
 						StringBuffer sb = new StringBuffer();
 

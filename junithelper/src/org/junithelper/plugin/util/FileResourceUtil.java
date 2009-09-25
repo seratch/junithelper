@@ -22,6 +22,10 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
+
+import org.eclipse.core.resources.IFile;
+import org.mozilla.universalchardet.UniversalDetector;
 
 /**
  * FileResourceUtil<br>
@@ -33,6 +37,28 @@ import java.io.OutputStreamWriter;
 
 public class FileResourceUtil
 {
+
+	public static String detectEncoding(IFile file) throws Exception
+	{
+		InputStream is = null;
+		try
+		{
+			is = file.getContents();
+			UniversalDetector detector = new UniversalDetector(null);
+			byte[] buf = new byte[4096];
+			int nread;
+			while ((nread = is.read(buf)) > 0 && !detector.isDone())
+				detector.handleData(buf, 0, nread);
+			detector.dataEnd();
+			String encoding = detector.getDetectedCharset();
+			if (encoding == null)
+				encoding = Charset.defaultCharset().name();
+			return encoding;
+		} finally
+		{
+			close(is);
+		}
+	}
 
 	/**
 	 * Close resource safely.<br>
