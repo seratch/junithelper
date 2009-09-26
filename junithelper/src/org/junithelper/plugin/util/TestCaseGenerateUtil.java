@@ -50,6 +50,8 @@ public class TestCaseGenerateUtil
 	private static final String RXP_METHOD_MODIFIERS = "[<\\w+?>|static|final|\\s]*";
 	private static final String RXP_METHOD_RETURN_TYPE = "[a-zA-Z1-9\\[\\]_,\\$<>]+?";
 
+	private static final String RXP_GENERICS_PART = "<[a-zA-Z0-9,\\$_]+?>";
+
 	private static final String RXP_METHOD_STATIC_MODIFIERS = "static";
 	private static final String RXP_METHOD_MODIFIERS_EXCLUDES_STATIC = "[<\\w+?>|final|\\s]*";
 
@@ -398,6 +400,7 @@ public class TestCaseGenerateUtil
 							each.methodName = matcher.group(2);
 							// arg types
 							String args = matcher.group(3);
+							args = args.replaceAll(RXP_GENERICS_PART, STR.EMPTY);
 							String[] argArr = args.split(",");
 							if (enabledNotBlankMethods || enabledArgs)
 							{
@@ -515,7 +518,7 @@ public class TestCaseGenerateUtil
 		Object returnDefaultValue = null;
 		if (!returnType.equals("void"))
 		{
-			returnType = returnType.replaceAll("<[a-zA-Z0-9,\\$_]+?>", STR.EMPTY);
+			returnType = returnType.replaceAll(RXP_GENERICS_PART, STR.EMPTY);
 			String returnTypeToCheck = returnType.replaceAll("\\[\\]", STR.EMPTY);
 			boolean returnTypeFound = false;
 			try
