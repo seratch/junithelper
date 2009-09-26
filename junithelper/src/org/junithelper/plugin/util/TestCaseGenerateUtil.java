@@ -18,7 +18,6 @@ package org.junithelper.plugin.util;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -54,6 +53,9 @@ public class TestCaseGenerateUtil
 	private static final String RXP_METHOD_STATIC_MODIFIERS = "static";
 	private static final String RXP_METHOD_MODIFIERS_EXCLUDES_STATIC = "[<\\w+?>|final|\\s]*";
 
+	/**
+	 * Regular expression to search method syntax
+	 */
 	private static String RXP_SEARCH_METHOD = "";
 	static
 	{
@@ -74,6 +76,9 @@ public class TestCaseGenerateUtil
 		RXP_SEARCH_METHOD += "\\{.+";
 	}
 
+	/**
+	 * Regular expression to search static method syntax
+	 */
 	private static String RXP_SEARCH_STATIC_METHOD = "";
 	static
 	{
@@ -95,6 +100,12 @@ public class TestCaseGenerateUtil
 		RXP_SEARCH_STATIC_METHOD += "\\{.+";
 	}
 
+	/**
+	 * Regular expression to search method syntax grouped<br>
+	 * $1 : return value <br>
+	 * $2 : method name <br>
+	 * $3 : args<br>
+	 */
 	private static String RXP_SEARCH_GROUP_METHOD = "";
 	static
 	{
@@ -198,9 +209,8 @@ public class TestCaseGenerateUtil
 			// detect charset
 			is = javaFile.getContents();
 			String encoding = FileResourceUtil.detectEncoding(javaFile);
-			if (encoding == null)
-				encoding = Charset.defaultCharset().name();
 
+			// read file
 			is = javaFile.getContents();
 			br = new BufferedReader(new InputStreamReader(is, encoding));
 			String line = null;
