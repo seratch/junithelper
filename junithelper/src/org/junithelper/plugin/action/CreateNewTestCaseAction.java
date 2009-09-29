@@ -260,8 +260,16 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 
 						sb.append(CRLF);
 
-						sb.append("import junit.framework.TestCase;");
+						// get class to extend
+						String testCase = Activator.getDefault().getPreferenceStore()
+								.getString(STR.Preference.Common.CLASS_TO_EXTEND);
+						String[] tmpTestCaseArr = testCase.split("\\.");
+						String testCaseName = tmpTestCaseArr[tmpTestCaseArr.length - 1];
+						sb.append("import ");
+						sb.append(testCase);
+						sb.append(";");
 						sb.append(CRLF);
+
 						boolean enabledTestMethodsGen = Activator.getDefault()
 								.getPreferenceStore().getBoolean(
 										STR.Preference.TestMethodGen.ENABLE);
@@ -285,7 +293,9 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 
 						sb.append("public class ");
 						sb.append(testCaseClassname);
-						sb.append(" extends TestCase {");
+						sb.append(" extends ");
+						sb.append(testCaseName);
+						sb.append(" {");
 						sb.append(CRLF);
 
 						sb.append(CRLF);

@@ -94,6 +94,9 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				// src/test/java
 				addField(new StringFieldEditor(STR.Preference.Common.SRC_TEST_PATH,
 						STR.Preference.Common.SRC_TEST_PATH, grp));
+				// extends
+				addField(new StringFieldEditor(STR.Preference.Common.CLASS_TO_EXTEND,
+						STR.Preference.Common.CLASS_TO_EXTEND, grp));
 			}
 
 			// generating test methods group

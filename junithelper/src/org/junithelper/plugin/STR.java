@@ -229,6 +229,10 @@ public interface STR
 			 * Test Source Folder
 			 */
 			public static final String SRC_TEST_PATH = "Test Source Folder";
+			/**
+			 * Class To Extend
+			 */
+			public static final String CLASS_TO_EXTEND = "Extends";
 		}
 
 		public static class TestMethodGen
