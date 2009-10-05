@@ -2,23 +2,16 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JUnit Helper
 Bundle-SymbolicName: org.junithelper.plugin;singleton:=true
-Bundle-Version: 0.0.25
-Bundle-Localization: plugin
+Bundle-Version: 0.0.26
 Bundle-ClassPath: .,
  lib/juniversalchardet-1.0.3.jar
 Bundle-Activator: org.junithelper.plugin.Activator
 Bundle-Vendor: junithelper.org
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.eclipse.ui.views,
  org.eclipse.core.runtime,
- org.eclipse.ui.editors,
  org.eclipse.ui.ide,
  org.eclipse.core.resources,
- org.eclipse.jface.text,
- org.eclipse.ui.workbench.texteditor,
- org.eclipse.compare,
- org.eclipse.core.expressions,
  org.eclipse.jdt.core
 Export-Package: org.junithelper.plugin,
  org.junithelper.plugin.action,
@@ -26,3 +19,5 @@ Export-Package: org.junithelper.plugin,
  org.junithelper.plugin.page,
  org.junithelper.plugin.util
 Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: J2SE-1.5,
+ JavaSE-1.6

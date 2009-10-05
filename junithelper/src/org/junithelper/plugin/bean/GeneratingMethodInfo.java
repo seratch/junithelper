@@ -16,12 +16,14 @@
 package org.junithelper.plugin.bean;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * GeneratingMethodInfo<br>
  * <br>
- * Information about test target developing punlic methods<br>
+ * Information about test target developingd punlic methods<br>
  * 
  * @author Kazuhiro Sera
  * @version 1.0
@@ -43,6 +45,11 @@ public class GeneratingMethodInfo
 	 * Return type name converted
 	 */
 	public String returnTypeNameInMethodName = "";
+
+	/**
+	 * Generic in return type
+	 */
+	public List<String> returnTypeGenerics = new ArrayList<String>();
 
 	/**
 	 * Test target method name
@@ -68,5 +75,10 @@ public class GeneratingMethodInfo
 	 * Test target method arg type names converted
 	 */
 	public List<String> argTypeNamesInMethodName = new ArrayList<String>();
+
+	/**
+	 * Generic in test target method arg types
+	 */
+	public Map<String, List<String>> argTypeGenerics = new HashMap<String, List<String>>();
 
 }
