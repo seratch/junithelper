@@ -672,6 +672,7 @@ public class TestCaseGenerateUtil
 	private static String getTypeAvailableInMethodName(String arg)
 	{
 		arg = arg.replaceAll("<.+?>", STR.EMPTY);
+		arg = arg.replaceAll("final ", STR.EMPTY);
 		arg = arg.replaceAll("\\.\\.\\.", "Array").replaceAll("\\[\\]", "Array");
 		arg = arg.trim().split("\\s+")[0];
 		return arg;
