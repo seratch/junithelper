@@ -50,12 +50,12 @@
 		<key
 			commandId="org.junithelper.plugin.action.OpenTestTargetActionCommand"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-			sequence="M1+8">
+			sequence="M3+8">
 		</key>
 		<key
 			commandId="org.junithelper.plugin.action.OpenTestCaseActionCommand"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-			sequence="M1+9">
+			sequence="M3+9">
 		</key>
 	</extension>
 
