@@ -659,7 +659,7 @@ public class TestCaseGenerateUtil
 	 */
 	private static String getType(String arg)
 	{
-		arg = arg.trim().split("\\s+")[0];
+		arg = arg.trim().replaceAll("final ", STR.EMPTY).split("\\s+")[0];
 		return arg;
 	}
 
