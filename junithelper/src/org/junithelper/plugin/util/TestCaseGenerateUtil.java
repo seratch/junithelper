@@ -507,7 +507,6 @@ public class TestCaseGenerateUtil
 													STR.EMPTY, new ArrayList<String>());
 											argType.generics.add(generic);
 										}
-										System.out.println(argTypeFull);
 									}
 									String argTypeStr = argTypeFull.replaceAll(
 											RXP_GENERICS_PART, STR.EMPTY);
