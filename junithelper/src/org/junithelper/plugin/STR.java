@@ -174,6 +174,13 @@ public interface STR
 			public static final String CONFIRM_PROCEED = "Proceed OK?";
 
 			/**
+			 * Setting not to create new file
+			 */
+			public static final String NOT_CREATE_NEW_FILE = "Test case file does not exist."
+					+ STR.LINE_FEED
+					+ "If you want to generate, please alter preferences.";
+
+			/**
 			 * Confirm to create new file
 			 */
 			public static final String COMFIRM_CREATE_NEW_FILE = "Create new test case file?";
@@ -229,10 +236,20 @@ public interface STR
 			 * Test Source Folder
 			 */
 			public static final String SRC_TEST_PATH = "Test Source Folder";
+		}
+
+		public static class TestClassGen
+		{
+
+			/**
+			 * Enable test methods gen
+			 */
+			public static final String ENABLE = "Test Class Auto Generate";
+
 			/**
 			 * Class To Extend
 			 */
-			public static final String CLASS_TO_EXTEND = "Extends";
+			public static final String CLASS_TO_EXTEND = "Class To Extend";
 		}
 
 		public static class TestMethodGen

@@ -39,7 +39,11 @@ public class PreferencePageInitializer extends AbstractPreferenceInitializer
 		{
 			store.setDefault(STR.Preference.Common.SRC_MAIN_PATH, "src/main/java");
 			store.setDefault(STR.Preference.Common.SRC_TEST_PATH, "src/test/java");
-			store.setDefault(STR.Preference.Common.CLASS_TO_EXTEND,
+		}
+		// generating extended test class
+		{
+			store.setDefault(STR.Preference.TestClassGen.ENABLE, true);
+			store.setDefault(STR.Preference.TestClassGen.CLASS_TO_EXTEND,
 					"junit.framework.TestCase");
 		}
 

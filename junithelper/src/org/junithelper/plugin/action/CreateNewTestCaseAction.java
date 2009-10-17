@@ -262,7 +262,7 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 
 						// get class to extend
 						String testCase = Activator.getDefault().getPreferenceStore()
-								.getString(STR.Preference.Common.CLASS_TO_EXTEND);
+								.getString(STR.Preference.TestClassGen.CLASS_TO_EXTEND);
 						String[] tmpTestCaseArr = testCase.split("\\.");
 						String testCaseName = tmpTestCaseArr[tmpTestCaseArr.length - 1];
 						sb.append("import ");

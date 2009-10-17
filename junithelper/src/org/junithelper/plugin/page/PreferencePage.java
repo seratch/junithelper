@@ -94,17 +94,39 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				// src/test/java
 				addField(new StringFieldEditor(STR.Preference.Common.SRC_TEST_PATH,
 						STR.Preference.Common.SRC_TEST_PATH, grp));
+			}
+
+			// generating test class group
+			// enable extended class gen
+			BooleanFieldEditor classExtendsEnable = new BooleanFieldEditor(
+					STR.Preference.TestClassGen.ENABLE,
+					STR.Preference.TestClassGen.ENABLE, parent);
+			addField(classExtendsEnable);
+			Group classConfigGroup = new Group(parent, 0);
+			{
+				FillLayout parentLayout = new FillLayout(256);
+				parentLayout.marginHeight = 2;
+				parentLayout.marginWidth = 4;
+				classConfigGroup.setLayout(parentLayout);
+				classConfigGroup.setText("Test Class");
+
+				GridData gd = new GridData(768);
+				classConfigGroup.setLayoutData(gd);
+				Composite grp = new Composite(classConfigGroup, 0);
+				grp.setLayout(new GridLayout(2, false));
+
 				// extends
-				addField(new StringFieldEditor(STR.Preference.Common.CLASS_TO_EXTEND,
-						STR.Preference.Common.CLASS_TO_EXTEND, grp));
+				addField(new StringFieldEditor(
+						STR.Preference.TestClassGen.CLASS_TO_EXTEND,
+						STR.Preference.TestClassGen.CLASS_TO_EXTEND, grp));
 			}
 
 			// generating test methods group
 			// enable test methods gen
-			BooleanFieldEditor enable = new BooleanFieldEditor(
+			BooleanFieldEditor testMethodsGenEnable = new BooleanFieldEditor(
 					STR.Preference.TestMethodGen.ENABLE,
 					STR.Preference.TestMethodGen.ENABLE, parent);
-			addField(enable);
+			addField(testMethodsGenEnable);
 			Group genTestMethodsParentGroup = new Group(parent, 0);
 			{
 				FillLayout parentLayout = new FillLayout(256);
