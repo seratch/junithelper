@@ -29,8 +29,9 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.junithelper.plugin.Activator;
 import org.junithelper.plugin.STR;
-import org.junithelper.plugin.bean.GeneratingMethodInfo;
-import org.junithelper.plugin.bean.GeneratingMethodInfo.ArgType;
+import org.junithelper.plugin.bean.ClassInfo;
+import org.junithelper.plugin.bean.MethodInfo;
+import org.junithelper.plugin.bean.MethodInfo.ArgType;
 
 /**
  * TestCaseGenerateUtil<br>
@@ -136,13 +137,14 @@ public class TestCaseGenerateUtil
 	 * 
 	 * @param testTarget
 	 * @param testCase
-	 * @return the information on the unimplemented test methods
+	 * @return the information on test class with the unimplemented test methods
 	 * @throws Exception
 	 */
-	public static List<GeneratingMethodInfo> getUnimplementedTestMethodNames(
-			IFile testTarget, IFile testCase) throws Exception
+	public static ClassInfo getClassInfoWithUnimplementedTestMethods(IFile testTarget,
+			IFile testCase) throws Exception
 	{
-		List<GeneratingMethodInfo> unimplementedMethodNames = new ArrayList<GeneratingMethodInfo>();
+		ClassInfo classInfo = new ClassInfo();
+		List<MethodInfo> unimplementedMethodNames = new ArrayList<MethodInfo>();
 
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		// enable public method test
@@ -152,12 +154,14 @@ public class TestCaseGenerateUtil
 		// enable public method test
 		if (enabled)
 		{
-			List<GeneratingMethodInfo> expectedList = getTestMethodsFromTarget(testTarget);
-			List<GeneratingMethodInfo> actualList = getMethodNames(testCase);
-			for (GeneratingMethodInfo expected : expectedList)
+			ClassInfo expectedClassInfo = getTestClassInfoFromTargetClass(testTarget);
+			List<MethodInfo> expectedMethods = expectedClassInfo.methods;
+			ClassInfo actualClassInfo = getMethodNamesAlreadyExists(testCase);
+			List<MethodInfo> actualMethods = actualClassInfo.methods;
+			for (MethodInfo expected : expectedMethods)
 			{
 				boolean exist = false;
-				for (GeneratingMethodInfo actual : actualList)
+				for (MethodInfo actual : actualMethods)
 				{
 					String escapedExp = expected.testMethodName.replaceAll("\\$",
 							"\\\\\\$");
@@ -174,8 +178,8 @@ public class TestCaseGenerateUtil
 			if (enabledNotBlankMethods)
 			{
 				List<String> notImportedList = new ArrayList<String>();
-				List<String> expImportedList = expectedList.get(0).importList;
-				List<String> actImportedList = actualList.get(0).importList;
+				List<String> expImportedList = expectedClassInfo.importList;
+				List<String> actImportedList = actualClassInfo.importList;
 				for (String expImported : expImportedList)
 				{
 					boolean found = false;
@@ -189,11 +193,14 @@ public class TestCaseGenerateUtil
 					}
 					if (!found)
 						notImportedList.add(expImported);
+					else
+						notImportedList.add("//" + expImported);
 				}
-				unimplementedMethodNames.get(0).importList = notImportedList;
+				classInfo.importList = notImportedList;
 			}
 		}
-		return unimplementedMethodNames;
+		classInfo.methods = unimplementedMethodNames;
+		return classInfo;
 	}
 
 	/**
@@ -235,10 +242,10 @@ public class TestCaseGenerateUtil
 	 * @return the information on the methods
 	 * @throws Exception
 	 */
-	public static List<GeneratingMethodInfo> getMethodNames(IFile javaFile)
-			throws Exception
+	public static ClassInfo getMethodNamesAlreadyExists(IFile javaFile) throws Exception
 	{
-		List<GeneratingMethodInfo> methodStringInfos = new ArrayList<GeneratingMethodInfo>();
+		ClassInfo classInfo = new ClassInfo();
+		List<MethodInfo> methodStringInfos = new ArrayList<MethodInfo>();
 
 		// enable public method test
 		boolean enabled = Activator.getDefault().getPreferenceStore().getBoolean(
@@ -277,7 +284,7 @@ public class TestCaseGenerateUtil
 						Matcher matcher = PAT_SEARCH_GROUP_METHOD.matcher(publicsEach);
 						if (matcher.find())
 						{
-							GeneratingMethodInfo each = new GeneratingMethodInfo();
+							MethodInfo each = new MethodInfo();
 							// return type
 							each.returnType.name = getType(matcher.group(1));
 							each.returnType.nameInMethodName = getTypeAvailableInMethodName(matcher
@@ -304,7 +311,7 @@ public class TestCaseGenerateUtil
 				if (enabledNotBlankMethods)
 				{
 					if (methodStringInfos.size() <= 0 || methodStringInfos.get(0) == null)
-						methodStringInfos.add(new GeneratingMethodInfo());
+						methodStringInfos.add(new MethodInfo());
 					String[] importStartLines = allSrc.split("import\\s+");
 					for (String importStartLine : importStartLines)
 					{
@@ -313,7 +320,7 @@ public class TestCaseGenerateUtil
 								.matches("^\\s*package.*?|^\\s*/\\*.*?|^\\s*//.*?"))
 						{
 							String importedPackage = importStartLine.split(";")[0];
-							methodStringInfos.get(0).importList.add(importedPackage);
+							classInfo.importList.add(importedPackage);
 						}
 					}
 				}
@@ -323,9 +330,9 @@ public class TestCaseGenerateUtil
 				FileResourceUtil.close(isr);
 				FileResourceUtil.close(is);
 			}
-
 		}
-		return methodStringInfos;
+		classInfo.methods = methodStringInfos;
+		return classInfo;
 	}
 
 	/**
@@ -336,11 +343,11 @@ public class TestCaseGenerateUtil
 	 * @return the information on the test methods
 	 * @throws Exception
 	 */
-	public static List<GeneratingMethodInfo> getTestMethodsFromTarget(IFile javaFile)
+	public static ClassInfo getTestClassInfoFromTargetClass(IFile javaFile)
 			throws Exception
 	{
-
-		List<GeneratingMethodInfo> testMethods = new ArrayList<GeneratingMethodInfo>();
+		ClassInfo classInfo = new ClassInfo();
+		List<MethodInfo> testMethods = new ArrayList<MethodInfo>();
 
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		// enable public method test
@@ -379,6 +386,25 @@ public class TestCaseGenerateUtil
 				while ((line = br.readLine()) != null)
 					tmpsb.append(line + " ");
 				String allSrc = tmpsb.toString();
+
+				// imported types
+				if (enabledNotBlankMethods)
+				{
+					if (testMethods.size() <= 0 || testMethods.get(0) == null)
+						testMethods.add(new MethodInfo());
+					String[] importStartLines = allSrc.split("import\\s+");
+					for (String importStartLine : importStartLines)
+					{
+						// not package or not comment
+						if (!importStartLine
+								.matches("^\\s*package.*?|^\\s*/\\*.*?|^\\s*//.*?"))
+						{
+							String importedPackage = importStartLine.split(";")[0];
+							classInfo.importList.add(importedPackage);
+						}
+					}
+				}
+
 				String[] publics = allSrc.split("public");
 				for (String publicsEach : publics)
 				{
@@ -392,39 +418,101 @@ public class TestCaseGenerateUtil
 						Matcher matcher = PAT_SEARCH_GROUP_METHOD.matcher(publicsEach);
 						if (matcher.find())
 						{
-							GeneratingMethodInfo each = new GeneratingMethodInfo();
+							MethodInfo each = new MethodInfo();
 							// return type
 							if (enabledNotBlankMethods || enabledReturn)
 							{
-								each.returnType.name = getType(matcher.group(1));
+								String returnTypeFull = getType(matcher.group(1));
+								// get generics
+								Matcher toGenericsMatcher = Pattern.compile(
+										RXP_GENERICS_PART_GROUP).matcher(returnTypeFull);
+								while (toGenericsMatcher.find())
+								{
+									String[] generics = toGenericsMatcher.group()
+											.replaceAll("<", STR.EMPTY).replaceAll(">",
+													STR.EMPTY).split(",");
+									// convert to java.lang.Object if self
+									// class is included
+									for (String generic : generics)
+									{
+										generic = getClassInSourceCode(generic,
+												STR.EMPTY, new ArrayList<String>());
+										each.returnType.generics.add(generic);
+									}
+								}
+								each.returnType.name = returnTypeFull.replace(
+										RXP_GENERICS_PART, STR.EMPTY);
 								each.returnType.nameInMethodName = getTypeAvailableInMethodName(each.returnType.name);
 							}
 							// method name
 							each.methodName = matcher.group(2);
 							// arg types
 							String args = matcher.group(3);
-							// TODO get generics
-							// Pattern pat =
-							// Pattern.compile(RXP_GENERICS_PART_GROUP);
-							// Matcher mat = pat.matcher(args);
-							// while (mat.find())
-							// {
-							// // TODO
-							// String[] generics = mat.group().replace("<",
-							// STR.EMPTY).replace(">", STR.EMPTY)
-							// .split(",");
-							// }
-							args = args.replaceAll(RXP_GENERICS_PART, STR.EMPTY);
-							String[] argArr = args.split(",");
+
+							// prepare to get generics
+							String[] tmpArr = args.split(",");
+							int tmpArrLen = tmpArr.length;
+							List<String> tmpArrList = new ArrayList<String>();
+							String buf = STR.EMPTY;
+							for (int i = 0; i < tmpArrLen; i++)
+							{
+								String element = tmpArr[i].trim();
+								// ex. List<String>
+								if (element.matches(".+?<.+?>.+"))
+								{
+									tmpArrList.add(element);
+									continue;
+								}
+								// ex. Map<String
+								if (element.matches(".+?<.+"))
+								{
+									buf += element;
+									continue;
+								}
+								// ex. (Map<String,) Object>
+								if (element.matches(".+?>.+"))
+								{
+									String result = buf + STR.COMMA + element;
+									tmpArrList.add(result);
+									buf = STR.EMPTY;
+									continue;
+								}
+								if (!buf.equals(STR.EMPTY))
+								{
+									buf += STR.COMMA + element;
+									continue;
+								}
+								tmpArrList.add(element);
+							}
+							String[] argArr = tmpArrList.toArray(new String[0]);
 							if (enabledNotBlankMethods || enabledArgs)
 							{
-								// TODO refactor to get generics
 								int argArrLen = argArr.length;
 								for (int i = 0; i < argArrLen; i++)
 								{
 									ArgType argType = new ArgType();
-									argType.name = getType(argArr[i]);
-									argType.nameInMethodName = getTypeAvailableInMethodName(argArr[i]);
+									String argTypeFull = argArr[i];
+									Matcher toGenericsMatcher = Pattern.compile(
+											RXP_GENERICS_PART_GROUP).matcher(argTypeFull);
+									while (toGenericsMatcher.find())
+									{
+										String[] generics = toGenericsMatcher.group()
+												.replaceAll("<", STR.EMPTY).replaceAll(
+														">", STR.EMPTY).split(",");
+										// convert to java.lang.Object if self
+										// class is included
+										for (String generic : generics)
+										{
+											generic = getClassInSourceCode(generic,
+													STR.EMPTY, new ArrayList<String>());
+											argType.generics.add(generic);
+										}
+										System.out.println(argTypeFull);
+									}
+									String argTypeStr = argTypeFull.replaceAll(
+											RXP_GENERICS_PART, STR.EMPTY);
+									argType.name = getType(argTypeStr);
+									argType.nameInMethodName = getTypeAvailableInMethodName(argTypeStr);
 									each.argTypes.add(argType);
 								}
 							}
@@ -435,6 +523,8 @@ public class TestCaseGenerateUtil
 								String fieldType = null;
 								if (each.methodName.matches("^set.+"))
 								{
+									if (each.argTypes.size() == 0)
+										continue;
 									// target field name
 									fieldName = each.methodName.substring(3);
 									fieldName = fieldName.substring(0, 1).toLowerCase()
@@ -487,23 +577,6 @@ public class TestCaseGenerateUtil
 						}
 					}
 				}
-				// imported types
-				if (enabledNotBlankMethods)
-				{
-					if (testMethods.size() <= 0 || testMethods.get(0) == null)
-						testMethods.add(new GeneratingMethodInfo());
-					String[] importStartLines = allSrc.split("import\\s+");
-					for (String importStartLine : importStartLines)
-					{
-						// not package or not comment
-						if (!importStartLine
-								.matches("^\\s*package.*?|^\\s*/\\*.*?|^\\s*//.*?"))
-						{
-							String importedPackage = importStartLine.split(";")[0];
-							testMethods.get(0).importList.add(importedPackage);
-						}
-					}
-				}
 			} finally
 			{
 				FileResourceUtil.close(br);
@@ -512,7 +585,8 @@ public class TestCaseGenerateUtil
 			}
 
 		}
-		return testMethods;
+		classInfo.methods = testMethods;
+		return classInfo;
 	}
 
 	/**
@@ -523,8 +597,8 @@ public class TestCaseGenerateUtil
 	 * @param testTargetClassname
 	 * @return sample implementation source code
 	 */
-	public static String getNotBlankTestMethodSource(GeneratingMethodInfo testMethod,
-			List<GeneratingMethodInfo> testMethods, String testTargetClassname)
+	public static String getNotBlankTestMethodSource(MethodInfo testMethod,
+			ClassInfo testClassinfo, String testTargetClassname)
 	{
 		StringBuffer sb = new StringBuffer();
 		String CRLF = STR.CARRIAGE_RETURN + STR.LINE_FEED;
@@ -536,9 +610,22 @@ public class TestCaseGenerateUtil
 		if (!returnTypeName.equals("void"))
 		{
 			returnTypeName = returnTypeName.replaceAll(RXP_GENERICS_PART, STR.EMPTY);
-			String returnTypeToCheck = returnTypeName.replaceAll("\\[\\]", STR.EMPTY);
-			returnTypeName = getClassInSourceCode(returnTypeToCheck, testTargetClassname,
-					testMethods.get(0).importList);
+			returnTypeName = getClassInSourceCode(returnTypeName, testTargetClassname,
+					testClassinfo.importList);
+			List<String> generics = testMethod.returnType.generics;
+			int genericsLen = generics.size();
+			if (genericsLen > 0)
+			{
+				returnTypeName += "<" + generics.get(0);
+				for (int i = 1; i < genericsLen; i++)
+					returnTypeName += "," + generics.get(i);
+				returnTypeName += ">";
+			}
+			if (PrimitiveTypeUtil.isPrimitive(returnTypeName))
+			{
+				returnDefaultValue = PrimitiveTypeUtil
+						.getPrimitiveDefaultValue(returnTypeName);
+			}
 		}
 
 		// instance method
@@ -578,8 +665,23 @@ public class TestCaseGenerateUtil
 				if (argType.name.matches(".+\\.\\.\\."))
 					argType.name = argType.name.replaceAll("\\.\\.\\.", "[]");
 				String argTypeName = getClassInSourceCode(argType.name,
-						testTargetClassname, testMethods.get(0).importList);
+						testTargetClassname, testClassinfo.importList);
 				sb.append(argTypeName);
+				// add generics
+				if (argType.generics.size() > 0)
+				{
+					sb.append("<");
+					sb.append(argType.generics.get(0));
+					if (argType.generics.size() > 1)
+					{
+						for (int j = 1; j < argType.generics.size(); j++)
+						{
+							sb.append(",");
+							sb.append(argType.generics.get(j));
+						}
+					}
+					sb.append(">");
+				}
 				sb.append(" arg");
 				sb.append(i);
 				sb.append(" = ");
@@ -656,7 +758,7 @@ public class TestCaseGenerateUtil
 	 */
 	private static String getTypeAvailableInMethodName(String arg)
 	{
-		arg = arg.replaceAll("<.+?>", STR.EMPTY);
+		arg = arg.replaceAll(RXP_GENERICS_PART, STR.EMPTY);
 		arg = arg.replaceAll("final ", STR.EMPTY);
 		arg = arg.replaceAll("\\.\\.\\.", "Array").replaceAll("\\[\\]", "Array");
 		arg = arg.trim().split("\\s+")[0];
@@ -701,6 +803,7 @@ public class TestCaseGenerateUtil
 				returnTypeFound = true;
 			for (String importedPackage : importList)
 			{
+				importedPackage = importedPackage.replaceAll("//", STR.EMPTY);
 				if (importedPackage.matches(".+?\\." + returnTypeToCheck + "$"))
 				{
 					returnTypeFound = true;

@@ -43,7 +43,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.junithelper.plugin.Activator;
 import org.junithelper.plugin.STR;
-import org.junithelper.plugin.bean.GeneratingMethodInfo;
+import org.junithelper.plugin.bean.ClassInfo;
+import org.junithelper.plugin.bean.MethodInfo;
 import org.junithelper.plugin.util.FileResourceUtil;
 import org.junithelper.plugin.util.ResourcePathUtil;
 import org.junithelper.plugin.util.ResourceRefreshUtil;
@@ -227,9 +228,9 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 						IResource targetClassResource = workspaceRoot
 								.findMember(targetClass);
 						IFile file = (IFile) targetClassResource;
-						List<GeneratingMethodInfo> testMethods = TestCaseGenerateUtil
-								.getTestMethodsFromTarget(file);
-
+						ClassInfo testClassInfo = TestCaseGenerateUtil
+								.getTestClassInfoFromTargetClass(file);
+						List<MethodInfo> testMethods = testClassInfo.methods;
 						// generate test class
 						String writeEncoding = FileResourceUtil.detectEncoding(file);
 						fos = new FileOutputStream(testCaseCreateDirpath + STR.DIR_SEP
@@ -280,7 +281,7 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 										STR.Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION);
 						if (enabledTestMethodsGen && enabledNotBlankMethods)
 						{
-							List<String> importedPackageList = testMethods.get(0).importList;
+							List<String> importedPackageList = testClassInfo.importList;
 							for (String importedPackage : importedPackageList)
 							{
 								sb.append("import ");
@@ -302,7 +303,7 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 
 						if (enabledTestMethodsGen)
 						{
-							for (GeneratingMethodInfo testMethod : testMethods)
+							for (MethodInfo testMethod : testMethods)
 							{
 								if (testMethod.testMethodName == null
 										|| testMethod.testMethodName.equals(STR.EMPTY))
@@ -321,7 +322,7 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 								{
 									String notBlankSourceCode = TestCaseGenerateUtil
 											.getNotBlankTestMethodSource(testMethod,
-													testMethods, testTargetClassname);
+													testClassInfo, testTargetClassname);
 									sb.append(notBlankSourceCode);
 								}
 

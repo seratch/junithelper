@@ -19,20 +19,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * GeneratingMethodInfo<br>
+ * MethodInfo<br>
  * <br>
- * Information about test target developingd punlic methods<br>
+ * Information about test target developing punlic methods<br>
  * 
  * @author Kazuhiro Sera
  * @version 1.0
  */
-public class GeneratingMethodInfo
+public class MethodInfo
 {
-
-	/**
-	 * Import types
-	 */
-	public List<String> importList = new ArrayList<String>();
 
 	/**
 	 * Return type converted
@@ -48,7 +43,7 @@ public class GeneratingMethodInfo
 	{
 		public String name;
 		public String nameInMethodName;
-		public List<String> generics;
+		public List<String> generics = new ArrayList<String>();
 	}
 
 	/**
@@ -80,7 +75,7 @@ public class GeneratingMethodInfo
 	{
 		public String name;
 		public String nameInMethodName;
-		public List<String> generics;
+		public List<String> generics = new ArrayList<String>();
 	}
 
 }
