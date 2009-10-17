@@ -30,6 +30,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.junithelper.plugin.Activator;
 import org.junithelper.plugin.STR;
 import org.junithelper.plugin.bean.GeneratingMethodInfo;
+import org.junithelper.plugin.bean.GeneratingMethodInfo.ArgType;
 
 /**
  * TestCaseGenerateUtil<br>
@@ -51,6 +52,7 @@ public class TestCaseGenerateUtil
 	private static final String RXP_METHOD_RETURN_TYPE = "[a-zA-Z1-9\\[\\]_,\\$<>]+?";
 
 	private static final String RXP_GENERICS_PART = "<[a-zA-Z0-9,\\$_]+?>";
+	private static final String RXP_GENERICS_PART_GROUP = "<([a-zA-Z0-9,\\$_]+?)>";
 
 	private static final String RXP_METHOD_STATIC_MODIFIERS = "static";
 	private static final String RXP_METHOD_MODIFIERS_EXCLUDES_STATIC = "[<\\w+?>|final|\\s]*";
@@ -277,8 +279,8 @@ public class TestCaseGenerateUtil
 						{
 							GeneratingMethodInfo each = new GeneratingMethodInfo();
 							// return type
-							each.returnTypeName = getType(matcher.group(1));
-							each.returnTypeNameInMethodName = getTypeAvailableInMethodName(matcher
+							each.returnType.name = getType(matcher.group(1));
+							each.returnType.nameInMethodName = getTypeAvailableInMethodName(matcher
 									.group(1));
 							// method name
 							each.methodName = matcher.group(2);
@@ -289,9 +291,10 @@ public class TestCaseGenerateUtil
 							int argArrLen = argArr.length;
 							for (int i = 0; i < argArrLen; i++)
 							{
-								each.argTypeNames.add(getType(argArr[i]));
-								each.argTypeNamesInMethodName
-										.add(getTypeAvailableInMethodName(argArr[i]));
+								ArgType argType = new ArgType();
+								argType.name = getType(argArr[i]);
+								argType.nameInMethodName = getTypeAvailableInMethodName(argArr[i]);
+								each.argTypes.add(argType);
 							}
 							methodStringInfos.add(each);
 						}
@@ -393,23 +396,36 @@ public class TestCaseGenerateUtil
 							// return type
 							if (enabledNotBlankMethods || enabledReturn)
 							{
-								each.returnTypeName = getType(matcher.group(1));
-								each.returnTypeNameInMethodName = getTypeAvailableInMethodName(each.returnTypeName);
+								each.returnType.name = getType(matcher.group(1));
+								each.returnType.nameInMethodName = getTypeAvailableInMethodName(each.returnType.name);
 							}
 							// method name
 							each.methodName = matcher.group(2);
 							// arg types
 							String args = matcher.group(3);
+							// TODO get generics
+							// Pattern pat =
+							// Pattern.compile(RXP_GENERICS_PART_GROUP);
+							// Matcher mat = pat.matcher(args);
+							// while (mat.find())
+							// {
+							// // TODO
+							// String[] generics = mat.group().replace("<",
+							// STR.EMPTY).replace(">", STR.EMPTY)
+							// .split(",");
+							// }
 							args = args.replaceAll(RXP_GENERICS_PART, STR.EMPTY);
 							String[] argArr = args.split(",");
 							if (enabledNotBlankMethods || enabledArgs)
 							{
+								// TODO refactor to get generics
 								int argArrLen = argArr.length;
 								for (int i = 0; i < argArrLen; i++)
 								{
-									each.argTypeNames.add(getType(argArr[i]));
-									each.argTypeNamesInMethodName
-											.add(getTypeAvailableInMethodName(argArr[i]));
+									ArgType argType = new ArgType();
+									argType.name = getType(argArr[i]);
+									argType.nameInMethodName = getTypeAvailableInMethodName(argArr[i]);
+									each.argTypes.add(argType);
 								}
 							}
 							// exlucdes accessors
@@ -423,21 +439,21 @@ public class TestCaseGenerateUtil
 									fieldName = each.methodName.substring(3);
 									fieldName = fieldName.substring(0, 1).toLowerCase()
 											+ fieldName.substring(1);
-									fieldType = each.argTypeNames.get(0);
+									fieldType = each.argTypes.get(0).name;
 								} else if (each.methodName.matches("^get.+"))
 								{
 									// target field name
 									fieldName = each.methodName.substring(3);
 									fieldName = fieldName.substring(0, 1).toLowerCase()
 											+ fieldName.substring(1);
-									fieldType = each.returnTypeName;
+									fieldType = each.returnType.name;
 								} else if (each.methodName.matches("^is.+"))
 								{
 									// target field name
 									fieldName = each.methodName.substring(2);
 									fieldName = fieldName.substring(0, 1).toLowerCase()
 											+ fieldName.substring(1);
-									fieldType = each.returnTypeName;
+									fieldType = each.returnType.name;
 								}
 
 								if (fieldName != null)
@@ -453,16 +469,17 @@ public class TestCaseGenerateUtil
 							if (enabledArgs)
 							{
 								each.testMethodName += delimiter + argsPrefix;
-								if (each.argTypeNames.size() == 0)
+								if (each.argTypes.size() == 0)
 									each.testMethodName += argsDelimiter;
-								for (String argType : each.argTypeNamesInMethodName)
-									each.testMethodName += argsDelimiter + argType;
+								for (ArgType argType : each.argTypes)
+									each.testMethodName += argsDelimiter
+											+ argType.nameInMethodName;
 							}
 							// add return type
 							if (enabledReturn)
 								each.testMethodName += delimiter + returnPrefix
 										+ returnDelimiter
-										+ each.returnTypeNameInMethodName;
+										+ each.returnType.nameInMethodName;
 							// static or instance method
 							if (publicsEach.matches(RXP_SEARCH_STATIC_METHOD))
 								each.isStatic = true;
@@ -514,49 +531,14 @@ public class TestCaseGenerateUtil
 
 		sb.append("\t\t");
 
-		String returnType = testMethod.returnTypeName;
+		String returnTypeName = testMethod.returnType.name;
 		Object returnDefaultValue = null;
-		if (!returnType.equals("void"))
+		if (!returnTypeName.equals("void"))
 		{
-			returnType = returnType.replaceAll(RXP_GENERICS_PART, STR.EMPTY);
-			String returnTypeToCheck = returnType.replaceAll("\\[\\]", STR.EMPTY);
-			boolean returnTypeFound = false;
-			try
-			{
-				if (PrimitiveTypeUtil.isPrimitive(returnTypeToCheck))
-				{
-					returnTypeFound = true;
-					if (!returnType.matches(".+?\\[\\]$"))
-						returnDefaultValue = PrimitiveTypeUtil
-								.getPrimitiveDefaultValue(returnTypeToCheck);
-				} else
-				{
-					try
-					{
-						Class.forName("java.lang." + returnTypeToCheck);
-						returnTypeFound = true;
-					} catch (Exception ignore)
-					{
-					}
-					if (!returnTypeFound)
-						Class.forName(returnTypeToCheck);
-				}
-			} catch (Exception e)
-			{
-				// class not found
-				if (returnTypeToCheck.equals(testTargetClassname))
-					returnTypeFound = true;
-				for (String importedPackage : testMethods.get(0).importList)
-				{
-					if (importedPackage.matches(".+?\\." + returnTypeToCheck + "$"))
-					{
-						returnTypeFound = true;
-						break;
-					}
-				}
-			}
-			if (!returnTypeFound)
-				returnType = returnType.replaceAll(returnTypeToCheck, "Object");
+			returnTypeName = returnTypeName.replaceAll(RXP_GENERICS_PART, STR.EMPTY);
+			String returnTypeToCheck = returnTypeName.replaceAll("\\[\\]", STR.EMPTY);
+			returnTypeName = getClassInSourceCode(returnTypeToCheck, testTargetClassname,
+					testMethods.get(0).importList);
 		}
 
 		// instance method
@@ -571,9 +553,9 @@ public class TestCaseGenerateUtil
 			sb.append("\t\t");
 		}
 
-		if (!returnType.equals("void"))
+		if (!returnTypeName.equals("void"))
 		{
-			sb.append(returnType);
+			sb.append(returnTypeName);
 			sb.append(" expected = ");
 			sb.append(returnDefaultValue);
 			sb.append(";");
@@ -583,25 +565,28 @@ public class TestCaseGenerateUtil
 		// args define
 		// ex. String arg0 = null;
 		// int arg1 = 0;
-		List<String> argTypes = testMethod.argTypeNames;
+		List<ArgType> argTypes = testMethod.argTypes;
 		List<String> args = new ArrayList<String>();
 		int argTypesLen = argTypes.size();
-		if (argTypesLen > 0 && argTypes.get(0) != null
-				&& !argTypes.get(0).equals(STR.EMPTY))
+		if (argTypesLen > 0 && argTypes.get(0).name != null
+				&& !argTypes.get(0).name.equals(STR.EMPTY))
 		{
 			for (int i = 0; i < argTypesLen; i++)
 			{
+				ArgType argType = argTypes.get(i);
 				// flexible length args
-				if (argTypes.get(i).matches(".+\\.\\.\\."))
-					argTypes.set(i, argTypes.get(i).replaceAll("\\.\\.\\.", "[]"));
-				sb.append(argTypes.get(i));
+				if (argType.name.matches(".+\\.\\.\\."))
+					argType.name = argType.name.replaceAll("\\.\\.\\.", "[]");
+				String argTypeName = getClassInSourceCode(argType.name,
+						testTargetClassname, testMethods.get(0).importList);
+				sb.append(argTypeName);
 				sb.append(" arg");
 				sb.append(i);
 				sb.append(" = ");
-				if (PrimitiveTypeUtil.isPrimitive(argTypes.get(i)))
+				if (PrimitiveTypeUtil.isPrimitive(argType.name))
 				{
 					Object primitiveDefault = PrimitiveTypeUtil
-							.getPrimitiveDefaultValue(argTypes.get(i));
+							.getPrimitiveDefaultValue(argType.name);
 					sb.append(primitiveDefault);
 				} else
 					sb.append("null");
@@ -616,9 +601,9 @@ public class TestCaseGenerateUtil
 		// ex. SampleUtil.doSomething(null, null);
 		// ex. String expected = null;
 		// String actual = target.doSomething();
-		if (!returnType.equals("void"))
+		if (!returnTypeName.equals("void"))
 		{
-			sb.append(returnType);
+			sb.append(returnTypeName);
 			sb.append(" actual = ");
 		}
 		if (testMethod.isStatic)
@@ -629,8 +614,8 @@ public class TestCaseGenerateUtil
 		sb.append(".");
 		sb.append(testMethod.methodName);
 		sb.append("(");
-		if (argTypesLen > 0 && argTypes.get(0) != null
-				&& !argTypes.get(0).equals(STR.EMPTY))
+		if (args.size() > 0 && argTypesLen > 0 && argTypes.get(0).name != null
+				&& !argTypes.get(0).name.equals(STR.EMPTY))
 			sb.append(args.get(0));
 		for (int i = 1; i < argTypes.size(); i++)
 		{
@@ -642,7 +627,7 @@ public class TestCaseGenerateUtil
 
 		// assert return value
 		// ex. assertEquals(expected, actual);
-		if (!returnType.equals("void"))
+		if (!returnTypeName.equals("void"))
 		{
 			sb.append("\t\t");
 			sb.append("assertEquals(expected, actual);");
@@ -678,4 +663,61 @@ public class TestCaseGenerateUtil
 		return arg;
 	}
 
+	private static String getClassInSourceCode(String returnTypeToCheck,
+			String testTargetClassname, List<String> importList)
+	{
+		boolean isArray = false;
+		if (returnTypeToCheck.matches(".+?\\[\\]"))
+		{
+			isArray = true;
+			returnTypeToCheck = returnTypeToCheck.replaceAll("\\[\\]", "");
+		}
+		String returnTypeName = "Object";
+		boolean returnTypeFound = false;
+		try
+		{
+			if (PrimitiveTypeUtil.isPrimitive(returnTypeToCheck))
+			{
+				returnTypeFound = true;
+				if (!returnTypeName.matches(".+?\\[\\]$"))
+					returnTypeName = PrimitiveTypeUtil
+							.getPrimitiveDefaultValue(returnTypeToCheck);
+			} else
+			{
+				try
+				{
+					Class.forName("java.lang." + returnTypeToCheck);
+					returnTypeFound = true;
+				} catch (Exception ignore)
+				{
+				}
+				if (!returnTypeFound)
+					Class.forName(returnTypeToCheck);
+			}
+		} catch (Exception e)
+		{
+			// class not found
+			if (returnTypeToCheck.equals(testTargetClassname))
+				returnTypeFound = true;
+			for (String importedPackage : importList)
+			{
+				if (importedPackage.matches(".+?\\." + returnTypeToCheck + "$"))
+				{
+					returnTypeFound = true;
+					break;
+				}
+			}
+		}
+		if (!returnTypeFound)
+		{
+			if (isArray)
+				returnTypeName += "[]";
+			return returnTypeName;
+		} else
+		{
+			if (isArray)
+				returnTypeToCheck += "[]";
+			return returnTypeToCheck;
+		}
+	}
 }

@@ -16,9 +16,7 @@
 package org.junithelper.plugin.bean;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * GeneratingMethodInfo<br>
@@ -37,19 +35,21 @@ public class GeneratingMethodInfo
 	public List<String> importList = new ArrayList<String>();
 
 	/**
-	 * Return type name
+	 * Return type converted
 	 */
-	public String returnTypeName = "";
+	public ReturnType returnType = new ReturnType();
 
 	/**
-	 * Return type name converted
+	 * Return type
+	 * 
+	 * @author Kazuhiro Sera
 	 */
-	public String returnTypeNameInMethodName = "";
-
-	/**
-	 * Generic in return type
-	 */
-	public List<String> returnTypeGenerics = new ArrayList<String>();
+	public static class ReturnType
+	{
+		public String name;
+		public String nameInMethodName;
+		public List<String> generics;
+	}
 
 	/**
 	 * Test target method name
@@ -67,18 +67,20 @@ public class GeneratingMethodInfo
 	public String testMethodName = "";
 
 	/**
-	 * Test target method arg type names
+	 * Test target method arg types
 	 */
-	public List<String> argTypeNames = new ArrayList<String>();
+	public List<ArgType> argTypes = new ArrayList<ArgType>();
 
 	/**
-	 * Test target method arg type names converted
+	 * Arg type
+	 * 
+	 * @author Kazuhiro Sera
 	 */
-	public List<String> argTypeNamesInMethodName = new ArrayList<String>();
-
-	/**
-	 * Generic in test target method arg types
-	 */
-	public Map<String, List<String>> argTypeGenerics = new HashMap<String, List<String>>();
+	public static class ArgType
+	{
+		public String name;
+		public String nameInMethodName;
+		public List<String> generics;
+	}
 
 }
