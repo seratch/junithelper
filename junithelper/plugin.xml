@@ -72,13 +72,13 @@
 			path="additions">
 		</menu>
 		<action
-			label="Open Test Target Ctrl+8"
+			label="Open Test Target Alt+8"
 			class="org.junithelper.plugin.action.OpenTestTargetAction"
 			id="org.junithelper.plugin.action.OpenTestTargetAction.pe"
 			menubarPath="org.junithelper.plugin.popupmenu/additions">
 		</action>
 		<action
-			label="Open Test Class Ctrl+9"
+			label="Open Test Class Alt+9"
 			class="org.junithelper.plugin.action.OpenTestCaseAction"
 			id="org.junithelper.plugin.action.OpenTestCaseAction.pe"
 			menubarPath="org.junithelper.plugin.popupmenu/additions" >
@@ -96,13 +96,13 @@
 			path="additions">
 		</menu>
 		<action
-			label="Open Test Target Ctrl+8"
+			label="Open Test Target Alt+8"
 			class="org.junithelper.plugin.action.OpenTestTargetAction"
 			id="org.junithelper.plugin.action.OpenTestTargetAction.nvg"
 			menubarPath="org.junithelper.plugin.popupmenu/additions">
 		</action>
 		<action
-			label="Open Test Class Ctrl+9"
+			label="Open Test Class Alt+9"
 			class="org.junithelper.plugin.action.OpenTestCaseAction"
 			id="org.junithelper.plugin.action.OpenTestCaseAction.nvg"
 			menubarPath="org.junithelper.plugin.popupmenu/additions" >
@@ -114,12 +114,12 @@
 		targetID="#CompilationUnitEditorContext"
 		id="org.junithelper.plugin.test.framework.create">
 		<action
-			label="Open Test Target Ctrl+8"
+			label="Open Test Target Alt+8"
 			class="org.junithelper.plugin.action.OpenTestTargetAction"
 			id="org.junithelper.plugin.action.OpenTestTargetAction.je">
 		</action>
 		<action
-			label="Open Test Class Ctrl+9"
+			label="Open Test Class Alt+9"
 			class="org.junithelper.plugin.action.OpenTestCaseAction"
 			id="org.junithelper.plugin.action.OpenTestCaseAction.je">
 		</action>

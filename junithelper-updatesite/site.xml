@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.junithelper.plugin.feature_0.0.30.jar" id="org.junithelper.plugin.feature" version="0.0.30">
+   <feature url="features/org.junithelper.plugin.feature_0.0.31.jar" id="org.junithelper.plugin.feature" version="0.0.31">
       <category name="JUnit Helper"/>
    </feature>
    <category-def name="JUnit Helper" label="JUnit Helper">

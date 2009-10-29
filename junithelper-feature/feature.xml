@@ -2,7 +2,7 @@
 <feature
       id="org.junithelper.plugin.feature"
       label="JUnit Helper"
-      version="0.0.30"
+      version="0.0.31"
       provider-name="junithelper.org"
       plugin="org.junithelper.plugin"
       image="icon/junithelper.png"
@@ -17,9 +17,9 @@ How to use
 
 The following commands are available on Java Editor, Package
 Explorer and Navigator.
-* Ctrl + 8 (Open target from test) 
+* Alt + 8 (Open target from test) 
 When selecting test class, open test target class. 
-* Ctrl + 9 (Create/Open test from target)
+* Alt + 9 (Create/Open test from target)
 When selecting test target class, open test class or create test
 class if it does not exist. 
 
@@ -281,7 +281,7 @@ limitations under the License.
          id="org.junithelper.plugin"
          download-size="0"
          install-size="0"
-         version="0.0.30"
+         version="0.0.31"
          unpack="false"/>
 
 </feature>
