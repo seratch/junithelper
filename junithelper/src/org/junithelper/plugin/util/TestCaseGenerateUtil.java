@@ -760,6 +760,9 @@ public class TestCaseGenerateUtil
 		arg = arg.replaceAll(RXP_GENERICS_PART, STR.EMPTY);
 		arg = arg.replaceAll("final ", STR.EMPTY);
 		arg = arg.replaceAll("\\.\\.\\.", "Array").replaceAll("\\[\\]", "Array");
+		// sample name classes imported or full package class defined
+		// ex. java.util.Date, java.sql.Date
+		arg = arg.replaceAll("\\.", STR.EMPTY);
 		arg = arg.trim().split("\\s+")[0];
 		return arg;
 	}
@@ -767,6 +770,10 @@ public class TestCaseGenerateUtil
 	private static String getClassInSourceCode(String returnTypeToCheck,
 			String testTargetClassname, List<String> importList)
 	{
+		// defined class with full package
+		if (returnTypeToCheck.matches(".+?\\..+"))
+			return returnTypeToCheck;
+		// array object
 		boolean isArray = false;
 		if (returnTypeToCheck.matches(".+?\\[\\]"))
 		{

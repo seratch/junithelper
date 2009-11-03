@@ -1,5 +1,6 @@
 package test;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -136,6 +137,12 @@ public class JUnitHelperTestBean
 
 	public void methodArgFinal(final Logger finalLog)
 	{
+	}
+
+	public static Timestamp toSqlTimestamp(java.sql.Date date)
+	{
+		Timestamp timestamp = new Timestamp(date.getTime());
+		return timestamp;
 	}
 
 	// TODO
