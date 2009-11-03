@@ -50,7 +50,7 @@ public class TestCaseGenerateUtil
 	static String RXP_NOT_S_NRQ = STR.RegExp.NOT_S_NOREQUIRED;
 
 	private static final String RXP_METHOD_MODIFIERS = "[<\\w+?>|static|final|\\s]*";
-	private static final String RXP_METHOD_RETURN_TYPE = "[a-zA-Z1-9\\[\\]_,\\$<>]+?";
+	private static final String RXP_METHOD_RETURN_TYPE = "[a-zA-Z1-9\\[\\]_,\\$<>\\.]+?";
 
 	private static final String RXP_GENERICS_PART = "<[a-zA-Z0-9,\\$_]+?>";
 	private static final String RXP_GENERICS_PART_GROUP = "<([a-zA-Z0-9,\\$_]+?)>";
