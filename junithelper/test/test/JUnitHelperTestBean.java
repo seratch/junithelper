@@ -122,13 +122,20 @@ public class JUnitHelperTestBean {
 		return null;
 	}
 
+	protected static java.sql.Date issue21Static() {
+		return null;
+	}
+
+	protected java.sql.Date issue21Instance() {
+		return null;
+	}
+
 	// TODO
-	// public static class InnerClass {
-	//		
-	// String innerMethod()
-	// {
-	// return null;
-	// }
-	//		
-	// }
+//	 public static class InnerClass {
+//	 String innerMethod()
+//	 {
+//	 return null;
+//	 }
+//	 }
+
 }

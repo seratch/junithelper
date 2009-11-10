@@ -272,16 +272,16 @@ public class TestCaseGenerateUtil
 				while ((line = br.readLine()) != null)
 					tmpsb.append(line + " ");
 				String allSrc = tmpsb.toString();
-				String[] publics = allSrc.split("public");
-				for (String publicsEach : publics)
+				String[] targets = allSrc.split("public|protected");
+				for (String target : targets)
 				{
-					publicsEach = publicsEach.replaceAll("\\s+?" + STR.COMMA, STR.COMMA)
+					target = target.replaceAll("\\s+?" + STR.COMMA, STR.COMMA)
 							.replaceAll(STR.COMMA + "\\s+?", STR.COMMA);
-					publicsEach = publicsEach.replaceAll("<\\s+?", "<").replaceAll(
+					target = target.replaceAll("<\\s+?", "<").replaceAll(
 							"\\s+?>", ">");
-					if (publicsEach.matches(RXP_SEARCH_METHOD))
+					if (target.matches(RXP_SEARCH_METHOD))
 					{
-						Matcher matcher = PAT_SEARCH_GROUP_METHOD.matcher(publicsEach);
+						Matcher matcher = PAT_SEARCH_GROUP_METHOD.matcher(target);
 						if (matcher.find())
 						{
 							MethodInfo each = new MethodInfo();
@@ -405,17 +405,17 @@ public class TestCaseGenerateUtil
 					}
 				}
 
-				String[] publics = allSrc.split("public");
-				for (String publicsEach : publics)
+				String[] targets = allSrc.split("public|protected");
+				for (String target : targets)
 				{
-					publicsEach = publicsEach.replaceAll("\\s+?" + STR.COMMA, STR.COMMA)
+					target = target.replaceAll("\\s+?" + STR.COMMA, STR.COMMA)
 							.replaceAll(STR.COMMA + "\\s+?", STR.COMMA);
-					publicsEach = publicsEach.replaceAll("<\\s+?", "<").replaceAll(
+					target = target.replaceAll("<\\s+?", "<").replaceAll(
 							"\\s+?>", ">");
 					// TODO inner class support
-					if (publicsEach.matches(RXP_SEARCH_METHOD))
+					if (target.matches(RXP_SEARCH_METHOD))
 					{
-						Matcher matcher = PAT_SEARCH_GROUP_METHOD.matcher(publicsEach);
+						Matcher matcher = PAT_SEARCH_GROUP_METHOD.matcher(target);
 						if (matcher.find())
 						{
 							MethodInfo each = new MethodInfo();
@@ -570,7 +570,7 @@ public class TestCaseGenerateUtil
 										+ returnDelimiter
 										+ each.returnType.nameInMethodName;
 							// static or instance method
-							if (publicsEach.matches(RXP_SEARCH_STATIC_METHOD))
+							if (target.matches(RXP_SEARCH_STATIC_METHOD))
 								each.isStatic = true;
 							testMethods.add(each);
 						}
