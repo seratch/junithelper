@@ -246,7 +246,8 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 						String[] tmpDirArr = selected.split(STR.DIR_SEP);
 						StringBuffer dirSb = new StringBuffer();
 						int packageArrLen = tmpDirArr.length - 2;
-						for (int i = 3; i < packageArrLen; i++)
+						int mainJavaLen = STR.SRC_MAIN_JAVA.split("/").length;
+						for (int i = mainJavaLen; i < packageArrLen; i++)
 						{
 							dirSb.append(tmpDirArr[i]);
 							dirSb.append(".");
