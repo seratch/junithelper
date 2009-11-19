@@ -151,7 +151,8 @@ public class TestCaseGenerateUtil
 		boolean enabled = store.getBoolean(STR.Preference.TestMethodGen.ENABLE);
 		boolean enabledNotBlankMethods = store
 				.getBoolean(STR.Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION);
-		boolean enabledSupportJMock2 = store.getBoolean(STR.Preference.TestMethodGen.SUPPORT_JMOCK2);
+		boolean enabledSupportJMock2 = store
+				.getBoolean(STR.Preference.TestMethodGen.SUPPORT_JMOCK2);
 		// enable public method test
 		if (enabled)
 		{
@@ -198,7 +199,7 @@ public class TestCaseGenerateUtil
 						notImportedList.add("//" + expImported);
 				}
 				classInfo.importList = notImportedList;
-				if (enabledSupportJMock2) 
+				if (enabledSupportJMock2)
 				{
 					classInfo.importList.add("org.jmock.Mockery");
 					classInfo.importList.add("org.jmock.Expectations");
@@ -284,8 +285,7 @@ public class TestCaseGenerateUtil
 				{
 					target = target.replaceAll("\\s+?" + STR.COMMA, STR.COMMA)
 							.replaceAll(STR.COMMA + "\\s+?", STR.COMMA);
-					target = target.replaceAll("<\\s+?", "<").replaceAll(
-							"\\s+?>", ">");
+					target = target.replaceAll("<\\s+?", "<").replaceAll("\\s+?>", ">");
 					if (target.matches(RXP_SEARCH_METHOD))
 					{
 						Matcher matcher = PAT_SEARCH_GROUP_METHOD.matcher(target);
@@ -412,11 +412,12 @@ public class TestCaseGenerateUtil
 							classInfo.importList.add(importedPackage);
 						}
 					}
-					if (enabledSupportJMock2) 
+					if (enabledSupportJMock2)
 					{
 						classInfo.importList.add("org.jmock.Mockery");
 						classInfo.importList.add("org.jmock.Expectations");
-						classInfo.importList.add("org.jmock.lib.legacy.ClassImposteriser");
+						classInfo.importList
+								.add("org.jmock.lib.legacy.ClassImposteriser");
 					}
 				}
 
@@ -425,8 +426,7 @@ public class TestCaseGenerateUtil
 				{
 					target = target.replaceAll("\\s+?" + STR.COMMA, STR.COMMA)
 							.replaceAll(STR.COMMA + "\\s+?", STR.COMMA);
-					target = target.replaceAll("<\\s+?", "<").replaceAll(
-							"\\s+?>", ">");
+					target = target.replaceAll("<\\s+?", "<").replaceAll("\\s+?>", ">");
 					// TODO inner class support
 					if (target.matches(RXP_SEARCH_METHOD))
 					{
@@ -619,9 +619,11 @@ public class TestCaseGenerateUtil
 
 		// mocked args using JMock2
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-		boolean enabledJMock2 = store.getBoolean(STR.Preference.TestMethodGen.SUPPORT_JMOCK2);
-		
-		if (enabledJMock2) {
+		boolean enabledJMock2 = store
+				.getBoolean(STR.Preference.TestMethodGen.SUPPORT_JMOCK2);
+
+		if (enabledJMock2)
+		{
 			sb.append("\t\t");
 			sb.append("Mockery context = new Mockery(){{");
 			sb.append(CRLF);
@@ -721,15 +723,20 @@ public class TestCaseGenerateUtil
 					Object primitiveDefault = PrimitiveTypeUtil
 							.getPrimitiveDefaultValue(argType.name);
 					sb.append(primitiveDefault);
-				} else {
-					if (enabledJMock2 && JMock2Util.isMockableClassName(argTypeName,testClassinfo.importList)) {
+				} else
+				{
+					if (enabledJMock2
+							&& JMock2Util.isMockableClassName(argTypeName,
+									testClassinfo.importList))
+					{
 						sb.append("context.mock(");
 						sb.append(argTypeName);
 						sb.append(".class)");
-					} else {
+					} else
+					{
 						sb.append("null");
 					}
-					
+
 				}
 				sb.append(";");
 				sb.append(CRLF);
@@ -737,9 +744,10 @@ public class TestCaseGenerateUtil
 				args.add("arg" + i);
 			}
 		}
-		
+
 		// JMock2 expectations
-		if (enabledJMock2) {
+		if (enabledJMock2)
+		{
 			sb.append("context.checking(new Expectations(){{");
 			sb.append(CRLF);
 			sb.append("\t\t\t// TODO JMock2 Expectations");

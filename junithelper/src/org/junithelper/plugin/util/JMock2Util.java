@@ -27,27 +27,30 @@ import org.junithelper.plugin.STR;
  * @author Kazuhiro Sera
  * @version 1.0
  */
-public class JMock2Util {
+public class JMock2Util
+{
 
-	private JMock2Util() {}
-	
+	private JMock2Util()
+	{
+	}
+
 	/**
 	 * Judge mockable class or not
+	 * 
 	 * @param className
 	 * @param importList
 	 * @return result
 	 */
-	public static boolean isMockableClassName(String className, List<String> importList) {
-		
+	public static boolean isMockableClassName(String className, List<String> importList)
+	{
+
 		if (PrimitiveTypeUtil.isPrimitive(className))
 		{
 			return false;
-		}
-		else if (className.matches(".+?\\[\\]$")) 
+		} else if (className.matches(".+?\\[\\]$"))
 		{
 			return false;
-		}
-		else
+		} else
 		{
 			try
 			{
@@ -67,11 +70,14 @@ public class JMock2Util {
 					}
 				}
 				// full package class name
-				if ( className.matches(".+?\\..+") ) {
-					try {
+				if (className.matches(".+?\\..+"))
+				{
+					try
+					{
 						Class<?> clazz = Class.forName(className);
 						return (Modifier.isFinal(clazz.getModifiers())) ? false : true;
-					} catch (Exception e) {
+					} catch (Exception e)
+					{
 						return false;
 					}
 				}
@@ -79,6 +85,5 @@ public class JMock2Util {
 		}
 		return false;
 	}
-	
-	
+
 }
