@@ -297,6 +297,10 @@ public interface STR
 			 * Generate sample implementation to test methods
 			 */
 			public static final String METHOD_SAMPLE_IMPLEMENTATION = "Generate Sample Implementation";
+			/**
+			 * Supporting JMock2 mock object args
+			 */
+			public static final String SUPPORT_JMOCK2 = "Supports JMock2";
 		}
 	}
 }

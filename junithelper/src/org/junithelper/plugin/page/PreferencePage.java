@@ -237,6 +237,15 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 
 				addField(enableGenerateSample);
 			}
+			{
+				// enable JMock2 supported test methods
+				BooleanFieldEditor enableSupportJMock2 = new BooleanFieldEditor(
+						STR.Preference.TestMethodGen.SUPPORT_JMOCK2,
+						STR.Preference.TestMethodGen.SUPPORT_JMOCK2,
+						genTestMethodsParentGroup);
+
+				addField(enableSupportJMock2);
+			}
 		}
 	}
 

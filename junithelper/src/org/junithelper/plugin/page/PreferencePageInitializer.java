@@ -64,6 +64,8 @@ public class PreferencePageInitializer extends AbstractPreferenceInitializer
 			store.setDefault(STR.Preference.TestMethodGen.EXLCUDES_ACCESSORS, true);
 			store.setDefault(STR.Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION,
 					true);
+			
+			store.setDefault(STR.Preference.TestMethodGen.SUPPORT_JMOCK2, false);
 		}
 	}
 

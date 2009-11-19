@@ -151,6 +151,7 @@ public class TestCaseGenerateUtil
 		boolean enabled = store.getBoolean(STR.Preference.TestMethodGen.ENABLE);
 		boolean enabledNotBlankMethods = store
 				.getBoolean(STR.Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION);
+		boolean enabledSupportJMock2 = store.getBoolean(STR.Preference.TestMethodGen.SUPPORT_JMOCK2);
 		// enable public method test
 		if (enabled)
 		{
@@ -197,6 +198,12 @@ public class TestCaseGenerateUtil
 						notImportedList.add("//" + expImported);
 				}
 				classInfo.importList = notImportedList;
+				if (enabledSupportJMock2) 
+				{
+					classInfo.importList.add("org.jmock.Mockery");
+					classInfo.importList.add("org.jmock.Expectations");
+					classInfo.importList.add("org.jmock.lib.legacy.ClassImposteriser");
+				}
 			}
 		}
 		classInfo.methods = unimplementedMethodNames;
@@ -359,6 +366,8 @@ public class TestCaseGenerateUtil
 				.getBoolean(STR.Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION);
 		boolean enableExcludesAccessors = store
 				.getBoolean(STR.Preference.TestMethodGen.EXLCUDES_ACCESSORS);
+		boolean enabledSupportJMock2 = store
+				.getBoolean(STR.Preference.TestMethodGen.SUPPORT_JMOCK2);
 
 		String delimiter = store.getString(STR.Preference.TestMethodGen.DELIMITER);
 		String argsPrefix = store.getString(STR.Preference.TestMethodGen.ARGS_PREFIX);
@@ -402,6 +411,12 @@ public class TestCaseGenerateUtil
 							String importedPackage = importStartLine.split(";")[0];
 							classInfo.importList.add(importedPackage);
 						}
+					}
+					if (enabledSupportJMock2) 
+					{
+						classInfo.importList.add("org.jmock.Mockery");
+						classInfo.importList.add("org.jmock.Expectations");
+						classInfo.importList.add("org.jmock.lib.legacy.ClassImposteriser");
 					}
 				}
 
@@ -602,6 +617,22 @@ public class TestCaseGenerateUtil
 		StringBuffer sb = new StringBuffer();
 		String CRLF = STR.CARRIAGE_RETURN + STR.LINE_FEED;
 
+		// mocked args using JMock2
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		boolean enabledJMock2 = store.getBoolean(STR.Preference.TestMethodGen.SUPPORT_JMOCK2);
+		
+		if (enabledJMock2) {
+			sb.append("\t\t");
+			sb.append("Mockery context = new Mockery(){{");
+			sb.append(CRLF);
+			sb.append("\t\t\t");
+			sb.append("setImposteriser(ClassImposteriser.INSTANCE);");
+			sb.append(CRLF);
+			sb.append("\t\t");
+			sb.append("}};");
+			sb.append(CRLF);
+		}
+
 		sb.append("\t\t");
 
 		String returnTypeName = testMethod.returnType.name;
@@ -648,6 +679,7 @@ public class TestCaseGenerateUtil
 			sb.append(CRLF);
 			sb.append("\t\t");
 		}
+
 		// args define
 		// ex. String arg0 = null;
 		// int arg1 = 0;
@@ -689,13 +721,32 @@ public class TestCaseGenerateUtil
 					Object primitiveDefault = PrimitiveTypeUtil
 							.getPrimitiveDefaultValue(argType.name);
 					sb.append(primitiveDefault);
-				} else
-					sb.append("null");
+				} else {
+					if (enabledJMock2 && JMock2Util.isMockableClassName(argTypeName,testClassinfo.importList)) {
+						sb.append("context.mock(");
+						sb.append(argTypeName);
+						sb.append(".class)");
+					} else {
+						sb.append("null");
+					}
+					
+				}
 				sb.append(";");
 				sb.append(CRLF);
 				sb.append("\t\t");
 				args.add("arg" + i);
 			}
+		}
+		
+		// JMock2 expectations
+		if (enabledJMock2) {
+			sb.append("context.checking(new Expectations(){{");
+			sb.append(CRLF);
+			sb.append("\t\t\t// TODO JMock2 Expectations");
+			sb.append(CRLF);
+			sb.append("\t\t}});");
+			sb.append(CRLF);
+			sb.append("\t\t");
 		}
 
 		// execute target method
