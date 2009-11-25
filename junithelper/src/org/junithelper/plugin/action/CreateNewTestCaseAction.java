@@ -237,14 +237,14 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 								+ testCaseFilename);
 						testFileOSWriter = new OutputStreamWriter(fos, writeEncoding);
 
-						StringBuffer sb = new StringBuffer();
+						StringBuilder sb = new StringBuilder();
 
 						String CRLF = STR.CARRIAGE_RETURN + STR.LINE_FEED;
 
 						// get package
 						String testPackageString = STR.EMPTY;
 						String[] tmpDirArr = selected.split(STR.DIR_SEP);
-						StringBuffer dirSb = new StringBuffer();
+						StringBuilder dirSb = new StringBuilder();
 						int packageArrLen = tmpDirArr.length - 2;
 						int mainJavaLen = STR.SRC_MAIN_JAVA.split("/").length;
 						for (int i = mainJavaLen; i < packageArrLen; i++)

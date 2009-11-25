@@ -275,7 +275,7 @@ public class TestCaseGenerateUtil
 				is = javaFile.getContents();
 				isr = new InputStreamReader(is, encoding);
 				br = new BufferedReader(isr);
-				StringBuffer tmpsb = new StringBuffer();
+				StringBuilder tmpsb = new StringBuilder();
 				String line = null;
 				while ((line = br.readLine()) != null)
 					tmpsb.append(line + " ");
@@ -390,7 +390,7 @@ public class TestCaseGenerateUtil
 				is = javaFile.getContents();
 				isr = new InputStreamReader(is, encoding);
 				br = new BufferedReader(isr);
-				StringBuffer tmpsb = new StringBuffer();
+				StringBuilder tmpsb = new StringBuilder();
 				String line = null;
 				while ((line = br.readLine()) != null)
 					tmpsb.append(line + " ");
@@ -614,7 +614,7 @@ public class TestCaseGenerateUtil
 	public static String getNotBlankTestMethodSource(MethodInfo testMethod,
 			ClassInfo testClassinfo, String testTargetClassname)
 	{
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		String CRLF = STR.CARRIAGE_RETURN + STR.LINE_FEED;
 
 		// mocked args using JMock2
