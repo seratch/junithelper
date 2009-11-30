@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JUnit Helper
 Bundle-SymbolicName: org.junithelper.plugin;singleton:=true
-Bundle-Version: 0.0.38
+Bundle-Version: 0.0.39
 Bundle-ClassPath: .,
  lib/juniversalchardet-1.0.3.jar
 Bundle-Activator: org.junithelper.plugin.Activator

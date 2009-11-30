@@ -699,6 +699,12 @@ public class TestCaseGenerateUtil
 					argType.name = argType.name.replaceAll("\\.\\.\\.", "[]");
 				String argTypeName = getClassInSourceCode(argType.name,
 						testTargetClassname, testClassinfo.importList);
+				boolean isJMock2 = enabledJMock2 && JMock2Util.isMockableClassName(argTypeName,
+						testClassinfo.importList);
+				if ( isJMock2 ) 
+				{
+					sb.append("final ");
+				}
 				sb.append(argTypeName);
 				// add generics
 				if (argType.generics.size() > 0)
@@ -725,9 +731,7 @@ public class TestCaseGenerateUtil
 					sb.append(primitiveDefault);
 				} else
 				{
-					if (enabledJMock2
-							&& JMock2Util.isMockableClassName(argTypeName,
-									testClassinfo.importList))
+					if (isJMock2)
 					{
 						sb.append("context.mock(");
 						sb.append(argTypeName);
