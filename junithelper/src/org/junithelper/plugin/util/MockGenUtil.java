@@ -27,10 +27,10 @@ import org.junithelper.plugin.STR;
  * @author Kazuhiro Sera
  * @version 1.0
  */
-public class JMock2Util
+public class MockGenUtil
 {
 
-	private JMock2Util()
+	private MockGenUtil()
 	{
 	}
 
