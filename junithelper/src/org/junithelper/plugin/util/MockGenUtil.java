@@ -18,6 +18,7 @@ package org.junithelper.plugin.util;
 import java.lang.reflect.Modifier;
 import java.util.List;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.junithelper.plugin.STR;
 
 /**
@@ -27,11 +28,9 @@ import org.junithelper.plugin.STR;
  * @author Kazuhiro Sera
  * @version 1.0
  */
-public class MockGenUtil
-{
+public final class MockGenUtil {
 
-	private MockGenUtil()
-	{
+	private MockGenUtil() {
 	}
 
 	/**
@@ -41,49 +40,60 @@ public class MockGenUtil
 	 * @param importList
 	 * @return result
 	 */
-	public static boolean isMockableClassName(String className, List<String> importList)
-	{
+	public static final boolean isMockableClassName(String className,
+			List<String> importList) {
 
-		if (PrimitiveTypeUtil.isPrimitive(className))
-		{
+		if (PrimitiveTypeUtil.isPrimitive(className)) {
 			return false;
-		} else if (className.matches(".+?\\[\\]$"))
-		{
+		} else if (className.matches(".+?\\[\\]$")) {
 			return false;
-		} else
-		{
-			try
-			{
+		} else {
+			try {
 				// java.lang class name
 				Class<?> clazz = Class.forName("java.lang." + className);
 				return (Modifier.isFinal(clazz.getModifiers())) ? false : true;
 
-			} catch (Exception ignore)
-			{
+			} catch (Exception ignore) {
 				// imported class name
-				for (String importedPackage : importList)
-				{
-					importedPackage = importedPackage.replaceAll("//", STR.EMPTY);
-					if (importedPackage.matches(".+?\\." + className + "$"))
-					{
+				for (String importedPackage : importList) {
+					importedPackage = importedPackage.replaceAll("//",
+							STR.EMPTY);
+					if (importedPackage.matches(".+?\\." + className + "$")) {
 						return true;
 					}
 				}
 				// full package class name
-				if (className.matches(".+?\\..+"))
-				{
-					try
-					{
+				if (className.matches(".+?\\..+")) {
+					try {
 						Class<?> clazz = Class.forName(className);
-						return (Modifier.isFinal(clazz.getModifiers())) ? false : true;
-					} catch (Exception e)
-					{
+						return (Modifier.isFinal(clazz.getModifiers())) ? false
+								: true;
+					} catch (Exception e) {
 						return false;
 					}
 				}
 			}
 		}
 		return false;
+	}
+
+	public static final boolean isUsingNone(IPreferenceStore store) {
+		String setting = store
+				.getString(STR.Preference.TestMethodGen.USING_MOCK);
+		return setting == null
+				|| STR.Preference.TestMethodGen.USING_MOCK_NONE.equals(setting);
+	}
+
+	public static final boolean isUsingEasyMock(IPreferenceStore store) {
+		String setting = store
+				.getString(STR.Preference.TestMethodGen.USING_MOCK);
+		return STR.Preference.TestMethodGen.USING_MOCK_EASYMOCK.equals(setting);
+	}
+
+	public static final boolean isUsingJMock2(IPreferenceStore store) {
+		String setting = store
+				.getString(STR.Preference.TestMethodGen.USING_MOCK);
+		return STR.Preference.TestMethodGen.USING_MOCK_JMOCK2.equals(setting);
 	}
 
 }

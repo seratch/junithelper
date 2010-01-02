@@ -34,8 +34,7 @@ import org.mozilla.universalchardet.UniversalDetector;
  * @version 1.0
  */
 
-public class FileResourceUtil
-{
+public final class FileResourceUtil {
 
 	/**
 	 * Get detected encoding charset name
@@ -44,11 +43,9 @@ public class FileResourceUtil
 	 * @return encoding charset name
 	 * @throws Exception
 	 */
-	public static String detectEncoding(IFile file) throws Exception
-	{
+	public static String detectEncoding(IFile file) throws Exception {
 		InputStream is = null;
-		try
-		{
+		try {
 			is = file.getContents();
 			UniversalDetector detector = new UniversalDetector(null);
 			byte[] buf = new byte[4096];
@@ -60,8 +57,7 @@ public class FileResourceUtil
 			if (encoding == null)
 				encoding = Charset.defaultCharset().name();
 			return encoding;
-		} finally
-		{
+		} finally {
 			close(is);
 		}
 	}
@@ -72,14 +68,11 @@ public class FileResourceUtil
 	 * @param is
 	 *            InputStream resource object
 	 */
-	public static void close(InputStream is)
-	{
-		try
-		{
+	public static void close(InputStream is) {
+		try {
 			if (is != null)
 				is.close();
-		} catch (Exception ignore)
-		{
+		} catch (Exception ignore) {
 		}
 	}
 
@@ -89,14 +82,11 @@ public class FileResourceUtil
 	 * @param isr
 	 *            InputStreamReader resource object
 	 */
-	public static void close(InputStreamReader isr)
-	{
-		try
-		{
+	public static void close(InputStreamReader isr) {
+		try {
 			if (isr != null)
 				isr.close();
-		} catch (Exception ignore)
-		{
+		} catch (Exception ignore) {
 		}
 	}
 
@@ -106,14 +96,11 @@ public class FileResourceUtil
 	 * @param br
 	 *            BufferedReader resource object
 	 */
-	public static void close(BufferedReader br)
-	{
-		try
-		{
+	public static void close(BufferedReader br) {
+		try {
 			if (br != null)
 				br.close();
-		} catch (Exception ignore)
-		{
+		} catch (Exception ignore) {
 		}
 	}
 
@@ -123,14 +110,11 @@ public class FileResourceUtil
 	 * @param bis
 	 *            BufferedInputStream resource object
 	 */
-	public static void close(BufferedInputStream bis)
-	{
-		try
-		{
+	public static void close(BufferedInputStream bis) {
+		try {
 			if (bis != null)
 				bis.close();
-		} catch (Exception ignore)
-		{
+		} catch (Exception ignore) {
 		}
 	}
 
@@ -140,14 +124,11 @@ public class FileResourceUtil
 	 * @param bis
 	 *            FileOutputStream resource object
 	 */
-	public static void close(FileOutputStream fos)
-	{
-		try
-		{
+	public static void close(FileOutputStream fos) {
+		try {
 			if (fos != null)
 				fos.close();
-		} catch (Exception ignore)
-		{
+		} catch (Exception ignore) {
 		}
 	}
 
@@ -157,14 +138,11 @@ public class FileResourceUtil
 	 * @param osw
 	 *            OutputStreamWriter resource object
 	 */
-	public static void close(OutputStreamWriter osw)
-	{
-		try
-		{
+	public static void close(OutputStreamWriter osw) {
+		try {
 			if (osw != null)
 				osw.close();
-		} catch (Exception ignore)
-		{
+		} catch (Exception ignore) {
 		}
 	}
 

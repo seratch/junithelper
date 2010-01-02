@@ -35,8 +35,7 @@ import org.eclipse.ui.internal.WorkbenchWindow;
  * @version 1.0
  */
 @SuppressWarnings("restriction")
-public class ResourceRefreshUtil
-{
+public final class ResourceRefreshUtil {
 
 	// get progress monitor
 	private static IWorkbench workbench = PlatformUI.getWorkbench();
@@ -53,17 +52,15 @@ public class ResourceRefreshUtil
 	 * @param param
 	 * @return
 	 */
-	public static boolean refreshLocal(IWorkbenchWindow window, String param)
-	{
-		try
-		{
+	public static boolean refreshLocal(IWorkbenchWindow window, String param) {
+		try {
 			// get resource
-			IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+			IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace()
+					.getRoot();
 			IResource resource = workspaceRoot.findMember(param);
 			// refresh resource
 			resource.refreshLocal(IResource.DEPTH_INFINITE, monitor);
-		} catch (CoreException e)
-		{
+		} catch (CoreException e) {
 			e.printStackTrace();
 			return false;
 		}

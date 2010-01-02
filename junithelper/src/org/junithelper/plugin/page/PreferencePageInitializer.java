@@ -27,18 +27,18 @@ import org.junithelper.plugin.STR;
  * @author Kazuhiro Sera
  * @version 1.0
  */
-public class PreferencePageInitializer extends AbstractPreferenceInitializer
-{
+public class PreferencePageInitializer extends AbstractPreferenceInitializer {
 
 	@Override
-	public void initializeDefaultPreferences()
-	{
+	public void initializeDefaultPreferences() {
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 
 		// common
 		{
-			store.setDefault(STR.Preference.Common.SRC_MAIN_PATH, "src/main/java");
-			store.setDefault(STR.Preference.Common.SRC_TEST_PATH, "src/test/java");
+			store.setDefault(STR.Preference.Common.SRC_MAIN_PATH,
+					"src/main/java");
+			store.setDefault(STR.Preference.Common.SRC_TEST_PATH,
+					"src/test/java");
 		}
 		// generating extended test class
 		{
@@ -59,14 +59,17 @@ public class PreferencePageInitializer extends AbstractPreferenceInitializer
 
 			store.setDefault(STR.Preference.TestMethodGen.RETURN, false);
 			store.setDefault(STR.Preference.TestMethodGen.RETURN_PREFIX, "R");
-			store.setDefault(STR.Preference.TestMethodGen.RETURN_DELIMITER, "$");
+			store
+					.setDefault(STR.Preference.TestMethodGen.RETURN_DELIMITER,
+							"$");
 
-			store.setDefault(STR.Preference.TestMethodGen.EXLCUDES_ACCESSORS, true);
-			store.setDefault(STR.Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION,
+			store.setDefault(STR.Preference.TestMethodGen.EXLCUDES_ACCESSORS,
+					true);
+			store.setDefault(
+					STR.Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION,
 					true);
 
-			store.setDefault(STR.Preference.TestMethodGen.USING_EASYMOCK, false);
-			store.setDefault(STR.Preference.TestMethodGen.USING_JMOCK2, false);
+			store.setDefault(STR.Preference.TestMethodGen.USING_MOCK, "None");
 		}
 	}
 

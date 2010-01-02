@@ -26,8 +26,7 @@ import java.util.List;
  * @author Kazuhiro Sera
  * @version 1.0
  */
-public class MethodInfo
-{
+public class MethodInfo {
 
 	/**
 	 * Return type converted
@@ -39,8 +38,7 @@ public class MethodInfo
 	 * 
 	 * @author Kazuhiro Sera
 	 */
-	public static class ReturnType
-	{
+	public static class ReturnType {
 		public String name;
 		public String nameInMethodName;
 		public List<String> generics = new ArrayList<String>();
@@ -71,8 +69,7 @@ public class MethodInfo
 	 * 
 	 * @author Kazuhiro Sera
 	 */
-	public static class ArgType
-	{
+	public static class ArgType {
 		public String name;
 		public String nameInMethodName;
 		public List<String> generics = new ArrayList<String>();

@@ -26,8 +26,7 @@ import java.util.List;
  * @author Kazuhiro Sera
  * @version 1.0
  */
-public class ClassInfo
-{
+public class ClassInfo {
 
 	/**
 	 * Class name

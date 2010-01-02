@@ -22,8 +22,7 @@ package org.junithelper.plugin.util;
  * @author Kazuhiro Sera
  * @version 1.0
  */
-public class PrimitiveTypeUtil
-{
+public final class PrimitiveTypeUtil {
 
 	/**
 	 * Judge the arg type name is primitive type or not.
@@ -31,8 +30,7 @@ public class PrimitiveTypeUtil
 	 * @param typeName
 	 * @return
 	 */
-	public static boolean isPrimitive(String typeName)
-	{
+	public static final boolean isPrimitive(String typeName) {
 		if (typeName.equals("byte"))
 			return true;
 		if (typeName.equals("short"))
@@ -60,8 +58,7 @@ public class PrimitiveTypeUtil
 	 * @param typeName
 	 * @return
 	 */
-	public static Class<?> getPrimitiveClass(String typeName)
-	{
+	public static final Class<?> getPrimitiveClass(String typeName) {
 		if (typeName.equals("byte"))
 			return byte.class;
 		if (typeName.equals("short"))
@@ -89,8 +86,7 @@ public class PrimitiveTypeUtil
 	 * @param typeName
 	 * @return
 	 */
-	public static String getPrimitiveDefaultValue(String typeName)
-	{
+	public static final String getPrimitiveDefaultValue(String typeName) {
 		if (typeName.equals("byte"))
 			return "0";
 		if (typeName.equals("short"))

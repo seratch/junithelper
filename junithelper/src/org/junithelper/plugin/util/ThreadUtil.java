@@ -22,20 +22,17 @@ package org.junithelper.plugin.util;
  * @author Kazuhiro Sera
  * @version 1.0
  */
-public final class ThreadUtil
-{
+public final class ThreadUtil {
+
 	/**
 	 * Current thread sleeps.
 	 * 
 	 * @param millisec
 	 */
-	public static final void sleep(long millisec)
-	{
-		try
-		{
+	public static final void sleep(long millisec) {
+		try {
 			Thread.sleep(millisec);
-		} catch (InterruptedException ignore)
-		{
+		} catch (InterruptedException ignore) {
 		}
 	}
 

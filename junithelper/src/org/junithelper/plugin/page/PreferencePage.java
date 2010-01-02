@@ -17,6 +17,7 @@ package org.junithelper.plugin.page;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -37,236 +38,334 @@ import org.junithelper.plugin.STR;
  * @version 1.0
  */
 public class PreferencePage extends FieldEditorPreferencePage implements
-	IWorkbenchPreferencePage {
+		IWorkbenchPreferencePage {
 
-    /**
-     * Constructor
-     */
-    public PreferencePage() {
-
-	super(FieldEditorPreferencePage.GRID);
-	setDescription(STR.Preference.Common.DESCRIPTION);
-	setPreferenceStore(Activator.getDefault().getPreferenceStore());
-    }
-
-    /**
-     * Init
-     */
-    public void init(IWorkbench workbench) {
-    }
-
-    /**
-     * Create field editors
-     */
-    @Override
-    protected void createFieldEditors() {
-	{
-	    // parent group
-	    Composite parent = getFieldEditorParent();
-
-	    // common group
-	    Group commonPrentGroup = new Group(parent, 0);
-	    {
-		FillLayout parentLayout = new FillLayout(256);
-		parentLayout.marginHeight = 2;
-		parentLayout.marginWidth = 4;
-		commonPrentGroup.setLayout(parentLayout);
-		commonPrentGroup.setText("Common");
-
-		GridData gd = new GridData(768);
-		commonPrentGroup.setLayoutData(gd);
-		Composite grp = new Composite(commonPrentGroup, 0);
-		grp.setLayout(new GridLayout(2, false));
-
-		Label label = new Label(grp, 0);
-		label
-			.setText("If you changed this section, please restart Eclipse.");
-		gd = new GridData(768);
-		gd.horizontalSpan = 2;
-		label.setLayoutData(gd);
-
-		// src/main/java
-		addField(new StringFieldEditor(
-			STR.Preference.Common.SRC_MAIN_PATH,
-			STR.Preference.Common.SRC_MAIN_PATH, grp));
-		// src/test/java
-		addField(new StringFieldEditor(
-			STR.Preference.Common.SRC_TEST_PATH,
-			STR.Preference.Common.SRC_TEST_PATH, grp));
-	    }
-
-	    // generating test class group
-	    // enable extended class gen
-	    BooleanFieldEditor classExtendsEnable = new BooleanFieldEditor(
-		    STR.Preference.TestClassGen.ENABLE,
-		    STR.Preference.TestClassGen.ENABLE, parent);
-	    addField(classExtendsEnable);
-	    Group classConfigGroup = new Group(parent, 0);
-	    {
-		FillLayout parentLayout = new FillLayout(256);
-		parentLayout.marginHeight = 2;
-		parentLayout.marginWidth = 4;
-		classConfigGroup.setLayout(parentLayout);
-		classConfigGroup.setText("Test Class");
-
-		GridData gd = new GridData(768);
-		classConfigGroup.setLayoutData(gd);
-		Composite grp = new Composite(classConfigGroup, 0);
-		grp.setLayout(new GridLayout(2, false));
-
-		// extends
-		addField(new StringFieldEditor(
-			STR.Preference.TestClassGen.CLASS_TO_EXTEND,
-			STR.Preference.TestClassGen.CLASS_TO_EXTEND, grp));
-	    }
-
-	    // generating test methods group
-	    // enable test methods gen
-	    BooleanFieldEditor testMethodsGenEnable = new BooleanFieldEditor(
-		    STR.Preference.TestMethodGen.ENABLE,
-		    STR.Preference.TestMethodGen.ENABLE, parent);
-	    addField(testMethodsGenEnable);
-	    Group genTestMethodsParentGroup = new Group(parent, 0);
-	    {
-		FillLayout parentLayout = new FillLayout(256);
-		parentLayout.marginHeight = 2;
-		parentLayout.marginWidth = 4;
-		genTestMethodsParentGroup.setLayout(parentLayout);
-		genTestMethodsParentGroup.setText("Test Method Auto Generate");
-
-		GridData gd = new GridData(768);
-		genTestMethodsParentGroup.setLayoutData(gd);
-		Composite grp = new Composite(genTestMethodsParentGroup, 0);
-		grp.setLayout(new GridLayout(2, false));
-
-	    }
-
-	    {
-		// delimiter
-		Group group = new Group(genTestMethodsParentGroup, 0);
-
-		FillLayout layout = new FillLayout(256);
-		layout.marginHeight = 4;
-		layout.marginWidth = 4;
-		group.setLayout(layout);
-		group.setText("Delimiter");
-
-		GridData gd = new GridData(768);
-		gd.horizontalSpan = 2;
-		group.setLayoutData(gd);
-		Composite grp = new Composite(group, 0);
-		grp.setLayout(new GridLayout(2, false));
-		// delimiter
-		addField(new StringFieldEditor(
-			STR.Preference.TestMethodGen.DELIMITER,
-			STR.Preference.TestMethodGen.DELIMITER, grp));
-	    }
-
-	    {
-		// enable args
-		BooleanFieldEditor enableArgs = new BooleanFieldEditor(
-			STR.Preference.TestMethodGen.ARGS,
-			STR.Preference.TestMethodGen.ARGS,
-			genTestMethodsParentGroup);
-
-		addField(enableArgs);
-
-		Group group = new Group(genTestMethodsParentGroup, 0);
-
-		FillLayout layout = new FillLayout(256);
-		layout.marginHeight = 4;
-		layout.marginWidth = 4;
-		group.setLayout(layout);
-		group.setText("Method Args");
-
-		GridData gd = new GridData(768);
-		gd.horizontalSpan = 2;
-		group.setLayoutData(gd);
-		Composite grp = new Composite(group, 0);
-		grp.setLayout(new GridLayout(2, false));
-		StringFieldEditor argsPrefix = new StringFieldEditor(
-			STR.Preference.TestMethodGen.ARGS_PREFIX,
-			STR.Preference.TestMethodGen.ARGS_PREFIX, grp);
-		StringFieldEditor argsDelimiter = new StringFieldEditor(
-			STR.Preference.TestMethodGen.ARGS_DELIMITER,
-			STR.Preference.TestMethodGen.ARGS_DELIMITER, grp);
-		addField(argsPrefix);
-		addField(argsDelimiter);
-	    }
-	    {
-		// enable return
-		addField(new BooleanFieldEditor(
-			STR.Preference.TestMethodGen.RETURN,
-			STR.Preference.TestMethodGen.RETURN,
-			genTestMethodsParentGroup));
-
-		Group group = new Group(genTestMethodsParentGroup, 0);
-
-		FillLayout layout = new FillLayout(256);
-		layout.marginHeight = 4;
-		layout.marginWidth = 4;
-		group.setLayout(layout);
-		group.setText("Return");
-
-		GridData gd = new GridData(768);
-		gd.horizontalSpan = 2;
-		group.setLayoutData(gd);
-		Composite grp = new Composite(group, 0);
-		grp.setLayout(new GridLayout(2, false));
-		StringFieldEditor argsPrefix = new StringFieldEditor(
-			STR.Preference.TestMethodGen.RETURN_PREFIX,
-			STR.Preference.TestMethodGen.RETURN_PREFIX, grp);
-		StringFieldEditor argsDelimiter = new StringFieldEditor(
-			STR.Preference.TestMethodGen.RETURN_DELIMITER,
-			STR.Preference.TestMethodGen.RETURN_DELIMITER, grp);
-		addField(argsPrefix);
-		addField(argsDelimiter);
-	    }
-	    {
-		// enable excluding accessors
-		BooleanFieldEditor execludesAccessors = new BooleanFieldEditor(
-			STR.Preference.TestMethodGen.EXLCUDES_ACCESSORS,
-			STR.Preference.TestMethodGen.EXLCUDES_ACCESSORS,
-			genTestMethodsParentGroup);
-
-		addField(execludesAccessors);
-	    }
-	    {
-		// enable generate not blank methods
-		BooleanFieldEditor enableGenerateSample = new BooleanFieldEditor(
-			STR.Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION,
-			STR.Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION,
-			genTestMethodsParentGroup);
-		addField(enableGenerateSample);
-
-		Group group = new Group(genTestMethodsParentGroup, 0);
-		FillLayout layout = new FillLayout(768);
-		layout.marginHeight = 4;
-		layout.marginWidth = 4;
-		group.setLayout(layout);
-		group.setText("Mock Object Frameworks");
-		GridData gd = new GridData(350);
-		gd.horizontalSpan = 2;
-		group.setLayoutData(gd);
-		final Composite grp = new Composite(group, 0);
-		grp.setLayout(new GridLayout(2, false));
-
-		// enable EasyMock supported test methods
-		final BooleanFieldEditor enableSupportEasyMock = new BooleanFieldEditor(
-			STR.Preference.TestMethodGen.USING_EASYMOCK,
-			STR.Preference.TestMethodGen.USING_EASYMOCK, grp);
-		addField(enableSupportEasyMock);
-
-		// enable JMock2 supported test methods
-		final BooleanFieldEditor enableSupportJMock2 = new BooleanFieldEditor(
-			STR.Preference.TestMethodGen.USING_JMOCK2,
-			STR.Preference.TestMethodGen.USING_JMOCK2, grp);
-		addField(enableSupportJMock2);
-
-		// TODO trap property changed event
-		// and enable/disable the checkboxes
-	    }
+	/**
+	 * Constructor
+	 */
+	public PreferencePage() {
+		super(FieldEditorPreferencePage.GRID);
+		setDescription(STR.Preference.Common.DESCRIPTION);
+		setPreferenceStore(Activator.getDefault().getPreferenceStore());
 	}
-    }
+
+	/**
+	 * Init
+	 */
+	public void init(IWorkbench workbench) {
+	}
+
+	/**
+	 * Create field editors
+	 */
+	@Override
+	protected void createFieldEditors() {
+		{
+			// parent group
+			Composite parent = getFieldEditorParent();
+
+			// common group
+			Group commonPrentGroup = new Group(parent, 0);
+			{
+				FillLayout parentLayout = new FillLayout(256);
+				parentLayout.marginHeight = 2;
+				parentLayout.marginWidth = 4;
+				commonPrentGroup.setLayout(parentLayout);
+				commonPrentGroup.setText("Common");
+				GridData gd = new GridData(768);
+				commonPrentGroup.setLayoutData(gd);
+
+				Composite grp = new Composite(commonPrentGroup, 0);
+				grp.setLayout(new GridLayout(2, false));
+				Label label = new Label(grp, 0);
+				label.setText("Restart if you changed this section.");
+				gd = new GridData(768);
+				gd.horizontalSpan = 2;
+				label.setLayoutData(gd);
+
+				// src/main/java
+				addField(new StringFieldEditor(
+						STR.Preference.Common.SRC_MAIN_PATH,
+						STR.Preference.Common.SRC_MAIN_PATH, grp));
+				// src/test/java
+				addField(new StringFieldEditor(
+						STR.Preference.Common.SRC_TEST_PATH,
+						STR.Preference.Common.SRC_TEST_PATH, grp));
+			}
+
+			// generating test class group
+			// enable extended class gen
+			tcgEnable = new BooleanFieldEditor(
+					STR.Preference.TestClassGen.ENABLE,
+					STR.Preference.TestClassGen.ENABLE, parent);
+			addField(tcgEnable);
+			Group classConfigGroup = new Group(parent, 0);
+			{
+				FillLayout parentLayout = new FillLayout(256);
+				parentLayout.marginHeight = 2;
+				parentLayout.marginWidth = 4;
+				classConfigGroup.setLayout(parentLayout);
+				classConfigGroup.setText("Test Class");
+				GridData gd = new GridData(768);
+				classConfigGroup.setLayoutData(gd);
+
+				tcgArea = new Composite(classConfigGroup, 0);
+				tcgArea.setLayout(new GridLayout(2, false));
+				// extends
+				tcgClassToExtend = new StringFieldEditor(
+						STR.Preference.TestClassGen.CLASS_TO_EXTEND,
+						STR.Preference.TestClassGen.CLASS_TO_EXTEND, tcgArea);
+				addField(tcgClassToExtend);
+			}
+
+			// generating test methods group
+			// enable test methods gen
+			tmgEnable = new BooleanFieldEditor(
+					STR.Preference.TestMethodGen.ENABLE,
+					STR.Preference.TestMethodGen.ENABLE, parent) {
+				@Override
+				protected void valueChanged(boolean oldValue, boolean newValue) {
+					super.valueChanged(oldValue, newValue);
+					switchDisplayOfTestMethodsGenArea(newValue);
+				}
+
+				@Override
+				protected void doLoad() {
+					super.doLoad();
+					switchDisplayOfTestMethodsGenArea(getBooleanValue());
+				}
+
+				@Override
+				protected void doLoadDefault() {
+					super.doLoadDefault();
+					switchDisplayOfTestMethodsGenArea(getBooleanValue());
+				}
+			};
+			addField(tmgEnable);
+			tmgParentGroup = new Group(parent, 0);
+			{
+				FillLayout parentLayout = new FillLayout(256);
+				parentLayout.marginHeight = 4;
+				parentLayout.marginWidth = 4;
+				tmgParentGroup.setLayout(parentLayout);
+				tmgParentGroup.setText("Test Method Auto Generate");
+				GridData gd = new GridData(768);
+				tmgParentGroup.setLayoutData(gd);
+
+				tmgArea = new Composite(tmgParentGroup, 0);
+				GridLayout layout = new GridLayout(2, false);
+				layout.marginHeight = 4;
+				layout.marginWidth = 4;
+				tmgArea.setLayout(layout);
+
+				{
+					// enable excluding accessors
+					tmgCOmmonExecludesAccessors = new BooleanFieldEditor(
+							STR.Preference.TestMethodGen.EXLCUDES_ACCESSORS,
+							STR.Preference.TestMethodGen.EXLCUDES_ACCESSORS,
+							tmgArea);
+					addField(tmgCOmmonExecludesAccessors);
+				}
+				{
+					// common delimiter setting
+					tmgCommonDelimiter = new StringFieldEditor(
+							STR.Preference.TestMethodGen.DELIMITER,
+							STR.Preference.TestMethodGen.DELIMITER, 10, tmgArea);
+					addField(tmgCommonDelimiter);
+				}
+			}
+			{
+				// enable args
+				tmgEnableArgs = new BooleanFieldEditor(
+						STR.Preference.TestMethodGen.ARGS,
+						STR.Preference.TestMethodGen.ARGS, tmgParentGroup) {
+					@Override
+					protected void valueChanged(boolean oldValue,
+							boolean newValue) {
+						super.valueChanged(oldValue, newValue);
+						switchDisplayOfMethodArgsArea(newValue);
+					}
+
+					@Override
+					protected void doLoad() {
+						super.doLoad();
+						switchDisplayOfMethodArgsArea(getBooleanValue());
+					}
+
+					@Override
+					protected void doLoadDefault() {
+						super.doLoadDefault();
+						switchDisplayOfMethodArgsArea(getBooleanValue());
+					}
+				};
+				addField(tmgEnableArgs);
+
+				Group group = new Group(tmgParentGroup, 0);
+				FillLayout layout = new FillLayout(256);
+				layout.marginHeight = 4;
+				layout.marginWidth = 4;
+				group.setLayout(layout);
+				group.setText("Args");
+				GridData gd = new GridData(768);
+				gd.horizontalSpan = 2;
+				group.setLayoutData(gd);
+
+				tmgEnableArgsArea = new Composite(group, 0);
+				tmgEnableArgsArea.setLayout(new GridLayout(2, false));
+				tmgArgsPrefix = new StringFieldEditor(
+						STR.Preference.TestMethodGen.ARGS_PREFIX,
+						STR.Preference.TestMethodGen.ARGS_PREFIX,
+						tmgEnableArgsArea);
+				addField(tmgArgsPrefix);
+				tmgArgsDelimiter = new StringFieldEditor(
+						STR.Preference.TestMethodGen.ARGS_DELIMITER,
+						STR.Preference.TestMethodGen.ARGS_DELIMITER,
+						tmgEnableArgsArea);
+				addField(tmgArgsDelimiter);
+			}
+			{
+				// enable return
+				tmgEnableReturn = new BooleanFieldEditor(
+						STR.Preference.TestMethodGen.RETURN,
+						STR.Preference.TestMethodGen.RETURN, tmgParentGroup) {
+					@Override
+					protected void valueChanged(boolean oldValue,
+							boolean newValue) {
+						super.valueChanged(oldValue, newValue);
+						switchDisplayOfMethodReturnArea(newValue);
+					}
+
+					@Override
+					protected void doLoad() {
+						super.doLoad();
+						switchDisplayOfMethodReturnArea(getBooleanValue());
+					}
+
+					@Override
+					protected void doLoadDefault() {
+						super.doLoadDefault();
+						switchDisplayOfMethodReturnArea(getBooleanValue());
+					}
+				};
+				addField(tmgEnableReturn);
+
+				Group group = new Group(tmgParentGroup, 0);
+				FillLayout layout = new FillLayout(256);
+				layout.marginHeight = 4;
+				layout.marginWidth = 4;
+				group.setLayout(layout);
+				group.setText("Return");
+				GridData gd = new GridData(768);
+				gd.horizontalSpan = 2;
+				group.setLayoutData(gd);
+
+				tmgReturnArea = new Composite(group, 0);
+				tmgReturnArea.setLayout(new GridLayout(2, false));
+				tmgReturnPrefix = new StringFieldEditor(
+						STR.Preference.TestMethodGen.RETURN_PREFIX,
+						STR.Preference.TestMethodGen.RETURN_PREFIX,
+						tmgReturnArea);
+				addField(tmgReturnPrefix);
+				tmgReturnDelimiter = new StringFieldEditor(
+						STR.Preference.TestMethodGen.RETURN_DELIMITER,
+						STR.Preference.TestMethodGen.RETURN_DELIMITER,
+						tmgReturnArea);
+				addField(tmgReturnDelimiter);
+			}
+			{
+				// enable generate not blank methods
+				tmgEnableGenerateSample = new BooleanFieldEditor(
+						STR.Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION,
+						STR.Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION,
+						tmgParentGroup) {
+					@Override
+					protected void valueChanged(boolean oldValue,
+							boolean newValue) {
+						super.valueChanged(oldValue, newValue);
+						switchDisplayOfSampleImplGenArea(newValue);
+					}
+
+					@Override
+					protected void doLoad() {
+						super.doLoad();
+						switchDisplayOfSampleImplGenArea(getBooleanValue());
+					}
+
+					@Override
+					protected void doLoadDefault() {
+						super.doLoadDefault();
+						switchDisplayOfSampleImplGenArea(getBooleanValue());
+					}
+				};
+				addField(tmgEnableGenerateSample);
+
+				Group group = new Group(tmgParentGroup, 0);
+				FillLayout layout = new FillLayout(768);
+				layout.marginHeight = 4;
+				layout.marginWidth = 4;
+				group.setLayout(layout);
+				group.setText("Mock Object Frameworks");
+				GridData gd = new GridData(350);
+				gd.horizontalSpan = 2;
+				group.setLayoutData(gd);
+				tmgSampleImplGenArea = new Composite(group, 0);
+				tmgSampleImplGenArea.setLayout(new GridLayout(2, false));
+				String none = STR.Preference.TestMethodGen.USING_MOCK_NONE;
+				String easyMock = STR.Preference.TestMethodGen.USING_MOCK_EASYMOCK;
+				String jmock2 = STR.Preference.TestMethodGen.USING_MOCK_JMOCK2;
+				String[][] labelAndValues = new String[][] { { none, none },
+						{ easyMock, easyMock }, { jmock2, jmock2 }, };
+				tmgRadioGroupMocks = new RadioGroupFieldEditor(
+						STR.Preference.TestMethodGen.USING_MOCK,
+						"Select your favorite framework.", 3, labelAndValues,
+						tmgSampleImplGenArea);
+				addField(tmgRadioGroupMocks);
+			}
+		}
+	}
+
+	private void switchDisplayOfTestMethodsGenArea(boolean value) {
+	}
+
+	private BooleanFieldEditor tcgEnable;
+	private StringFieldEditor tcgClassToExtend;
+	private Composite tcgArea;
+
+	private BooleanFieldEditor tmgEnable;
+	private StringFieldEditor tmgCommonDelimiter;
+	private BooleanFieldEditor tmgCOmmonExecludesAccessors;
+	private Composite tmgArea;
+	private Group tmgParentGroup;
+
+	private BooleanFieldEditor tmgEnableArgs;
+	private StringFieldEditor tmgArgsPrefix;
+	private StringFieldEditor tmgArgsDelimiter;
+	private Composite tmgEnableArgsArea;
+
+	private void switchDisplayOfMethodArgsArea(boolean value) {
+		// enable/disable the area
+		tmgArgsDelimiter.setEnabled(value, tmgEnableArgsArea);
+		tmgArgsPrefix.setEnabled(value, tmgEnableArgsArea);
+	}
+
+	private BooleanFieldEditor tmgEnableReturn;
+	private StringFieldEditor tmgReturnPrefix;
+	private StringFieldEditor tmgReturnDelimiter;
+	private Composite tmgReturnArea;
+
+	private void switchDisplayOfMethodReturnArea(boolean value) {
+		// enable/disable the area
+		tmgReturnDelimiter.setEnabled(value, tmgReturnArea);
+		tmgReturnPrefix.setEnabled(value, tmgReturnArea);
+	}
+
+	private BooleanFieldEditor tmgEnableGenerateSample;
+	private RadioGroupFieldEditor tmgRadioGroupMocks;
+	private Composite tmgSampleImplGenArea;
+
+	private void switchDisplayOfSampleImplGenArea(boolean value) {
+		// enable/disable the area
+		tmgRadioGroupMocks.setEnabled(value, tmgSampleImplGenArea);
+	}
 
 }
