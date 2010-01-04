@@ -269,8 +269,8 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 			{
 				// enable generate not blank methods
 				tmgEnableGenerateSample = new BooleanFieldEditor(
-						Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION,
-						Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION,
+						Preference.TestMethodGen.METHOD_SAMPLE_IMPL,
+						Preference.TestMethodGen.METHOD_SAMPLE_IMPL,
 						tmgParentGroup) {
 					@Override
 					protected void valueChanged(boolean oldValue,

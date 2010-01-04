@@ -49,6 +49,7 @@ public class PreferencePageInitializer extends AbstractPreferenceInitializer {
 		{
 			store.setDefault(Preference.TestMethodGen.ENABLE, true);
 
+			store.setDefault(Preference.TestMethodGen.EXLCUDES_ACCESSORS, true);
 			store.setDefault(Preference.TestMethodGen.DELIMITER, "_");
 
 			store.setDefault(Preference.TestMethodGen.ARGS, true);
@@ -59,12 +60,7 @@ public class PreferencePageInitializer extends AbstractPreferenceInitializer {
 			store.setDefault(Preference.TestMethodGen.RETURN_PREFIX, "R");
 			store.setDefault(Preference.TestMethodGen.RETURN_DELIMITER, "$");
 
-			store.setDefault(Preference.TestMethodGen.EXLCUDES_ACCESSORS, true);
-			store
-					.setDefault(
-							Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION,
-							true);
-
+			store.setDefault(Preference.TestMethodGen.METHOD_SAMPLE_IMPL, true);
 			store.setDefault(Preference.TestMethodGen.USING_MOCK, "None");
 		}
 	}

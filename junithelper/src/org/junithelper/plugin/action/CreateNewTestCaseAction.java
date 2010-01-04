@@ -278,7 +278,7 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 								.getDefault()
 								.getPreferenceStore()
 								.getBoolean(
-										Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION);
+										Preference.TestMethodGen.METHOD_SAMPLE_IMPL);
 						if (enabledTestMethodsGen && enabledNotBlankMethods) {
 							List<String> importedPackageList = testClassInfo.importList;
 							for (String importedPackage : importedPackageList) {

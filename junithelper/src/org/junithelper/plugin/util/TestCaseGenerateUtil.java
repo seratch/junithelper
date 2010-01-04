@@ -150,7 +150,7 @@ public final class TestCaseGenerateUtil {
 		// enable public method test
 		boolean enabled = store.getBoolean(Preference.TestMethodGen.ENABLE);
 		boolean enabledNotBlankMethods = store
-				.getBoolean(Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION);
+				.getBoolean(Preference.TestMethodGen.METHOD_SAMPLE_IMPL);
 		boolean enabledSupportJMock2 = MockGenUtil.isUsingJMock2(store);
 		boolean enabledSupportEasyMock = MockGenUtil.isUsingEasyMock(store);
 		// enable public method test
@@ -256,7 +256,7 @@ public final class TestCaseGenerateUtil {
 				.getBoolean(Preference.TestMethodGen.ENABLE);
 		boolean enabledNotBlankMethods = Activator.getDefault()
 				.getPreferenceStore().getBoolean(
-						Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION);
+						Preference.TestMethodGen.METHOD_SAMPLE_IMPL);
 		if (enabled) {
 			InputStream is = null;
 			InputStreamReader isr = null;
@@ -352,14 +352,14 @@ public final class TestCaseGenerateUtil {
 		List<MethodInfo> testMethods = new ArrayList<MethodInfo>();
 		// enable public method test
 		boolean enabled = store.getBoolean(Preference.TestMethodGen.ENABLE);
-		if (enabled) {
+		if (!enabled) {
 			return classInfo;
 		}
 		boolean enabledArgs = store.getBoolean(Preference.TestMethodGen.ARGS);
 		boolean enabledReturn = store
 				.getBoolean(Preference.TestMethodGen.RETURN);
 		boolean enabledNotBlankMethods = store
-				.getBoolean(Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION);
+				.getBoolean(Preference.TestMethodGen.METHOD_SAMPLE_IMPL);
 		boolean enableExcludesAccessors = store
 				.getBoolean(Preference.TestMethodGen.EXLCUDES_ACCESSORS);
 		boolean enabledSupportJMock2 = MockGenUtil.isUsingJMock2(store);
@@ -535,10 +535,11 @@ public final class TestCaseGenerateUtil {
 								fieldName = each.methodName.substring(2);
 								fieldType = each.returnType.name;
 							}
-							fieldName = fieldName.substring(0, 1).toLowerCase()
-									+ fieldName.substring(1);
 
 							if (fieldName != null) {
+								fieldName = fieldName.substring(0, 1)
+										.toLowerCase()
+										+ fieldName.substring(1);
 								String searchRegexp = ".+?private\\s+"
 										+ fieldType + "\\s+" + fieldName
 										+ ".+?";

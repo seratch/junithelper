@@ -85,7 +85,7 @@ public final class Preference {
 		/**
 		 * Generate sample implementation to test methods
 		 */
-		public static final String METHOD_SAMPLE_IMPLEMENTATION = "Generate Sample Implementation";
+		public static final String METHOD_SAMPLE_IMPL = "Generate Sample Implementation";
 
 		/**
 		 * Using mock object framework
