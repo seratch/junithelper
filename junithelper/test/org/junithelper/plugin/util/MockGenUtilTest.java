@@ -8,7 +8,7 @@ import junit.framework.TestCase;
 import org.easymock.classextension.EasyMock;
 import org.easymock.classextension.IMocksControl;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.junithelper.plugin.STR;
+import org.junithelper.plugin.constant.Preference;
 
 public class MockGenUtilTest extends TestCase {
 
@@ -26,10 +26,10 @@ public class MockGenUtilTest extends TestCase {
 	public void test_isUsingEasyMock_A$IPreferenceStore() throws Exception {
 		IMocksControl mocks = EasyMock.createStrictControl();
 		IPreferenceStore store = mocks.createMock(IPreferenceStore.class);
-		String key = STR.Preference.TestMethodGen.USING_MOCK;
-		String none = STR.Preference.TestMethodGen.USING_MOCK_NONE;
-		String easyMock = STR.Preference.TestMethodGen.USING_MOCK_EASYMOCK;
-		String jmock2 = STR.Preference.TestMethodGen.USING_MOCK_JMOCK2;
+		String key = Preference.TestMethodGen.USING_MOCK;
+		String none = Preference.TestMethodGen.USING_MOCK_NONE;
+		String easyMock = Preference.TestMethodGen.USING_MOCK_EASYMOCK;
+		String jmock2 = Preference.TestMethodGen.USING_MOCK_JMOCK2;
 		EasyMock.expect(store.getString(key)).andReturn(null);
 		EasyMock.expect(store.getString(key)).andReturn(none);
 		EasyMock.expect(store.getString(key)).andReturn(easyMock);
@@ -53,10 +53,10 @@ public class MockGenUtilTest extends TestCase {
 	public void test_isUsingJMock2_A$IPreferenceStore() throws Exception {
 		IMocksControl mocks = EasyMock.createStrictControl();
 		IPreferenceStore store = mocks.createMock(IPreferenceStore.class);
-		String key = STR.Preference.TestMethodGen.USING_MOCK;
-		String none = STR.Preference.TestMethodGen.USING_MOCK_NONE;
-		String easyMock = STR.Preference.TestMethodGen.USING_MOCK_EASYMOCK;
-		String jmock2 = STR.Preference.TestMethodGen.USING_MOCK_JMOCK2;
+		String key = Preference.TestMethodGen.USING_MOCK;
+		String none = Preference.TestMethodGen.USING_MOCK_NONE;
+		String easyMock = Preference.TestMethodGen.USING_MOCK_EASYMOCK;
+		String jmock2 = Preference.TestMethodGen.USING_MOCK_JMOCK2;
 		EasyMock.expect(store.getString(key)).andReturn(null);
 		EasyMock.expect(store.getString(key)).andReturn(none);
 		EasyMock.expect(store.getString(key)).andReturn(easyMock);
@@ -80,10 +80,10 @@ public class MockGenUtilTest extends TestCase {
 	public void test_isUsingNone_A$IPreferenceStore() throws Exception {
 		IMocksControl mocks = EasyMock.createStrictControl();
 		IPreferenceStore store = mocks.createMock(IPreferenceStore.class);
-		String key = STR.Preference.TestMethodGen.USING_MOCK;
-		String none = STR.Preference.TestMethodGen.USING_MOCK_NONE;
-		String easyMock = STR.Preference.TestMethodGen.USING_MOCK_EASYMOCK;
-		String jmock2 = STR.Preference.TestMethodGen.USING_MOCK_JMOCK2;
+		String key = Preference.TestMethodGen.USING_MOCK;
+		String none = Preference.TestMethodGen.USING_MOCK_NONE;
+		String easyMock = Preference.TestMethodGen.USING_MOCK_EASYMOCK;
+		String jmock2 = Preference.TestMethodGen.USING_MOCK_JMOCK2;
 		EasyMock.expect(store.getString(key)).andReturn(null);
 		EasyMock.expect(store.getString(key)).andReturn(none);
 		EasyMock.expect(store.getString(key)).andReturn(easyMock);

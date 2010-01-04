@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.junithelper.plugin.Activator;
-import org.junithelper.plugin.STR;
+import org.junithelper.plugin.constant.Preference;
 
 /**
  * PreferencePage<br>
@@ -45,7 +45,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 	 */
 	public PreferencePage() {
 		super(FieldEditorPreferencePage.GRID);
-		setDescription(STR.Preference.Common.DESCRIPTION);
+		setDescription(Preference.Common.DESCRIPTION);
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
 	}
 
@@ -84,20 +84,17 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				label.setLayoutData(gd);
 
 				// src/main/java
-				addField(new StringFieldEditor(
-						STR.Preference.Common.SRC_MAIN_PATH,
-						STR.Preference.Common.SRC_MAIN_PATH, grp));
+				addField(new StringFieldEditor(Preference.Common.SRC_MAIN_PATH,
+						Preference.Common.SRC_MAIN_PATH, grp));
 				// src/test/java
-				addField(new StringFieldEditor(
-						STR.Preference.Common.SRC_TEST_PATH,
-						STR.Preference.Common.SRC_TEST_PATH, grp));
+				addField(new StringFieldEditor(Preference.Common.SRC_TEST_PATH,
+						Preference.Common.SRC_TEST_PATH, grp));
 			}
 
 			// generating test class group
 			// enable extended class gen
-			tcgEnable = new BooleanFieldEditor(
-					STR.Preference.TestClassGen.ENABLE,
-					STR.Preference.TestClassGen.ENABLE, parent);
+			tcgEnable = new BooleanFieldEditor(Preference.TestClassGen.ENABLE,
+					Preference.TestClassGen.ENABLE, parent);
 			addField(tcgEnable);
 			Group classConfigGroup = new Group(parent, 0);
 			{
@@ -113,16 +110,15 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				tcgArea.setLayout(new GridLayout(2, false));
 				// extends
 				tcgClassToExtend = new StringFieldEditor(
-						STR.Preference.TestClassGen.CLASS_TO_EXTEND,
-						STR.Preference.TestClassGen.CLASS_TO_EXTEND, tcgArea);
+						Preference.TestClassGen.CLASS_TO_EXTEND,
+						Preference.TestClassGen.CLASS_TO_EXTEND, tcgArea);
 				addField(tcgClassToExtend);
 			}
 
 			// generating test methods group
 			// enable test methods gen
-			tmgEnable = new BooleanFieldEditor(
-					STR.Preference.TestMethodGen.ENABLE,
-					STR.Preference.TestMethodGen.ENABLE, parent) {
+			tmgEnable = new BooleanFieldEditor(Preference.TestMethodGen.ENABLE,
+					Preference.TestMethodGen.ENABLE, parent) {
 				@Override
 				protected void valueChanged(boolean oldValue, boolean newValue) {
 					super.valueChanged(oldValue, newValue);
@@ -161,24 +157,24 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				{
 					// enable excluding accessors
 					tmgCOmmonExecludesAccessors = new BooleanFieldEditor(
-							STR.Preference.TestMethodGen.EXLCUDES_ACCESSORS,
-							STR.Preference.TestMethodGen.EXLCUDES_ACCESSORS,
+							Preference.TestMethodGen.EXLCUDES_ACCESSORS,
+							Preference.TestMethodGen.EXLCUDES_ACCESSORS,
 							tmgArea);
 					addField(tmgCOmmonExecludesAccessors);
 				}
 				{
 					// common delimiter setting
 					tmgCommonDelimiter = new StringFieldEditor(
-							STR.Preference.TestMethodGen.DELIMITER,
-							STR.Preference.TestMethodGen.DELIMITER, 10, tmgArea);
+							Preference.TestMethodGen.DELIMITER,
+							Preference.TestMethodGen.DELIMITER, 10, tmgArea);
 					addField(tmgCommonDelimiter);
 				}
 			}
 			{
 				// enable args
 				tmgEnableArgs = new BooleanFieldEditor(
-						STR.Preference.TestMethodGen.ARGS,
-						STR.Preference.TestMethodGen.ARGS, tmgParentGroup) {
+						Preference.TestMethodGen.ARGS,
+						Preference.TestMethodGen.ARGS, tmgParentGroup) {
 					@Override
 					protected void valueChanged(boolean oldValue,
 							boolean newValue) {
@@ -213,21 +209,20 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				tmgEnableArgsArea = new Composite(group, 0);
 				tmgEnableArgsArea.setLayout(new GridLayout(2, false));
 				tmgArgsPrefix = new StringFieldEditor(
-						STR.Preference.TestMethodGen.ARGS_PREFIX,
-						STR.Preference.TestMethodGen.ARGS_PREFIX,
-						tmgEnableArgsArea);
+						Preference.TestMethodGen.ARGS_PREFIX,
+						Preference.TestMethodGen.ARGS_PREFIX, tmgEnableArgsArea);
 				addField(tmgArgsPrefix);
 				tmgArgsDelimiter = new StringFieldEditor(
-						STR.Preference.TestMethodGen.ARGS_DELIMITER,
-						STR.Preference.TestMethodGen.ARGS_DELIMITER,
+						Preference.TestMethodGen.ARGS_DELIMITER,
+						Preference.TestMethodGen.ARGS_DELIMITER,
 						tmgEnableArgsArea);
 				addField(tmgArgsDelimiter);
 			}
 			{
 				// enable return
 				tmgEnableReturn = new BooleanFieldEditor(
-						STR.Preference.TestMethodGen.RETURN,
-						STR.Preference.TestMethodGen.RETURN, tmgParentGroup) {
+						Preference.TestMethodGen.RETURN,
+						Preference.TestMethodGen.RETURN, tmgParentGroup) {
 					@Override
 					protected void valueChanged(boolean oldValue,
 							boolean newValue) {
@@ -262,21 +257,20 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				tmgReturnArea = new Composite(group, 0);
 				tmgReturnArea.setLayout(new GridLayout(2, false));
 				tmgReturnPrefix = new StringFieldEditor(
-						STR.Preference.TestMethodGen.RETURN_PREFIX,
-						STR.Preference.TestMethodGen.RETURN_PREFIX,
-						tmgReturnArea);
+						Preference.TestMethodGen.RETURN_PREFIX,
+						Preference.TestMethodGen.RETURN_PREFIX, tmgReturnArea);
 				addField(tmgReturnPrefix);
 				tmgReturnDelimiter = new StringFieldEditor(
-						STR.Preference.TestMethodGen.RETURN_DELIMITER,
-						STR.Preference.TestMethodGen.RETURN_DELIMITER,
+						Preference.TestMethodGen.RETURN_DELIMITER,
+						Preference.TestMethodGen.RETURN_DELIMITER,
 						tmgReturnArea);
 				addField(tmgReturnDelimiter);
 			}
 			{
 				// enable generate not blank methods
 				tmgEnableGenerateSample = new BooleanFieldEditor(
-						STR.Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION,
-						STR.Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION,
+						Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION,
+						Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION,
 						tmgParentGroup) {
 					@Override
 					protected void valueChanged(boolean oldValue,
@@ -310,13 +304,13 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				group.setLayoutData(gd);
 				tmgSampleImplGenArea = new Composite(group, 0);
 				tmgSampleImplGenArea.setLayout(new GridLayout(2, false));
-				String none = STR.Preference.TestMethodGen.USING_MOCK_NONE;
-				String easyMock = STR.Preference.TestMethodGen.USING_MOCK_EASYMOCK;
-				String jmock2 = STR.Preference.TestMethodGen.USING_MOCK_JMOCK2;
+				String none = Preference.TestMethodGen.USING_MOCK_NONE;
+				String easyMock = Preference.TestMethodGen.USING_MOCK_EASYMOCK;
+				String jmock2 = Preference.TestMethodGen.USING_MOCK_JMOCK2;
 				String[][] labelAndValues = new String[][] { { none, none },
 						{ easyMock, easyMock }, { jmock2, jmock2 }, };
 				tmgRadioGroupMocks = new RadioGroupFieldEditor(
-						STR.Preference.TestMethodGen.USING_MOCK,
+						Preference.TestMethodGen.USING_MOCK,
 						"Select your favorite framework.", 3, labelAndValues,
 						tmgSampleImplGenArea);
 				addField(tmgRadioGroupMocks);

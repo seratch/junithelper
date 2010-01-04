@@ -18,7 +18,7 @@ package org.junithelper.plugin.util;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
-import org.junithelper.plugin.STR;
+import org.junithelper.plugin.constant.STR;
 
 /**
  * ResourcePathUtil<br>

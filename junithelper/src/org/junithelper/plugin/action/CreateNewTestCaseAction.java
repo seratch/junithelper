@@ -42,9 +42,11 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.junithelper.plugin.Activator;
-import org.junithelper.plugin.STR;
 import org.junithelper.plugin.bean.ClassInfo;
 import org.junithelper.plugin.bean.MethodInfo;
+import org.junithelper.plugin.constant.Dialog;
+import org.junithelper.plugin.constant.Preference;
+import org.junithelper.plugin.constant.STR;
 import org.junithelper.plugin.util.FileResourceUtil;
 import org.junithelper.plugin.util.ResourcePathUtil;
 import org.junithelper.plugin.util.ResourceRefreshUtil;
@@ -107,15 +109,15 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 			if (structuredSelection != null && structuredSelection.size() == 0) {
 				// required select
 				Shell shell = new Shell();
-				MessageDialog.openWarning(shell, STR.Dialog.Common.TITLE,
-						STR.Dialog.Common.REQUIRED);
+				MessageDialog.openWarning(shell, Dialog.Common.TITLE,
+						Dialog.Common.REQUIRED);
 				refreshFlag = false;
 			} else if (structuredSelection != null
 					&& structuredSelection.size() > 1) {
 				// select one only
 				Shell shell = new Shell();
-				MessageDialog.openWarning(shell, STR.Dialog.Common.TITLE,
-						STR.Dialog.Common.SELECT_ONLY_ONE);
+				MessageDialog.openWarning(shell, Dialog.Common.TITLE,
+						Dialog.Common.SELECT_ONLY_ONE);
 				refreshFlag = false;
 			} else {
 
@@ -185,9 +187,9 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 									+ tmpDir.getPath());
 						if (!ResourceRefreshUtil.refreshLocal(null, projectName
 								+ STR.DIR_SEP + tmpResourceDirPath + "/..")) {
-							String msg = STR.Dialog.Common.RESOURCE_REFRESH_ERROR;
+							String msg = Dialog.Common.RESOURCE_REFRESH_ERROR;
 							MessageDialog.openWarning(new Shell(),
-									STR.Dialog.Common.TITLE, msg);
+									Dialog.Common.TITLE, msg);
 							System.err.println("Resource refresh error!");
 						}
 					}
@@ -201,9 +203,8 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 				// resource sync
 				if (!ResourceRefreshUtil.refreshLocal(null, projectName
 						+ STR.DIR_SEP + testCaseDirResource)) {
-					MessageDialog.openWarning(new Shell(),
-							STR.Dialog.Common.TITLE,
-							STR.Dialog.Common.RESOURCE_REFRESH_ERROR);
+					MessageDialog.openWarning(new Shell(), Dialog.Common.TITLE,
+							Dialog.Common.RESOURCE_REFRESH_ERROR);
 					System.err.println("Resource refresh error!");
 				}
 
@@ -211,12 +212,12 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 					// confirm if already exist
 					File outputFile = new File(testCaseCreateDirpath
 							+ STR.DIR_SEP + testCaseFilename);
-					String msg = STR.Dialog.Common.ALREADY_EXIST + " ("
+					String msg = Dialog.Common.ALREADY_EXIST + " ("
 							+ testCaseFilename + ")" + STR.LINE_FEED
-							+ STR.Dialog.Common.CONFIRM_PROCEED;
+							+ Dialog.Common.CONFIRM_PROCEED;
 					if (!outputFile.exists()
 							|| MessageDialog.openConfirm(new Shell(),
-									STR.Dialog.Common.TITLE, msg)) {
+									Dialog.Common.TITLE, msg)) {
 						// get public methods
 						String targetClass = "/" + projectName + "/" + selected;
 						IResource targetClassResource = workspaceRoot
@@ -262,7 +263,7 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 								.getDefault()
 								.getPreferenceStore()
 								.getString(
-										STR.Preference.TestClassGen.CLASS_TO_EXTEND);
+										Preference.TestClassGen.CLASS_TO_EXTEND);
 						String[] tmpTestCaseArr = testCase.split("\\.");
 						String testCaseName = tmpTestCaseArr[tmpTestCaseArr.length - 1];
 						sb.append("import ");
@@ -272,12 +273,12 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 
 						boolean enabledTestMethodsGen = Activator.getDefault()
 								.getPreferenceStore().getBoolean(
-										STR.Preference.TestMethodGen.ENABLE);
+										Preference.TestMethodGen.ENABLE);
 						boolean enabledNotBlankMethods = Activator
 								.getDefault()
 								.getPreferenceStore()
 								.getBoolean(
-										STR.Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION);
+										Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION);
 						if (enabledTestMethodsGen && enabledNotBlankMethods) {
 							List<String> importedPackageList = testClassInfo.importList;
 							for (String importedPackage : importedPackageList) {
@@ -353,8 +354,8 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 		if (refreshFlag
 				&& !ResourceRefreshUtil.refreshLocal(null, projectName
 						+ STR.DIR_SEP + testCaseDirResource + "/..")) {
-			MessageDialog.openWarning(new Shell(), STR.Dialog.Common.TITLE,
-					STR.Dialog.Common.RESOURCE_REFRESH_ERROR);
+			MessageDialog.openWarning(new Shell(), Dialog.Common.TITLE,
+					Dialog.Common.RESOURCE_REFRESH_ERROR);
 			System.err.println("Resource refresh error!");
 
 		} else {

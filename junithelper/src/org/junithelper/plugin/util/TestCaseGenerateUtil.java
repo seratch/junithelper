@@ -28,10 +28,11 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.junithelper.plugin.Activator;
-import org.junithelper.plugin.STR;
 import org.junithelper.plugin.bean.ClassInfo;
 import org.junithelper.plugin.bean.MethodInfo;
 import org.junithelper.plugin.bean.MethodInfo.ArgType;
+import org.junithelper.plugin.constant.Preference;
+import org.junithelper.plugin.constant.STR;
 
 /**
  * TestCaseGenerateUtil<br>
@@ -147,9 +148,9 @@ public final class TestCaseGenerateUtil {
 
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		// enable public method test
-		boolean enabled = store.getBoolean(STR.Preference.TestMethodGen.ENABLE);
+		boolean enabled = store.getBoolean(Preference.TestMethodGen.ENABLE);
 		boolean enabledNotBlankMethods = store
-				.getBoolean(STR.Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION);
+				.getBoolean(Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION);
 		boolean enabledSupportJMock2 = MockGenUtil.isUsingJMock2(store);
 		boolean enabledSupportEasyMock = MockGenUtil.isUsingEasyMock(store);
 		// enable public method test
@@ -252,12 +253,10 @@ public final class TestCaseGenerateUtil {
 
 		// enable public method test
 		boolean enabled = Activator.getDefault().getPreferenceStore()
-				.getBoolean(STR.Preference.TestMethodGen.ENABLE);
-		boolean enabledNotBlankMethods = Activator
-				.getDefault()
-				.getPreferenceStore()
-				.getBoolean(
-						STR.Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION);
+				.getBoolean(Preference.TestMethodGen.ENABLE);
+		boolean enabledNotBlankMethods = Activator.getDefault()
+				.getPreferenceStore().getBoolean(
+						Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION);
 		if (enabled) {
 			InputStream is = null;
 			InputStreamReader isr = null;
@@ -352,31 +351,29 @@ public final class TestCaseGenerateUtil {
 		ClassInfo classInfo = new ClassInfo();
 		List<MethodInfo> testMethods = new ArrayList<MethodInfo>();
 		// enable public method test
-		boolean enabled = store.getBoolean(STR.Preference.TestMethodGen.ENABLE);
+		boolean enabled = store.getBoolean(Preference.TestMethodGen.ENABLE);
 		if (enabled) {
 			return classInfo;
 		}
-		boolean enabledArgs = store
-				.getBoolean(STR.Preference.TestMethodGen.ARGS);
+		boolean enabledArgs = store.getBoolean(Preference.TestMethodGen.ARGS);
 		boolean enabledReturn = store
-				.getBoolean(STR.Preference.TestMethodGen.RETURN);
+				.getBoolean(Preference.TestMethodGen.RETURN);
 		boolean enabledNotBlankMethods = store
-				.getBoolean(STR.Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION);
+				.getBoolean(Preference.TestMethodGen.METHOD_SAMPLE_IMPLEMENTATION);
 		boolean enableExcludesAccessors = store
-				.getBoolean(STR.Preference.TestMethodGen.EXLCUDES_ACCESSORS);
+				.getBoolean(Preference.TestMethodGen.EXLCUDES_ACCESSORS);
 		boolean enabledSupportJMock2 = MockGenUtil.isUsingJMock2(store);
 		boolean enabledSupportEasyMock = MockGenUtil.isUsingEasyMock(store);
 
-		String delimiter = store
-				.getString(STR.Preference.TestMethodGen.DELIMITER);
+		String delimiter = store.getString(Preference.TestMethodGen.DELIMITER);
 		String argsPrefix = store
-				.getString(STR.Preference.TestMethodGen.ARGS_PREFIX);
+				.getString(Preference.TestMethodGen.ARGS_PREFIX);
 		String argsDelimiter = store
-				.getString(STR.Preference.TestMethodGen.ARGS_DELIMITER);
+				.getString(Preference.TestMethodGen.ARGS_DELIMITER);
 		String returnPrefix = store
-				.getString(STR.Preference.TestMethodGen.RETURN_PREFIX);
+				.getString(Preference.TestMethodGen.RETURN_PREFIX);
 		String returnDelimiter = store
-				.getString(STR.Preference.TestMethodGen.RETURN_DELIMITER);
+				.getString(Preference.TestMethodGen.RETURN_DELIMITER);
 
 		InputStream is = null;
 		InputStreamReader isr = null;
