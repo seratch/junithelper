@@ -53,8 +53,8 @@ public final class TestCaseGenerateUtil {
 	private static final String RXP_METHOD_MODIFIERS = "[<\\w+?>|static|final|\\s]*";
 	private static final String RXP_METHOD_RETURN_TYPE = "[a-zA-Z1-9\\[\\]_,\\$<>\\.]+?";
 
-	private static final String RXP_GENERICS_PART = "<[a-zA-Z0-9,\\$_]+?>";
-	private static final String RXP_GENERICS_PART_GROUP = "<([a-zA-Z0-9,\\$_]+?)>";
+	private static final String RXP_GENERICS_PART = "<[a-zA-Z0-9,\\$_\\?]+?>";
+	private static final String RXP_GENERICS_PART_GROUP = "<([a-zA-Z0-9,\\$_\\?]+?)>";
 
 	private static final String RXP_METHOD_STATIC_MODIFIERS = "static";
 	private static final String RXP_METHOD_MODIFIERS_EXCLUDES_STATIC = "[<\\w+?>|final|\\s]*";

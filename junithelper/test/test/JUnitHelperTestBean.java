@@ -130,12 +130,17 @@ public class JUnitHelperTestBean {
 		return null;
 	}
 
+	public static String issue24(Class<?> clazz, String methodName,
+			Object[] args) {
+		return null;
+	}
+
 	// TODO
-//	 public static class InnerClass {
-//	 String innerMethod()
-//	 {
-//	 return null;
-//	 }
-//	 }
+	// public static class InnerClass {
+	// String innerMethod()
+	// {
+	// return null;
+	// }
+	// }
 
 }
