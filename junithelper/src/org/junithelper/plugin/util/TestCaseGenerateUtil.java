@@ -521,11 +521,11 @@ public final class TestCaseGenerateUtil {
 							String fieldName = null;
 							String fieldType = null;
 							if (each.methodName.matches("^set.+")) {
-								if (each.argTypes.size() == 0)
-									continue;
 								// target field name
 								fieldName = each.methodName.substring(3);
-								fieldType = each.argTypes.get(0).name;
+								if (each.argTypes.size() > 0) {
+									fieldType = each.argTypes.get(0).name;
+								}
 							} else if (each.methodName.matches("^get.+")) {
 								// target field name
 								fieldName = each.methodName.substring(3);
@@ -540,9 +540,11 @@ public final class TestCaseGenerateUtil {
 								fieldName = fieldName.substring(0, 1)
 										.toLowerCase()
 										+ fieldName.substring(1);
+								fieldType = fieldType
+										.replaceAll("\\[", "\\\\[").replaceAll(
+												"\\]", "\\\\]");
 								String searchRegexp = ".+?private\\s+"
-										+ fieldType + "\\s+" + fieldName
-										+ ".+?";
+										+ fieldType + "\\s+" + fieldName + ".+";
 								if (targetClassSourceStr.matches(searchRegexp))
 									continue;
 							}
