@@ -7,6 +7,15 @@
 	<classpathentry kind="lib" path="lib/easymock-2.4.jar"/>
 	<classpathentry kind="lib" path="lib/easymockclassextension-2.4.jar"/>
 	<classpathentry kind="lib" path="lib/junit-4.4.jar"/>
+	<classpathentry kind="lib" path="lib/jmock2/cglib-full-2.0.jar"/>
+	<classpathentry kind="lib" path="lib/jmock2/cglib-nodep-2.1_3.jar"/>
+	<classpathentry kind="lib" path="lib/jmock2/hamcrest-core-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/jmock2/hamcrest-library-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/jmock2/jmock-2.5.1.jar"/>
+	<classpathentry kind="lib" path="lib/jmock2/jmock-cglib-1.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/jmock2/jmock-junit3-2.5.1.jar"/>
+	<classpathentry kind="lib" path="lib/jmock2/jmock-legacy-2.5.1.jar"/>
+	<classpathentry kind="lib" path="lib/jmock2/objenesis-1.0.jar"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="output" path="bin"/>
