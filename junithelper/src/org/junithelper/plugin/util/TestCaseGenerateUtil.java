@@ -20,10 +20,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -43,8 +45,8 @@ import org.junithelper.plugin.constant.STR;
  */
 public final class TestCaseGenerateUtil {
 
-	static IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace()
-			.getRoot();
+	static IWorkspace workspace = ResourcesPlugin.getWorkspace();
+	static IWorkspaceRoot workspaceRoot = workspace.getRoot();
 
 	static String RXP_WS = STR.RegExp.WHITE_AND_SPACE;
 	static String RXP_NOT_S_RQ = STR.RegExp.NOT_S_REQUIRED;
@@ -275,11 +277,7 @@ public final class TestCaseGenerateUtil {
 				while ((line = br.readLine()) != null)
 					tmpsb.append(line + " ");
 				String targetClassSourceStr = tmpsb.toString();
-				// TODO better implementation to get target methods
-				// - no access modifier methods?
-				// - exclude inner class methods?
-				String[] targets = targetClassSourceStr
-						.split("public|protected");
+				String[] targets = targetClassSourceStr.split("public");
 				for (String target : targets) {
 					target = target.replaceAll("\\s+?" + STR.COMMA, STR.COMMA)
 							.replaceAll(STR.COMMA + "\\s+?", STR.COMMA);
@@ -381,16 +379,20 @@ public final class TestCaseGenerateUtil {
 		try {
 			// detect charset
 			String encoding = FileResourceUtil.detectEncoding(javaFile);
-
+			// read test target class source code string
 			is = javaFile.getContents();
 			isr = new InputStreamReader(is, encoding);
 			br = new BufferedReader(isr);
-
 			StringBuilder tmpsb = new StringBuilder();
 			String line = null;
-			while ((line = br.readLine()) != null)
+			while ((line = br.readLine()) != null) {
 				tmpsb.append(line + " ");
-			String targetClassSourceStr = tmpsb.toString();
+			}
+			// source code string
+			// (inner class methods are excluded)
+			String targetClassSourceStr = trimInnerClassMethods(tmpsb
+					.toString());
+
 			// get imported types
 			if (enabledNotBlankMethods) {
 				if (testMethods.size() <= 0 || testMethods.get(0) == null)
@@ -419,7 +421,6 @@ public final class TestCaseGenerateUtil {
 				}
 			}
 
-			// TODO
 			String[] targets = targetClassSourceStr.split("public|protected");
 			for (String target : targets) {
 				target = target.replaceAll("\\s+?" + STR.COMMA, STR.COMMA)
@@ -788,7 +789,7 @@ public final class TestCaseGenerateUtil {
 	 * @param arg
 	 * @return
 	 */
-	private static String getType(String arg) {
+	protected static String getType(String arg) {
 		arg = arg.trim().replaceAll("final ", STR.EMPTY).split("\\s+")[0];
 		return arg;
 	}
@@ -799,7 +800,7 @@ public final class TestCaseGenerateUtil {
 	 * @param arg
 	 * @return
 	 */
-	private static String getTypeAvailableInMethodName(String arg) {
+	protected static String getTypeAvailableInMethodName(String arg) {
 		arg = arg.replaceAll(RXP_GENERICS_PART, STR.EMPTY);
 		arg = arg.replaceAll("final ", STR.EMPTY);
 		arg = arg.replaceAll("\\.\\.\\.", "Array")
@@ -811,7 +812,7 @@ public final class TestCaseGenerateUtil {
 		return arg;
 	}
 
-	private static String getClassInSourceCode(String returnTypeToCheck,
+	protected static String getClassInSourceCode(String returnTypeToCheck,
 			String testTargetClassname, List<String> importList) {
 		// defined class with full package
 		if (returnTypeToCheck.matches(".+?\\..+"))
@@ -860,5 +861,47 @@ public final class TestCaseGenerateUtil {
 				returnTypeToCheck += "[]";
 			return returnTypeToCheck;
 		}
+	}
+
+	protected static String trimInnerClassMethods(String source) {
+		int len = source.length();
+		boolean isClassInside = false;
+		boolean isWorking = false;
+		boolean isStackStarted = false;
+		Stack<Character> braceStack = new Stack<Character>();
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < len; i++) {
+			// might be started class def
+			if (i >= 6 && source.charAt(i - 6) == ' '
+					&& source.charAt(i - 5) == 'c'
+					&& source.charAt(i - 4) == 'l'
+					&& source.charAt(i - 3) == 'a'
+					&& source.charAt(i - 2) == 's'
+					&& source.charAt(i - 1) == 's' && source.charAt(i) == ' ') {
+				if (!isClassInside) {
+					isClassInside = true;
+				} else {
+					isWorking = true;
+				}
+				continue;
+			}
+			// excluding inner classes
+			if (isWorking) {
+				if (source.charAt(i) == '{') {
+					braceStack.push(source.charAt(i));
+					isStackStarted = true;
+				}
+				if (source.charAt(i) == '}') {
+					braceStack.pop();
+				}
+				if (isStackStarted && braceStack.empty()) {
+					isWorking = false;
+					isStackStarted = false;
+				}
+			} else {
+				sb.append(source.charAt(i));
+			}
+		}
+		return sb.toString();
 	}
 }

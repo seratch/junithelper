@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 
 import test.bean.SampleBean;
 
-public class JUnitHelperTestBean {
+public abstract class JUnitHelperTestBean {
 
 	public static void methodStaticReturnVoid() {
 	}
@@ -135,12 +135,16 @@ public class JUnitHelperTestBean {
 		return null;
 	}
 
-	// TODO
-	// public static class InnerClass {
-	// String innerMethod()
-	// {
-	// return null;
-	// }
-	// }
+	public static class Inner {
+
+		public static class InnerInner {
+		}
+
+		String innerMethod() {
+			return null;
+		}
+	}
+
+	public abstract void abstractMethod();
 
 }
