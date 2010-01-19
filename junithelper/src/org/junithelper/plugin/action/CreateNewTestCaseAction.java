@@ -1,5 +1,5 @@
 /* 
- * Copyright 2009 junithelper.org. 
+ * Copyright 2009-2010 junithelper.org. 
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -58,7 +58,7 @@ import org.junithelper.plugin.util.ThreadUtil;
  * <br>
  * Create new test case file.<br>
  * 
- * @author Kazuhiro Sera
+ * @author Kazuhiro Sera <seratch@gmail.com>
  * @version 1.0
  */
 public class CreateNewTestCaseAction extends Action implements IActionDelegate,

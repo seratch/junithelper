@@ -1,5 +1,5 @@
 /* 
- * Copyright 2009 junithelper.org. 
+ * Copyright 2009-2010 junithelper.org. 
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -23,7 +23,7 @@ import java.util.List;
  * <br>
  * Information about test target developing punlic methods<br>
  * 
- * @author Kazuhiro Sera
+ * @author Kazuhiro Sera <seratch@gmail.com>
  * @version 1.0
  */
 public class MethodInfo {
