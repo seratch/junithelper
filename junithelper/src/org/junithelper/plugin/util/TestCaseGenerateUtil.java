@@ -1,5 +1,5 @@
 /* 
- * Copyright 2009 junithelper.org. 
+ * Copyright 2009-2010 junithelper.org. 
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -40,7 +40,7 @@ import org.junithelper.plugin.constant.STR;
  * TestCaseGenerateUtil<br>
  * <br>
  * 
- * @author Kazuhiro Sera
+ * @author Kazuhiro Sera <seratch@gmail.com>
  * @version 1.0
  */
 public final class TestCaseGenerateUtil {
@@ -386,12 +386,12 @@ public final class TestCaseGenerateUtil {
 			StringBuilder tmpsb = new StringBuilder();
 			String line = null;
 			while ((line = br.readLine()) != null) {
-				tmpsb.append(line + " ");
+				tmpsb.append(trimLineComments(line) + " ");
 			}
 			// source code string
 			// (inner class methods are excluded)
-			String targetClassSourceStr = trimInnerClassMethods(tmpsb
-					.toString());
+			String targetClassSourceStr = trimInnerClassMethods(trimAllComments(tmpsb
+					.toString()));
 
 			// get imported types
 			if (enabledNotBlankMethods) {
@@ -863,6 +863,14 @@ public final class TestCaseGenerateUtil {
 		}
 	}
 
+	protected static String trimLineComments(String source) {
+		return source.replaceAll("//.+?\n", STR.EMPTY);
+	}
+
+	protected static String trimAllComments(String source) {
+		return trimLineComments(source.replaceAll("/\\*.+?\\*/", STR.EMPTY));
+	}
+
 	protected static String trimInnerClassMethods(String source) {
 		int len = source.length();
 		boolean isClassInside = false;
@@ -904,4 +912,5 @@ public final class TestCaseGenerateUtil {
 		}
 		return sb.toString();
 	}
+
 }
