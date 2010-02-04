@@ -1,10 +1,10 @@
-package org.junithelper.runtime.util;
+package org.junithelper.runtime.concurrent;
 
 import java.util.concurrent.Callable;
 
 import junit.framework.TestCase;
 
-import org.junithelper.runtime.util.ConcurrentTest.Result;
+import org.junithelper.runtime.concurrent.ConcurrentTest.Result;
 
 public class ConcurrentTestTest extends TestCase {
 

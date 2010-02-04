@@ -1,4 +1,19 @@
-package org.junithelper.runtime.util;
+/* 
+ * Copyright 2009-2010 junithelper.org. 
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at 
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0 
+ * 
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+ * either express or implied. See the License for the specific language 
+ * governing permissions and limitations under the License. 
+ */
+package org.junithelper.runtime.concurrent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,16 +22,23 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
 /**
- * Concurrent testing utility
+ * Utility class for concurrent testing<br>
  * 
  * @author Kazuhiro Sera <seratch@gmail.com>
+ * @version 1.0
  */
 public class ConcurrentTest {
 
 	/**
-	 * Callable execute result
+	 * Hiding default constructor
+	 */
+	private ConcurrentTest() {
+	}
+
+	/**
+	 * Result object of callable execution
 	 * 
-	 * @author k-sera
+	 * @author Kazuhiro Sera <seratch@gmail.com>
 	 */
 	public static class Result {
 		/**
@@ -31,6 +53,14 @@ public class ConcurrentTest {
 
 	/**
 	 * Start concurrent testing
+	 * 
+	 * <pre>
+	 * ConcurrentTest.start(new Runnable() {
+	 * 	public void run() {
+	 * 		// do something
+	 * 	}
+	 * }, 3);
+	 * </pre>
 	 * 
 	 * @param runnable
 	 * @param maxThreads
@@ -49,6 +79,10 @@ public class ConcurrentTest {
 	/**
 	 * Get concurrent callable testing result
 	 * 
+	 * <pre>
+	 * Obejct returned = ConcurrentTest.getResult(0).returned;
+	 * </pre>
+	 * 
 	 * @param index
 	 * @return Result
 	 */
@@ -65,6 +99,16 @@ public class ConcurrentTest {
 
 	/**
 	 * Start concurrent testing
+	 * 
+	 * <pre>
+	 * ConcurrentTest.start(new Callable&lt;Result&gt;() {
+	 * 	public Result call() throws Exception {
+	 * 		Result res = new Result();
+	 * 		res.returned = &quot;res&quot;;
+	 * 		return res;
+	 * 	}
+	 * }, 3);
+	 * </pre>
 	 * 
 	 * @param callable
 	 * @param maxThreads
