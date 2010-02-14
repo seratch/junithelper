@@ -2,7 +2,7 @@
 <feature
       id="org.junithelper.plugin.feature"
       label="JUnit Helper"
-      version="0.0.46"
+      version="0.0.47"
       provider-name="junithelper.org"
       plugin="org.junithelper.plugin"
       image="icon/junithelper.png"
@@ -281,7 +281,7 @@ limitations under the License.
          id="org.junithelper.plugin"
          download-size="0"
          install-size="0"
-         version="0.0.46"
+         version="0.0.47"
          unpack="false"/>
 
 </feature>
