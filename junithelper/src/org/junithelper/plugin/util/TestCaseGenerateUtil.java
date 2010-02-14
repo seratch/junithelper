@@ -596,10 +596,12 @@ public final class TestCaseGenerateUtil {
 
 		// mocked args using JMock2
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		boolean usingJUnitHelperRuntime = store
+				.getBoolean(Preference.TestClassGen.USING_JUNIT_HELPER_RUNTIME_LIB);
 		boolean enabledSupportJMock2 = MockGenUtil.isUsingJMock2(store);
 		boolean enabledSupportEasyMock = MockGenUtil.isUsingEasyMock(store);
 
-		if (enabledSupportJMock2) {
+		if (enabledSupportJMock2 && !usingJUnitHelperRuntime) {
 			sb.append("\t\t");
 			sb.append("Mockery context = new Mockery(){{");
 			sb.append(CRLF);
@@ -705,7 +707,9 @@ public final class TestCaseGenerateUtil {
 					sb.append(primitiveDefault);
 				} else {
 					if (isJMock2) {
-						sb.append("context.mock(");
+						sb.append(usingJUnitHelperRuntime ? "jmock2"
+								: "context");
+						sb.append(".mock(");
 						sb.append(argTypeName);
 						sb.append(".class)");
 					} else if (isEasyMock) {
@@ -726,7 +730,8 @@ public final class TestCaseGenerateUtil {
 
 		// JMock2 expectations
 		if (enabledSupportJMock2) {
-			sb.append("context.checking(new Expectations(){{");
+			sb.append(usingJUnitHelperRuntime ? "jmock2" : "context");
+			sb.append(".checking(new Expectations(){{");
 			sb.append(CRLF);
 			sb.append("\t\t\t// TODO JMock2 Expectations");
 			sb.append(CRLF);

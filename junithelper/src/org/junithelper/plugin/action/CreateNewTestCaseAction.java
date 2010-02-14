@@ -32,6 +32,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Shell;
@@ -46,6 +47,7 @@ import org.junithelper.plugin.bean.ClassInfo;
 import org.junithelper.plugin.bean.MethodInfo;
 import org.junithelper.plugin.constant.Dialog;
 import org.junithelper.plugin.constant.Preference;
+import org.junithelper.plugin.constant.RuntimeLibrary;
 import org.junithelper.plugin.constant.STR;
 import org.junithelper.plugin.util.FileResourceUtil;
 import org.junithelper.plugin.util.ResourcePathUtil;
@@ -259,11 +261,13 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 						sb.append(CRLF);
 
 						// get class to extend
-						String testCase = Activator
-								.getDefault()
-								.getPreferenceStore()
-								.getString(
-										Preference.TestClassGen.CLASS_TO_EXTEND);
+						IPreferenceStore store = Activator.getDefault()
+								.getPreferenceStore();
+						boolean usingJUnitHelperRuntime = store
+								.getBoolean(Preference.TestClassGen.USING_JUNIT_HELPER_RUNTIME_LIB);
+						String testCase = usingJUnitHelperRuntime ? RuntimeLibrary.TEST_CASE
+								: store
+										.getString(Preference.TestClassGen.CLASS_TO_EXTEND);
 						String[] tmpTestCaseArr = testCase.split("\\.");
 						String testCaseName = tmpTestCaseArr[tmpTestCaseArr.length - 1];
 						sb.append("import ");

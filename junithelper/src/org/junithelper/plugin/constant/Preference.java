@@ -60,6 +60,10 @@ public final class Preference {
 		/**
 		 * Class To Extend
 		 */
+		public static final String USING_JUNIT_HELPER_RUNTIME_LIB = "Using JUnit Helper Runtime Library.";
+		/**
+		 * Class To Extend
+		 */
 		public static final String CLASS_TO_EXTEND = "Class To Extend";
 	}
 

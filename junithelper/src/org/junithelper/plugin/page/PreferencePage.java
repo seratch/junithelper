@@ -108,11 +108,44 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 
 				tcgArea = new Composite(classConfigGroup, 0);
 				tcgArea.setLayout(new GridLayout(2, false));
-				// extends
-				tcgClassToExtend = new StringFieldEditor(
-						Preference.TestClassGen.CLASS_TO_EXTEND,
-						Preference.TestClassGen.CLASS_TO_EXTEND, tcgArea);
-				addField(tcgClassToExtend);
+				{
+					// using junit helper runtime lib or not
+					tcgUsingJUnitHelperTestCase = new BooleanFieldEditor(
+							Preference.TestClassGen.USING_JUNIT_HELPER_RUNTIME_LIB,
+							Preference.TestClassGen.USING_JUNIT_HELPER_RUNTIME_LIB,
+							tcgArea) {
+						@Override
+						protected void valueChanged(boolean oldValue,
+								boolean newValue) {
+							super.valueChanged(oldValue, newValue);
+							switchDisplayOfClassToExtendArea(newValue ? false
+									: true);
+						}
+
+						@Override
+						protected void doLoad() {
+							super.doLoad();
+							switchDisplayOfClassToExtendArea(getBooleanValue() ? false
+									: true);
+						}
+
+						@Override
+						protected void doLoadDefault() {
+							super.doLoadDefault();
+							switchDisplayOfClassToExtendArea(getBooleanValue() ? false
+									: true);
+						}
+					};
+					addField(tcgUsingJUnitHelperTestCase);
+
+				}
+				{
+					// extends
+					tcgClassToExtend = new StringFieldEditor(
+							Preference.TestClassGen.CLASS_TO_EXTEND,
+							Preference.TestClassGen.CLASS_TO_EXTEND, tcgArea);
+					addField(tcgClassToExtend);
+				}
 			}
 
 			// generating test methods group
@@ -156,11 +189,11 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 
 				{
 					// enable excluding accessors
-					tmgCOmmonExecludesAccessors = new BooleanFieldEditor(
+					tmgCommonExecludesAccessors = new BooleanFieldEditor(
 							Preference.TestMethodGen.EXLCUDES_ACCESSORS,
 							Preference.TestMethodGen.EXLCUDES_ACCESSORS,
 							tmgArea);
-					addField(tmgCOmmonExecludesAccessors);
+					addField(tmgCommonExecludesAccessors);
 				}
 				{
 					// common delimiter setting
@@ -322,12 +355,18 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 	}
 
 	private BooleanFieldEditor tcgEnable;
+	private BooleanFieldEditor tcgUsingJUnitHelperTestCase;
 	private StringFieldEditor tcgClassToExtend;
 	private Composite tcgArea;
 
+	private void switchDisplayOfClassToExtendArea(boolean value) {
+		// enable/disable the area
+		tcgClassToExtend.setEnabled(value, tcgArea);
+	}
+
 	private BooleanFieldEditor tmgEnable;
 	private StringFieldEditor tmgCommonDelimiter;
-	private BooleanFieldEditor tmgCOmmonExecludesAccessors;
+	private BooleanFieldEditor tmgCommonExecludesAccessors;
 	private Composite tmgArea;
 	private Group tmgParentGroup;
 

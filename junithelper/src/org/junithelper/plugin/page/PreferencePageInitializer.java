@@ -41,6 +41,9 @@ public class PreferencePageInitializer extends AbstractPreferenceInitializer {
 		// generating extended test class
 		{
 			store.setDefault(Preference.TestClassGen.ENABLE, true);
+			store.setDefault(
+					Preference.TestClassGen.USING_JUNIT_HELPER_RUNTIME_LIB,
+					false);
 			store.setDefault(Preference.TestClassGen.CLASS_TO_EXTEND,
 					"junit.framework.TestCase");
 		}
