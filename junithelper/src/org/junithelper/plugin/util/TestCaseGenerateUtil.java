@@ -390,7 +390,7 @@ public final class TestCaseGenerateUtil {
 			}
 			// source code string
 			// (inner class methods are excluded)
-			String targetClassSourceStr = trimInnerClassMethods(trimAllComments(tmpsb
+			String targetClassSourceStr = trimInsideOfBraces(trimAllComments(tmpsb
 					.toString()));
 
 			// get imported types
@@ -871,43 +871,44 @@ public final class TestCaseGenerateUtil {
 		return trimLineComments(source.replaceAll("/\\*.+?\\*/", STR.EMPTY));
 	}
 
-	protected static String trimInnerClassMethods(String source) {
+	/**
+	 * trim inside of the second level braces.
+	 * 
+	 * @param source
+	 * @return
+	 */
+	protected static String trimInsideOfBraces(String source) {
 		int len = source.length();
-		boolean isClassInside = false;
-		boolean isWorking = false;
-		boolean isStackStarted = false;
+		boolean isInsideOfFirstLevel = false;
+		boolean isInsideOfSecondLevel = false;
 		Stack<Character> braceStack = new Stack<Character>();
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < len; i++) {
-			// might be started class def
-			if (i >= 6 && source.charAt(i - 6) == ' '
-					&& source.charAt(i - 5) == 'c'
-					&& source.charAt(i - 4) == 'l'
-					&& source.charAt(i - 3) == 'a'
-					&& source.charAt(i - 2) == 's'
-					&& source.charAt(i - 1) == 's' && source.charAt(i) == ' ') {
-				if (!isClassInside) {
-					isClassInside = true;
-				} else {
-					isWorking = true;
+			// waiting for inside of the first level brace
+			if (!isInsideOfFirstLevel) {
+				sb.append(source.charAt(i));
+				if (source.charAt(i) == '{') {
+					isInsideOfFirstLevel = true;
 				}
 				continue;
 			}
-			// excluding inner classes
-			if (isWorking) {
-				if (source.charAt(i) == '{') {
-					braceStack.push(source.charAt(i));
-					isStackStarted = true;
-				}
-				if (source.charAt(i) == '}') {
-					braceStack.pop();
-				}
-				if (isStackStarted && braceStack.empty()) {
-					isWorking = false;
-					isStackStarted = false;
-				}
-			} else {
+			// excluding inside of top brace
+			// outer of top braced
+			if (!isInsideOfSecondLevel) {
 				sb.append(source.charAt(i));
+			}
+			// brace start
+			if (source.charAt(i) == '{') {
+				isInsideOfSecondLevel = true;
+				braceStack.push(source.charAt(i));
+			}
+			// brace end
+			if (!braceStack.empty() && source.charAt(i) == '}') {
+				braceStack.pop();
+			}
+			// check the brace stack state
+			if (braceStack.empty()) {
+				isInsideOfSecondLevel = false;
 			}
 		}
 		return sb.toString();

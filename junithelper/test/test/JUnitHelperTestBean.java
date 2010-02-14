@@ -1,5 +1,7 @@
 package test;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
@@ -7,9 +9,25 @@ import java.util.logging.Logger;
 
 import test.bean.SampleBean;
 
-public abstract class JUnitHelperTestBean {
+public class JUnitHelperTestBean {
+
+	static {
+		System.out.println("hoge");
+	}
+
+	static class Hoge {
+		public void doSomething() {
+		}
+	}
 
 	public static void methodStaticReturnVoid() {
+		new InputStream() {
+			@Override
+			public int read() throws IOException {
+				// TODO Auto-generated method stub
+				return 0;
+			}
+		};
 	}
 
 	public static final void methodStaticFinalReturnVoid() {
@@ -144,7 +162,5 @@ public abstract class JUnitHelperTestBean {
 			return null;
 		}
 	}
-
-	public abstract void abstractMethod();
 
 }
