@@ -41,11 +41,13 @@ public class PreferencePageInitializer extends AbstractPreferenceInitializer {
 		// generating extended test class
 		{
 			store.setDefault(Preference.TestClassGen.ENABLE, true);
+			store.setDefault(Preference.TestClassGen.JUNIT_VERSION,
+					Preference.TestClassGen.JUNIT_VERSION_3);
+			store.setDefault(Preference.TestClassGen.CLASS_TO_EXTEND,
+					"junit.framework.TestCase");
 			store.setDefault(
 					Preference.TestClassGen.USING_JUNIT_HELPER_RUNTIME_LIB,
 					false);
-			store.setDefault(Preference.TestClassGen.CLASS_TO_EXTEND,
-					"junit.framework.TestCase");
 		}
 
 		// generating test methods
@@ -64,7 +66,8 @@ public class PreferencePageInitializer extends AbstractPreferenceInitializer {
 			store.setDefault(Preference.TestMethodGen.RETURN_DELIMITER, "$");
 
 			store.setDefault(Preference.TestMethodGen.METHOD_SAMPLE_IMPL, true);
-			store.setDefault(Preference.TestMethodGen.USING_MOCK, "None");
+			store.setDefault(Preference.TestMethodGen.USING_MOCK,
+					Preference.TestMethodGen.USING_MOCK_NONE);
 		}
 	}
 

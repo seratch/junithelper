@@ -28,13 +28,11 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.junithelper.plugin.Activator;
 import org.junithelper.plugin.bean.ClassInfo;
 import org.junithelper.plugin.bean.MethodInfo;
 import org.junithelper.plugin.bean.MethodInfo.ArgType;
-import org.junithelper.plugin.constant.Preference;
 import org.junithelper.plugin.constant.STR;
+import org.junithelper.plugin.page.PreferenceLoader;
 
 /**
  * TestCaseGenerateUtil<br>
@@ -145,18 +143,11 @@ public final class TestCaseGenerateUtil {
 	 */
 	public static ClassInfo getClassInfoWithUnimplementedTestMethods(
 			IFile testTarget, IFile testCase) throws Exception {
+		PreferenceLoader pref = new PreferenceLoader();
 		ClassInfo classInfo = new ClassInfo();
 		List<MethodInfo> unimplementedMethodNames = new ArrayList<MethodInfo>();
-
-		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		// enable public method test
-		boolean enabled = store.getBoolean(Preference.TestMethodGen.ENABLE);
-		boolean enabledNotBlankMethods = store
-				.getBoolean(Preference.TestMethodGen.METHOD_SAMPLE_IMPL);
-		boolean enabledSupportJMock2 = MockGenUtil.isUsingJMock2(store);
-		boolean enabledSupportEasyMock = MockGenUtil.isUsingEasyMock(store);
-		// enable public method test
-		if (enabled) {
+		if (pref.isTestMethodGenEnabled) {
 			ClassInfo expectedClassInfo = getTestClassInfoFromTargetClass(testTarget);
 			List<MethodInfo> expectedMethods = expectedClassInfo.methods;
 			ClassInfo actualClassInfo = getMethodNamesAlreadyExists(testCase);
@@ -164,9 +155,9 @@ public final class TestCaseGenerateUtil {
 			for (MethodInfo expected : expectedMethods) {
 				boolean exist = false;
 				for (MethodInfo actual : actualMethods) {
-					String escapedExp = expected.testMethodName.replaceAll(
-							"\\$", "\\\\\\$");
-					if (actual.testMethodName.matches(escapedExp + ".*")) {
+					String escapedExp = expected.testMethodName.replace(
+							"test_", STR.EMPTY).replaceAll("\\$", "\\\\\\$");
+					if (actual.testMethodName.matches(".*" + escapedExp + ".*")) {
 						exist = true;
 						break;
 					}
@@ -175,7 +166,7 @@ public final class TestCaseGenerateUtil {
 					unimplementedMethodNames.add(expected);
 			}
 			// imported types
-			if (enabledNotBlankMethods) {
+			if (pref.isTestMethodGenNotBlankEnabled) {
 				List<String> notImportedList = new ArrayList<String>();
 				List<String> expImportedList = expectedClassInfo.importList;
 				List<String> actImportedList = actualClassInfo.importList;
@@ -193,13 +184,13 @@ public final class TestCaseGenerateUtil {
 						notImportedList.add("//" + expImported);
 				}
 				classInfo.importList = notImportedList;
-				if (enabledSupportJMock2) {
+				if (pref.isTestMethodGenEnabledSupportJMock2) {
 					classInfo.importList.add("org.jmock.Mockery");
 					classInfo.importList.add("org.jmock.Expectations");
 					classInfo.importList
 							.add("org.jmock.lib.legacy.ClassImposteriser");
 				}
-				if (enabledSupportEasyMock) {
+				if (pref.isTestMethodGenEnabledSupportEasyMock) {
 					classInfo.importList
 							.add("org.easymock.classextension.EasyMock");
 					classInfo.importList
@@ -250,16 +241,12 @@ public final class TestCaseGenerateUtil {
 	 */
 	public static ClassInfo getMethodNamesAlreadyExists(IFile javaFile)
 			throws Exception {
+		PreferenceLoader pref = new PreferenceLoader();
 		ClassInfo classInfo = new ClassInfo();
 		List<MethodInfo> methodStringInfos = new ArrayList<MethodInfo>();
 
 		// enable public method test
-		boolean enabled = Activator.getDefault().getPreferenceStore()
-				.getBoolean(Preference.TestMethodGen.ENABLE);
-		boolean enabledNotBlankMethods = Activator.getDefault()
-				.getPreferenceStore().getBoolean(
-						Preference.TestMethodGen.METHOD_SAMPLE_IMPL);
-		if (enabled) {
+		if (pref.isTestMethodGenEnabled) {
 			InputStream is = null;
 			InputStreamReader isr = null;
 			BufferedReader br = null;
@@ -310,7 +297,7 @@ public final class TestCaseGenerateUtil {
 					}
 				}
 				// imported types
-				if (enabledNotBlankMethods) {
+				if (pref.isTestMethodGenNotBlankEnabled) {
 					if (methodStringInfos.size() <= 0
 							|| methodStringInfos.get(0) == null)
 						methodStringInfos.add(new MethodInfo());
@@ -345,33 +332,9 @@ public final class TestCaseGenerateUtil {
 	 */
 	public static ClassInfo getTestClassInfoFromTargetClass(IFile javaFile)
 			throws Exception {
-		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		PreferenceLoader pref = new PreferenceLoader();
 		ClassInfo classInfo = new ClassInfo();
 		List<MethodInfo> testMethods = new ArrayList<MethodInfo>();
-		// enable public method test
-		boolean enabled = store.getBoolean(Preference.TestMethodGen.ENABLE);
-		if (!enabled) {
-			return classInfo;
-		}
-		boolean enabledArgs = store.getBoolean(Preference.TestMethodGen.ARGS);
-		boolean enabledReturn = store
-				.getBoolean(Preference.TestMethodGen.RETURN);
-		boolean enabledNotBlankMethods = store
-				.getBoolean(Preference.TestMethodGen.METHOD_SAMPLE_IMPL);
-		boolean enableExcludesAccessors = store
-				.getBoolean(Preference.TestMethodGen.EXLCUDES_ACCESSORS);
-		boolean enabledSupportJMock2 = MockGenUtil.isUsingJMock2(store);
-		boolean enabledSupportEasyMock = MockGenUtil.isUsingEasyMock(store);
-
-		String delimiter = store.getString(Preference.TestMethodGen.DELIMITER);
-		String argsPrefix = store
-				.getString(Preference.TestMethodGen.ARGS_PREFIX);
-		String argsDelimiter = store
-				.getString(Preference.TestMethodGen.ARGS_DELIMITER);
-		String returnPrefix = store
-				.getString(Preference.TestMethodGen.RETURN_PREFIX);
-		String returnDelimiter = store
-				.getString(Preference.TestMethodGen.RETURN_DELIMITER);
 
 		InputStream is = null;
 		InputStreamReader isr = null;
@@ -394,7 +357,7 @@ public final class TestCaseGenerateUtil {
 					.toString()));
 
 			// get imported types
-			if (enabledNotBlankMethods) {
+			if (pref.isTestMethodGenNotBlankEnabled) {
 				if (testMethods.size() <= 0 || testMethods.get(0) == null)
 					testMethods.add(new MethodInfo());
 				String[] importStartLines = targetClassSourceStr
@@ -407,13 +370,23 @@ public final class TestCaseGenerateUtil {
 						classInfo.importList.add(importedPackage);
 					}
 				}
-				if (enabledSupportJMock2) {
+				if (pref.isJUnitVersion3) {
+					// nothing to do
+				} else if (pref.isJUnitVersion4) {
+					classInfo.importList.add("org.junit.Test");
+					classInfo.importList.add("static org.junit.Assert.*");
+				}
+				if (pref.isTestMethodGenEnabledSupportJMock2) {
 					classInfo.importList.add("org.jmock.Mockery");
 					classInfo.importList.add("org.jmock.Expectations");
 					classInfo.importList
 							.add("org.jmock.lib.legacy.ClassImposteriser");
+					if (pref.isUsingJUnitHelperRuntime) {
+						classInfo.importList
+								.add("org.junithelper.runtime.util.JMock2Util");
+					}
 				}
-				if (enabledSupportEasyMock) {
+				if (pref.isTestMethodGenEnabledSupportEasyMock) {
 					classInfo.importList
 							.add("org.easymock.classextension.EasyMock");
 					classInfo.importList
@@ -431,7 +404,8 @@ public final class TestCaseGenerateUtil {
 					if (matcher.find()) {
 						MethodInfo each = new MethodInfo();
 						// return type
-						if (enabledNotBlankMethods || enabledReturn) {
+						if (pref.isTestMethodGenNotBlankEnabled
+								|| pref.isTestMethodGenReturnEnabled) {
 							String returnTypeFull = getType(matcher.group(1));
 							// get generics
 							Matcher toGenericsMatcher = Pattern.compile(
@@ -488,7 +462,8 @@ public final class TestCaseGenerateUtil {
 							tmpArrList.add(element);
 						}
 						String[] argArr = tmpArrList.toArray(new String[0]);
-						if (enabledNotBlankMethods || enabledArgs) {
+						if (pref.isTestMethodGenNotBlankEnabled
+								|| pref.isTestMethodGenArgsEnabled) {
 							int argArrLen = argArr.length;
 							for (int i = 0; i < argArrLen; i++) {
 								ArgType argType = new ArgType();
@@ -518,7 +493,7 @@ public final class TestCaseGenerateUtil {
 							}
 						}
 						// exlucdes accessors
-						if (enableExcludesAccessors) {
+						if (pref.isTestMethodGenExecludeAccessors) {
 							String fieldName = null;
 							String fieldType = null;
 							if (each.methodName.matches("^set.+")) {
@@ -550,24 +525,31 @@ public final class TestCaseGenerateUtil {
 									continue;
 							}
 						}
-						each.testMethodName = "test_" + each.methodName;
+						String prefix = pref.isJUnitVersion3 ? "test_" : "";
+						each.testMethodName = prefix + each.methodName;
 						// add arg types
-						if (enabledArgs) {
-							each.testMethodName += delimiter + argsPrefix;
-							if (each.argTypes.size() == 0)
-								each.testMethodName += argsDelimiter;
-							for (ArgType argType : each.argTypes)
-								each.testMethodName += argsDelimiter
+						if (pref.isTestMethodGenArgsEnabled) {
+							each.testMethodName += pref.testMethodDelimiter
+									+ pref.testMethodArgsPrefix;
+							if (each.argTypes.size() == 0) {
+								each.testMethodName += pref.testMethodArgsDelimiter;
+							}
+							for (ArgType argType : each.argTypes) {
+								each.testMethodName += pref.testMethodArgsDelimiter
 										+ argType.nameInMethodName;
+							}
 						}
 						// add return type
-						if (enabledReturn)
-							each.testMethodName += delimiter + returnPrefix
-									+ returnDelimiter
+						if (pref.isTestMethodGenReturnEnabled) {
+							each.testMethodName += pref.testMethodDelimiter
+									+ pref.testMethodReturnPrefix
+									+ pref.testMethodReturnDelimiter
 									+ each.returnType.nameInMethodName;
+						}
 						// static or instance method
-						if (target.matches(RXP_SEARCH_STATIC_METHOD))
+						if (target.matches(RXP_SEARCH_STATIC_METHOD)) {
 							each.isStatic = true;
+						}
 						testMethods.add(each);
 					}
 				}
@@ -591,35 +573,32 @@ public final class TestCaseGenerateUtil {
 	 */
 	public static String getNotBlankTestMethodSource(MethodInfo testMethod,
 			ClassInfo testClassinfo, String testTargetClassname) {
+		PreferenceLoader pref = new PreferenceLoader();
 		StringBuilder sb = new StringBuilder();
 		String CRLF = STR.CARRIAGE_RETURN + STR.LINE_FEED;
-
-		// mocked args using JMock2
-		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-		boolean usingJUnitHelperRuntime = store
-				.getBoolean(Preference.TestClassGen.USING_JUNIT_HELPER_RUNTIME_LIB);
-		boolean enabledSupportJMock2 = MockGenUtil.isUsingJMock2(store);
-		boolean enabledSupportEasyMock = MockGenUtil.isUsingEasyMock(store);
-
-		if (enabledSupportJMock2 && !usingJUnitHelperRuntime) {
-			sb.append("\t\t");
-			sb.append("Mockery context = new Mockery(){{");
-			sb.append(CRLF);
-			sb.append("\t\t\t");
-			sb.append("setImposteriser(ClassImposteriser.INSTANCE);");
-			sb.append(CRLF);
-			sb.append("\t\t");
-			sb.append("}};");
-			sb.append(CRLF);
+		if (pref.isTestMethodGenEnabledSupportJMock2) {
+			if (pref.isUsingJUnitHelperRuntime) {
+				sb.append("\t\t");
+				sb.append("Mockery jmock2 = JMock2Util.getNewInstance();");
+				sb.append(CRLF);
+			} else {
+				sb.append("\t\t");
+				sb.append("Mockery context = new Mockery(){{");
+				sb.append(CRLF);
+				sb.append("\t\t\t");
+				sb.append("setImposteriser(ClassImposteriser.INSTANCE);");
+				sb.append(CRLF);
+				sb.append("\t\t");
+				sb.append("}};");
+				sb.append(CRLF);
+			}
 		}
-		if (enabledSupportEasyMock) {
+		if (pref.isTestMethodGenEnabledSupportEasyMock) {
 			sb.append("\t\t");
 			sb.append("IMocksControl mocks = EasyMock.createControl();");
 			sb.append(CRLF);
 		}
-
 		sb.append("\t\t");
-
 		String returnTypeName = testMethod.returnType.name;
 		Object returnDefaultValue = null;
 		if (!returnTypeName.equals("void")) {
@@ -640,7 +619,6 @@ public final class TestCaseGenerateUtil {
 						.getPrimitiveDefaultValue(returnTypeName);
 			}
 		}
-
 		// instance method
 		// ex. TestTarget target = new TestTarget();
 		if (!testMethod.isStatic) {
@@ -651,7 +629,6 @@ public final class TestCaseGenerateUtil {
 			sb.append(CRLF);
 			sb.append("\t\t");
 		}
-
 		if (!returnTypeName.equals("void")) {
 			sb.append(returnTypeName);
 			sb.append(" expected = ");
@@ -676,10 +653,10 @@ public final class TestCaseGenerateUtil {
 					argType.name = argType.name.replaceAll("\\.\\.\\.", "[]");
 				String argTypeName = getClassInSourceCode(argType.name,
 						testTargetClassname, testClassinfo.importList);
-				boolean isJMock2 = enabledSupportJMock2
+				boolean isJMock2 = pref.isTestMethodGenEnabledSupportJMock2
 						&& MockGenUtil.isMockableClassName(argTypeName,
 								testClassinfo.importList);
-				boolean isEasyMock = enabledSupportEasyMock
+				boolean isEasyMock = pref.isTestMethodGenEnabledSupportEasyMock
 						&& MockGenUtil.isMockableClassName(argTypeName,
 								testClassinfo.importList);
 				if (isJMock2) {
@@ -707,7 +684,7 @@ public final class TestCaseGenerateUtil {
 					sb.append(primitiveDefault);
 				} else {
 					if (isJMock2) {
-						sb.append(usingJUnitHelperRuntime ? "jmock2"
+						sb.append(pref.isUsingJUnitHelperRuntime ? "jmock2"
 								: "context");
 						sb.append(".mock(");
 						sb.append(argTypeName);
@@ -727,10 +704,9 @@ public final class TestCaseGenerateUtil {
 				args.add("arg" + i);
 			}
 		}
-
 		// JMock2 expectations
-		if (enabledSupportJMock2) {
-			sb.append(usingJUnitHelperRuntime ? "jmock2" : "context");
+		if (pref.isTestMethodGenEnabledSupportJMock2) {
+			sb.append(pref.isUsingJUnitHelperRuntime ? "jmock2" : "context");
 			sb.append(".checking(new Expectations(){{");
 			sb.append(CRLF);
 			sb.append("\t\t\t// TODO JMock2 Expectations");
@@ -739,14 +715,14 @@ public final class TestCaseGenerateUtil {
 			sb.append(CRLF);
 			sb.append("\t\t");
 		}
-		if (enabledSupportEasyMock) {
+		// EasyMock expectations
+		if (pref.isTestMethodGenEnabledSupportEasyMock) {
 			sb.append("// TODO EasyMock Expectations");
 			sb.append(CRLF);
 			sb.append("\t\tmocks.replay();");
 			sb.append(CRLF);
 			sb.append("\t\t");
 		}
-
 		// execute target method
 		// ex. SampleUtil.doSomething(null, null);
 		// ex. String expected = null;
@@ -755,10 +731,11 @@ public final class TestCaseGenerateUtil {
 			sb.append(returnTypeName);
 			sb.append(" actual = ");
 		}
-		if (testMethod.isStatic)
+		if (testMethod.isStatic) {
 			sb.append(testTargetClassname);
-		else
+		} else {
 			sb.append("target");
+		}
 
 		sb.append(".");
 		sb.append(testMethod.methodName);
@@ -773,11 +750,10 @@ public final class TestCaseGenerateUtil {
 		sb.append(");");
 		sb.append(CRLF);
 
-		if (enabledSupportEasyMock) {
+		if (pref.isTestMethodGenEnabledSupportEasyMock) {
 			sb.append("\t\tmocks.verify();");
 			sb.append(CRLF);
 		}
-
 		// assert return value
 		// ex. assertEquals(expected, actual);
 		if (!returnTypeName.equals("void")) {

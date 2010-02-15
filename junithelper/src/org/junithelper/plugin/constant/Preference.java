@@ -56,15 +56,26 @@ public final class Preference {
 		 * Enable test methods gen
 		 */
 		public static final String ENABLE = "Test Class Auto Generate";
-
 		/**
-		 * Class To Extend
+		 * JUnit versions
 		 */
-		public static final String USING_JUNIT_HELPER_RUNTIME_LIB = "Using JUnit Helper Runtime Library.";
+		public static final String JUNIT_VERSION = "JUnit Version";
+		/**
+		 * JUnit version 3.x
+		 */
+		public static final String JUNIT_VERSION_3 = "JUnit 3.x";
+		/**
+		 * JUnit version 4.x
+		 */
+		public static final String JUNIT_VERSION_4 = "JUnit 4.x";
 		/**
 		 * Class To Extend
 		 */
 		public static final String CLASS_TO_EXTEND = "Class To Extend";
+		/**
+		 * Using JUnit Helper runtime library
+		 */
+		public static final String USING_JUNIT_HELPER_RUNTIME_LIB = "Using JUnit Helper Runtime Library.";
 	}
 
 	public static class TestMethodGen {

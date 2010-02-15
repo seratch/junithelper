@@ -32,7 +32,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Shell;
@@ -42,13 +41,12 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
-import org.junithelper.plugin.Activator;
 import org.junithelper.plugin.bean.ClassInfo;
 import org.junithelper.plugin.bean.MethodInfo;
 import org.junithelper.plugin.constant.Dialog;
-import org.junithelper.plugin.constant.Preference;
 import org.junithelper.plugin.constant.RuntimeLibrary;
 import org.junithelper.plugin.constant.STR;
+import org.junithelper.plugin.page.PreferenceLoader;
 import org.junithelper.plugin.util.FileResourceUtil;
 import org.junithelper.plugin.util.ResourcePathUtil;
 import org.junithelper.plugin.util.ResourceRefreshUtil;
@@ -85,6 +83,8 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 	 * @param action
 	 */
 	public void run(IAction action) {
+
+		PreferenceLoader pref = new PreferenceLoader();
 
 		InputStream javaFileIStream = null;
 		OutputStreamWriter testFileOSWriter = null;
@@ -261,13 +261,8 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 						sb.append(CRLF);
 
 						// get class to extend
-						IPreferenceStore store = Activator.getDefault()
-								.getPreferenceStore();
-						boolean usingJUnitHelperRuntime = store
-								.getBoolean(Preference.TestClassGen.USING_JUNIT_HELPER_RUNTIME_LIB);
-						String testCase = usingJUnitHelperRuntime ? RuntimeLibrary.TEST_CASE
-								: store
-										.getString(Preference.TestClassGen.CLASS_TO_EXTEND);
+						String testCase = pref.isUsingJUnitHelperRuntime ? RuntimeLibrary.TEST_CASE
+								: pref.classToExtend;
 						String[] tmpTestCaseArr = testCase.split("\\.");
 						String testCaseName = tmpTestCaseArr[tmpTestCaseArr.length - 1];
 						sb.append("import ");
@@ -275,15 +270,8 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 						sb.append(";");
 						sb.append(CRLF);
 
-						boolean enabledTestMethodsGen = Activator.getDefault()
-								.getPreferenceStore().getBoolean(
-										Preference.TestMethodGen.ENABLE);
-						boolean enabledNotBlankMethods = Activator
-								.getDefault()
-								.getPreferenceStore()
-								.getBoolean(
-										Preference.TestMethodGen.METHOD_SAMPLE_IMPL);
-						if (enabledTestMethodsGen && enabledNotBlankMethods) {
+						if (pref.isTestMethodGenEnabled
+								&& pref.isTestMethodGenNotBlankEnabled) {
 							List<String> importedPackageList = testClassInfo.importList;
 							for (String importedPackage : importedPackageList) {
 								sb.append("import ");
@@ -296,20 +284,26 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 
 						sb.append("public class ");
 						sb.append(testCaseClassname);
-						sb.append(" extends ");
-						sb.append(testCaseName);
+						if (pref.isJUnitVersion3) {
+							sb.append(" extends ");
+							sb.append(testCaseName);
+						}
 						sb.append(" {");
 						sb.append(CRLF);
 
 						sb.append(CRLF);
 
-						if (enabledTestMethodsGen) {
+						if (pref.isTestMethodGenEnabled) {
 							for (MethodInfo testMethod : testMethods) {
 								if (testMethod.testMethodName == null
 										|| testMethod.testMethodName
 												.equals(STR.EMPTY))
 									continue;
 
+								if (pref.isJUnitVersion4) {
+									sb.append("\t@Test");
+									sb.append(CRLF);
+								}
 								sb.append("\tpublic void ");
 								sb.append(testMethod.testMethodName);
 								sb.append("() throws Exception {");
@@ -319,7 +313,7 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 								sb.append(STR.AUTO_GEN_MSG_TODO);
 								sb.append(CRLF);
 
-								if (enabledNotBlankMethods) {
+								if (pref.isTestMethodGenNotBlankEnabled) {
 									String notBlankSourceCode = TestCaseGenerateUtil
 											.getNotBlankTestMethodSource(
 													testMethod, testClassInfo,

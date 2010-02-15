@@ -17,6 +17,7 @@ package org.junithelper.plugin.page;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.layout.FillLayout;
@@ -109,6 +110,38 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				tcgArea = new Composite(classConfigGroup, 0);
 				tcgArea.setLayout(new GridLayout(2, false));
 				{
+					// JUnit version(3 or 4)
+					String ver3 = Preference.TestClassGen.JUNIT_VERSION_3;
+					String ver4 = Preference.TestClassGen.JUNIT_VERSION_4;
+					String[][] labelAndValues = new String[][] {
+							{ ver3, ver3 }, { ver4, ver4 }, };
+					tcgRadioGroupVersions = new RadioGroupFieldEditor(
+							Preference.TestClassGen.JUNIT_VERSION,
+							"Select JUnit Version.", 2, labelAndValues, tcgArea) {
+
+						@Override
+						protected void fireValueChanged(String p, Object o,
+								Object n) {
+							String ver3 = Preference.TestClassGen.JUNIT_VERSION_3;
+							String ver4 = Preference.TestClassGen.JUNIT_VERSION_4;
+							boolean usingRuntimeLib = tcgUsingJUnitHelperTestCase
+									.getBooleanValue();
+							if (n.equals(ver4)) {
+								switchDisplayOfClassToExtendArea(false);
+							} else if (n.equals(ver3) && !usingRuntimeLib) {
+								switchDisplayOfClassToExtendArea(true);
+							}
+							super.fireValueChanged(p, o, n);
+							IPreferenceStore store = Activator.getDefault()
+									.getPreferenceStore();
+							store.setValue(
+									Preference.TestClassGen.JUNIT_VERSION,
+									String.valueOf(n));
+						}
+					};
+					addField(tcgRadioGroupVersions);
+				}
+				{
 					// using junit helper runtime lib or not
 					tcgUsingJUnitHelperTestCase = new BooleanFieldEditor(
 							Preference.TestClassGen.USING_JUNIT_HELPER_RUNTIME_LIB,
@@ -118,29 +151,40 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 						protected void valueChanged(boolean oldValue,
 								boolean newValue) {
 							super.valueChanged(oldValue, newValue);
-							switchDisplayOfClassToExtendArea(newValue ? false
-									: true);
+							if (isJUnitVersion3()) {
+								switchDisplayOfClassToExtendArea(newValue ? false
+										: true);
+							} else {
+								switchDisplayOfClassToExtendArea(false);
+							}
 						}
 
 						@Override
 						protected void doLoad() {
 							super.doLoad();
-							switchDisplayOfClassToExtendArea(getBooleanValue() ? false
-									: true);
+							if (isJUnitVersion3()) {
+								switchDisplayOfClassToExtendArea(getBooleanValue() ? false
+										: true);
+							} else {
+								switchDisplayOfClassToExtendArea(false);
+							}
 						}
 
 						@Override
 						protected void doLoadDefault() {
 							super.doLoadDefault();
-							switchDisplayOfClassToExtendArea(getBooleanValue() ? false
-									: true);
+							if (isJUnitVersion3()) {
+								switchDisplayOfClassToExtendArea(getBooleanValue() ? false
+										: true);
+							} else {
+								switchDisplayOfClassToExtendArea(false);
+							}
 						}
 					};
 					addField(tcgUsingJUnitHelperTestCase);
-
 				}
 				{
-					// extends
+					// class to extend
 					tcgClassToExtend = new StringFieldEditor(
 							Preference.TestClassGen.CLASS_TO_EXTEND,
 							Preference.TestClassGen.CLASS_TO_EXTEND, tcgArea);
@@ -355,9 +399,21 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 	}
 
 	private BooleanFieldEditor tcgEnable;
-	private BooleanFieldEditor tcgUsingJUnitHelperTestCase;
+	private RadioGroupFieldEditor tcgRadioGroupVersions;
 	private StringFieldEditor tcgClassToExtend;
+	private BooleanFieldEditor tcgUsingJUnitHelperTestCase;
 	private Composite tcgArea;
+
+	private boolean isJUnitVersion3() {
+		String value = Activator.getDefault().getPreferenceStore().getString(
+				Preference.TestClassGen.JUNIT_VERSION);
+		if (value == null || value.equals("")
+				|| value.equals(Preference.TestClassGen.JUNIT_VERSION_3)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	private void switchDisplayOfClassToExtendArea(boolean value) {
 		// enable/disable the area
