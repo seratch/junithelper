@@ -16,7 +16,7 @@
 package org.junithelper.runtime.unit;
 
 import org.jmock.Mockery;
-import org.jmock.lib.legacy.ClassImposteriser;
+import org.junithelper.runtime.util.JMock2Util;
 
 /**
  * Subclass of {@link junit.framework.TestCase} <br>
@@ -52,11 +52,7 @@ public abstract class TestCase extends junit.framework.TestCase {
 	 * @return Mockery instance
 	 */
 	protected Mockery getNewJMock2Mockey() {
-		return new Mockery() {
-			{
-				setImposteriser(ClassImposteriser.INSTANCE);
-			}
-		};
+		return JMock2Util.getNewInstance();
 	}
 
 	@Override
