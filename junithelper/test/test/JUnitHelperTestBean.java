@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import test.bean.SampleBean;
 
+@SuppressWarnings(value = { "issue 28" })
 public class JUnitHelperTestBean {
 
 	static {

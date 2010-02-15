@@ -884,11 +884,27 @@ public final class TestCaseGenerateUtil {
 	 */
 	protected static String trimInsideOfBraces(String source) {
 		int len = source.length();
+		boolean isInsideOfTargetClass = false;
 		boolean isInsideOfFirstLevel = false;
 		boolean isInsideOfSecondLevel = false;
 		Stack<Character> braceStack = new Stack<Character>();
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < len; i++) {
+			// waiting for inside of the target class
+			if (!isInsideOfTargetClass) {
+				sb.append(source.charAt(i));
+				// might be started class def
+				if (i >= 6 && source.charAt(i - 6) == ' '
+						&& source.charAt(i - 5) == 'c'
+						&& source.charAt(i - 4) == 'l'
+						&& source.charAt(i - 3) == 'a'
+						&& source.charAt(i - 2) == 's'
+						&& source.charAt(i - 1) == 's'
+						&& source.charAt(i) == ' ') {
+					isInsideOfTargetClass = true;
+				}
+				continue;
+			}
 			// waiting for inside of the first level brace
 			if (!isInsideOfFirstLevel) {
 				sb.append(source.charAt(i));
