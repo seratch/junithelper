@@ -12,6 +12,10 @@ import test.bean.SampleBean;
 @SuppressWarnings(value = { "issue 28" })
 public class JUnitHelperTestBean {
 
+	public String publicField;
+	protected String protectedField = new String();
+	String packageLocalField;
+
 	static {
 		System.out.println("hoge");
 	}
@@ -19,6 +23,13 @@ public class JUnitHelperTestBean {
 	static class Hoge {
 		public void doSomething() {
 		}
+	}
+
+	static String[] staticPackageLocal() {
+		return null;
+	}
+
+	void packageLocal() {
 	}
 
 	public static void methodStaticReturnVoid() {
@@ -162,6 +173,10 @@ public class JUnitHelperTestBean {
 		String innerMethod() {
 			return null;
 		}
+	}
+
+	protected String throwsException() throws Exception {
+		return null;
 	}
 
 }
