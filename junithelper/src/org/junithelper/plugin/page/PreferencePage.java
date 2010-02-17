@@ -230,14 +230,6 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				tmgArea.setLayout(layout);
 
 				{
-					// enable excluding accessors
-					tmgCommonExecludesAccessors = new BooleanFieldEditor(
-							Preference.TestMethodGen.EXLCUDES_ACCESSORS,
-							Preference.TestMethodGen.EXLCUDES_ACCESSORS,
-							tmgArea);
-					addField(tmgCommonExecludesAccessors);
-				}
-				{
 					// common delimiter setting
 					tmgCommonDelimiter = new StringFieldEditor(
 							Preference.TestMethodGen.DELIMITER,
@@ -341,6 +333,35 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 						tmgReturnArea);
 				addField(tmgReturnDelimiter);
 			}
+
+			{
+				// public methods
+				tmgCommonIncludePublicMethods = new BooleanFieldEditor(
+						Preference.TestMethodGen.INCLUDE_PUBLIC,
+						Preference.TestMethodGen.INCLUDE_PUBLIC, tmgParentGroup);
+				addField(tmgCommonIncludePublicMethods);
+				// protected methods
+				tmgCommonIncludeProtectdMethods = new BooleanFieldEditor(
+						Preference.TestMethodGen.INCLUDE_PROTECTED,
+						Preference.TestMethodGen.INCLUDE_PROTECTED,
+						tmgParentGroup);
+				addField(tmgCommonIncludeProtectdMethods);
+				// package local methods
+				tmgCommonIncludePackageLocalMethods = new BooleanFieldEditor(
+						Preference.TestMethodGen.INCLUDE_PACKAGE_LOCAL,
+						Preference.TestMethodGen.INCLUDE_PACKAGE_LOCAL,
+						tmgParentGroup);
+				addField(tmgCommonIncludePackageLocalMethods);
+			}
+			{
+				// enable excluding accessors
+				tmgCommonExecludesAccessors = new BooleanFieldEditor(
+						Preference.TestMethodGen.EXLCUDES_ACCESSORS,
+						Preference.TestMethodGen.EXLCUDES_ACCESSORS,
+						tmgParentGroup);
+				addField(tmgCommonExecludesAccessors);
+			}
+
 			{
 				// enable generate not blank methods
 				tmgEnableGenerateSample = new BooleanFieldEditor(
@@ -420,6 +441,9 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 
 	private BooleanFieldEditor tmgEnable;
 	private StringFieldEditor tmgCommonDelimiter;
+	private BooleanFieldEditor tmgCommonIncludePublicMethods;
+	private BooleanFieldEditor tmgCommonIncludeProtectdMethods;
+	private BooleanFieldEditor tmgCommonIncludePackageLocalMethods;
 	private BooleanFieldEditor tmgCommonExecludesAccessors;
 	private Composite tmgArea;
 	private Group tmgParentGroup;

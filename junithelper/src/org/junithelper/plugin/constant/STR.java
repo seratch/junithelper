@@ -15,7 +15,6 @@
  */
 package org.junithelper.plugin.constant;
 
-
 /**
  * STR<br>
  * <br>
@@ -40,6 +39,16 @@ public interface STR {
 	 * Empty String
 	 */
 	public static final String EMPTY = "";
+
+	/**
+	 * Space
+	 */
+	public static final String SPACE = " ";
+
+	/**
+	 * Space
+	 */
+	public static final String TAB = "\t";
 
 	/**
 	 * Comma

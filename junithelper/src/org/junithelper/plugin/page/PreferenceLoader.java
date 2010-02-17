@@ -44,6 +44,9 @@ public class PreferenceLoader {
 	public boolean isTestMethodGenNotBlankEnabled;
 	public boolean isTestMethodGenEnabledSupportJMock2;
 	public boolean isTestMethodGenEnabledSupportEasyMock;
+	public boolean isTestMethodGenIncludePublic;
+	public boolean isTestMethodGenIncludeProtected;
+	public boolean isTestMethodGenIncludePackageLocal;
 	public boolean isTestMethodGenExecludeAccessors;
 
 	public String testMethodDelimiter;
@@ -73,8 +76,17 @@ public class PreferenceLoader {
 				.getBoolean(Preference.TestMethodGen.RETURN);
 		isTestMethodGenNotBlankEnabled = store
 				.getBoolean(Preference.TestMethodGen.METHOD_SAMPLE_IMPL);
+
+		isTestMethodGenIncludePublic = store
+				.getBoolean(Preference.TestMethodGen.INCLUDE_PUBLIC);
+		isTestMethodGenIncludeProtected = store
+				.getBoolean(Preference.TestMethodGen.INCLUDE_PROTECTED);
+		isTestMethodGenIncludePackageLocal = store
+				.getBoolean(Preference.TestMethodGen.INCLUDE_PACKAGE_LOCAL);
+
 		isTestMethodGenExecludeAccessors = store
 				.getBoolean(Preference.TestMethodGen.EXLCUDES_ACCESSORS);
+
 		isTestMethodGenEnabledSupportJMock2 = MockGenUtil.isUsingJMock2(store);
 		isTestMethodGenEnabledSupportEasyMock = MockGenUtil
 				.isUsingEasyMock(store);

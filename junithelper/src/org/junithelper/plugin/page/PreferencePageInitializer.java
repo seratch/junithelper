@@ -54,7 +54,12 @@ public class PreferencePageInitializer extends AbstractPreferenceInitializer {
 		{
 			store.setDefault(Preference.TestMethodGen.ENABLE, true);
 
+			store.setDefault(Preference.TestMethodGen.INCLUDE_PUBLIC, true);
+			store.setDefault(Preference.TestMethodGen.INCLUDE_PROTECTED, true);
+			store.setDefault(Preference.TestMethodGen.INCLUDE_PACKAGE_LOCAL,
+					true);
 			store.setDefault(Preference.TestMethodGen.EXLCUDES_ACCESSORS, true);
+
 			store.setDefault(Preference.TestMethodGen.DELIMITER, "_");
 
 			store.setDefault(Preference.TestMethodGen.ARGS, true);

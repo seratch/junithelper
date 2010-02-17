@@ -361,24 +361,86 @@ public final class TestCaseGenerateUtil {
 							.add("org.easymock.classextension.IMocksControl");
 				}
 			}
-			// TODO
-			String[] targets = targetClassSourceStr.split("public|protected");
+			// get test target methods
+			List<String> targets = SourceCodeParseUtil.getTargetMethods(
+					targetClassSourceStr, pref.isTestMethodGenIncludePublic,
+					pref.isTestMethodGenIncludeProtected,
+					pref.isTestMethodGenIncludePackageLocal);
 			for (String target : targets) {
-				target = target.replaceAll("\\s+?" + STR.COMMA, STR.COMMA)
-						.replaceAll(STR.COMMA + "\\s+?", STR.COMMA).replaceAll(
-								"<\\s+?", "<").replaceAll("\\s+?>", ">");
-				if (target.matches(RXP_SEARCH_METHOD)) {
-					Matcher matcher = PAT_SEARCH_GROUP_METHOD.matcher(target);
-					if (matcher.find()) {
-						MethodInfo each = new MethodInfo();
-						// return type
-						if (pref.isTestMethodGenNotBlankEnabled
-								|| pref.isTestMethodGenReturnEnabled) {
-							String returnTypeFull = getType(matcher.group(1));
-							// get generics
+				// target = target.replaceAll("\\s+?" + STR.COMMA, STR.COMMA)
+				// .replaceAll(STR.COMMA + "\\s+?", STR.COMMA).replaceAll(
+				// "<\\s+?", "<").replaceAll("\\s+?>", ">");
+				Matcher matcher = PAT_SEARCH_GROUP_METHOD.matcher(target);
+				if (matcher.find()) {
+					MethodInfo each = new MethodInfo();
+					// return type
+					if (pref.isTestMethodGenNotBlankEnabled
+							|| pref.isTestMethodGenReturnEnabled) {
+						String returnTypeFull = getType(matcher.group(1));
+						// get generics
+						Matcher toGenericsMatcher = Pattern.compile(
+								RXP_GENERICS_PART_GROUP)
+								.matcher(returnTypeFull);
+						while (toGenericsMatcher.find()) {
+							String[] generics = toGenericsMatcher.group()
+									.replaceAll("<", STR.EMPTY).replaceAll(">",
+											STR.EMPTY).split(",");
+							// convert to java.lang.Object if self
+							// class is included
+							for (String generic : generics) {
+								generic = getClassInSourceCode(generic,
+										STR.EMPTY, new ArrayList<String>());
+								each.returnType.generics.add(generic);
+							}
+						}
+						each.returnType.name = returnTypeFull.replace(
+								RXP_GENERICS_PART, STR.EMPTY);
+						each.returnType.nameInMethodName = getTypeAvailableInMethodName(each.returnType.name);
+					}
+					// method name
+					each.methodName = matcher.group(2);
+					// arg types
+					String args = matcher.group(3);
+					// prepare to get generics
+					String[] tmpArr = args.split(",");
+					int tmpArrLen = tmpArr.length;
+					List<String> tmpArrList = new ArrayList<String>();
+					String buf = STR.EMPTY;
+					for (int i = 0; i < tmpArrLen; i++) {
+						String element = tmpArr[i].trim();
+						// ex. List<String>
+						if (element.matches(".+?<.+?>.+")) {
+							tmpArrList.add(element);
+							continue;
+						}
+						// ex. Map<String
+						if (element.matches(".+?<.+")) {
+							buf += element;
+							continue;
+						}
+						// ex. (Map<String,) Object>
+						if (element.matches(".+?>.+")) {
+							String result = buf + STR.COMMA + element;
+							tmpArrList.add(result);
+							buf = STR.EMPTY;
+							continue;
+						}
+						if (!buf.equals(STR.EMPTY)) {
+							buf += STR.COMMA + element;
+							continue;
+						}
+						tmpArrList.add(element);
+					}
+					String[] argArr = tmpArrList.toArray(new String[0]);
+					if (pref.isTestMethodGenNotBlankEnabled
+							|| pref.isTestMethodGenArgsEnabled) {
+						int argArrLen = argArr.length;
+						for (int i = 0; i < argArrLen; i++) {
+							ArgType argType = new ArgType();
+							String argTypeFull = argArr[i];
 							Matcher toGenericsMatcher = Pattern.compile(
 									RXP_GENERICS_PART_GROUP).matcher(
-									returnTypeFull);
+									argTypeFull);
 							while (toGenericsMatcher.find()) {
 								String[] generics = toGenericsMatcher.group()
 										.replaceAll("<", STR.EMPTY).replaceAll(
@@ -388,137 +450,72 @@ public final class TestCaseGenerateUtil {
 								for (String generic : generics) {
 									generic = getClassInSourceCode(generic,
 											STR.EMPTY, new ArrayList<String>());
-									each.returnType.generics.add(generic);
+									argType.generics.add(generic);
 								}
 							}
-							each.returnType.name = returnTypeFull.replace(
+							String argTypeStr = argTypeFull.replaceAll(
 									RXP_GENERICS_PART, STR.EMPTY);
-							each.returnType.nameInMethodName = getTypeAvailableInMethodName(each.returnType.name);
+							argType.name = getType(argTypeStr);
+							argType.nameInMethodName = getTypeAvailableInMethodName(argTypeStr);
+							each.argTypes.add(argType);
 						}
-						// method name
-						each.methodName = matcher.group(2);
-						// arg types
-						String args = matcher.group(3);
-						// prepare to get generics
-						String[] tmpArr = args.split(",");
-						int tmpArrLen = tmpArr.length;
-						List<String> tmpArrList = new ArrayList<String>();
-						String buf = STR.EMPTY;
-						for (int i = 0; i < tmpArrLen; i++) {
-							String element = tmpArr[i].trim();
-							// ex. List<String>
-							if (element.matches(".+?<.+?>.+")) {
-								tmpArrList.add(element);
-								continue;
-							}
-							// ex. Map<String
-							if (element.matches(".+?<.+")) {
-								buf += element;
-								continue;
-							}
-							// ex. (Map<String,) Object>
-							if (element.matches(".+?>.+")) {
-								String result = buf + STR.COMMA + element;
-								tmpArrList.add(result);
-								buf = STR.EMPTY;
-								continue;
-							}
-							if (!buf.equals(STR.EMPTY)) {
-								buf += STR.COMMA + element;
-								continue;
-							}
-							tmpArrList.add(element);
-						}
-						String[] argArr = tmpArrList.toArray(new String[0]);
-						if (pref.isTestMethodGenNotBlankEnabled
-								|| pref.isTestMethodGenArgsEnabled) {
-							int argArrLen = argArr.length;
-							for (int i = 0; i < argArrLen; i++) {
-								ArgType argType = new ArgType();
-								String argTypeFull = argArr[i];
-								Matcher toGenericsMatcher = Pattern.compile(
-										RXP_GENERICS_PART_GROUP).matcher(
-										argTypeFull);
-								while (toGenericsMatcher.find()) {
-									String[] generics = toGenericsMatcher
-											.group().replaceAll("<", STR.EMPTY)
-											.replaceAll(">", STR.EMPTY).split(
-													",");
-									// convert to java.lang.Object if self
-									// class is included
-									for (String generic : generics) {
-										generic = getClassInSourceCode(generic,
-												STR.EMPTY,
-												new ArrayList<String>());
-										argType.generics.add(generic);
-									}
-								}
-								String argTypeStr = argTypeFull.replaceAll(
-										RXP_GENERICS_PART, STR.EMPTY);
-								argType.name = getType(argTypeStr);
-								argType.nameInMethodName = getTypeAvailableInMethodName(argTypeStr);
-								each.argTypes.add(argType);
-							}
-						}
-						// exlucdes accessors
-						if (pref.isTestMethodGenExecludeAccessors) {
-							String fieldName = null;
-							String fieldType = null;
-							if (each.methodName.matches("^set.+")) {
-								// target field name
-								fieldName = each.methodName.substring(3);
-								if (each.argTypes.size() > 0) {
-									fieldType = each.argTypes.get(0).name;
-								}
-							} else if (each.methodName.matches("^get.+")) {
-								// target field name
-								fieldName = each.methodName.substring(3);
-								fieldType = each.returnType.name;
-							} else if (each.methodName.matches("^is.+")) {
-								// target field name
-								fieldName = each.methodName.substring(2);
-								fieldType = each.returnType.name;
-							}
-							if (fieldName != null) {
-								fieldName = fieldName.substring(0, 1)
-										.toLowerCase()
-										+ fieldName.substring(1);
-								fieldType = fieldType
-										.replaceAll("\\[", "\\\\[").replaceAll(
-												"\\]", "\\\\]");
-								String searchRegexp = ".+?private\\s+"
-										+ fieldType + "\\s+" + fieldName + ".+";
-								if (targetClassSourceStr.matches(searchRegexp))
-									continue;
-							}
-						}
-						String prefix = pref.isJUnitVersion3 ? "test_" : "";
-						each.testMethodName = prefix + each.methodName;
-						// add arg types
-						if (pref.isTestMethodGenArgsEnabled) {
-							each.testMethodName += pref.testMethodDelimiter
-									+ pref.testMethodArgsPrefix;
-							if (each.argTypes.size() == 0) {
-								each.testMethodName += pref.testMethodArgsDelimiter;
-							}
-							for (ArgType argType : each.argTypes) {
-								each.testMethodName += pref.testMethodArgsDelimiter
-										+ argType.nameInMethodName;
-							}
-						}
-						// add return type
-						if (pref.isTestMethodGenReturnEnabled) {
-							each.testMethodName += pref.testMethodDelimiter
-									+ pref.testMethodReturnPrefix
-									+ pref.testMethodReturnDelimiter
-									+ each.returnType.nameInMethodName;
-						}
-						// static or instance method
-						if (target.matches(RXP_SEARCH_STATIC_METHOD)) {
-							each.isStatic = true;
-						}
-						testMethods.add(each);
 					}
+					// exlucdes accessors
+					if (pref.isTestMethodGenExecludeAccessors) {
+						String fieldName = null;
+						String fieldType = null;
+						if (each.methodName.matches("^set.+")) {
+							// target field name
+							fieldName = each.methodName.substring(3);
+							if (each.argTypes.size() > 0) {
+								fieldType = each.argTypes.get(0).name;
+							}
+						} else if (each.methodName.matches("^get.+")) {
+							// target field name
+							fieldName = each.methodName.substring(3);
+							fieldType = each.returnType.name;
+						} else if (each.methodName.matches("^is.+")) {
+							// target field name
+							fieldName = each.methodName.substring(2);
+							fieldType = each.returnType.name;
+						}
+						if (fieldName != null) {
+							fieldName = fieldName.substring(0, 1).toLowerCase()
+									+ fieldName.substring(1);
+							fieldType = fieldType.replaceAll("\\[", "\\\\[")
+									.replaceAll("\\]", "\\\\]");
+							String searchRegexp = ".+?private\\s+" + fieldType
+									+ "\\s+" + fieldName + ".+";
+							if (targetClassSourceStr.matches(searchRegexp))
+								continue;
+						}
+					}
+					String prefix = pref.isJUnitVersion3 ? "test_" : "";
+					each.testMethodName = prefix + each.methodName;
+					// add arg types
+					if (pref.isTestMethodGenArgsEnabled) {
+						each.testMethodName += pref.testMethodDelimiter
+								+ pref.testMethodArgsPrefix;
+						if (each.argTypes.size() == 0) {
+							each.testMethodName += pref.testMethodArgsDelimiter;
+						}
+						for (ArgType argType : each.argTypes) {
+							each.testMethodName += pref.testMethodArgsDelimiter
+									+ argType.nameInMethodName;
+						}
+					}
+					// add return type
+					if (pref.isTestMethodGenReturnEnabled) {
+						each.testMethodName += pref.testMethodDelimiter
+								+ pref.testMethodReturnPrefix
+								+ pref.testMethodReturnDelimiter
+								+ each.returnType.nameInMethodName;
+					}
+					// static or instance method
+					if (target.matches(RXP_SEARCH_STATIC_METHOD)) {
+						each.isStatic = true;
+					}
+					testMethods.add(each);
 				}
 			}
 		} finally {
@@ -791,7 +788,9 @@ public final class TestCaseGenerateUtil {
 				returnTypeFound = true;
 			for (String importedPackage : importList) {
 				importedPackage = importedPackage.replaceAll("//", STR.EMPTY);
-				if (importedPackage.matches(".+?\\." + returnTypeToCheck + "$")) {
+				if (importedPackage.matches(".+?\\."
+						+ returnTypeToCheck.replaceAll("\\[", "\\\\[")
+								.replaceAll("\\]", "\\\\]") + "$")) {
 					returnTypeFound = true;
 					break;
 				}
@@ -803,5 +802,4 @@ public final class TestCaseGenerateUtil {
 			return isArray ? returnTypeToCheck + "[]" : returnTypeToCheck;
 		}
 	}
-
 }

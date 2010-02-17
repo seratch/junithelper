@@ -133,6 +133,9 @@ public class SourceCodeParseUtil {
 			// brace end
 			if (!braceStack.empty() && source.charAt(i) == '}') {
 				braceStack.pop();
+				if (braceStack.empty()) {
+					sb.append(source.charAt(i));
+				}
 			}
 			// check the brace stack state
 			if (braceStack.empty()) {
@@ -159,12 +162,28 @@ public class SourceCodeParseUtil {
 		Pattern pat = Pattern.compile(regexp);
 		Matcher mat = pat.matcher(source);
 		while (mat.find()) {
-			// TODO
-			String matched = mat.group().replaceAll("\t", " ").replaceAll(
-					"[\\{;\\}]\\s+?public\\s", "").replaceAll(
-					"[\\{;\\}]\\s+?protected\\s", "").replaceAll(
-					"[\\{;\\}]\\s+?", "").replaceAll("\\sfinal\\s", " ");
-			result.add(matched);
+			String matched = mat.group();
+			String prefix = "[\\{;\\}]\\s+?";
+			String postfix = "\\s.*";
+			// skip public methods
+			if (!publicRequired && matched.matches(prefix + "public" + postfix)) {
+				continue;
+			}
+			// skip protected methods
+			if (!protectedRequired
+					&& matched.matches(prefix + "protected" + postfix)) {
+				continue;
+			}
+			// skip package local methods
+			if (!packageLocalRequired && matched.matches(prefix + postfix)) {
+				continue;
+			}
+			matched = matched.replaceAll(STR.TAB, STR.SPACE).replaceAll(
+					prefix + "public" + "\\s", STR.EMPTY).replaceAll(
+					prefix + "protected" + "\\s", STR.EMPTY).replaceAll(
+					prefix + "\\s+?", STR.EMPTY).replaceAll("\\sfinal\\s",
+					STR.SPACE);
+			result.add(STR.SPACE + matched);
 		}
 		return result;
 	}

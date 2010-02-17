@@ -86,12 +86,12 @@ public final class Preference {
 		/**
 		 * Delimiter to test method name
 		 */
-		public static final String DELIMITER = "Method Name Delimiter";
+		public static final String DELIMITER = " Method Name Delimiter";
 
 		/**
 		 * Enable includes method args in test method name
 		 */
-		public static final String ARGS = "Includes Method Args";
+		public static final String ARGS = " Includes Method Args";
 		/**
 		 * Args prefix
 		 */
@@ -104,7 +104,7 @@ public final class Preference {
 		/**
 		 * Enable includes method return in test method name
 		 */
-		public static final String RETURN = "Includes Method Return";
+		public static final String RETURN = " Includes Method Return";
 		/**
 		 * Return prefix
 		 */
@@ -115,14 +115,29 @@ public final class Preference {
 		public static final String RETURN_DELIMITER = "Return Delimiter";
 
 		/**
+		 * Public methods
+		 */
+		public static final String INCLUDE_PUBLIC = " Includes \"public\"";
+
+		/**
+		 * Protected methods
+		 */
+		public static final String INCLUDE_PROTECTED = " Includes \"protected\"";
+
+		/**
+		 * Package local methods
+		 */
+		public static final String INCLUDE_PACKAGE_LOCAL = " Includes \"package local\"";
+
+		/**
 		 * Exclude accessors
 		 */
-		public static final String EXLCUDES_ACCESSORS = "Exculdes Accessors(setter/getter)";
+		public static final String EXLCUDES_ACCESSORS = " Exculdes Accessors(setter/getter)";
 
 		/**
 		 * Generate sample implementation to test methods
 		 */
-		public static final String METHOD_SAMPLE_IMPL = "Generate Sample Implementation";
+		public static final String METHOD_SAMPLE_IMPL = " Generate Sample Implementation";
 
 		/**
 		 * Using mock object framework
