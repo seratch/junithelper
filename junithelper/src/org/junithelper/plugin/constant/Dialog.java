@@ -31,6 +31,11 @@ public class Dialog {
 		public static final String TITLE = "JUnit Helper";
 
 		/**
+		 * Invalid preference error
+		 */
+		public static final String INVALID_PREFERENCE = "Maybe invalid preference, please check again!";
+
+		/**
 		 * Confirm to execute
 		 */
 		public static final String EXCUTE_QUESTION = "Execute OK?";

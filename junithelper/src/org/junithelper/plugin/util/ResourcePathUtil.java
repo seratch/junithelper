@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.junithelper.plugin.constant.STR;
+import org.junithelper.plugin.page.PreferenceLoader;
 
 /**
  * ResourcePathUtil<br>
@@ -38,7 +39,7 @@ public final class ResourcePathUtil {
 	@SuppressWarnings("restriction")
 	public static String getPathStartsFromProjectRoot(
 			StructuredSelection structuredSelection) {
-
+		PreferenceLoader pref = new PreferenceLoader();
 		String pathFromProjectRoot = STR.EMPTY;
 		if (structuredSelection == null) {
 			// ----------------------------------------
@@ -48,14 +49,12 @@ public final class ResourcePathUtil {
 					.getActiveWorkbenchWindow().getActivePage();
 			pathFromProjectRoot = STR.DIR_SEP
 					+ activePage.getActiveEditor().getTitleToolTip();
-
 		} else if (structuredSelection.getFirstElement() instanceof org.eclipse.core.internal.resources.File) {
 			// ----------------------------------------
 			// navigator
 			// ----------------------------------------
 			pathFromProjectRoot = structuredSelection.toString().replace("[L",
 					STR.EMPTY).replace("]", STR.EMPTY);
-
 		} else if (structuredSelection.getFirstElement() instanceof org.eclipse.jdt.internal.core.CompilationUnit) {
 			// ----------------------------------------
 			// package explorer
@@ -69,9 +68,8 @@ public final class ResourcePathUtil {
 					.replaceAll("(\\[|\\])", STR.EMPTY).replaceAll(
 							"Working copy ", STR.EMPTY).trim();
 			pathFromProjectRoot = STR.DIR_SEP + projectName + STR.DIR_SEP
-					+ STR.SRC_MAIN_JAVA + STR.DIR_SEP + packagePath
+					+ pref.commonSrcMainJavaDir + STR.DIR_SEP + packagePath
 					+ STR.DIR_SEP + testTargetClassname + STR.JAVA_EXP;
-
 		}
 		return pathFromProjectRoot;
 	}

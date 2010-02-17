@@ -86,7 +86,7 @@ public final class PrimitiveTypeUtil {
 	 * @param typeName
 	 * @return
 	 */
-	public static final String getPrimitiveDefaultValue(String typeName) {
+	public static final String getTypeDefaultValue(String typeName) {
 		if (typeName.equals("byte"))
 			return "0";
 		if (typeName.equals("short"))

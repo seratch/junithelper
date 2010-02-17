@@ -16,11 +16,11 @@
 package org.junithelper.plugin.util;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,6 +32,7 @@ import org.junithelper.plugin.bean.ClassInfo;
 import org.junithelper.plugin.bean.MethodInfo;
 import org.junithelper.plugin.bean.MethodInfo.ArgType;
 import org.junithelper.plugin.constant.STR;
+import org.junithelper.plugin.exception.InvalidPreferenceException;
 import org.junithelper.plugin.page.PreferenceLoader;
 
 /**
@@ -78,7 +79,7 @@ public final class TestCaseGenerateUtil {
 		// throws exception
 		RXP_SEARCH_METHOD += RXP_WS + ".*?" + RXP_WS;
 		// method start and so on
-		RXP_SEARCH_METHOD += "\\{.+";
+		RXP_SEARCH_METHOD += "\\{.*";
 	}
 
 	/**
@@ -102,7 +103,7 @@ public final class TestCaseGenerateUtil {
 		// throws exception
 		RXP_SEARCH_STATIC_METHOD += RXP_WS + ".*?" + RXP_WS;
 		// method start and so on
-		RXP_SEARCH_STATIC_METHOD += "\\{.+";
+		RXP_SEARCH_STATIC_METHOD += "\\{.*";
 	}
 
 	/**
@@ -116,7 +117,6 @@ public final class TestCaseGenerateUtil {
 		// prefix white and space
 		RXP_SEARCH_GROUP_METHOD += RXP_WS;
 		// method modifiers
-		// TODO exclude abstract methods
 		RXP_SEARCH_GROUP_METHOD += RXP_METHOD_MODIFIERS;
 		// return type
 		RXP_SEARCH_GROUP_METHOD += "\\s+(" + RXP_METHOD_RETURN_TYPE + ")"
@@ -128,7 +128,7 @@ public final class TestCaseGenerateUtil {
 		// throws exception
 		RXP_SEARCH_GROUP_METHOD += RXP_WS + ".*?" + RXP_WS;
 		// method start and so on
-		RXP_SEARCH_GROUP_METHOD += "\\{.+";
+		RXP_SEARCH_GROUP_METHOD += "\\{.*";
 	}
 	static Pattern PAT_SEARCH_GROUP_METHOD = Pattern
 			.compile(RXP_SEARCH_GROUP_METHOD);
@@ -203,36 +203,6 @@ public final class TestCaseGenerateUtil {
 	}
 
 	/**
-	 * Get source code lines.
-	 * 
-	 * @param javaFile
-	 * @return source code lines
-	 * @throws Exception
-	 */
-	public static List<String> getAllSourceCodeLineList(IFile javaFile)
-			throws Exception {
-		List<String> lines = new ArrayList<String>();
-		InputStream is = null;
-		BufferedReader br = null;
-		try {
-			// detect charset
-			is = javaFile.getContents();
-			String encoding = FileResourceUtil.detectEncoding(javaFile);
-
-			// read file
-			is = javaFile.getContents();
-			br = new BufferedReader(new InputStreamReader(is, encoding));
-			String line = null;
-			while ((line = br.readLine()) != null)
-				lines.add(line.replace("\r", STR.EMPTY));
-		} finally {
-			FileResourceUtil.close(is);
-			FileResourceUtil.close(br);
-		}
-		return lines;
-	}
-
-	/**
 	 * Get the information on the methods.
 	 * 
 	 * @param javaFile
@@ -244,21 +214,18 @@ public final class TestCaseGenerateUtil {
 		PreferenceLoader pref = new PreferenceLoader();
 		ClassInfo classInfo = new ClassInfo();
 		List<MethodInfo> methodStringInfos = new ArrayList<MethodInfo>();
-
 		// enable public method test
 		if (pref.isTestMethodGenEnabled) {
 			InputStream is = null;
 			InputStreamReader isr = null;
 			BufferedReader br = null;
 			try {
-				is = javaFile.getContents();
+				is = FileResourceUtil.readFile(javaFile);
 				// detect charset
 				String encoding = FileResourceUtil.detectEncoding(javaFile);
-
-				is = javaFile.getContents();
+				is = FileResourceUtil.readFile(javaFile);
 				isr = new InputStreamReader(is, encoding);
 				br = new BufferedReader(isr);
-
 				StringBuilder tmpsb = new StringBuilder();
 				String line = null;
 				while ((line = br.readLine()) != null)
@@ -331,11 +298,10 @@ public final class TestCaseGenerateUtil {
 	 * @throws Exception
 	 */
 	public static ClassInfo getTestClassInfoFromTargetClass(IFile javaFile)
-			throws Exception {
+			throws InvalidPreferenceException, IOException {
 		PreferenceLoader pref = new PreferenceLoader();
 		ClassInfo classInfo = new ClassInfo();
 		List<MethodInfo> testMethods = new ArrayList<MethodInfo>();
-
 		InputStream is = null;
 		InputStreamReader isr = null;
 		BufferedReader br = null;
@@ -343,19 +309,18 @@ public final class TestCaseGenerateUtil {
 			// detect charset
 			String encoding = FileResourceUtil.detectEncoding(javaFile);
 			// read test target class source code string
-			is = javaFile.getContents();
+			is = FileResourceUtil.readFile(javaFile);
 			isr = new InputStreamReader(is, encoding);
 			br = new BufferedReader(isr);
 			StringBuilder tmpsb = new StringBuilder();
 			String line = null;
 			while ((line = br.readLine()) != null) {
-				tmpsb.append(trimLineComments(line) + " ");
+				tmpsb.append(SourceCodeParseUtil.trimLineComments(line) + " ");
 			}
-			// source code string
-			// (inner class methods are excluded)
-			String targetClassSourceStr = trimInsideOfBraces(trimAllComments(tmpsb
-					.toString()));
-
+			// source code string (inner class methods are excluded)
+			String targetClassSourceStr = SourceCodeParseUtil
+					.trimInsideOfBraces(SourceCodeParseUtil
+							.trimAllComments(tmpsb.toString()));
 			// get imported types
 			if (pref.isTestMethodGenNotBlankEnabled) {
 				if (testMethods.size() <= 0 || testMethods.get(0) == null)
@@ -370,12 +335,14 @@ public final class TestCaseGenerateUtil {
 						classInfo.importList.add(importedPackage);
 					}
 				}
+				// JUnit version 3.x or 4.x
 				if (pref.isJUnitVersion3) {
 					// nothing to do
 				} else if (pref.isJUnitVersion4) {
 					classInfo.importList.add("org.junit.Test");
 					classInfo.importList.add("static org.junit.Assert.*");
 				}
+				// JMock2
 				if (pref.isTestMethodGenEnabledSupportJMock2) {
 					classInfo.importList.add("org.jmock.Mockery");
 					classInfo.importList.add("org.jmock.Expectations");
@@ -386,6 +353,7 @@ public final class TestCaseGenerateUtil {
 								.add("org.junithelper.runtime.util.JMock2Util");
 					}
 				}
+				// EasyMock
 				if (pref.isTestMethodGenEnabledSupportEasyMock) {
 					classInfo.importList
 							.add("org.easymock.classextension.EasyMock");
@@ -393,7 +361,7 @@ public final class TestCaseGenerateUtil {
 							.add("org.easymock.classextension.IMocksControl");
 				}
 			}
-
+			// TODO
 			String[] targets = targetClassSourceStr.split("public|protected");
 			for (String target : targets) {
 				target = target.replaceAll("\\s+?" + STR.COMMA, STR.COMMA)
@@ -511,7 +479,6 @@ public final class TestCaseGenerateUtil {
 								fieldName = each.methodName.substring(2);
 								fieldType = each.returnType.name;
 							}
-
 							if (fieldName != null) {
 								fieldName = fieldName.substring(0, 1)
 										.toLowerCase()
@@ -616,7 +583,7 @@ public final class TestCaseGenerateUtil {
 			}
 			if (PrimitiveTypeUtil.isPrimitive(returnTypeName)) {
 				returnDefaultValue = PrimitiveTypeUtil
-						.getPrimitiveDefaultValue(returnTypeName);
+						.getTypeDefaultValue(returnTypeName);
 			}
 		}
 		// instance method
@@ -679,8 +646,8 @@ public final class TestCaseGenerateUtil {
 				sb.append(i);
 				sb.append(" = ");
 				if (PrimitiveTypeUtil.isPrimitive(argType.name)) {
-					Object primitiveDefault = PrimitiveTypeUtil
-							.getPrimitiveDefaultValue(argType.name);
+					String primitiveDefault = PrimitiveTypeUtil
+							.getTypeDefaultValue(argType.name);
 					sb.append(primitiveDefault);
 				} else {
 					if (isJMock2) {
@@ -696,7 +663,6 @@ public final class TestCaseGenerateUtil {
 					} else {
 						sb.append("null");
 					}
-
 				}
 				sb.append(";");
 				sb.append(CRLF);
@@ -736,7 +702,6 @@ public final class TestCaseGenerateUtil {
 		} else {
 			sb.append("target");
 		}
-
 		sb.append(".");
 		sb.append(testMethod.methodName);
 		sb.append("(");
@@ -749,7 +714,6 @@ public final class TestCaseGenerateUtil {
 		}
 		sb.append(");");
 		sb.append(CRLF);
-
 		if (pref.isTestMethodGenEnabledSupportEasyMock) {
 			sb.append("\t\tmocks.verify();");
 			sb.append(CRLF);
@@ -811,7 +775,7 @@ public final class TestCaseGenerateUtil {
 				returnTypeFound = true;
 				if (!returnTypeName.matches(".+?\\[\\]$"))
 					returnTypeName = PrimitiveTypeUtil
-							.getPrimitiveDefaultValue(returnTypeToCheck);
+							.getTypeDefaultValue(returnTypeToCheck);
 			} else {
 				try {
 					Class.forName("java.lang." + returnTypeToCheck);
@@ -834,81 +798,10 @@ public final class TestCaseGenerateUtil {
 			}
 		}
 		if (!returnTypeFound) {
-			if (isArray)
-				returnTypeName += "[]";
-			return returnTypeName;
+			return isArray ? returnTypeName + "[]" : returnTypeName;
 		} else {
-			if (isArray)
-				returnTypeToCheck += "[]";
-			return returnTypeToCheck;
+			return isArray ? returnTypeToCheck + "[]" : returnTypeToCheck;
 		}
-	}
-
-	protected static String trimLineComments(String source) {
-		return source.replaceAll("//.+?\n", STR.EMPTY);
-	}
-
-	protected static String trimAllComments(String source) {
-		return trimLineComments(source.replaceAll("/\\*.+?\\*/", STR.EMPTY));
-	}
-
-	/**
-	 * trim inside of the second level braces.
-	 * 
-	 * @param source
-	 * @return
-	 */
-	protected static String trimInsideOfBraces(String source) {
-		int len = source.length();
-		boolean isInsideOfTargetClass = false;
-		boolean isInsideOfFirstLevel = false;
-		boolean isInsideOfSecondLevel = false;
-		Stack<Character> braceStack = new Stack<Character>();
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < len; i++) {
-			// waiting for inside of the target class
-			if (!isInsideOfTargetClass) {
-				sb.append(source.charAt(i));
-				// might be started class def
-				if (i >= 6 && source.charAt(i - 6) == ' '
-						&& source.charAt(i - 5) == 'c'
-						&& source.charAt(i - 4) == 'l'
-						&& source.charAt(i - 3) == 'a'
-						&& source.charAt(i - 2) == 's'
-						&& source.charAt(i - 1) == 's'
-						&& source.charAt(i) == ' ') {
-					isInsideOfTargetClass = true;
-				}
-				continue;
-			}
-			// waiting for inside of the first level brace
-			if (!isInsideOfFirstLevel) {
-				sb.append(source.charAt(i));
-				if (source.charAt(i) == '{') {
-					isInsideOfFirstLevel = true;
-				}
-				continue;
-			}
-			// excluding inside of top brace
-			// outer of top braced
-			if (!isInsideOfSecondLevel) {
-				sb.append(source.charAt(i));
-			}
-			// brace start
-			if (source.charAt(i) == '{') {
-				isInsideOfSecondLevel = true;
-				braceStack.push(source.charAt(i));
-			}
-			// brace end
-			if (!braceStack.empty() && source.charAt(i) == '}') {
-				braceStack.pop();
-			}
-			// check the brace stack state
-			if (braceStack.empty()) {
-				isInsideOfSecondLevel = false;
-			}
-		}
-		return sb.toString();
 	}
 
 }

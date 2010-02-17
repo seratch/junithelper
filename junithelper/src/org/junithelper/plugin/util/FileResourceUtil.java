@@ -24,6 +24,8 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
+import org.junithelper.plugin.exception.InvalidPreferenceException;
 import org.mozilla.universalchardet.UniversalDetector;
 
 /**
@@ -36,30 +38,47 @@ import org.mozilla.universalchardet.UniversalDetector;
 
 public final class FileResourceUtil {
 
+	public static InputStream readFile(IFile file)
+			throws InvalidPreferenceException {
+		InputStream is = null;
+		try {
+			is = file.getContents();
+		} catch (CoreException ignored) {
+		} catch (NullPointerException e) {
+			throw new InvalidPreferenceException();
+		}
+		return is;
+	}
+
 	/**
 	 * Get detected encoding charset name
 	 * 
 	 * @param file
 	 * @return encoding charset name
-	 * @throws Exception
+	 * @throws InvalidPreferenceException
 	 */
-	public static String detectEncoding(IFile file) throws Exception {
+	public static String detectEncoding(IFile file)
+			throws InvalidPreferenceException {
 		InputStream is = null;
+		String encoding = null;
 		try {
-			is = file.getContents();
+			is = FileResourceUtil.readFile(file);
 			UniversalDetector detector = new UniversalDetector(null);
 			byte[] buf = new byte[4096];
 			int nread;
 			while ((nread = is.read(buf)) > 0 && !detector.isDone())
 				detector.handleData(buf, 0, nread);
 			detector.dataEnd();
-			String encoding = detector.getDetectedCharset();
-			if (encoding == null)
-				encoding = Charset.defaultCharset().name();
-			return encoding;
+			encoding = detector.getDetectedCharset();
+		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			close(is);
+			if (encoding == null) {
+				return Charset.defaultCharset().name();
+			}
 		}
+		return encoding;
 	}
 
 	/**

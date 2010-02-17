@@ -29,6 +29,9 @@ import org.junithelper.plugin.util.MockGenUtil;
  */
 public class PreferenceLoader {
 
+	public String commonSrcMainJavaDir;
+	public String commonTestMainJavaDir;
+
 	public boolean isJUnitVersion3;
 	public boolean isJUnitVersion4;
 	public boolean isUsingJUnitHelperRuntime;
@@ -54,6 +57,10 @@ public class PreferenceLoader {
 	public PreferenceLoader() {
 
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+
+		commonSrcMainJavaDir = store.getString(Preference.Common.SRC_MAIN_PATH);
+		commonTestMainJavaDir = store
+				.getString(Preference.Common.SRC_TEST_PATH);
 
 		isTestClassGenEnabled = store
 				.getBoolean(Preference.TestClassGen.ENABLE);

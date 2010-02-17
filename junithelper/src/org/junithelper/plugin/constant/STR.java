@@ -15,7 +15,6 @@
  */
 package org.junithelper.plugin.constant;
 
-import org.junithelper.plugin.Activator;
 
 /**
  * STR<br>
@@ -81,17 +80,6 @@ public interface STR {
 	 * The suffix of test case name
 	 */
 	public static final String SUFFIX_OF_TESTCASE = "Test";
-
-	/**
-	 * The path to store developing sources
-	 */
-	public static final String SRC_MAIN_JAVA = Activator.getDefault()
-			.getPreferenceStore().getString(Preference.Common.SRC_MAIN_PATH);
-	/**
-	 * The path to store testing sources
-	 */
-	public static final String SRC_TEST_JAVA = Activator.getDefault()
-			.getPreferenceStore().getString(Preference.Common.SRC_TEST_PATH);
 
 	/**
 	 * Auto generated todo message

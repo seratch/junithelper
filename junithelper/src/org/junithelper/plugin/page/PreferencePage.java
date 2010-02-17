@@ -79,11 +79,10 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				Composite grp = new Composite(commonPrentGroup, 0);
 				grp.setLayout(new GridLayout(2, false));
 				Label label = new Label(grp, 0);
-				label.setText("Restart if you changed this section.");
+				label.setText("Specify the source folders.");
 				gd = new GridData(768);
 				gd.horizontalSpan = 2;
 				label.setLayoutData(gd);
-
 				// src/main/java
 				addField(new StringFieldEditor(Preference.Common.SRC_MAIN_PATH,
 						Preference.Common.SRC_MAIN_PATH, grp));
@@ -118,7 +117,6 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 					tcgRadioGroupVersions = new RadioGroupFieldEditor(
 							Preference.TestClassGen.JUNIT_VERSION,
 							"Select JUnit Version.", 2, labelAndValues, tcgArea) {
-
 						@Override
 						protected void fireValueChanged(String p, Object o,
 								Object n) {

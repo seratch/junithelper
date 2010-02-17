@@ -46,6 +46,7 @@ import org.junithelper.plugin.bean.MethodInfo;
 import org.junithelper.plugin.constant.Dialog;
 import org.junithelper.plugin.constant.RuntimeLibrary;
 import org.junithelper.plugin.constant.STR;
+import org.junithelper.plugin.exception.InvalidPreferenceException;
 import org.junithelper.plugin.page.PreferenceLoader;
 import org.junithelper.plugin.util.FileResourceUtil;
 import org.junithelper.plugin.util.ResourcePathUtil;
@@ -83,9 +84,7 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 	 * @param action
 	 */
 	public void run(IAction action) {
-
 		PreferenceLoader pref = new PreferenceLoader();
-
 		InputStream javaFileIStream = null;
 		OutputStreamWriter testFileOSWriter = null;
 		FileOutputStream fos = null;
@@ -104,10 +103,10 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 			String testCaseCreateDirpath = null;
 
 			StructuredSelection structuredSelection = null;
-			if (selection instanceof StructuredSelection)
+			if (selection instanceof StructuredSelection) {
 				// viewer
 				structuredSelection = (StructuredSelection) selection;
-
+			}
 			if (structuredSelection != null && structuredSelection.size() == 0) {
 				// required select
 				Shell shell = new Shell();
@@ -122,11 +121,9 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 						Dialog.Common.SELECT_ONLY_ONE);
 				refreshFlag = false;
 			} else {
-
 				// path started from project root
 				String pathFromProjectRoot = ResourcePathUtil
 						.getPathStartsFromProjectRoot(structuredSelection);
-
 				// path started from project root
 				// ex. /{projectName}/src/main/java/hoge/foo/var/TestTarget.java
 				String[] dirArrFromProjectRoot = pathFromProjectRoot
@@ -137,15 +134,12 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 				for (int i = 2; i < len - 1; i++)
 					selected += dirArrFromProjectRoot[i] + STR.DIR_SEP;
 				selected += dirArrFromProjectRoot[len - 1];
-
 				// current project name
 				projectName = dirArrFromProjectRoot[1];
-
 				// last element is test class file name
 				String testTargetClassFilename = dirArrFromProjectRoot[dirArrFromProjectRoot.length - 1];
 				testTargetClassname = testTargetClassFilename.replace(
 						STR.JAVA_EXP, STR.EMPTY);
-
 				// test class name to create
 				testCaseClassname = testTargetClassname
 						+ STR.SUFFIX_OF_TESTCASE;
@@ -156,8 +150,8 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 				String projectRootPath = workspaceRoot.getLocation()
 						+ STR.DIR_SEP + projectName + STR.DIR_SEP;
 
-				testCaseResource = selected.replace(STR.SRC_MAIN_JAVA,
-						STR.SRC_TEST_JAVA).replace(STR.JAVA_EXP,
+				testCaseResource = selected.replace(pref.commonSrcMainJavaDir,
+						pref.commonTestMainJavaDir).replace(STR.JAVA_EXP,
 						STR.SUFFIX_OF_TESTCASE + STR.JAVA_EXP);
 				String[] selectedDirArr = selected.split(STR.DIR_SEP);
 				testCaseDirResource = "";
@@ -165,11 +159,9 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 				for (int i = 0; i < selectedDirArrLength - 1; i++)
 					testCaseDirResource += selectedDirArr[i] + STR.DIR_SEP;
 				testCaseDirResource = testCaseDirResource.replace(
-						STR.SRC_MAIN_JAVA, STR.SRC_TEST_JAVA);
+						pref.commonSrcMainJavaDir, pref.commonTestMainJavaDir);
 				testCaseCreateDirpath = projectRootPath + testCaseDirResource;
-
 				File testDir = new File(testCaseCreateDirpath);
-
 				// check directory exist
 				String[] dirArr = testCaseCreateDirpath.split(STR.DIR_SEP);
 				String tmpDirPath = STR.EMPTY;
@@ -177,16 +169,16 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 				for (String each : dirArr) {
 					tmpDirPath += STR.DIR_SEP + each;
 					File tmpDir = new File(tmpDirPath);
-
 					// skip until project root dir
-					if (tmpDir.getPath().length() <= projectRootPath.length())
+					if (tmpDir.getPath().length() <= projectRootPath.length()) {
 						continue;
-
+					}
 					tmpResourceDirPath += STR.DIR_SEP + each;
 					if (!tmpDir.exists()) {
-						if (!tmpDir.mkdir())
+						if (!tmpDir.mkdir()) {
 							System.err.println("create directory error : "
 									+ tmpDir.getPath());
+						}
 						if (!ResourceRefreshUtil.refreshLocal(null, projectName
 								+ STR.DIR_SEP + tmpResourceDirPath + "/..")) {
 							String msg = Dialog.Common.RESOURCE_REFRESH_ERROR;
@@ -196,12 +188,10 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 						}
 					}
 				}
-
 				// execute create directory
-				if (!testDir.mkdirs())
-					System.err
-							.println("test directory create error or already exist");
-
+				if (!testDir.mkdirs()) {
+					System.err.println("test directory already exist");
+				}
 				// resource sync
 				if (!ResourceRefreshUtil.refreshLocal(null, projectName
 						+ STR.DIR_SEP + testCaseDirResource)) {
@@ -209,7 +199,6 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 							Dialog.Common.RESOURCE_REFRESH_ERROR);
 					System.err.println("Resource refresh error!");
 				}
-
 				try {
 					// confirm if already exist
 					File outputFile = new File(testCaseCreateDirpath
@@ -235,31 +224,25 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 								+ STR.DIR_SEP + testCaseFilename);
 						testFileOSWriter = new OutputStreamWriter(fos,
 								writeEncoding);
-
 						StringBuilder sb = new StringBuilder();
-
 						String CRLF = STR.CARRIAGE_RETURN + STR.LINE_FEED;
-
 						// get package
 						String testPackageString = STR.EMPTY;
 						String[] tmpDirArr = selected.split(STR.DIR_SEP);
 						StringBuilder dirSb = new StringBuilder();
 						int packageArrLen = tmpDirArr.length - 2;
-						int mainJavaLen = STR.SRC_MAIN_JAVA.split("/").length;
+						int mainJavaLen = pref.commonSrcMainJavaDir.split("/").length;
 						for (int i = mainJavaLen; i < packageArrLen; i++) {
 							dirSb.append(tmpDirArr[i]);
 							dirSb.append(".");
 						}
 						dirSb.append(tmpDirArr[packageArrLen]);
 						testPackageString = dirSb.toString();
-
 						sb.append("package ");
 						sb.append(testPackageString);
 						sb.append(";");
 						sb.append(CRLF);
-
 						sb.append(CRLF);
-
 						// get class to extend
 						String testCase = pref.isUsingJUnitHelperRuntime ? RuntimeLibrary.TEST_CASE
 								: pref.classToExtend;
@@ -269,7 +252,6 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 						sb.append(testCase);
 						sb.append(";");
 						sb.append(CRLF);
-
 						if (pref.isTestMethodGenEnabled
 								&& pref.isTestMethodGenNotBlankEnabled) {
 							List<String> importedPackageList = testClassInfo.importList;
@@ -281,7 +263,6 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 							}
 						}
 						sb.append(CRLF);
-
 						sb.append("public class ");
 						sb.append(testCaseClassname);
 						if (pref.isJUnitVersion3) {
@@ -290,16 +271,14 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 						}
 						sb.append(" {");
 						sb.append(CRLF);
-
 						sb.append(CRLF);
-
 						if (pref.isTestMethodGenEnabled) {
 							for (MethodInfo testMethod : testMethods) {
 								if (testMethod.testMethodName == null
 										|| testMethod.testMethodName
-												.equals(STR.EMPTY))
+												.equals(STR.EMPTY)) {
 									continue;
-
+								}
 								if (pref.isJUnitVersion4) {
 									sb.append("\t@Test");
 									sb.append(CRLF);
@@ -308,11 +287,9 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 								sb.append(testMethod.testMethodName);
 								sb.append("() throws Exception {");
 								sb.append(CRLF);
-
 								sb.append("\t\t//");
 								sb.append(STR.AUTO_GEN_MSG_TODO);
 								sb.append(CRLF);
-
 								if (pref.isTestMethodGenNotBlankEnabled) {
 									String notBlankSourceCode = TestCaseGenerateUtil
 											.getNotBlankTestMethodSource(
@@ -320,19 +297,19 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 													testTargetClassname);
 									sb.append(notBlankSourceCode);
 								}
-
 								sb.append("\t}");
 								sb.append(CRLF);
-
 								sb.append(CRLF);
 							}
 						}
 						sb.append("}");
 						sb.append(CRLF);
-
 						testFileOSWriter.write(sb.toString());
 					}
-
+				} catch (InvalidPreferenceException ipe) {
+					MessageDialog.openWarning(new Shell(), Dialog.Common.TITLE,
+							Dialog.Common.INVALID_PREFERENCE);
+					return;
 				} catch (FileNotFoundException fnfe) {
 					fnfe.printStackTrace();
 				} finally {
@@ -340,7 +317,6 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 					FileResourceUtil.close(fos);
 				}
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -355,9 +331,7 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 			MessageDialog.openWarning(new Shell(), Dialog.Common.TITLE,
 					Dialog.Common.RESOURCE_REFRESH_ERROR);
 			System.err.println("Resource refresh error!");
-
 		} else {
-
 			// open test case
 			int retryCount = 0;
 			IEditorPart editorPart = null;

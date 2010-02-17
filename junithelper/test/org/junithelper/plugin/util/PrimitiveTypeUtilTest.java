@@ -21,17 +21,17 @@ public class PrimitiveTypeUtilTest extends TestCase {
 		}
 	}
 
-	public void test_getPrimitiveDefaultValue_A$String() throws Exception {
+	public void test_getTypeDefaultValue_A$String() throws Exception {
 		String[] args = new String[] { "byte", "short", "int", "long", "char",
 				"float", "double", "boolean", "void", };
 		String[] expected = new String[] { "0", "0", "0", "0L", "'\u0000'",
 				"0.0F", "0.0", "false", "void" };
 		for (int i = 0; i < args.length; i++) {
-			String actual = PrimitiveTypeUtil.getPrimitiveDefaultValue(args[i]);
+			String actual = PrimitiveTypeUtil.getTypeDefaultValue(args[i]);
 			assertEquals(expected[i], actual);
 		}
 		try {
-			PrimitiveTypeUtil.getPrimitiveDefaultValue("dummy");
+			PrimitiveTypeUtil.getTypeDefaultValue("dummy");
 			fail("Expected Exception did not occurred!");
 		} catch (IllegalArgumentException e) {
 		}
