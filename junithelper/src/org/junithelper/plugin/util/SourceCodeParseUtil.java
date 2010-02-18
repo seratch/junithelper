@@ -175,7 +175,9 @@ public class SourceCodeParseUtil {
 				continue;
 			}
 			// skip package local methods
-			if (!packageLocalRequired && matched.matches(prefix + postfix)) {
+			if (!packageLocalRequired
+					&& !matched.matches(prefix + "public" + postfix)
+					&& !matched.matches(prefix + "protected" + postfix)) {
 				continue;
 			}
 			matched = matched.replaceAll(STR.TAB, STR.SPACE).replaceAll(
