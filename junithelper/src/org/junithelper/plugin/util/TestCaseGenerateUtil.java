@@ -542,9 +542,12 @@ public final class TestCaseGenerateUtil {
 		String CRLF = STR.CARRIAGE_RETURN + STR.LINE_FEED;
 		if (pref.isTestMethodGenEnabledSupportJMock2) {
 			if (pref.isUsingJUnitHelperRuntime) {
-				sb.append("\t\t");
-				sb.append("Mockery jmock2 = JMock2Util.getNewInstance();");
-				sb.append(CRLF);
+				// JUnit 4.x does not have the field.
+				if (pref.isJUnitVersion4) {
+					sb.append("\t\t");
+					sb.append("Mockery jmock2 = JMock2Util.getNewInstance();");
+					sb.append(CRLF);
+				}
 			} else {
 				sb.append("\t\t");
 				sb.append("Mockery context = new Mockery(){{");
