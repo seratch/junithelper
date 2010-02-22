@@ -28,7 +28,7 @@ public final class Preference {
 	 * Select language
 	 */
 	// TODO
-	public static final String LANG = "Language";
+	public static final String lang = "Language";
 
 	/**
 	 * Common
@@ -39,15 +39,15 @@ public final class Preference {
 		/**
 		 * Description
 		 */
-		public static final String DESCRIPTION = "Settings for JUnit Helper plugin.";
+		public static final String description = "Settings for JUnit Helper plugin.";
 		/**
 		 * Main Source Folder
 		 */
-		public static final String SRC_MAIN_PATH = "Main Source Folder";
+		public static final String srcMainPath = "Main Source Folder";
 		/**
 		 * Test Source Folder
 		 */
-		public static final String SRC_TEST_PATH = "Test Source Folder";
+		public static final String srcTestPath = "Test Source Folder";
 	}
 
 	public static class TestClassGen {
@@ -55,97 +55,97 @@ public final class Preference {
 		/**
 		 * Enable test methods gen
 		 */
-		public static final String ENABLE = "Test Class Auto Generate";
+		public static final String enabled = "Test Class Auto Generate";
 		/**
 		 * JUnit versions
 		 */
-		public static final String JUNIT_VERSION = "JUnit Version";
+		public static final String junitVersion = "JUnit Version";
 		/**
 		 * JUnit version 3.x
 		 */
-		public static final String JUNIT_VERSION_3 = "JUnit 3.x";
+		public static final String junitVersion3 = "JUnit 3.x";
 		/**
 		 * JUnit version 4.x
 		 */
-		public static final String JUNIT_VERSION_4 = "JUnit 4.x";
+		public static final String junitVersion4 = "JUnit 4.x";
 		/**
 		 * Class To Extend
 		 */
-		public static final String CLASS_TO_EXTEND = "Class To Extend";
+		public static final String classToExtend = "Class To Extend";
 		/**
 		 * Using JUnit Helper runtime library
 		 */
-		public static final String USING_JUNIT_HELPER_RUNTIME_LIB = "Using JUnit Helper Runtime Library.";
+		public static final String usingJunitHelperRuntimeLib = "Using JUnit Helper Runtime Library.";
 	}
 
 	public static class TestMethodGen {
 		/**
 		 * Enable test methods gen
 		 */
-		public static final String ENABLE = "Test Method Auto Generate";
+		public static final String enabled = "Test Method Auto Generate";
 		/**
 		 * Delimiter to test method name
 		 */
-		public static final String DELIMITER = " Method Name Delimiter";
+		public static final String delimiter = " Method Name Delimiter";
 
 		/**
 		 * Enable includes method args in test method name
 		 */
-		public static final String ARGS = " Includes Method Args";
+		public static final String enabledArgs = " Includes Method Args";
 		/**
 		 * Args prefix
 		 */
-		public static final String ARGS_PREFIX = "Args Prefix";
+		public static final String argsPrefix = "Args Prefix";
 		/**
 		 * Args delimiter
 		 */
-		public static final String ARGS_DELIMITER = "Args Delimiter";
+		public static final String argsDelimiter = "Args Delimiter";
 
 		/**
 		 * Enable includes method return in test method name
 		 */
-		public static final String RETURN = " Includes Method Return";
+		public static final String enabledReturn = " Includes Method Return";
 		/**
 		 * Return prefix
 		 */
-		public static final String RETURN_PREFIX = "Return Prefix";
+		public static final String returnPrefix = "Return Prefix";
 		/**
 		 * Return delimiter
 		 */
-		public static final String RETURN_DELIMITER = "Return Delimiter";
+		public static final String returnDelimiter = "Return Delimiter";
 
 		/**
 		 * Public methods
 		 */
-		public static final String INCLUDE_PUBLIC = " Includes \"public\"";
+		public static final String includePublic = " Includes \"public\"";
 
 		/**
 		 * Protected methods
 		 */
-		public static final String INCLUDE_PROTECTED = " Includes \"protected\"";
+		public static final String includeProtected = " Includes \"protected\"";
 
 		/**
 		 * Package local methods
 		 */
-		public static final String INCLUDE_PACKAGE_LOCAL = " Includes \"package local\"";
+		public static final String includePackageLocal = " Includes \"package local\"";
 
 		/**
 		 * Exclude accessors
 		 */
-		public static final String EXLCUDES_ACCESSORS = " Exculdes Accessors(setter/getter)";
+		public static final String excludesAccessors = " Exculdes Accessors(setter/getter)";
 
 		/**
 		 * Generate sample implementation to test methods
 		 */
-		public static final String METHOD_SAMPLE_IMPL = " Generate Sample Implementation";
+		public static final String enabledTestMethodSampleImpl = " Generate Sample Implementation";
 
 		/**
 		 * Using mock object framework
 		 */
-		public static final String USING_MOCK = "Mock";
-		public static final String USING_MOCK_NONE = "None";
-		public static final String USING_MOCK_EASYMOCK = "EasyMock";
-		public static final String USING_MOCK_JMOCK2 = "JMock2";
+		public static final String usingMock = "Mock";
+		public static final String usingMockNone = "None";
+		public static final String usingMockEasyMock = "EasyMock";
+		public static final String usingMockJMock2 = "JMock2";
 
 	}
 

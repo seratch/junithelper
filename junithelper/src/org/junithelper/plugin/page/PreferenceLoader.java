@@ -61,57 +61,53 @@ public class PreferenceLoader {
 
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 
-		commonSrcMainJavaDir = store.getString(Preference.Common.SRC_MAIN_PATH);
-		commonTestMainJavaDir = store
-				.getString(Preference.Common.SRC_TEST_PATH);
+		commonSrcMainJavaDir = store.getString(Preference.Common.srcMainPath);
+		commonTestMainJavaDir = store.getString(Preference.Common.srcTestPath);
 
 		isTestClassGenEnabled = store
-				.getBoolean(Preference.TestClassGen.ENABLE);
+				.getBoolean(Preference.TestClassGen.enabled);
 
 		isTestMethodGenEnabled = store
-				.getBoolean(Preference.TestMethodGen.ENABLE);
+				.getBoolean(Preference.TestMethodGen.enabled);
 		isTestMethodGenArgsEnabled = store
-				.getBoolean(Preference.TestMethodGen.ARGS);
+				.getBoolean(Preference.TestMethodGen.enabledArgs);
 		isTestMethodGenReturnEnabled = store
-				.getBoolean(Preference.TestMethodGen.RETURN);
+				.getBoolean(Preference.TestMethodGen.enabledReturn);
 		isTestMethodGenNotBlankEnabled = store
-				.getBoolean(Preference.TestMethodGen.METHOD_SAMPLE_IMPL);
+				.getBoolean(Preference.TestMethodGen.enabledTestMethodSampleImpl);
 
 		isTestMethodGenIncludePublic = store
-				.getBoolean(Preference.TestMethodGen.INCLUDE_PUBLIC);
+				.getBoolean(Preference.TestMethodGen.includePublic);
 		isTestMethodGenIncludeProtected = store
-				.getBoolean(Preference.TestMethodGen.INCLUDE_PROTECTED);
+				.getBoolean(Preference.TestMethodGen.includeProtected);
 		isTestMethodGenIncludePackageLocal = store
-				.getBoolean(Preference.TestMethodGen.INCLUDE_PACKAGE_LOCAL);
+				.getBoolean(Preference.TestMethodGen.includePackageLocal);
 
 		isTestMethodGenExecludeAccessors = store
-				.getBoolean(Preference.TestMethodGen.EXLCUDES_ACCESSORS);
+				.getBoolean(Preference.TestMethodGen.excludesAccessors);
 
 		isTestMethodGenEnabledSupportJMock2 = MockGenUtil.isUsingJMock2(store);
 		isTestMethodGenEnabledSupportEasyMock = MockGenUtil
 				.isUsingEasyMock(store);
 
-		String version = store.getString(Preference.TestClassGen.JUNIT_VERSION);
-		isJUnitVersion3 = version
-				.equals(Preference.TestClassGen.JUNIT_VERSION_3);
-		isJUnitVersion4 = version
-				.equals(Preference.TestClassGen.JUNIT_VERSION_4);
+		String version = store.getString(Preference.TestClassGen.junitVersion);
+		isJUnitVersion3 = version.equals(Preference.TestClassGen.junitVersion3);
+		isJUnitVersion4 = version.equals(Preference.TestClassGen.junitVersion4);
 		isUsingJUnitHelperRuntime = store
-				.getBoolean(Preference.TestClassGen.USING_JUNIT_HELPER_RUNTIME_LIB);
+				.getBoolean(Preference.TestClassGen.usingJunitHelperRuntimeLib);
 
 		testMethodDelimiter = store
-				.getString(Preference.TestMethodGen.DELIMITER);
+				.getString(Preference.TestMethodGen.delimiter);
 		testMethodArgsPrefix = store
-				.getString(Preference.TestMethodGen.ARGS_PREFIX);
+				.getString(Preference.TestMethodGen.argsPrefix);
 		testMethodArgsDelimiter = store
-				.getString(Preference.TestMethodGen.ARGS_DELIMITER);
+				.getString(Preference.TestMethodGen.argsDelimiter);
 		testMethodReturnPrefix = store
-				.getString(Preference.TestMethodGen.RETURN_PREFIX);
+				.getString(Preference.TestMethodGen.returnPrefix);
 		testMethodReturnDelimiter = store
-				.getString(Preference.TestMethodGen.RETURN_DELIMITER);
+				.getString(Preference.TestMethodGen.returnDelimiter);
 
-		classToExtend = store
-				.getString(Preference.TestClassGen.CLASS_TO_EXTEND);
+		classToExtend = store.getString(Preference.TestClassGen.classToExtend);
 
 	}
 }

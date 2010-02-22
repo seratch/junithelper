@@ -25,7 +25,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
-import org.junithelper.plugin.constant.STR;
+import org.junithelper.plugin.constant.StrConst;
 
 /**
  * Source code parse util<br>
@@ -54,8 +54,10 @@ public class SourceCodeParseUtil {
 			is = FileResourceUtil.readFile(javaFile);
 			br = new BufferedReader(new InputStreamReader(is, encoding));
 			String line = null;
-			while ((line = br.readLine()) != null)
-				lines.add(line.replace("\r", STR.EMPTY));
+			while ((line = br.readLine()) != null) {
+				line = line.replace(StrConst.carriageReturn, StrConst.empty);
+				lines.add(line);
+			}
 		} finally {
 			FileResourceUtil.close(is);
 			FileResourceUtil.close(br);
@@ -70,7 +72,7 @@ public class SourceCodeParseUtil {
 	 * @return result without line comments
 	 */
 	public static String trimLineComments(String source) {
-		return source.replaceAll("//.+?\n", STR.EMPTY);
+		return source.replaceAll("//.+?\n", StrConst.empty);
 	}
 
 	/**
@@ -80,7 +82,8 @@ public class SourceCodeParseUtil {
 	 * @return result without line comments
 	 */
 	public static String trimAllComments(String source) {
-		return trimLineComments(source.replaceAll("/\\*.+?\\*/", STR.EMPTY));
+		return trimLineComments(source
+				.replaceAll("/\\*.+?\\*/", StrConst.empty));
 	}
 
 	/**
@@ -154,9 +157,9 @@ public class SourceCodeParseUtil {
 	public static List<String> getTargetMethods(String source,
 			boolean publicRequired, boolean protectedRequired,
 			boolean packageLocalRequired) {
-		source = source.replaceAll("\\s+?" + STR.COMMA, STR.COMMA).replaceAll(
-				STR.COMMA + "\\s+?", STR.COMMA).replaceAll("<\\s+?", "<")
-				.replaceAll("\\s+?>", ">");
+		source = source.replaceAll("\\s+?" + StrConst.comma, StrConst.comma)
+				.replaceAll(StrConst.comma + "\\s+?", StrConst.comma)
+				.replaceAll("<\\s+?", "<").replaceAll("\\s+?>", ">");
 		List<String> result = new ArrayList<String>();
 		String regexp = "[\\{;\\}][^\\{;\\}]+?\\([^\\{;\\}]*?\\)[^\\{;\\}]+?\\{";
 		Pattern pat = Pattern.compile(regexp);
@@ -180,12 +183,12 @@ public class SourceCodeParseUtil {
 					&& !matched.matches(prefix + "protected" + postfix)) {
 				continue;
 			}
-			matched = matched.replaceAll(STR.TAB, STR.SPACE).replaceAll(
-					prefix + "public" + "\\s", STR.EMPTY).replaceAll(
-					prefix + "protected" + "\\s", STR.EMPTY).replaceAll(
-					prefix + "\\s+?", STR.EMPTY).replaceAll("\\sfinal\\s",
-					STR.SPACE);
-			result.add(STR.SPACE + matched);
+			matched = matched.replaceAll(StrConst.tab, StrConst.space)
+					.replaceAll(prefix + "public" + "\\s", StrConst.empty)
+					.replaceAll(prefix + "protected" + "\\s", StrConst.empty)
+					.replaceAll(prefix + "\\s+?", StrConst.empty).replaceAll(
+							"\\sfinal\\s", StrConst.space);
+			result.add(StrConst.space + matched);
 		}
 		return result;
 	}

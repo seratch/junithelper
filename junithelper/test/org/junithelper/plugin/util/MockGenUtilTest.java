@@ -26,10 +26,10 @@ public class MockGenUtilTest extends TestCase {
 	public void test_isUsingEasyMock_A$IPreferenceStore() throws Exception {
 		IMocksControl mocks = EasyMock.createStrictControl();
 		IPreferenceStore store = mocks.createMock(IPreferenceStore.class);
-		String key = Preference.TestMethodGen.USING_MOCK;
-		String none = Preference.TestMethodGen.USING_MOCK_NONE;
-		String easyMock = Preference.TestMethodGen.USING_MOCK_EASYMOCK;
-		String jmock2 = Preference.TestMethodGen.USING_MOCK_JMOCK2;
+		String key = Preference.TestMethodGen.usingMock;
+		String none = Preference.TestMethodGen.usingMockNone;
+		String easyMock = Preference.TestMethodGen.usingMockEasyMock;
+		String jmock2 = Preference.TestMethodGen.usingMockJMock2;
 		EasyMock.expect(store.getString(key)).andReturn(null);
 		EasyMock.expect(store.getString(key)).andReturn(none);
 		EasyMock.expect(store.getString(key)).andReturn(easyMock);
@@ -53,10 +53,10 @@ public class MockGenUtilTest extends TestCase {
 	public void test_isUsingJMock2_A$IPreferenceStore() throws Exception {
 		IMocksControl mocks = EasyMock.createStrictControl();
 		IPreferenceStore store = mocks.createMock(IPreferenceStore.class);
-		String key = Preference.TestMethodGen.USING_MOCK;
-		String none = Preference.TestMethodGen.USING_MOCK_NONE;
-		String easyMock = Preference.TestMethodGen.USING_MOCK_EASYMOCK;
-		String jmock2 = Preference.TestMethodGen.USING_MOCK_JMOCK2;
+		String key = Preference.TestMethodGen.usingMock;
+		String none = Preference.TestMethodGen.usingMockNone;
+		String easyMock = Preference.TestMethodGen.usingMockEasyMock;
+		String jmock2 = Preference.TestMethodGen.usingMockJMock2;
 		EasyMock.expect(store.getString(key)).andReturn(null);
 		EasyMock.expect(store.getString(key)).andReturn(none);
 		EasyMock.expect(store.getString(key)).andReturn(easyMock);
@@ -80,10 +80,10 @@ public class MockGenUtilTest extends TestCase {
 	public void test_isUsingNone_A$IPreferenceStore() throws Exception {
 		IMocksControl mocks = EasyMock.createStrictControl();
 		IPreferenceStore store = mocks.createMock(IPreferenceStore.class);
-		String key = Preference.TestMethodGen.USING_MOCK;
-		String none = Preference.TestMethodGen.USING_MOCK_NONE;
-		String easyMock = Preference.TestMethodGen.USING_MOCK_EASYMOCK;
-		String jmock2 = Preference.TestMethodGen.USING_MOCK_JMOCK2;
+		String key = Preference.TestMethodGen.usingMock;
+		String none = Preference.TestMethodGen.usingMockNone;
+		String easyMock = Preference.TestMethodGen.usingMockEasyMock;
+		String jmock2 = Preference.TestMethodGen.usingMockJMock2;
 		EasyMock.expect(store.getString(key)).andReturn(null);
 		EasyMock.expect(store.getString(key)).andReturn(none);
 		EasyMock.expect(store.getString(key)).andReturn(easyMock);

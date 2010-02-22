@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.junithelper.plugin.constant.Preference;
-import org.junithelper.plugin.constant.STR;
+import org.junithelper.plugin.constant.StrConst;
 
 /**
  * JMock2Util<br>
@@ -58,7 +58,7 @@ public final class MockGenUtil {
 				// imported class name
 				for (String importedPackage : importList) {
 					importedPackage = importedPackage.replaceAll("//",
-							STR.EMPTY);
+							StrConst.empty);
 					if (importedPackage.matches(".+?\\." + className + "$")) {
 						return true;
 					}
@@ -79,19 +79,19 @@ public final class MockGenUtil {
 	}
 
 	public static final boolean isUsingNone(IPreferenceStore store) {
-		String setting = store.getString(Preference.TestMethodGen.USING_MOCK);
+		String setting = store.getString(Preference.TestMethodGen.usingMock);
 		return setting == null
-				|| Preference.TestMethodGen.USING_MOCK_NONE.equals(setting);
+				|| Preference.TestMethodGen.usingMockNone.equals(setting);
 	}
 
 	public static final boolean isUsingEasyMock(IPreferenceStore store) {
-		String setting = store.getString(Preference.TestMethodGen.USING_MOCK);
-		return Preference.TestMethodGen.USING_MOCK_EASYMOCK.equals(setting);
+		String setting = store.getString(Preference.TestMethodGen.usingMock);
+		return Preference.TestMethodGen.usingMockEasyMock.equals(setting);
 	}
 
 	public static final boolean isUsingJMock2(IPreferenceStore store) {
-		String setting = store.getString(Preference.TestMethodGen.USING_MOCK);
-		return Preference.TestMethodGen.USING_MOCK_JMOCK2.equals(setting);
+		String setting = store.getString(Preference.TestMethodGen.usingMock);
+		return Preference.TestMethodGen.usingMockJMock2.equals(setting);
 	}
 
 }

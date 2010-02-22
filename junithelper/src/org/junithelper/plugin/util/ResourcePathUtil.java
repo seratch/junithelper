@@ -18,7 +18,8 @@ package org.junithelper.plugin.util;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
-import org.junithelper.plugin.constant.STR;
+import org.junithelper.plugin.constant.RegExp;
+import org.junithelper.plugin.constant.StrConst;
 import org.junithelper.plugin.page.PreferenceLoader;
 
 /**
@@ -40,21 +41,21 @@ public final class ResourcePathUtil {
 	public static String getPathStartsFromProjectRoot(
 			StructuredSelection structuredSelection) {
 		PreferenceLoader pref = new PreferenceLoader();
-		String pathFromProjectRoot = STR.EMPTY;
+		String pathFromProjectRoot = StrConst.empty;
 		if (structuredSelection == null) {
 			// ----------------------------------------
 			// java editor
 			// ----------------------------------------
 			IWorkbenchPage activePage = PlatformUI.getWorkbench()
 					.getActiveWorkbenchWindow().getActivePage();
-			pathFromProjectRoot = STR.DIR_SEP
+			pathFromProjectRoot = StrConst.dirSep
 					+ activePage.getActiveEditor().getTitleToolTip();
 		} else if (structuredSelection.getFirstElement() instanceof org.eclipse.core.internal.resources.File) {
 			// ----------------------------------------
 			// navigator
 			// ----------------------------------------
 			pathFromProjectRoot = structuredSelection.toString().replace("[L",
-					STR.EMPTY).replace("]", STR.EMPTY);
+					StrConst.empty).replace("]", StrConst.empty);
 		} else if (structuredSelection.getFirstElement() instanceof org.eclipse.jdt.internal.core.CompilationUnit) {
 			// ----------------------------------------
 			// package explorer
@@ -62,14 +63,15 @@ public final class ResourcePathUtil {
 			// TODO better implementation
 			String cuToString = structuredSelection.toString();
 			String packagePath = cuToString.split("\\[in")[1].trim()
-					.replaceAll("\\.", STR.DIR_SEP);
+					.replaceAll("\\.", StrConst.dirSep);
 			String projectName = cuToString.split("\\[in")[3].trim().split("]")[0];
-			String testTargetClassname = cuToString.split(STR.RegExp.JAVA_EXP)[0]
-					.replaceAll("(\\[|\\])", STR.EMPTY).replaceAll(
-							"Working copy ", STR.EMPTY).trim();
-			pathFromProjectRoot = STR.DIR_SEP + projectName + STR.DIR_SEP
-					+ pref.commonSrcMainJavaDir + STR.DIR_SEP + packagePath
-					+ STR.DIR_SEP + testTargetClassname + STR.JAVA_EXP;
+			String testTargetClassname = cuToString.split(RegExp.javaFileExp)[0]
+					.replaceAll("(\\[|\\])", StrConst.empty).replaceAll(
+							"Working copy ", StrConst.empty).trim();
+			pathFromProjectRoot = StrConst.dirSep + projectName
+					+ StrConst.dirSep + pref.commonSrcMainJavaDir
+					+ StrConst.dirSep + packagePath + StrConst.dirSep
+					+ testTargetClassname + StrConst.javaFileExp;
 		}
 		return pathFromProjectRoot;
 	}

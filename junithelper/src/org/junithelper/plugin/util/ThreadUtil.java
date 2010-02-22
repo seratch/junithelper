@@ -33,6 +33,7 @@ public final class ThreadUtil {
 		try {
 			Thread.sleep(millisec);
 		} catch (InterruptedException ignore) {
+			Thread.currentThread().interrupt();
 		}
 	}
 

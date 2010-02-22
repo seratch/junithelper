@@ -31,7 +31,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.junithelper.plugin.bean.ClassInfo;
 import org.junithelper.plugin.bean.MethodInfo;
 import org.junithelper.plugin.bean.MethodInfo.ArgType;
-import org.junithelper.plugin.constant.STR;
+import org.junithelper.plugin.constant.RegExp;
+import org.junithelper.plugin.constant.StrConst;
 import org.junithelper.plugin.exception.InvalidPreferenceException;
 import org.junithelper.plugin.page.PreferenceLoader;
 
@@ -46,92 +47,6 @@ public final class TestCaseGenerateUtil {
 
 	static IWorkspace workspace = ResourcesPlugin.getWorkspace();
 	static IWorkspaceRoot workspaceRoot = workspace.getRoot();
-
-	static String RXP_WS = STR.RegExp.WHITE_AND_SPACE;
-	static String RXP_NOT_S_RQ = STR.RegExp.NOT_S_REQUIRED;
-	static String RXP_NOT_S_NRQ = STR.RegExp.NOT_S_NOREQUIRED;
-
-	private static final String RXP_METHOD_MODIFIERS = "[<\\w+?>|static|final|\\s]*";
-	private static final String RXP_METHOD_RETURN_TYPE = "[a-zA-Z1-9\\[\\]_,\\$<>\\.]+?";
-
-	private static final String RXP_GENERICS_PART = "<[a-zA-Z0-9,\\$_\\?]+?>";
-	private static final String RXP_GENERICS_PART_GROUP = "<([a-zA-Z0-9,\\$_\\?]+?)>";
-
-	private static final String RXP_METHOD_STATIC_MODIFIERS = "static";
-	private static final String RXP_METHOD_MODIFIERS_EXCLUDES_STATIC = "[<\\w+?>|final|\\s]*";
-
-	/**
-	 * Regular expression to search method syntax
-	 */
-	private static String RXP_SEARCH_METHOD = "";
-	static {
-		// prefix white and space
-		RXP_SEARCH_METHOD += RXP_WS;
-		// method modifiers
-		// no need to support abstract methods
-		RXP_SEARCH_METHOD += RXP_METHOD_MODIFIERS;
-		// return type
-		RXP_SEARCH_METHOD += "\\s+" + RXP_METHOD_RETURN_TYPE + "\\s+";
-		// method ex.doSomething(String arg)
-		RXP_SEARCH_METHOD += RXP_NOT_S_RQ + RXP_WS;
-		// method args
-		RXP_SEARCH_METHOD += "\\(" + "[^\\)]*?" + "\\)";
-		// throws exception
-		RXP_SEARCH_METHOD += RXP_WS + ".*?" + RXP_WS;
-		// method start and so on
-		RXP_SEARCH_METHOD += "\\{.*";
-	}
-
-	/**
-	 * Regular expression to search static method syntax
-	 */
-	private static String RXP_SEARCH_STATIC_METHOD = "";
-	static {
-		// prefix white and space
-		RXP_SEARCH_STATIC_METHOD += RXP_WS;
-		// method modifiers
-		// no need to support abstract methods
-		RXP_SEARCH_STATIC_METHOD += RXP_METHOD_MODIFIERS_EXCLUDES_STATIC
-				+ RXP_METHOD_STATIC_MODIFIERS
-				+ RXP_METHOD_MODIFIERS_EXCLUDES_STATIC;
-		// return type
-		RXP_SEARCH_STATIC_METHOD += RXP_NOT_S_RQ + "\\s+";
-		// method ex.doSomething(String arg)
-		RXP_SEARCH_STATIC_METHOD += RXP_NOT_S_RQ + RXP_WS;
-		// method args
-		RXP_SEARCH_STATIC_METHOD += "\\(" + "[^\\)]*?" + "\\)";
-		// throws exception
-		RXP_SEARCH_STATIC_METHOD += RXP_WS + ".*?" + RXP_WS;
-		// method start and so on
-		RXP_SEARCH_STATIC_METHOD += "\\{.*";
-	}
-
-	/**
-	 * Regular expression to search method syntax grouped<br>
-	 * $1 : return value <br>
-	 * $2 : method name <br>
-	 * $3 : args<br>
-	 */
-	private static String RXP_SEARCH_GROUP_METHOD = "";
-	static {
-		// prefix white and space
-		RXP_SEARCH_GROUP_METHOD += RXP_WS;
-		// method modifiers
-		RXP_SEARCH_GROUP_METHOD += RXP_METHOD_MODIFIERS;
-		// return type
-		RXP_SEARCH_GROUP_METHOD += "\\s+(" + RXP_METHOD_RETURN_TYPE + ")"
-				+ "\\s+";
-		// method ex.doSomething
-		RXP_SEARCH_GROUP_METHOD += "(" + RXP_NOT_S_RQ + ")" + RXP_WS;
-		// method args
-		RXP_SEARCH_GROUP_METHOD += "\\((" + "[^\\)]*?" + ")\\)";
-		// throws exception
-		RXP_SEARCH_GROUP_METHOD += RXP_WS + ".*?" + RXP_WS;
-		// method start and so on
-		RXP_SEARCH_GROUP_METHOD += "\\{.*";
-	}
-	static Pattern PAT_SEARCH_GROUP_METHOD = Pattern
-			.compile(RXP_SEARCH_GROUP_METHOD);
 
 	/**
 	 * Get the information on the unimplemented test methods.
@@ -156,7 +71,8 @@ public final class TestCaseGenerateUtil {
 				boolean exist = false;
 				for (MethodInfo actual : actualMethods) {
 					String escapedExp = expected.testMethodName.replace(
-							"test_", STR.EMPTY).replaceAll("\\$", "\\\\\\$");
+							StrConst.testMethodPrefix4Version3, StrConst.empty)
+							.replaceAll("\\$", "\\\\\\$");
 					if (actual.testMethodName.matches(".*" + escapedExp + ".*")) {
 						exist = true;
 						break;
@@ -228,17 +144,19 @@ public final class TestCaseGenerateUtil {
 				br = new BufferedReader(isr);
 				StringBuilder tmpsb = new StringBuilder();
 				String line = null;
-				while ((line = br.readLine()) != null)
-					tmpsb.append(line + " ");
+				while ((line = br.readLine()) != null) {
+					tmpsb.append(line + StrConst.space);
+				}
 				String targetClassSourceStr = tmpsb.toString();
 				String[] targets = targetClassSourceStr.split("public");
 				for (String target : targets) {
-					target = target.replaceAll("\\s+?" + STR.COMMA, STR.COMMA)
-							.replaceAll(STR.COMMA + "\\s+?", STR.COMMA);
+					target = target.replaceAll("\\s+?" + StrConst.comma,
+							StrConst.comma).replaceAll(
+							StrConst.comma + "\\s+?", StrConst.comma);
 					target = target.replaceAll("<\\s+?", "<").replaceAll(
 							"\\s+?>", ">");
-					if (target.matches(RXP_SEARCH_METHOD)) {
-						Matcher matcher = PAT_SEARCH_GROUP_METHOD
+					if (target.matches(RegExp.matchesMethod)) {
+						Matcher matcher = RegExp.groupMethodPattern
 								.matcher(target);
 						if (matcher.find()) {
 							MethodInfo each = new MethodInfo();
@@ -315,7 +233,8 @@ public final class TestCaseGenerateUtil {
 			StringBuilder tmpsb = new StringBuilder();
 			String line = null;
 			while ((line = br.readLine()) != null) {
-				tmpsb.append(SourceCodeParseUtil.trimLineComments(line) + " ");
+				tmpsb.append(SourceCodeParseUtil.trimLineComments(line)
+						+ StrConst.space);
 			}
 			// source code string (inner class methods are excluded)
 			String targetClassSourceStr = SourceCodeParseUtil
@@ -367,10 +286,7 @@ public final class TestCaseGenerateUtil {
 					pref.isTestMethodGenIncludeProtected,
 					pref.isTestMethodGenIncludePackageLocal);
 			for (String target : targets) {
-				// target = target.replaceAll("\\s+?" + STR.COMMA, STR.COMMA)
-				// .replaceAll(STR.COMMA + "\\s+?", STR.COMMA).replaceAll(
-				// "<\\s+?", "<").replaceAll("\\s+?>", ">");
-				Matcher matcher = PAT_SEARCH_GROUP_METHOD.matcher(target);
+				Matcher matcher = RegExp.groupMethodPattern.matcher(target);
 				if (matcher.find()) {
 					MethodInfo each = new MethodInfo();
 					// return type
@@ -379,22 +295,22 @@ public final class TestCaseGenerateUtil {
 						String returnTypeFull = getType(matcher.group(1));
 						// get generics
 						Matcher toGenericsMatcher = Pattern.compile(
-								RXP_GENERICS_PART_GROUP)
-								.matcher(returnTypeFull);
+								RegExp.genericsGroup).matcher(returnTypeFull);
 						while (toGenericsMatcher.find()) {
 							String[] generics = toGenericsMatcher.group()
-									.replaceAll("<", STR.EMPTY).replaceAll(">",
-											STR.EMPTY).split(",");
+									.replaceAll("<", StrConst.empty)
+									.replaceAll(">", StrConst.empty).split(
+											StrConst.comma);
 							// convert to java.lang.Object if self
 							// class is included
 							for (String generic : generics) {
 								generic = getClassInSourceCode(generic,
-										STR.EMPTY, new ArrayList<String>());
+										StrConst.empty, new ArrayList<String>());
 								each.returnType.generics.add(generic);
 							}
 						}
 						each.returnType.name = returnTypeFull.replace(
-								RXP_GENERICS_PART, STR.EMPTY);
+								RegExp.generics, StrConst.empty);
 						each.returnType.nameInMethodName = getTypeAvailableInMethodName(each.returnType.name);
 					}
 					// method name
@@ -402,10 +318,10 @@ public final class TestCaseGenerateUtil {
 					// arg types
 					String args = matcher.group(3);
 					// prepare to get generics
-					String[] tmpArr = args.split(",");
+					String[] tmpArr = args.split(StrConst.comma);
 					int tmpArrLen = tmpArr.length;
 					List<String> tmpArrList = new ArrayList<String>();
-					String buf = STR.EMPTY;
+					String buf = StrConst.empty;
 					for (int i = 0; i < tmpArrLen; i++) {
 						String element = tmpArr[i].trim();
 						// ex. List<String>
@@ -420,13 +336,13 @@ public final class TestCaseGenerateUtil {
 						}
 						// ex. (Map<String,) Object>
 						if (element.matches(".+?>.+")) {
-							String result = buf + STR.COMMA + element;
+							String result = buf + StrConst.comma + element;
 							tmpArrList.add(result);
-							buf = STR.EMPTY;
+							buf = StrConst.empty;
 							continue;
 						}
-						if (!buf.equals(STR.EMPTY)) {
-							buf += STR.COMMA + element;
+						if (!buf.equals(StrConst.empty)) {
+							buf += StrConst.comma + element;
 							continue;
 						}
 						tmpArrList.add(element);
@@ -439,22 +355,23 @@ public final class TestCaseGenerateUtil {
 							ArgType argType = new ArgType();
 							String argTypeFull = argArr[i];
 							Matcher toGenericsMatcher = Pattern.compile(
-									RXP_GENERICS_PART_GROUP).matcher(
-									argTypeFull);
+									RegExp.genericsGroup).matcher(argTypeFull);
 							while (toGenericsMatcher.find()) {
 								String[] generics = toGenericsMatcher.group()
-										.replaceAll("<", STR.EMPTY).replaceAll(
-												">", STR.EMPTY).split(",");
+										.replaceAll("<", StrConst.empty)
+										.replaceAll(">", StrConst.empty).split(
+												StrConst.comma);
 								// convert to java.lang.Object if self
 								// class is included
 								for (String generic : generics) {
 									generic = getClassInSourceCode(generic,
-											STR.EMPTY, new ArrayList<String>());
+											StrConst.empty,
+											new ArrayList<String>());
 									argType.generics.add(generic);
 								}
 							}
 							String argTypeStr = argTypeFull.replaceAll(
-									RXP_GENERICS_PART, STR.EMPTY);
+									RegExp.generics, StrConst.empty);
 							argType.name = getType(argTypeStr);
 							argType.nameInMethodName = getTypeAvailableInMethodName(argTypeStr);
 							each.argTypes.add(argType);
@@ -485,12 +402,13 @@ public final class TestCaseGenerateUtil {
 							fieldType = fieldType.replaceAll("\\[", "\\\\[")
 									.replaceAll("\\]", "\\\\]");
 							String searchRegexp = ".+?private\\s+" + fieldType
-									+ "\\s+" + fieldName + ".+";
+									+ RegExp.wsReq + fieldName + ".+";
 							if (targetClassSourceStr.matches(searchRegexp))
 								continue;
 						}
 					}
-					String prefix = pref.isJUnitVersion3 ? "test_" : "";
+					String prefix = pref.isJUnitVersion3 ? StrConst.testMethodPrefix4Version3
+							: StrConst.empty;
 					each.testMethodName = prefix + each.methodName;
 					// add arg types
 					if (pref.isTestMethodGenArgsEnabled) {
@@ -512,7 +430,7 @@ public final class TestCaseGenerateUtil {
 								+ each.returnType.nameInMethodName;
 					}
 					// static or instance method
-					if (target.matches(RXP_SEARCH_STATIC_METHOD)) {
+					if (target.matches(RegExp.matchesStaticMethod)) {
 						each.isStatic = true;
 					}
 					testMethods.add(each);
@@ -539,7 +457,7 @@ public final class TestCaseGenerateUtil {
 			ClassInfo testClassinfo, String testTargetClassname) {
 		PreferenceLoader pref = new PreferenceLoader();
 		StringBuilder sb = new StringBuilder();
-		String CRLF = STR.CARRIAGE_RETURN + STR.LINE_FEED;
+		String CRLF = StrConst.carriageReturn + StrConst.lineFeed;
 		if (pref.isTestMethodGenEnabledSupportJMock2) {
 			if (pref.isUsingJUnitHelperRuntime) {
 				// JUnit 4.x does not have the field.
@@ -569,16 +487,17 @@ public final class TestCaseGenerateUtil {
 		String returnTypeName = testMethod.returnType.name;
 		Object returnDefaultValue = null;
 		if (!returnTypeName.equals("void")) {
-			returnTypeName = returnTypeName.replaceAll(RXP_GENERICS_PART,
-					STR.EMPTY);
+			returnTypeName = returnTypeName.replaceAll(RegExp.generics,
+					StrConst.empty);
 			returnTypeName = getClassInSourceCode(returnTypeName,
 					testTargetClassname, testClassinfo.importList);
 			List<String> generics = testMethod.returnType.generics;
 			int genericsLen = generics.size();
 			if (genericsLen > 0) {
 				returnTypeName += "<" + generics.get(0);
-				for (int i = 1; i < genericsLen; i++)
-					returnTypeName += "," + generics.get(i);
+				for (int i = 1; i < genericsLen; i++) {
+					returnTypeName += StrConst.comma + generics.get(i);
+				}
 				returnTypeName += ">";
 			}
 			if (PrimitiveTypeUtil.isPrimitive(returnTypeName)) {
@@ -612,7 +531,7 @@ public final class TestCaseGenerateUtil {
 		List<String> args = new ArrayList<String>();
 		int argTypesLen = argTypes.size();
 		if (argTypesLen > 0 && argTypes.get(0).name != null
-				&& !argTypes.get(0).name.equals(STR.EMPTY)) {
+				&& !argTypes.get(0).name.equals(StrConst.empty)) {
 			for (int i = 0; i < argTypesLen; i++) {
 				ArgType argType = argTypes.get(i);
 				// flexible length args
@@ -636,7 +555,7 @@ public final class TestCaseGenerateUtil {
 					sb.append(argType.generics.get(0));
 					if (argType.generics.size() > 1) {
 						for (int j = 1; j < argType.generics.size(); j++) {
-							sb.append(",");
+							sb.append(StrConst.comma);
 							sb.append(argType.generics.get(j));
 						}
 					}
@@ -702,11 +621,11 @@ public final class TestCaseGenerateUtil {
 		} else {
 			sb.append("target");
 		}
-		sb.append(".");
+		sb.append(StrConst.dot);
 		sb.append(testMethod.methodName);
 		sb.append("(");
 		if (args.size() > 0 && argTypesLen > 0 && argTypes.get(0).name != null
-				&& !argTypes.get(0).name.equals(STR.EMPTY))
+				&& !argTypes.get(0).name.equals(StrConst.empty))
 			sb.append(args.get(0));
 		for (int i = 1; i < argTypes.size(); i++) {
 			sb.append(", ");
@@ -735,7 +654,7 @@ public final class TestCaseGenerateUtil {
 	 * @return
 	 */
 	protected static String getType(String arg) {
-		arg = arg.trim().replaceAll("final ", STR.EMPTY).split("\\s+")[0];
+		arg = arg.trim().replaceAll("final ", StrConst.empty).split("\\s+")[0];
 		return arg;
 	}
 
@@ -746,14 +665,14 @@ public final class TestCaseGenerateUtil {
 	 * @return
 	 */
 	protected static String getTypeAvailableInMethodName(String arg) {
-		arg = arg.replaceAll(RXP_GENERICS_PART, STR.EMPTY);
-		arg = arg.replaceAll("final ", STR.EMPTY);
+		arg = arg.replaceAll(RegExp.generics, StrConst.empty);
+		arg = arg.replaceAll("final ", StrConst.empty);
 		arg = arg.replaceAll("\\.\\.\\.", "Array")
 				.replaceAll("\\[\\]", "Array");
 		// sample name classes imported or full package class defined
 		// ex. java.util.Date, java.sql.Date
-		arg = arg.replaceAll("\\.", STR.EMPTY);
-		arg = arg.trim().split("\\s+")[0];
+		arg = arg.replaceAll("\\.", StrConst.empty);
+		arg = arg.trim().split(RegExp.wsReq)[0];
 		return arg;
 	}
 
@@ -790,7 +709,8 @@ public final class TestCaseGenerateUtil {
 			if (returnTypeToCheck.equals(testTargetClassname))
 				returnTypeFound = true;
 			for (String importedPackage : importList) {
-				importedPackage = importedPackage.replaceAll("//", STR.EMPTY);
+				importedPackage = importedPackage.replaceAll("//",
+						StrConst.empty);
 				if (importedPackage.matches(".+?\\."
 						+ returnTypeToCheck.replaceAll("\\[", "\\\\[")
 								.replaceAll("\\]", "\\\\]") + "$")) {

@@ -45,7 +45,7 @@ import org.junithelper.plugin.bean.ClassInfo;
 import org.junithelper.plugin.bean.MethodInfo;
 import org.junithelper.plugin.constant.Dialog;
 import org.junithelper.plugin.constant.RuntimeLibrary;
-import org.junithelper.plugin.constant.STR;
+import org.junithelper.plugin.constant.StrConst;
 import org.junithelper.plugin.exception.InvalidPreferenceException;
 import org.junithelper.plugin.page.PreferenceLoader;
 import org.junithelper.plugin.util.FileResourceUtil;
@@ -96,7 +96,6 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 		try {
 			IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace()
 					.getRoot();
-
 			String testTargetClassname = null;
 			String testCaseFilename = null;
 			String testCaseClassname = null;
@@ -110,15 +109,15 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 			if (structuredSelection != null && structuredSelection.size() == 0) {
 				// required select
 				Shell shell = new Shell();
-				MessageDialog.openWarning(shell, Dialog.Common.TITLE,
-						Dialog.Common.REQUIRED);
+				MessageDialog.openWarning(shell, Dialog.Common.title,
+						Dialog.Common.required);
 				refreshFlag = false;
 			} else if (structuredSelection != null
 					&& structuredSelection.size() > 1) {
 				// select one only
 				Shell shell = new Shell();
-				MessageDialog.openWarning(shell, Dialog.Common.TITLE,
-						Dialog.Common.SELECT_ONLY_ONE);
+				MessageDialog.openWarning(shell, Dialog.Common.title,
+						Dialog.Common.selectOneOnly);
 				refreshFlag = false;
 			} else {
 				// path started from project root
@@ -127,63 +126,64 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 				// path started from project root
 				// ex. /{projectName}/src/main/java/hoge/foo/var/TestTarget.java
 				String[] dirArrFromProjectRoot = pathFromProjectRoot
-						.split(STR.DIR_SEP);
+						.split(StrConst.dirSep);
 				// test case file create filesystem path
-				String selected = STR.EMPTY;
+				String selected = StrConst.empty;
 				int len = dirArrFromProjectRoot.length;
 				for (int i = 2; i < len - 1; i++)
-					selected += dirArrFromProjectRoot[i] + STR.DIR_SEP;
+					selected += dirArrFromProjectRoot[i] + StrConst.dirSep;
 				selected += dirArrFromProjectRoot[len - 1];
 				// current project name
 				projectName = dirArrFromProjectRoot[1];
 				// last element is test class file name
 				String testTargetClassFilename = dirArrFromProjectRoot[dirArrFromProjectRoot.length - 1];
 				testTargetClassname = testTargetClassFilename.replace(
-						STR.JAVA_EXP, STR.EMPTY);
+						StrConst.javaFileExp, StrConst.empty);
 				// test class name to create
 				testCaseClassname = testTargetClassname
-						+ STR.SUFFIX_OF_TESTCASE;
+						+ StrConst.suffixOfTestcase;
 				// test case name to open
-				testCaseFilename = testCaseClassname + STR.JAVA_EXP;
+				testCaseFilename = testCaseClassname + StrConst.javaFileExp;
 
 				// get workspace path on os file system
 				String projectRootPath = workspaceRoot.getLocation()
-						+ STR.DIR_SEP + projectName + STR.DIR_SEP;
+						+ StrConst.dirSep + projectName + StrConst.dirSep;
 
 				testCaseResource = selected.replace(pref.commonSrcMainJavaDir,
-						pref.commonTestMainJavaDir).replace(STR.JAVA_EXP,
-						STR.SUFFIX_OF_TESTCASE + STR.JAVA_EXP);
-				String[] selectedDirArr = selected.split(STR.DIR_SEP);
+						pref.commonTestMainJavaDir).replace(
+						StrConst.javaFileExp,
+						StrConst.suffixOfTestcase + StrConst.javaFileExp);
+				String[] selectedDirArr = selected.split(StrConst.dirSep);
 				testCaseDirResource = "";
 				int selectedDirArrLength = selectedDirArr.length;
 				for (int i = 0; i < selectedDirArrLength - 1; i++)
-					testCaseDirResource += selectedDirArr[i] + STR.DIR_SEP;
+					testCaseDirResource += selectedDirArr[i] + StrConst.dirSep;
 				testCaseDirResource = testCaseDirResource.replace(
 						pref.commonSrcMainJavaDir, pref.commonTestMainJavaDir);
 				testCaseCreateDirpath = projectRootPath + testCaseDirResource;
 				File testDir = new File(testCaseCreateDirpath);
 				// check directory exist
-				String[] dirArr = testCaseCreateDirpath.split(STR.DIR_SEP);
-				String tmpDirPath = STR.EMPTY;
-				String tmpResourceDirPath = STR.EMPTY;
+				String[] dirArr = testCaseCreateDirpath.split(StrConst.dirSep);
+				String tmpDirPath = StrConst.empty;
+				String tmpResourceDirPath = StrConst.empty;
 				for (String each : dirArr) {
-					tmpDirPath += STR.DIR_SEP + each;
+					tmpDirPath += StrConst.dirSep + each;
 					File tmpDir = new File(tmpDirPath);
 					// skip until project root dir
 					if (tmpDir.getPath().length() <= projectRootPath.length()) {
 						continue;
 					}
-					tmpResourceDirPath += STR.DIR_SEP + each;
+					tmpResourceDirPath += StrConst.dirSep + each;
 					if (!tmpDir.exists()) {
 						if (!tmpDir.mkdir()) {
 							System.err.println("create directory error : "
 									+ tmpDir.getPath());
 						}
 						if (!ResourceRefreshUtil.refreshLocal(null, projectName
-								+ STR.DIR_SEP + tmpResourceDirPath + "/..")) {
-							String msg = Dialog.Common.RESOURCE_REFRESH_ERROR;
+								+ StrConst.dirSep + tmpResourceDirPath + "/..")) {
+							String msg = Dialog.Common.resourceRefreshError;
 							MessageDialog.openWarning(new Shell(),
-									Dialog.Common.TITLE, msg);
+									Dialog.Common.title, msg);
 							System.err.println("Resource refresh error!");
 						}
 					}
@@ -194,21 +194,21 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 				}
 				// resource sync
 				if (!ResourceRefreshUtil.refreshLocal(null, projectName
-						+ STR.DIR_SEP + testCaseDirResource)) {
-					MessageDialog.openWarning(new Shell(), Dialog.Common.TITLE,
-							Dialog.Common.RESOURCE_REFRESH_ERROR);
+						+ StrConst.dirSep + testCaseDirResource)) {
+					MessageDialog.openWarning(new Shell(), Dialog.Common.title,
+							Dialog.Common.resourceRefreshError);
 					System.err.println("Resource refresh error!");
 				}
 				try {
 					// confirm if already exist
 					File outputFile = new File(testCaseCreateDirpath
-							+ STR.DIR_SEP + testCaseFilename);
-					String msg = Dialog.Common.ALREADY_EXIST + " ("
-							+ testCaseFilename + ")" + STR.LINE_FEED
-							+ Dialog.Common.CONFIRM_PROCEED;
+							+ StrConst.dirSep + testCaseFilename);
+					String msg = Dialog.Common.alreadyExist + " ("
+							+ testCaseFilename + ")" + StrConst.lineFeed
+							+ Dialog.Common.confirmToProceed;
 					if (!outputFile.exists()
 							|| MessageDialog.openConfirm(new Shell(),
-									Dialog.Common.TITLE, msg)) {
+									Dialog.Common.title, msg)) {
 						// get public methods
 						String targetClass = "/" + projectName + "/" + selected;
 						IResource targetClassResource = workspaceRoot
@@ -221,14 +221,15 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 						String writeEncoding = FileResourceUtil
 								.detectEncoding(file);
 						fos = new FileOutputStream(testCaseCreateDirpath
-								+ STR.DIR_SEP + testCaseFilename);
+								+ StrConst.dirSep + testCaseFilename);
 						testFileOSWriter = new OutputStreamWriter(fos,
 								writeEncoding);
 						StringBuilder sb = new StringBuilder();
-						String CRLF = STR.CARRIAGE_RETURN + STR.LINE_FEED;
+						String CRLF = StrConst.carriageReturn
+								+ StrConst.lineFeed;
 						// get package
-						String testPackageString = STR.EMPTY;
-						String[] tmpDirArr = selected.split(STR.DIR_SEP);
+						String testPackageString = StrConst.empty;
+						String[] tmpDirArr = selected.split(StrConst.dirSep);
 						StringBuilder dirSb = new StringBuilder();
 						int packageArrLen = tmpDirArr.length - 2;
 						int mainJavaLen = pref.commonSrcMainJavaDir.split("/").length;
@@ -244,7 +245,7 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 						sb.append(CRLF);
 						sb.append(CRLF);
 						// get class to extend
-						String testCase = pref.isUsingJUnitHelperRuntime ? RuntimeLibrary.TEST_CASE
+						String testCase = pref.isUsingJUnitHelperRuntime ? RuntimeLibrary.testcase
 								: pref.classToExtend;
 						String[] tmpTestCaseArr = testCase.split("\\.");
 						String testCaseName = tmpTestCaseArr[tmpTestCaseArr.length - 1];
@@ -276,7 +277,7 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 							for (MethodInfo testMethod : testMethods) {
 								if (testMethod.testMethodName == null
 										|| testMethod.testMethodName
-												.equals(STR.EMPTY)) {
+												.equals(StrConst.empty)) {
 									continue;
 								}
 								if (pref.isJUnitVersion4) {
@@ -288,7 +289,7 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 								sb.append("() throws Exception {");
 								sb.append(CRLF);
 								sb.append("\t\t//");
-								sb.append(STR.AUTO_GEN_MSG_TODO);
+								sb.append(StrConst.autoGenTodoMessage);
 								sb.append(CRLF);
 								if (pref.isTestMethodGenNotBlankEnabled) {
 									String notBlankSourceCode = TestCaseGenerateUtil
@@ -307,8 +308,8 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 						testFileOSWriter.write(sb.toString());
 					}
 				} catch (InvalidPreferenceException ipe) {
-					MessageDialog.openWarning(new Shell(), Dialog.Common.TITLE,
-							Dialog.Common.INVALID_PREFERENCE);
+					MessageDialog.openWarning(new Shell(), Dialog.Common.title,
+							Dialog.Common.invalidPreference);
 					return;
 				} catch (FileNotFoundException fnfe) {
 					fnfe.printStackTrace();
@@ -327,9 +328,9 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 		// resource refresh
 		if (refreshFlag
 				&& !ResourceRefreshUtil.refreshLocal(null, projectName
-						+ STR.DIR_SEP + testCaseDirResource + "/..")) {
-			MessageDialog.openWarning(new Shell(), Dialog.Common.TITLE,
-					Dialog.Common.RESOURCE_REFRESH_ERROR);
+						+ StrConst.dirSep + testCaseDirResource + "/..")) {
+			MessageDialog.openWarning(new Shell(), Dialog.Common.title,
+					Dialog.Common.resourceRefreshError);
 			System.err.println("Resource refresh error!");
 		} else {
 			// open test case

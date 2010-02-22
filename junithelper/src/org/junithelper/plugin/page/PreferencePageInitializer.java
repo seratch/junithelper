@@ -35,44 +35,45 @@ public class PreferencePageInitializer extends AbstractPreferenceInitializer {
 
 		// common
 		{
-			store.setDefault(Preference.Common.SRC_MAIN_PATH, "src/main/java");
-			store.setDefault(Preference.Common.SRC_TEST_PATH, "src/test/java");
+			store.setDefault(Preference.Common.srcMainPath, "src/main/java");
+			store.setDefault(Preference.Common.srcTestPath, "src/test/java");
 		}
 		// generating extended test class
 		{
-			store.setDefault(Preference.TestClassGen.ENABLE, true);
-			store.setDefault(Preference.TestClassGen.JUNIT_VERSION,
-					Preference.TestClassGen.JUNIT_VERSION_3);
-			store.setDefault(Preference.TestClassGen.CLASS_TO_EXTEND,
+			store.setDefault(Preference.TestClassGen.enabled, true);
+			store.setDefault(Preference.TestClassGen.junitVersion,
+					Preference.TestClassGen.junitVersion3);
+			store.setDefault(Preference.TestClassGen.classToExtend,
 					"junit.framework.TestCase");
 			store.setDefault(
-					Preference.TestClassGen.USING_JUNIT_HELPER_RUNTIME_LIB,
-					false);
+					Preference.TestClassGen.usingJunitHelperRuntimeLib, false);
 		}
 
 		// generating test methods
 		{
-			store.setDefault(Preference.TestMethodGen.ENABLE, true);
+			store.setDefault(Preference.TestMethodGen.enabled, true);
 
-			store.setDefault(Preference.TestMethodGen.INCLUDE_PUBLIC, true);
-			store.setDefault(Preference.TestMethodGen.INCLUDE_PROTECTED, true);
-			store.setDefault(Preference.TestMethodGen.INCLUDE_PACKAGE_LOCAL,
-					true);
-			store.setDefault(Preference.TestMethodGen.EXLCUDES_ACCESSORS, true);
+			store.setDefault(Preference.TestMethodGen.includePublic, true);
+			store.setDefault(Preference.TestMethodGen.includeProtected, true);
+			store
+					.setDefault(Preference.TestMethodGen.includePackageLocal,
+							true);
+			store.setDefault(Preference.TestMethodGen.excludesAccessors, true);
 
-			store.setDefault(Preference.TestMethodGen.DELIMITER, "_");
+			store.setDefault(Preference.TestMethodGen.delimiter, "_");
 
-			store.setDefault(Preference.TestMethodGen.ARGS, true);
-			store.setDefault(Preference.TestMethodGen.ARGS_PREFIX, "A");
-			store.setDefault(Preference.TestMethodGen.ARGS_DELIMITER, "$");
+			store.setDefault(Preference.TestMethodGen.enabledArgs, true);
+			store.setDefault(Preference.TestMethodGen.argsPrefix, "A");
+			store.setDefault(Preference.TestMethodGen.argsDelimiter, "$");
 
-			store.setDefault(Preference.TestMethodGen.RETURN, false);
-			store.setDefault(Preference.TestMethodGen.RETURN_PREFIX, "R");
-			store.setDefault(Preference.TestMethodGen.RETURN_DELIMITER, "$");
+			store.setDefault(Preference.TestMethodGen.enabledReturn, false);
+			store.setDefault(Preference.TestMethodGen.returnPrefix, "R");
+			store.setDefault(Preference.TestMethodGen.returnDelimiter, "$");
 
-			store.setDefault(Preference.TestMethodGen.METHOD_SAMPLE_IMPL, true);
-			store.setDefault(Preference.TestMethodGen.USING_MOCK,
-					Preference.TestMethodGen.USING_MOCK_NONE);
+			store.setDefault(
+					Preference.TestMethodGen.enabledTestMethodSampleImpl, true);
+			store.setDefault(Preference.TestMethodGen.usingMock,
+					Preference.TestMethodGen.usingMockNone);
 		}
 	}
 
