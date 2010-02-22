@@ -335,6 +335,15 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 			}
 
 			{
+				// enable return
+				tmgEnableExceptions = new BooleanFieldEditor(
+						Preference.TestMethodGen.enabledExceptions,
+						Preference.TestMethodGen.enabledExceptions,
+						tmgParentGroup);
+				addField(tmgEnableExceptions);
+			}
+
+			{
 				// public methods
 				tmgCommonIncludePublicMethods = new BooleanFieldEditor(
 						Preference.TestMethodGen.includePublic,
@@ -469,6 +478,8 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 		tmgReturnDelimiter.setEnabled(value, tmgReturnArea);
 		tmgReturnPrefix.setEnabled(value, tmgReturnArea);
 	}
+
+	private BooleanFieldEditor tmgEnableExceptions;
 
 	private BooleanFieldEditor tmgEnableGenerateSample;
 	private RadioGroupFieldEditor tmgRadioGroupMocks;

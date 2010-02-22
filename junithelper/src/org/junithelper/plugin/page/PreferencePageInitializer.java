@@ -70,6 +70,8 @@ public class PreferencePageInitializer extends AbstractPreferenceInitializer {
 			store.setDefault(Preference.TestMethodGen.returnPrefix, "R");
 			store.setDefault(Preference.TestMethodGen.returnDelimiter, "$");
 
+			store.setDefault(Preference.TestMethodGen.enabledExceptions, true);
+
 			store.setDefault(
 					Preference.TestMethodGen.enabledTestMethodSampleImpl, true);
 			store.setDefault(Preference.TestMethodGen.usingMock,

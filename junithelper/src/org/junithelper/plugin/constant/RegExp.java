@@ -48,7 +48,8 @@ public class RegExp {
 	static {
 		groupMethod = wsNotReq + methodModifiers + "\\s+(" + methodReturnType
 				+ ")" + wsReq + "(" + notWsReq + ")" + wsNotReq + "\\(("
-				+ "[^\\)]*?" + ")\\)" + wsNotReq + ".*?" + wsNotReq + "\\{.*";
+				+ "[^\\)]*?" + ")\\)" + wsNotReq + "(throws .+)*.*?" + wsNotReq
+				+ "\\{.*";
 	}
 	public static Pattern groupMethodPattern = Pattern.compile(groupMethod);
 

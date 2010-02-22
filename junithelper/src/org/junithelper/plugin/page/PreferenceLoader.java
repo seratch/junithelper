@@ -41,6 +41,7 @@ public class PreferenceLoader {
 	public boolean isTestMethodGenEnabled;
 	public boolean isTestMethodGenArgsEnabled;
 	public boolean isTestMethodGenReturnEnabled;
+	public boolean isTestMethodGenExceptions;
 	public boolean isTestMethodGenNotBlankEnabled;
 	public boolean isTestMethodGenEnabledSupportJMock2;
 	public boolean isTestMethodGenEnabledSupportEasyMock;
@@ -73,6 +74,9 @@ public class PreferenceLoader {
 				.getBoolean(Preference.TestMethodGen.enabledArgs);
 		isTestMethodGenReturnEnabled = store
 				.getBoolean(Preference.TestMethodGen.enabledReturn);
+		isTestMethodGenExceptions = store
+				.getBoolean(Preference.TestMethodGen.enabledExceptions);
+
 		isTestMethodGenNotBlankEnabled = store
 				.getBoolean(Preference.TestMethodGen.enabledTestMethodSampleImpl);
 

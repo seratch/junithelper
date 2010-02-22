@@ -75,4 +75,14 @@ public class MethodInfo {
 		public List<String> generics = new ArrayList<String>();
 	}
 
+	/**
+	 * Exceptions that test target method throws
+	 */
+	public List<ExceptionInfo> exceptions = new ArrayList<ExceptionInfo>();
+
+	public static class ExceptionInfo {
+		public String name;
+		public String nameInMethodName;
+	}
+
 }

@@ -115,6 +115,11 @@ public final class Preference {
 		public static final String returnDelimiter = "Return Delimiter";
 
 		/**
+		 * Enable includes exceptions that the method throws
+		 */
+		public static final String enabledExceptions = " Includes \"throws Exception\"";
+
+		/**
 		 * Public methods
 		 */
 		public static final String includePublic = " Includes \"public\"";

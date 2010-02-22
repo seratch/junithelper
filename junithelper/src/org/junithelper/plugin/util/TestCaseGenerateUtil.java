@@ -434,6 +434,16 @@ public final class TestCaseGenerateUtil {
 						each.isStatic = true;
 					}
 					testMethods.add(each);
+					String throwsExceptions = matcher.group(4);
+					if (throwsExceptions != null) {
+						String[] exceptions = throwsExceptions.replace(
+								"throws ", StrConst.empty)
+								.split(StrConst.comma);
+						for (String exp : exceptions) {
+							// TODO
+							System.out.println(exp);
+						}
+					}
 				}
 			}
 		} finally {
