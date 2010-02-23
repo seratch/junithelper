@@ -108,15 +108,18 @@ public class SourceCodeParseUtil {
 				if (current == '"' && source.charAt(i - 1) != '\\') {
 					isInsideOfString = (isInsideOfString) ? false : true;
 				}
-				if (current == '\'' && source.charAt(i - 1) != '\\') {
-					isInsideOfChar = (isInsideOfChar) ? false : true;
+				if (current == '\'') {
+					if (source.charAt(i - 1) != '\\') {
+						isInsideOfChar = (isInsideOfChar) ? false : true;
+					} else if (source.charAt(i - 2) == '\\') {
+						isInsideOfChar = (isInsideOfChar) ? false : true;
+					}
 				}
 			}
 			if (isInsideOfChar || isInsideOfString) {
 				System.out.print("!" + current);
 				continue;
 			}
-			System.out.print(current);
 			// waiting for inside of the target class
 			if (!isInsideOfTargetClass) {
 				sb.append(current);
@@ -163,6 +166,33 @@ public class SourceCodeParseUtil {
 		}
 		return sb.toString();
 	}
+
+	protected static boolean matchesPublic(String arg) {
+		return arg.matches(searchTargetMethodRegExpPrefix + "public"
+				+ searchTargetMethodRegExpPostfix);
+	}
+
+	protected static boolean matchesProtected(String arg) {
+		return arg.matches(searchTargetMethodRegExpPrefix + "protected"
+				+ searchTargetMethodRegExpPostfix);
+	}
+
+	protected static boolean matchesPackageLocal(String arg) {
+		return !arg.matches(searchTargetMethodRegExpPrefix + "public"
+				+ searchTargetMethodRegExpPostfix)
+				&& !arg.matches(searchTargetMethodRegExpPrefix + "protected"
+						+ searchTargetMethodRegExpPostfix)
+				&& !arg.matches(searchTargetMethodRegExpPrefix + "private"
+						+ searchTargetMethodRegExpPostfix);
+	}
+
+	protected static boolean matchesPrivate(String arg) {
+		return arg.matches(searchTargetMethodRegExpPrefix + "private"
+				+ searchTargetMethodRegExpPostfix);
+	}
+
+	private static String searchTargetMethodRegExpPrefix = "[\\{;\\}](\\s*.*\\s+)?";
+	private static String searchTargetMethodRegExpPostfix = "\\s+?.*\\{";
 
 	/**
 	 * Get target methods from source code string
@@ -213,32 +243,5 @@ public class SourceCodeParseUtil {
 		}
 		return result;
 	}
-
-	protected static boolean matchesPublic(String arg) {
-		return arg.matches(searchTargetMethodRegExpPrefix + "public"
-				+ searchTargetMethodRegExpPostfix);
-	}
-
-	protected static boolean matchesProtected(String arg) {
-		return arg.matches(searchTargetMethodRegExpPrefix + "protected"
-				+ searchTargetMethodRegExpPostfix);
-	}
-
-	protected static boolean matchesPackageLocal(String arg) {
-		return !arg.matches(searchTargetMethodRegExpPrefix + "public"
-				+ searchTargetMethodRegExpPostfix)
-				&& !arg.matches(searchTargetMethodRegExpPrefix + "protected"
-						+ searchTargetMethodRegExpPostfix)
-				&& !arg.matches(searchTargetMethodRegExpPrefix + "private"
-						+ searchTargetMethodRegExpPostfix);
-	}
-
-	protected static boolean matchesPrivate(String arg) {
-		return arg.matches(searchTargetMethodRegExpPrefix + "private"
-				+ searchTargetMethodRegExpPostfix);
-	}
-
-	private static String searchTargetMethodRegExpPrefix = "[\\{;\\}](\\s*.*\\s+)?";
-	private static String searchTargetMethodRegExpPostfix = "\\s+?.*\\{";
 
 }
