@@ -2,7 +2,7 @@ package org.junithelper.plugin.constant;
 
 import java.util.regex.Pattern;
 
-public class RegExp {
+public final class RegExp {
 
 	public static final String javaFileExp = "\\.java";
 

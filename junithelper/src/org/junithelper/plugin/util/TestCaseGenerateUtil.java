@@ -31,6 +31,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.junithelper.plugin.bean.ClassInfo;
 import org.junithelper.plugin.bean.MethodInfo;
 import org.junithelper.plugin.bean.MethodInfo.ArgType;
+import org.junithelper.plugin.bean.MethodInfo.ExceptionInfo;
 import org.junithelper.plugin.constant.RegExp;
 import org.junithelper.plugin.constant.StrConst;
 import org.junithelper.plugin.exception.InvalidPreferenceException;
@@ -186,14 +187,14 @@ public final class TestCaseGenerateUtil {
 					if (methodStringInfos.size() <= 0
 							|| methodStringInfos.get(0) == null)
 						methodStringInfos.add(new MethodInfo());
-					String[] importStartLines = targetClassSourceStr
+					String[] importLines = targetClassSourceStr
 							.split("import\\s+");
-					for (String importStartLine : importStartLines) {
+					for (String importLine : importLines) {
 						// not package or not comment
-						if (!importStartLine
-								.matches("^\\s*package.*?|^\\s*/\\*.*?|^\\s*//.*?")) {
-							String importedPackage = importStartLine.split(";")[0];
+						if (!importLine.matches("\\s*?package\\s.+")) {
+							String importedPackage = importLine.split(";")[0];
 							classInfo.importList.add(importedPackage);
+							System.out.println(importedPackage);
 						}
 					}
 				}
@@ -233,24 +234,25 @@ public final class TestCaseGenerateUtil {
 			StringBuilder tmpsb = new StringBuilder();
 			String line = null;
 			while ((line = br.readLine()) != null) {
-				tmpsb.append(SourceCodeParseUtil.trimLineComments(line)
-						+ StrConst.space);
+				line += StrConst.lineFeed;
+				tmpsb.append(SourceCodeParseUtil.trimLineComments(line));
+				tmpsb.append(StrConst.space);
 			}
 			// source code string (inner class methods are excluded)
+			String targetClassSourceStrWithoutComments = SourceCodeParseUtil
+					.trimAllComments(tmpsb.toString());
 			String targetClassSourceStr = SourceCodeParseUtil
-					.trimInsideOfBraces(SourceCodeParseUtil
-							.trimAllComments(tmpsb.toString()));
+					.trimInsideOfBraces(targetClassSourceStrWithoutComments);
 			// get imported types
 			if (pref.isTestMethodGenNotBlankEnabled) {
 				if (testMethods.size() <= 0 || testMethods.get(0) == null)
 					testMethods.add(new MethodInfo());
-				String[] importStartLines = targetClassSourceStr
-						.split("import\\s+");
-				for (String importStartLine : importStartLines) {
+				String[] importLines = targetClassSourceStr.split("import\\s+");
+				for (String importLine : importLines) {
 					// not package or not comment
-					if (!importStartLine
-							.matches("^\\s*package.*?|^\\s*/\\*.*?|^\\s*//.*?")) {
-						String importedPackage = importStartLine.split(";")[0];
+					if (!importLine.replaceAll(StrConst.lineFeed,
+							StrConst.empty).matches("\\s*?package\\s.+")) {
+						String importedPackage = importLine.split(";")[0];
 						classInfo.importList.add(importedPackage);
 					}
 				}
@@ -408,6 +410,7 @@ public final class TestCaseGenerateUtil {
 						}
 					}
 					String prefix = pref.isJUnitVersion3 ? StrConst.testMethodPrefix4Version3
+							+ pref.testMethodDelimiter
 							: StrConst.empty;
 					each.testMethodName = prefix + each.methodName;
 					// add arg types
@@ -434,14 +437,28 @@ public final class TestCaseGenerateUtil {
 						each.isStatic = true;
 					}
 					testMethods.add(each);
-					String throwsExceptions = matcher.group(4);
-					if (throwsExceptions != null) {
-						String[] exceptions = throwsExceptions.replace(
-								"throws ", StrConst.empty)
-								.split(StrConst.comma);
-						for (String exp : exceptions) {
-							// TODO
-							System.out.println(exp);
+
+					// testing exception patterns
+					if (pref.isTestMethodGenExceptions) {
+						String throwsExceptions = matcher.group(4);
+						if (throwsExceptions != null) {
+							String[] exceptions = throwsExceptions.replaceAll(
+									"throws" + RegExp.wsReq, StrConst.empty)
+									.split(StrConst.comma);
+							for (String exp : exceptions) {
+								exp = exp.trim();
+								MethodInfo expTest = ObjectUtil.deepCopy(each);
+								expTest.testingTargetException = new ExceptionInfo();
+								expTest.testingTargetException.name = exp;
+								expTest.testingTargetException.nameInMethodName = TestCaseGenerateUtil
+										.getTypeAvailableInMethodName(exp);
+								expTest.testMethodName = expTest.testMethodName
+										+ pref.testMethodDelimiter
+										+ pref.testMethodExceptionPrefix
+										+ pref.testMethodExceptionDelimiter
+										+ expTest.testingTargetException.nameInMethodName;
+								testMethods.add(expTest);
+							}
 						}
 					}
 				}
@@ -618,6 +635,14 @@ public final class TestCaseGenerateUtil {
 			sb.append(CRLF);
 			sb.append("\t\t");
 		}
+
+		if (pref.isTestMethodGenExceptions
+				&& testMethod.testingTargetException != null) {
+			sb.append("try{");
+			sb.append(CRLF);
+			sb.append("\t\t\t");
+		}
+
 		// execute target method
 		// ex. SampleUtil.doSomething(null, null);
 		// ex. String expected = null;
@@ -643,16 +668,34 @@ public final class TestCaseGenerateUtil {
 		}
 		sb.append(");");
 		sb.append(CRLF);
-		if (pref.isTestMethodGenEnabledSupportEasyMock) {
-			sb.append("\t\tmocks.verify();");
+
+		if (pref.isTestMethodGenExceptions
+				&& testMethod.testingTargetException != null) {
+			// exceptions thrown patterns
+			sb.append("\t\t\tfail(\"");
+			sb.append(StrConst.expectedExceptionNotThrownMessage);
+			sb.append(" (");
+			sb.append(testMethod.testingTargetException.name);
+			sb.append(")");
+			sb.append("\");");
 			sb.append(CRLF);
-		}
-		// assert return value
-		// ex. assertEquals(expected, actual);
-		if (!returnTypeName.equals("void")) {
-			sb.append("\t\t");
-			sb.append("assertEquals(expected, actual);");
+			sb.append("\t\t} catch (");
+			sb.append(testMethod.testingTargetException.name);
+			sb.append(" e) {}");
 			sb.append(CRLF);
+		} else {
+			// normal patterns
+			if (pref.isTestMethodGenEnabledSupportEasyMock) {
+				sb.append("\t\tmocks.verify();");
+				sb.append(CRLF);
+			}
+			// assert return value
+			// ex. assertEquals(expected, actual);
+			if (!returnTypeName.equals("void")) {
+				sb.append("\t\t");
+				sb.append("assertEquals(expected, actual);");
+				sb.append(CRLF);
+			}
 		}
 		return sb.toString();
 	}

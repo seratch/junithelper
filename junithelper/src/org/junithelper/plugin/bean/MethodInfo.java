@@ -78,11 +78,13 @@ public class MethodInfo {
 	/**
 	 * Exceptions that test target method throws
 	 */
-	public List<ExceptionInfo> exceptions = new ArrayList<ExceptionInfo>();
+	public List<ExceptionInfo> throwsExceptions = new ArrayList<ExceptionInfo>();
 
 	public static class ExceptionInfo {
 		public String name;
 		public String nameInMethodName;
 	}
+
+	public ExceptionInfo testingTargetException;
 
 }

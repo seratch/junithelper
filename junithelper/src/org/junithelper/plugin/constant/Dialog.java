@@ -22,7 +22,7 @@ package org.junithelper.plugin.constant;
  * @author Kazuhiro Sera <seratch@gmail.com>
  * @version 1.0
  */
-public class Dialog {
+public final class Dialog {
 
 	public static class Common {
 		/**

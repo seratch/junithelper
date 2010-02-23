@@ -72,7 +72,7 @@ public class SourceCodeParseUtil {
 	 * @return result without line comments
 	 */
 	public static String trimLineComments(String source) {
-		return source.replaceAll("//.+?\n", StrConst.empty);
+		return source.replaceAll("//[^\n]+\n", StrConst.empty);
 	}
 
 	/**
@@ -82,8 +82,8 @@ public class SourceCodeParseUtil {
 	 * @return result without line comments
 	 */
 	public static String trimAllComments(String source) {
-		return trimLineComments(source
-				.replaceAll("/\\*.+?\\*/", StrConst.empty));
+		return trimLineComments(source).replaceAll("/\\*[^(*/)]+?\\*/",
+				StrConst.empty);
 	}
 
 	/**
@@ -165,31 +165,64 @@ public class SourceCodeParseUtil {
 		Pattern pat = Pattern.compile(regexp);
 		Matcher mat = pat.matcher(source);
 		while (mat.find()) {
-			String matched = mat.group();
-			String prefix = "[\\{;\\}]\\s+?";
-			String postfix = "\\s.*";
+			String matched = mat.group(0).replaceAll(StrConst.carriageReturn,
+					StrConst.empty).replaceAll(StrConst.lineFeed,
+					StrConst.space);
 			// skip public methods
-			if (!publicRequired && matched.matches(prefix + "public" + postfix)) {
+			if (!publicRequired && matchesPublic(matched)) {
 				continue;
 			}
 			// skip protected methods
-			if (!protectedRequired
-					&& matched.matches(prefix + "protected" + postfix)) {
+			if (!protectedRequired && matchesProtected(matched)) {
 				continue;
 			}
 			// skip package local methods
-			if (!packageLocalRequired
-					&& !matched.matches(prefix + "public" + postfix)
-					&& !matched.matches(prefix + "protected" + postfix)) {
+			if (!packageLocalRequired && matchesPackageLocal(matched)) {
+				continue;
+			}
+			// skip private method by default
+			if (matchesPrivate(matched)) {
 				continue;
 			}
 			matched = matched.replaceAll(StrConst.tab, StrConst.space)
-					.replaceAll(prefix + "public" + "\\s", StrConst.empty)
-					.replaceAll(prefix + "protected" + "\\s", StrConst.empty)
-					.replaceAll(prefix + "\\s+?", StrConst.empty).replaceAll(
-							"\\sfinal\\s", StrConst.space);
+					.replaceAll(
+							searchTargetMethodRegExpPrefix + "public" + "\\s",
+							StrConst.empty).replaceAll(
+							searchTargetMethodRegExpPrefix + "protected"
+									+ "\\s", StrConst.empty).replaceAll(
+							searchTargetMethodRegExpPrefix + "\\s+?",
+							StrConst.empty).replaceAll("\\sfinal\\s",
+							StrConst.space);
 			result.add(StrConst.space + matched);
 		}
 		return result;
 	}
+
+	private static String searchTargetMethodRegExpPrefix = "[\\{;\\}](\\s*.*\\s+)?";
+	private static String searchTargetMethodRegExpPostfix = "\\s+?.*\\{";
+
+	protected static boolean matchesPublic(String arg) {
+		return arg.matches(searchTargetMethodRegExpPrefix + "public"
+				+ searchTargetMethodRegExpPostfix);
+	}
+
+	protected static boolean matchesProtected(String arg) {
+		return arg.matches(searchTargetMethodRegExpPrefix + "protected"
+				+ searchTargetMethodRegExpPostfix);
+	}
+
+	protected static boolean matchesPackageLocal(String arg) {
+		return !arg.matches(searchTargetMethodRegExpPrefix + "public"
+				+ searchTargetMethodRegExpPostfix)
+				&& !arg.matches(searchTargetMethodRegExpPrefix + "protected"
+						+ searchTargetMethodRegExpPostfix)
+				&& !arg.matches(searchTargetMethodRegExpPrefix + "private"
+						+ searchTargetMethodRegExpPostfix);
+	}
+
+	protected static boolean matchesPrivate(String arg) {
+		return arg.matches(searchTargetMethodRegExpPrefix + "private"
+				+ searchTargetMethodRegExpPostfix);
+	}
+
 }

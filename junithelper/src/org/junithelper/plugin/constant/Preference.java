@@ -117,7 +117,15 @@ public final class Preference {
 		/**
 		 * Enable includes exceptions that the method throws
 		 */
-		public static final String enabledExceptions = " Includes \"throws Exception\"";
+		public static final String enabledException = " Includes Exceptions Thrown";
+		/**
+		 * Return prefix
+		 */
+		public static final String exceptionPrefix = "Exception Prefix";
+		/**
+		 * Return delimiter
+		 */
+		public static final String exceptionDelimiter = "Exception Delimiter";
 
 		/**
 		 * Public methods
@@ -148,8 +156,17 @@ public final class Preference {
 		 * Using mock object framework
 		 */
 		public static final String usingMock = "Mock";
+		/**
+		 * None
+		 */
 		public static final String usingMockNone = "None";
+		/**
+		 * EasyMock
+		 */
 		public static final String usingMockEasyMock = "EasyMock";
+		/**
+		 * JMock2
+		 */
 		public static final String usingMockJMock2 = "JMock2";
 
 	}

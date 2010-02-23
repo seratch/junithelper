@@ -12,6 +12,69 @@ import test.bean.SampleBean;
 @SuppressWarnings(value = { "issue 28" })
 public class JUnitHelperTestBean {
 
+	/**
+	 * comment1
+	 * 
+	 */
+
+	/*
+	 * comment2
+	 */
+
+	// Expected : 45 methods
+	// static String[] staticPackageLocal() {
+	// void packageLocal() {
+	// public static void methodStaticReturnVoid() {
+	// public static final void methodStaticFinalReturnVoid() {
+	// public boolean returnPrimitive_boolean(boolean arg) {
+	// public int returnPrimitive_int(int arg) {
+	// public byte returnPrimitive_byte(byte arg) {
+	// public short returnPrimitive_short(short arg) {
+	// public long returnPrimitive_long(long arg) {
+	// public char returnPrimitive_char(char arg) {
+	// public float returnPrimitive_float(float arg) {
+	// public double returnPrimitive_double(double arg) {
+	// public double[] returnPrimitiveArray_double(double[] arg) {
+	// public JUnitHelperTestBean getBean(SampleBean arg) {
+	// public Map<String, String> getMap() {
+	// public void setMap(Map<String, Object> map) {
+	// public List<String> getList() {
+	// public void setList(List<String> arg) {
+	// public void setMapList(Map<String, Object> map, List<String> list) {
+	// public Map<String, Object> methodReturnMapGetMap(Map<Object, String> a)
+	// public <T> void issue9(Map<String, T> singletonComponents) {
+	// public String methodSomeSringArgs(String arg, String arg2, String
+	// arg3,String arg4) {
+	// public List<String> getList(String... args) {
+	// public List<String> toList(String[] args1, String[] args2) {
+	// public static <T> T[] toArray(List<T> arg) {
+	// public static <T> List<T> toArrayList(T[] arg) {
+	// public static <T> T[] deepCopy(T[] arg) {
+	// public static final void info(Logger logger, String msg, boolean logging)
+	// public static final void info(Logger logger, String msg) {
+	// public void methodArgFinal(final Logger finalLog) {
+	// public static Timestamp issue19(java.sql.Date date) {
+	// public static java.sql.Date issue20() {
+	// protected static java.sql.Date issue21Static() {
+	// protected java.sql.Date issue21Instance() {
+	// public static String issue24(Class<?> clazz, String methodName,
+	// protected String throwsException() throws Exception {
+	// protected String throwsException() throws Exception {
+	// protected void throwsException2() throws
+	// IOException,UnsupportedOperationException
+	// protected void throwsException2() throws
+	// IOException,UnsupportedOperationException
+	// protected void throwsException2() throws
+	// IOException,UnsupportedOperationException
+	// protected void throwsException3() throws
+	// NullPointerException,java.lang.IllegalArgumentException {
+	// protected void throwsException3() throws
+	// NullPointerException,java.lang.IllegalArgumentException {
+	// protected void throwsException3() throws
+	// NullPointerException,java.lang.IllegalArgumentException {
+	// static public void staticPublicMethod() {
+	// static protected void staticProtectedMethod() {
+
 	public String publicField;
 	protected String protectedField = new String();
 	String packageLocalField;
@@ -177,6 +240,32 @@ public class JUnitHelperTestBean {
 
 	protected String throwsException() throws Exception {
 		return null;
+	}
+
+	protected void throwsException2() throws IOException,
+			UnsupportedOperationException {
+	}
+
+	protected void throwsException3() throws NullPointerException,
+			java.lang.IllegalArgumentException {
+		staticPrivateMethod();
+		privateStaticMethod();
+		privateInstanceMethod();
+	}
+
+	static public void staticPublicMethod() {
+	}
+
+	static protected void staticProtectedMethod() {
+	}
+
+	static private void staticPrivateMethod() {
+	}
+
+	private static void privateStaticMethod() {
+	}
+
+	private void privateInstanceMethod() {
 	}
 
 }

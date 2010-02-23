@@ -335,12 +335,54 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 			}
 
 			{
-				// enable return
-				tmgEnableExceptions = new BooleanFieldEditor(
-						Preference.TestMethodGen.enabledExceptions,
-						Preference.TestMethodGen.enabledExceptions,
-						tmgParentGroup);
-				addField(tmgEnableExceptions);
+				// enable exceptions
+				tmgEnableException = new BooleanFieldEditor(
+						Preference.TestMethodGen.enabledException,
+						Preference.TestMethodGen.enabledException,
+						tmgParentGroup) {
+					@Override
+					protected void valueChanged(boolean oldValue,
+							boolean newValue) {
+						super.valueChanged(oldValue, newValue);
+						switchDisplayOfMethodExceptionsArea(newValue);
+					}
+
+					@Override
+					protected void doLoad() {
+						super.doLoad();
+						switchDisplayOfMethodExceptionsArea(getBooleanValue());
+					}
+
+					@Override
+					protected void doLoadDefault() {
+						super.doLoadDefault();
+						switchDisplayOfMethodExceptionsArea(getBooleanValue());
+					}
+				};
+				addField(tmgEnableException);
+
+				Group group = new Group(tmgParentGroup, 0);
+				FillLayout layout = new FillLayout(256);
+				layout.marginHeight = 4;
+				layout.marginWidth = 4;
+				group.setLayout(layout);
+				group.setText("Exceptions thrown");
+				GridData gd = new GridData(768);
+				gd.horizontalSpan = 2;
+				group.setLayoutData(gd);
+
+				tmgExceptionArea = new Composite(group, 0);
+				tmgExceptionArea.setLayout(new GridLayout(2, false));
+				tmgExceptionPrefix = new StringFieldEditor(
+						Preference.TestMethodGen.exceptionPrefix,
+						Preference.TestMethodGen.exceptionPrefix,
+						tmgExceptionArea);
+				addField(tmgExceptionPrefix);
+				tmgExceptionDelimiter = new StringFieldEditor(
+						Preference.TestMethodGen.exceptionDelimiter,
+						Preference.TestMethodGen.exceptionDelimiter,
+						tmgExceptionArea);
+				addField(tmgExceptionDelimiter);
 			}
 
 			{
@@ -479,7 +521,16 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 		tmgReturnPrefix.setEnabled(value, tmgReturnArea);
 	}
 
-	private BooleanFieldEditor tmgEnableExceptions;
+	private BooleanFieldEditor tmgEnableException;
+	private StringFieldEditor tmgExceptionPrefix;
+	private StringFieldEditor tmgExceptionDelimiter;
+	private Composite tmgExceptionArea;
+
+	private void switchDisplayOfMethodExceptionsArea(boolean value) {
+		// enable/disable the area
+		tmgExceptionDelimiter.setEnabled(value, tmgExceptionArea);
+		tmgExceptionPrefix.setEnabled(value, tmgExceptionArea);
+	}
 
 	private BooleanFieldEditor tmgEnableGenerateSample;
 	private RadioGroupFieldEditor tmgRadioGroupMocks;

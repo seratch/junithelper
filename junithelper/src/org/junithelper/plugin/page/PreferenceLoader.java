@@ -55,6 +55,8 @@ public class PreferenceLoader {
 	public String testMethodArgsDelimiter;
 	public String testMethodReturnPrefix;
 	public String testMethodReturnDelimiter;
+	public String testMethodExceptionPrefix;
+	public String testMethodExceptionDelimiter;
 
 	public String classToExtend;
 
@@ -75,7 +77,7 @@ public class PreferenceLoader {
 		isTestMethodGenReturnEnabled = store
 				.getBoolean(Preference.TestMethodGen.enabledReturn);
 		isTestMethodGenExceptions = store
-				.getBoolean(Preference.TestMethodGen.enabledExceptions);
+				.getBoolean(Preference.TestMethodGen.enabledException);
 
 		isTestMethodGenNotBlankEnabled = store
 				.getBoolean(Preference.TestMethodGen.enabledTestMethodSampleImpl);
@@ -110,6 +112,10 @@ public class PreferenceLoader {
 				.getString(Preference.TestMethodGen.returnPrefix);
 		testMethodReturnDelimiter = store
 				.getString(Preference.TestMethodGen.returnDelimiter);
+		testMethodExceptionPrefix = store
+				.getString(Preference.TestMethodGen.exceptionPrefix);
+		testMethodExceptionDelimiter = store
+				.getString(Preference.TestMethodGen.exceptionDelimiter);
 
 		classToExtend = store.getString(Preference.TestClassGen.classToExtend);
 
