@@ -73,7 +73,8 @@ public final class TestCaseGenerateUtil {
 				for (MethodInfo actual : actualMethods) {
 					String escapedExp = expected.testMethodName.replace(
 							StrConst.testMethodPrefix4Version3, StrConst.empty)
-							.replaceAll("\\$", "\\\\\\$");
+							.replaceAll("\\$", "\\\\\\$").replaceAll(
+									"[\\(\\)\\[\\]]", StrConst.empty);
 					if (actual.testMethodName.matches(".*" + escapedExp + ".*")) {
 						exist = true;
 						break;
@@ -240,6 +241,8 @@ public final class TestCaseGenerateUtil {
 				tmpsb.append(SourceCodeParseUtil.trimLineComments(line));
 				tmpsb.append(StrConst.space);
 			}
+			// TODO
+			System.out.println(tmpsb.toString());
 			// source code string (inner class methods are excluded)
 			String targetClassSourceStrWithoutComments = SourceCodeParseUtil
 					.trimAllComments(tmpsb.toString());

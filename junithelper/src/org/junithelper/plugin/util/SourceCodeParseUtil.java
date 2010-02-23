@@ -72,7 +72,7 @@ public class SourceCodeParseUtil {
 	 * @return result without line comments
 	 */
 	public static String trimLineComments(String source) {
-		return source.replaceAll("//[^\n]+\n", StrConst.empty);
+		return source.replaceAll("^[\\s\\t]*//[^\n]+\n", StrConst.empty);
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class SourceCodeParseUtil {
 	 * @return result without line comments
 	 */
 	public static String trimAllComments(String source) {
-		return trimLineComments(source).replaceAll("/\\*[^(*/)]+?\\*/",
+		return trimLineComments(source).replaceAll("\\s*/\\*.+?\\*/",
 				StrConst.empty);
 	}
 
@@ -94,31 +94,47 @@ public class SourceCodeParseUtil {
 	 */
 	public static String trimInsideOfBraces(String source) {
 		int len = source.length();
+		boolean isInsideOfString = false;
+		boolean isInsideOfChar = false;
 		boolean isInsideOfTargetClass = false;
 		boolean isInsideOfFirstLevel = false;
 		boolean isInsideOfSecondLevel = false;
 		Stack<Character> braceStack = new Stack<Character>();
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < len; i++) {
+			char current = source.charAt(i);
+			// check inside of String or char
+			if (i > 0) {
+				if (current == '"' && source.charAt(i - 1) != '\\') {
+					isInsideOfString = (isInsideOfString) ? false : true;
+				}
+				if (current == '\'' && source.charAt(i - 1) != '\\') {
+					isInsideOfChar = (isInsideOfChar) ? false : true;
+				}
+			}
+			if (isInsideOfChar || isInsideOfString) {
+				System.out.print("!" + current);
+				continue;
+			}
+			System.out.print(current);
 			// waiting for inside of the target class
 			if (!isInsideOfTargetClass) {
-				sb.append(source.charAt(i));
+				sb.append(current);
 				// might be started class def
 				if (i >= 6 && source.charAt(i - 6) == ' '
 						&& source.charAt(i - 5) == 'c'
 						&& source.charAt(i - 4) == 'l'
 						&& source.charAt(i - 3) == 'a'
 						&& source.charAt(i - 2) == 's'
-						&& source.charAt(i - 1) == 's'
-						&& source.charAt(i) == ' ') {
+						&& source.charAt(i - 1) == 's' && current == ' ') {
 					isInsideOfTargetClass = true;
 				}
 				continue;
 			}
 			// waiting for inside of the first level brace
 			if (!isInsideOfFirstLevel) {
-				sb.append(source.charAt(i));
-				if (source.charAt(i) == '{') {
+				sb.append(current);
+				if (current == '{') {
 					isInsideOfFirstLevel = true;
 				}
 				continue;
@@ -126,18 +142,18 @@ public class SourceCodeParseUtil {
 			// excluding inside of top brace
 			// outer of top braced
 			if (!isInsideOfSecondLevel) {
-				sb.append(source.charAt(i));
+				sb.append(current);
 			}
 			// brace start
-			if (source.charAt(i) == '{') {
+			if (current == '{') {
 				isInsideOfSecondLevel = true;
-				braceStack.push(source.charAt(i));
+				braceStack.push(current);
 			}
 			// brace end
-			if (!braceStack.empty() && source.charAt(i) == '}') {
+			if (!braceStack.empty() && current == '}') {
 				braceStack.pop();
 				if (braceStack.empty()) {
-					sb.append(source.charAt(i));
+					sb.append(current);
 				}
 			}
 			// check the brace stack state
@@ -198,9 +214,6 @@ public class SourceCodeParseUtil {
 		return result;
 	}
 
-	private static String searchTargetMethodRegExpPrefix = "[\\{;\\}](\\s*.*\\s+)?";
-	private static String searchTargetMethodRegExpPostfix = "\\s+?.*\\{";
-
 	protected static boolean matchesPublic(String arg) {
 		return arg.matches(searchTargetMethodRegExpPrefix + "public"
 				+ searchTargetMethodRegExpPostfix);
@@ -224,5 +237,8 @@ public class SourceCodeParseUtil {
 		return arg.matches(searchTargetMethodRegExpPrefix + "private"
 				+ searchTargetMethodRegExpPostfix);
 	}
+
+	private static String searchTargetMethodRegExpPrefix = "[\\{;\\}](\\s*.*\\s+)?";
+	private static String searchTargetMethodRegExpPostfix = "\\s+?.*\\{";
 
 }
