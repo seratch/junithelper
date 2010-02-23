@@ -190,11 +190,13 @@ public final class TestCaseGenerateUtil {
 					String[] importLines = targetClassSourceStr
 							.split("import\\s+");
 					for (String importLine : importLines) {
+						importLine = importLine.replaceAll(StrConst.lineFeed,
+								StrConst.empty);
 						// not package or not comment
-						if (!importLine.matches("\\s*?package\\s.+")) {
+						if (!importLine.matches("\\s*?package\\s.+")
+								&& !importLine.matches("/\\*.+")) {
 							String importedPackage = importLine.split(";")[0];
 							classInfo.importList.add(importedPackage);
-							System.out.println(importedPackage);
 						}
 					}
 				}
@@ -250,8 +252,10 @@ public final class TestCaseGenerateUtil {
 				String[] importLines = targetClassSourceStr.split("import\\s+");
 				for (String importLine : importLines) {
 					// not package or not comment
-					if (!importLine.replaceAll(StrConst.lineFeed,
-							StrConst.empty).matches("\\s*?package\\s.+")) {
+					importLine = importLine.replaceAll(StrConst.lineFeed,
+							StrConst.empty);
+					if (!importLine.matches("\\s*?package\\s.+")
+							&& !importLine.matches("/\\*.+")) {
 						String importedPackage = importLine.split(";")[0];
 						classInfo.importList.add(importedPackage);
 					}
@@ -405,8 +409,9 @@ public final class TestCaseGenerateUtil {
 									.replaceAll("\\]", "\\\\]");
 							String searchRegexp = ".+?private\\s+" + fieldType
 									+ RegExp.wsReq + fieldName + ".+";
-							if (targetClassSourceStr.matches(searchRegexp))
+							if (targetClassSourceStr.matches(searchRegexp)) {
 								continue;
+							}
 						}
 					}
 					String prefix = pref.isJUnitVersion3 ? StrConst.testMethodPrefix4Version3
