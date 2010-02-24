@@ -82,7 +82,7 @@ public class SourceCodeParseUtil {
 	 * @return result without line comments
 	 */
 	public static String trimAllComments(String source) {
-		return trimLineComments(source).replaceAll("\\s*/\\*.+?\\*/",
+		return trimLineComments(source).replaceAll("\\s*/\\*[^(\\*/)]+?\\*/",
 				StrConst.empty);
 	}
 
@@ -107,17 +107,16 @@ public class SourceCodeParseUtil {
 			if (i > 0) {
 				if (current == '"' && source.charAt(i - 1) != '\\') {
 					isInsideOfString = (isInsideOfString) ? false : true;
+					sb.append(current);
+					continue;
 				}
-				if (current == '\'') {
-					if (source.charAt(i - 1) != '\\') {
-						isInsideOfChar = (isInsideOfChar) ? false : true;
-					} else if (source.charAt(i - 2) == '\\') {
-						isInsideOfChar = (isInsideOfChar) ? false : true;
-					}
+				if (current == '\'' && source.charAt(i - 1) != '\\') {
+					isInsideOfChar = (isInsideOfChar) ? false : true;
+					sb.append(current);
+					continue;
 				}
 			}
 			if (isInsideOfChar || isInsideOfString) {
-				System.out.print("!" + current);
 				continue;
 			}
 			// waiting for inside of the target class
