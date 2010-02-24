@@ -6,6 +6,8 @@ public final class RegExp {
 
 	public static final String javaFileExp = "\\.java";
 
+	public static final String crlf = "[\\r\\n]";
+
 	public static final String wsReq = "\\s+";
 	public static final String wsNotReq = "\\s*";
 	public static final String notWsReq = "[^\\s]+?";
@@ -14,7 +16,7 @@ public final class RegExp {
 	public static final String methodModifiers = "[<\\w+?>|static|final|\\s]*";
 	public static final String methodModifiersExcludedStatic = "[<\\w+?>|final|\\s]*";
 	public static final String methodReturnType = "[a-zA-Z1-9\\[\\]_,\\$<>\\.]+?";
-	public static final String generics = "<[a-zA-Z0-9,\\$_\\?]+?>";
+	public static final String generics = "<[^>]+?>";
 	public static final String genericsGroup = "<([a-zA-Z0-9,\\$_\\?]+?)>";
 
 	/**

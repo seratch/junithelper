@@ -241,8 +241,6 @@ public final class TestCaseGenerateUtil {
 				tmpsb.append(SourceCodeParseUtil.trimLineComments(line));
 				tmpsb.append(StrConst.space);
 			}
-			// TODO
-			System.out.println(tmpsb.toString());
 			// source code string (inner class methods are excluded)
 			String targetClassSourceStrWithoutComments = SourceCodeParseUtil
 					.trimAllComments(tmpsb.toString());
@@ -409,10 +407,13 @@ public final class TestCaseGenerateUtil {
 							fieldName = fieldName.substring(0, 1).toLowerCase()
 									+ fieldName.substring(1);
 							fieldType = fieldType.replaceAll("\\[", "\\\\[")
-									.replaceAll("\\]", "\\\\]");
-							String searchRegexp = ".+?private\\s+" + fieldType
+									.replaceAll("\\]", "\\\\]").replaceAll(",",
+											"\\\\s*,\\\\s*");
+							String searchRegexp = ".*?private\\s+" + fieldType
+									+ "(" + RegExp.generics + ")*"
 									+ RegExp.wsReq + fieldName + ".+";
-							if (targetClassSourceStr.matches(searchRegexp)) {
+							if (targetClassSourceStr.replaceAll(RegExp.crlf,
+									StrConst.empty).matches(searchRegexp)) {
 								continue;
 							}
 						}

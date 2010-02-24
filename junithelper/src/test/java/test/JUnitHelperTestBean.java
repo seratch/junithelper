@@ -42,7 +42,7 @@ public class JUnitHelperTestBean {
 	 * comment2
 	 */
 
-	// Expected : 45 methods
+	// Expected : 43 methods
 	// static String[] staticPackageLocal() {
 	// void packageLocal() {
 	// public static void methodStaticReturnVoid() {
@@ -57,8 +57,6 @@ public class JUnitHelperTestBean {
 	// public double returnPrimitive_double(double arg) {
 	// public double[] returnPrimitiveArray_double(double[] arg) {
 	// public JUnitHelperTestBean getBean(SampleBean arg) {
-	// public Map<String, String> getMap() {
-	// public void setMap(Map<String, Object> map) {
 	// public List<String> getList() {
 	// public void setList(List<String> arg) {
 	// public void setMapList(Map<String, Object> map, List<String> list) {
@@ -169,18 +167,24 @@ public class JUnitHelperTestBean {
 		return null;
 	}
 
+	private Map<String, String> map;
+
 	public Map<String, String> getMap() {
-		return null;
+		return map;
 	}
 
-	public void setMap(Map<String, Object> map) {
+	public void setMap(Map<String, String> map) {
+		this.map = map;
 	}
+
+	public List<String> list;
 
 	public List<String> getList() {
-		return null;
+		return this.list;
 	}
 
-	public void setList(List<String> arg) {
+	public void setList(List<String> list) {
+		this.list = list;
 	}
 
 	public void setMapList(Map<String, Object> map, List<String> list) {
