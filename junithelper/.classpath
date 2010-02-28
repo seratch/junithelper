@@ -16,6 +16,7 @@
 	<classpathentry kind="lib" path="lib/jmock2/jmock-junit3-2.5.1.jar"/>
 	<classpathentry kind="lib" path="lib/jmock2/jmock-legacy-2.5.1.jar"/>
 	<classpathentry kind="lib" path="lib/jmock2/objenesis-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/mockito-all-1.8.2.jar"/>
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="src/test/java"/>
 	<classpathentry kind="output" path="bin"/>
