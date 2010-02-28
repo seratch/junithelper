@@ -23,7 +23,7 @@ import org.junithelper.plugin.constant.Preference;
 import org.junithelper.plugin.constant.StrConst;
 
 /**
- * JMock2Util<br>
+ * MockGenUtil<br>
  * <br>
  * 
  * @author Kazuhiro Sera <seratch@gmail.com>
@@ -92,6 +92,11 @@ public final class MockGenUtil {
 	public static final boolean isUsingJMock2(IPreferenceStore store) {
 		String setting = store.getString(Preference.TestMethodGen.usingMock);
 		return Preference.TestMethodGen.usingMockJMock2.equals(setting);
+	}
+
+	public static final boolean isUsingMockito(IPreferenceStore store) {
+		String setting = store.getString(Preference.TestMethodGen.usingMock);
+		return Preference.TestMethodGen.usingMockMockito.equals(setting);
 	}
 
 }

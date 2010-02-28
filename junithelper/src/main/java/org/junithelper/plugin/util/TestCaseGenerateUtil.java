@@ -114,6 +114,9 @@ public final class TestCaseGenerateUtil {
 					classInfo.importList
 							.add("org.easymock.classextension.IMocksControl");
 				}
+				if (pref.isTestMethodGenEnabledSupportMockito) {
+					classInfo.importList.add("static org.mockito.BDDMockito.*");
+				}
 			}
 		}
 		classInfo.methods = unimplementedMethodNames;
@@ -286,6 +289,10 @@ public final class TestCaseGenerateUtil {
 					classInfo.importList
 							.add("org.easymock.classextension.IMocksControl");
 				}
+				// Mockito
+				if (pref.isTestMethodGenEnabledSupportMockito) {
+					classInfo.importList.add("static org.mockito.BDDMockito.*");
+				}
 			}
 			// get test target methods
 			List<String> targets = SourceCodeParseUtil.getTargetMethods(
@@ -312,7 +319,7 @@ public final class TestCaseGenerateUtil {
 							// class is included
 							for (String generic : generics) {
 								generic = getClassInSourceCode(generic,
-										StrConst.empty, new ArrayList<String>());
+										StrConst.empty, classInfo.importList);
 								each.returnType.generics.add(generic);
 							}
 						}
@@ -373,7 +380,7 @@ public final class TestCaseGenerateUtil {
 								for (String generic : generics) {
 									generic = getClassInSourceCode(generic,
 											StrConst.empty,
-											new ArrayList<String>());
+											classInfo.importList);
 									argType.generics.add(generic);
 								}
 							}
@@ -551,11 +558,10 @@ public final class TestCaseGenerateUtil {
 			sb.append(CRLF);
 			sb.append("\t\t");
 		}
-		if (!returnTypeName.equals("void")) {
-			sb.append(returnTypeName);
-			sb.append(" expected = ");
-			sb.append(returnDefaultValue);
-			sb.append(";");
+
+		// Mockito BDD
+		if (pref.isTestMethodGenEnabledSupportMockito) {
+			sb.append("// given");
 			sb.append(CRLF);
 			sb.append("\t\t");
 		}
@@ -575,10 +581,14 @@ public final class TestCaseGenerateUtil {
 					argType.name = argType.name.replaceAll("\\.\\.\\.", "[]");
 				String argTypeName = getClassInSourceCode(argType.name,
 						testTargetClassname, testClassinfo.importList);
+				// generics
 				boolean isJMock2 = pref.isTestMethodGenEnabledSupportJMock2
 						&& MockGenUtil.isMockableClassName(argTypeName,
 								testClassinfo.importList);
 				boolean isEasyMock = pref.isTestMethodGenEnabledSupportEasyMock
+						&& MockGenUtil.isMockableClassName(argTypeName,
+								testClassinfo.importList);
+				boolean isMockito = pref.isTestMethodGenEnabledSupportMockito
 						&& MockGenUtil.isMockableClassName(argTypeName,
 								testClassinfo.importList);
 				if (isJMock2) {
@@ -615,6 +625,10 @@ public final class TestCaseGenerateUtil {
 						sb.append("mocks.createMock(");
 						sb.append(argTypeName);
 						sb.append(".class)");
+					} else if (isMockito) {
+						sb.append("mock(");
+						sb.append(argTypeName);
+						sb.append(".class)");
 					} else {
 						sb.append("null");
 					}
@@ -644,7 +658,15 @@ public final class TestCaseGenerateUtil {
 			sb.append(CRLF);
 			sb.append("\t\t");
 		}
-
+		// Mockito stubbing
+		// (ex.) when(hoge.doSomething()).thenReturn("abc");
+		if (pref.isTestMethodGenEnabledSupportMockito) {
+			sb.append("// - e.g. : given(mocked.called()).willReturn(1);");
+			sb.append(CRLF);
+			sb.append("\t\t// when");
+			sb.append(CRLF);
+			sb.append("\t\t");
+		}
 		if (pref.isTestMethodGenExceptions
 				&& testMethod.testingTargetException != null) {
 			sb.append("try{");
@@ -696,6 +718,20 @@ public final class TestCaseGenerateUtil {
 			// normal patterns
 			if (pref.isTestMethodGenEnabledSupportEasyMock) {
 				sb.append("\t\tmocks.verify();");
+				sb.append(CRLF);
+			}
+			if (pref.isTestMethodGenEnabledSupportMockito) {
+				sb.append("\t\t// then");
+				sb.append(CRLF);
+				sb.append("\t\t// - e.g. : verify(mocked).called();");
+				sb.append(CRLF);
+			}
+			if (!returnTypeName.equals("void")) {
+				sb.append("\t\t");
+				sb.append(returnTypeName);
+				sb.append(" expected = ");
+				sb.append(returnDefaultValue);
+				sb.append(";");
 				sb.append(CRLF);
 			}
 			// assert return value

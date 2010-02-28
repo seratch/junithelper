@@ -168,6 +168,10 @@ public final class Preference {
 		 * JMock2
 		 */
 		public static final String usingMockJMock2 = "JMock2";
+		/**
+		 * Mockito
+		 */
+		public static final String usingMockMockito = "Mockito(BDD)";
 
 	}
 

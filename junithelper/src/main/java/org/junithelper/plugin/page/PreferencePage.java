@@ -454,11 +454,13 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				String none = Preference.TestMethodGen.usingMockNone;
 				String easyMock = Preference.TestMethodGen.usingMockEasyMock;
 				String jmock2 = Preference.TestMethodGen.usingMockJMock2;
+				String mockito = Preference.TestMethodGen.usingMockMockito;
 				String[][] labelAndValues = new String[][] { { none, none },
-						{ easyMock, easyMock }, { jmock2, jmock2 }, };
+						{ easyMock, easyMock }, { jmock2, jmock2 },
+						{ mockito, mockito } };
 				tmgRadioGroupMocks = new RadioGroupFieldEditor(
 						Preference.TestMethodGen.usingMock,
-						"Select your favorite framework.", 3, labelAndValues,
+						"Select your favorite framework.", 4, labelAndValues,
 						tmgSampleImplGenArea);
 				addField(tmgRadioGroupMocks);
 			}
