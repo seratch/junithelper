@@ -1,4 +1,4 @@
-package org.junithelper.runtime.util;
+package org.junithelper.runtime.jmock2.util;
 
 import org.jmock.Mockery;
 import org.jmock.lib.legacy.ClassImposteriser;

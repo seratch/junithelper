@@ -5,7 +5,7 @@
 	<packaging>jar</packaging>
 	<groupId>junithelper</groupId>
 	<artifactId>junithelper-runtime</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1-SNAPSHOT</version>
 	<name>${project.artifactId}</name>
 	<description>JUnitHelper Runtime Libraries</description>
 
@@ -47,6 +47,12 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>3.8.2</version>
+		</dependency>
+		<!-- Mockito -->
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.8.2</version>
 		</dependency>
 		<!-- JMock2 -->
 		<dependency>

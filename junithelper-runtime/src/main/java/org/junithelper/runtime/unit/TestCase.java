@@ -16,7 +16,7 @@
 package org.junithelper.runtime.unit;
 
 import org.jmock.Mockery;
-import org.junithelper.runtime.util.JMock2Util;
+import org.junithelper.runtime.jmock2.util.JMock2Util;
 
 /**
  * Subclass of {@link junit.framework.TestCase} <br>
@@ -57,10 +57,10 @@ public abstract class TestCase extends junit.framework.TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
+		super.setUp();
 		if (usingJMock2) {
 			jmock2 = getNewJMock2Mockey();
 		}
-		super.setUp();
 	}
 
 }
