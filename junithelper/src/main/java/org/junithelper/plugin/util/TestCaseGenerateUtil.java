@@ -644,7 +644,8 @@ public final class TestCaseGenerateUtil {
 			sb.append(pref.isUsingJUnitHelperRuntime ? "jmock2" : "context");
 			sb.append(".checking(new Expectations(){{");
 			sb.append(CRLF);
-			sb.append("\t\t\t// TODO JMock2 Expectations");
+			sb.append("\t\t\t// e.g. : ");
+			sb.append("allowing(mocked).called(); will(returnValue(1));");
 			sb.append(CRLF);
 			sb.append("\t\t}});");
 			sb.append(CRLF);
@@ -652,7 +653,8 @@ public final class TestCaseGenerateUtil {
 		}
 		// EasyMock expectations
 		if (pref.isTestMethodGenEnabledSupportEasyMock) {
-			sb.append("// TODO EasyMock Expectations");
+			sb.append("// e.g. : ");
+			sb.append("EasyMock.expect(mocked.called()).andReturn(1);");
 			sb.append(CRLF);
 			sb.append("\t\tmocks.replay();");
 			sb.append(CRLF);
@@ -661,7 +663,7 @@ public final class TestCaseGenerateUtil {
 		// Mockito stubbing
 		// (ex.) when(hoge.doSomething()).thenReturn("abc");
 		if (pref.isTestMethodGenEnabledSupportMockito) {
-			sb.append("// - e.g. : given(mocked.called()).willReturn(1);");
+			sb.append("// e.g. : given(mocked.called()).willReturn(1);");
 			sb.append(CRLF);
 			sb.append("\t\t// when");
 			sb.append(CRLF);
@@ -723,7 +725,7 @@ public final class TestCaseGenerateUtil {
 			if (pref.isTestMethodGenEnabledSupportMockito) {
 				sb.append("\t\t// then");
 				sb.append(CRLF);
-				sb.append("\t\t// - e.g. : verify(mocked).called();");
+				sb.append("\t\t// e.g. : verify(mocked).called();");
 				sb.append(CRLF);
 			}
 			if (!returnTypeName.equals("void")) {
