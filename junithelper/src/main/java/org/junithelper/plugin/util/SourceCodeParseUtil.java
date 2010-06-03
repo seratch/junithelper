@@ -82,8 +82,12 @@ public class SourceCodeParseUtil {
 	 * @return result without line comments
 	 */
 	public static String trimAllComments(String source) {
-		return trimLineComments(source).replaceAll("\\s*/\\*[^(\\*/)]+?\\*/",
+		String withoutLineComments = trimLineComments(source);
+		String withoutLineBreak = withoutLineComments.replaceAll("\r|\n",
 				StrConst.empty);
+		String withoutComments = withoutLineBreak.replaceAll("/\\*.*?\\*/",
+				StrConst.empty);
+		return withoutComments;
 	}
 
 	/**
