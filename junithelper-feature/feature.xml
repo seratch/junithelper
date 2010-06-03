@@ -2,7 +2,7 @@
 <feature
       id="org.junithelper.plugin.feature"
       label="JUnit Helper"
-      version="0.1.10"
+      version="0.2.1"
       provider-name="junithelper.org"
       plugin="org.junithelper.plugin"
       image="icon/junithelper.png"
@@ -10,7 +10,7 @@
       colocation-affinity="org.junithelper.plugin.feature">
 
    <description url="http://code.google.com/p/junithelper/">
-      &quot;JUnit Helper&quot; "JUnit Helper" is a project to reduce frustrations of Java unit-testing on Eclipse IDE by getting off the routine works when making test cases. 
+      &quot;JUnit Helper&quot; &quot;JUnit Helper&quot; is a project to reduce frustrations of Java unit-testing on Eclipse IDE by getting off the routine works when making test cases. 
 http://junithelper.org/
 
 How to use
@@ -281,7 +281,7 @@ limitations under the License.
          id="org.junithelper.plugin"
          download-size="0"
          install-size="0"
-         version="0.1.10"
+         version="0.2.1"
          unpack="false"/>
 
 </feature>
