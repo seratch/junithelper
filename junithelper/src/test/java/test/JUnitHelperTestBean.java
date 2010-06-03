@@ -18,6 +18,7 @@ package test;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -42,58 +43,59 @@ public class JUnitHelperTestBean {
 	 * comment2
 	 */
 
-
-	// 40 methods and 5 exception patterns
-//		static String[] staticPackageLocal() {
-//		void packageLocal() {
-//		public static void methodStaticReturnVoid() {
-//		public static final void methodStaticFinalReturnVoid() {
-//		public boolean returnPrimitive_boolean(boolean arg) {
-//		public int returnPrimitive_int(int arg) {
-//		public byte returnPrimitive_byte(byte arg) {
-//		public short returnPrimitive_short(short arg) {
-//		public long returnPrimitive_long(long arg) {
-//		public char returnPrimitive_char(char arg) {
-//		public float returnPrimitive_float(float arg) {
-//		public double returnPrimitive_double(double arg) {
-//		public double[] returnPrimitiveArray_double(double[] arg) {
-//		public JUnitHelperTestBean getBean(SampleBean arg) {
-//		public List<SampleBean> getList() {
-//		public void setList(List<SampleBean> list) {
-//		public void setMapList(Map<String, Object> map, List<String> list) {
-//		public Map<String, Object> methodReturnMapGetMap(Map<Object, String> hoge) {
-//		public <T> void issue9(Map<String, T> singletonComponents) {
-//		public String methodSomeSringArgs(String arg, String arg2, String arg3,
-//		public List<String> getList(String... args) {
-//		public List<String> toList(String[] args1, String[] args2) {
-//		public static <T> T[] toArray(List<T> arg) {
-//		public static <T> List<T> toArrayList(T[] arg) {
-//		public static <T> T[] deepCopy(T[] arg) {
-//		public static final void info(Logger logger, String msg, boolean logging) {
-//		public static final void info(Logger logger, String msg) {
-//		public void methodArgFinal(final Logger finalLog) {
-//		public static Timestamp issue19(java.sql.Date date) {
-//		public static java.sql.Date issue20() {
-//		protected static java.sql.Date issue21Static() {
-//		protected java.sql.Date issue21Instance() {
-//		public static String issue24(Class<?> clazz, String methodName,
-//		protected String throwsException() throws Exception {
-//		protected void throwsException2() throws IOException,
-//		protected void throwsException3() throws NullPointerException,
-//		static public void staticPublicMethod() {
-//		static protected void staticProtectedMethod() {
-//		public List<SampleBean> issue32_list(List<SampleBean> list) {
-//		public Map<String, SampleBean> issue32_map(Map<String, SampleBean> map) {
-
+	// 41 methods and 5 exception patterns
+	// static String[] staticPackageLocal() {
+	// void packageLocal() {
+	// public static void methodStaticReturnVoid() {
+	// public static final void methodStaticFinalReturnVoid() {
+	// public boolean returnPrimitive_boolean(boolean arg) {
+	// public int returnPrimitive_int(int arg) {
+	// public byte returnPrimitive_byte(byte arg) {
+	// public short returnPrimitive_short(short arg) {
+	// public long returnPrimitive_long(long arg) {
+	// public char returnPrimitive_char(char arg) {
+	// public float returnPrimitive_float(float arg) {
+	// public double returnPrimitive_double(double arg) {
+	// public double[] returnPrimitiveArray_double(double[] arg) {
+	// public JUnitHelperTestBean getBean(SampleBean arg) {
+	// public List<SampleBean> getList() {
+	// public void setList(List<SampleBean> list) {
+	// public void setMapList(Map<String, Object> map, List<String> list) {
+	// public Map<String, Object> methodReturnMapGetMap(Map<Object, String>
+	// hoge) {
+	// public <T> void issue9(Map<String, T> singletonComponents) {
+	// public String methodSomeSringArgs(String arg, String arg2, String arg3,
+	// public List<String> getList(String... args) {
+	// public List<String> toList(String[] args1, String[] args2) {
+	// public static <T> T[] toArray(List<T> arg) {
+	// public static <T> List<T> toArrayList(T[] arg) {
+	// public static <T> T[] deepCopy(T[] arg) {
+	// public static final void info(Logger logger, String msg, boolean logging)
+	// {
+	// public static final void info(Logger logger, String msg) {
+	// public void methodArgFinal(final Logger finalLog) {
+	// public static Timestamp issue19(java.sql.Date date) {
+	// public static java.sql.Date issue20() {
+	// protected static java.sql.Date issue21Static() {
+	// protected java.sql.Date issue21Instance() {
+	// public static String issue24(Class<?> clazz, String methodName,
+	// protected String throwsException() throws Exception {
+	// protected void throwsException2() throws IOException,
+	// protected void throwsException3() throws NullPointerException,
+	// static public void staticPublicMethod() {
+	// static protected void staticProtectedMethod() {
+	// public List<SampleBean> issue32_list(List<SampleBean> list) {
+	// public Map<String, SampleBean> issue32_map(Map<String, SampleBean> map) {
+	// public static Calendar getCalendar(long timeInMillis) {
 
 	// excluded patterns
-//		private Map<String, String> map;
-//		private static void privateStaticMethod() {
-//		private void privateInstanceMethod() {
-//		static private void staticPrivateMethod() {
-//		public Map<String, String> getMap() {
-//		public void setMap(Map<String, String> map) {
-	
+	// private Map<String, String> map;
+	// private static void privateStaticMethod() {
+	// private void privateInstanceMethod() {
+	// static private void staticPrivateMethod() {
+	// public Map<String, String> getMap() {
+	// public void setMap(Map<String, String> map) {
+
 	public String publicField;
 	protected String protectedField = new String();
 	String packageLocalField;
@@ -298,9 +300,22 @@ public class JUnitHelperTestBean {
 	public List<SampleBean> issue32_list(List<SampleBean> list) {
 		return list;
 	}
-	
+
 	public Map<String, SampleBean> issue32_map(Map<String, SampleBean> map) {
 		return map;
 	}
-	
+
+	/**
+	 * UNIX TIME(timeInMillis) to {@link Calendar} object
+	 * 
+	 * @param timeInMillis
+	 *            UNIX TIME(timeInMillis)
+	 * @return　{@link Calendar} object
+	 */
+	public static Calendar getCalendar(long timeInMillis) {
+		Calendar dest = Calendar.getInstance();
+		dest.setTimeInMillis(timeInMillis);
+		return dest;
+	}
+
 }
