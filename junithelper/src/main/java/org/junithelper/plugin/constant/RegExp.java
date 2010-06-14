@@ -8,10 +8,10 @@ public final class RegExp {
 
 	public static final String crlf = "[\\r\\n]";
 
-	public static final String wsReq = "\\s+";
-	public static final String wsNotReq = "\\s*";
-	public static final String notWsReq = "[^\\s]+?";
-	public static final String notWsNotReq = "[^\\s]*?";
+	public static final String wsPlusMax = "\\s+";
+	public static final String wsAsteriskMax = "\\s*";
+	public static final String notWsPlusMin = "[^\\s]+?";
+	public static final String notWsAsteriskMin = "[^\\s]*?";
 
 	public static final String methodModifiers = "[<\\w+?>|static|final|\\s]*";
 	public static final String methodModifiersExcludedStatic = "[<\\w+?>|final|\\s]*";
@@ -24,9 +24,10 @@ public final class RegExp {
 	 */
 	public static String matchesMethod = "";
 	static {
-		matchesMethod = wsNotReq + methodModifiers + wsReq + methodReturnType
-				+ wsReq + notWsReq + wsNotReq + "\\(" + "[^\\)]*?" + "\\)"
-				+ wsNotReq + ".*?" + wsNotReq + "\\{.*";
+		matchesMethod = wsAsteriskMax + methodModifiers + wsPlusMax
+				+ methodReturnType + wsPlusMax + notWsPlusMin + wsAsteriskMax
+				+ "\\(" + "[^\\)]*?" + "\\)" + wsAsteriskMax + ".*?"
+				+ wsAsteriskMax + "\\{.*";
 	}
 
 	/**
@@ -34,10 +35,10 @@ public final class RegExp {
 	 */
 	public static String matchesStaticMethod = "";
 	static {
-		matchesStaticMethod = wsNotReq + methodModifiersExcludedStatic
-				+ "static" + methodModifiersExcludedStatic + notWsReq + wsReq
-				+ notWsReq + wsNotReq + "\\(" + "[^\\)]*?" + "\\)" + wsNotReq
-				+ ".*?" + wsNotReq + "\\{.*";
+		matchesStaticMethod = wsAsteriskMax + methodModifiersExcludedStatic
+				+ "static" + methodModifiersExcludedStatic + notWsPlusMin
+				+ wsPlusMax + notWsPlusMin + wsAsteriskMax + "\\(" + "[^\\)]*?"
+				+ "\\)" + wsAsteriskMax + ".*?" + wsAsteriskMax + "\\{.*";
 	}
 
 	/**
@@ -48,11 +49,23 @@ public final class RegExp {
 	 */
 	public static String groupMethod = "";
 	static {
-		groupMethod = wsNotReq + methodModifiers + "\\s+(" + methodReturnType
-				+ ")" + wsReq + "(" + notWsReq + ")" + wsNotReq + "\\(("
-				+ "[^\\)]*?" + ")\\)" + wsNotReq + "(throws .+)*.*?" + wsNotReq
-				+ "\\{.*";
+		groupMethod = wsAsteriskMax + methodModifiers + "\\s+("
+				+ methodReturnType + ")" + wsPlusMax + "(" + notWsPlusMin + ")"
+				+ wsAsteriskMax + "\\((" + "[^\\)]*?" + ")\\)" + wsAsteriskMax
+				+ "(throws .+)*.*?" + wsAsteriskMax + "\\{.*";
 	}
 	public static Pattern groupMethodPattern = Pattern.compile(groupMethod);
+
+	/**
+	 * Regular expression to search method arg name grouped<br>
+	 * $1 : arg name
+	 */
+	public static String groupMethodArgName = "";
+	static {
+		groupMethodArgName = notWsPlusMin + wsPlusMax + "(" + notWsPlusMin
+				+ "$)";
+	}
+	public static Pattern groupMethodArgNamePattern = Pattern
+			.compile(groupMethodArgName);
 
 }

@@ -65,6 +65,11 @@ public class MethodInfo {
 	public List<ArgType> argTypes = new ArrayList<ArgType>();
 
 	/**
+	 * Test target method arg names
+	 */
+	public List<String> argNames = new ArrayList<String>();
+
+	/**
 	 * Arg type
 	 * 
 	 * @author Kazuhiro Sera

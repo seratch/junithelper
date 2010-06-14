@@ -389,6 +389,13 @@ public final class TestCaseGenerateUtil {
 							argType.name = getType(argTypeStr);
 							argType.nameInMethodName = getTypeAvailableInMethodName(argTypeStr);
 							each.argTypes.add(argType);
+							Matcher nameMatcher = RegExp.groupMethodArgNamePattern
+									.matcher(argTypeFull);
+							if (nameMatcher.find()) {
+								each.argNames.add(nameMatcher.group(1));
+							} else {
+								each.argNames.add("arg" + i);
+							}
 						}
 					}
 					// exlucdes accessors
@@ -418,7 +425,7 @@ public final class TestCaseGenerateUtil {
 											"\\\\s*,\\\\s*");
 							String searchRegexp = ".*?private\\s+" + fieldType
 									+ "(" + RegExp.generics + ")*"
-									+ RegExp.wsReq + fieldName + ".+";
+									+ RegExp.wsPlusMax + fieldName + ".+";
 							if (targetClassSourceStr.replaceAll(RegExp.crlf,
 									StrConst.empty).matches(searchRegexp)) {
 								continue;
@@ -459,7 +466,7 @@ public final class TestCaseGenerateUtil {
 						String throwsExceptions = matcher.group(4);
 						if (throwsExceptions != null) {
 							String[] exceptions = throwsExceptions.replaceAll(
-									"throws" + RegExp.wsReq, StrConst.empty)
+									"throws" + RegExp.wsPlusMax, StrConst.empty)
 									.split(StrConst.comma);
 							for (String exp : exceptions) {
 								exp = exp.trim();
@@ -570,6 +577,7 @@ public final class TestCaseGenerateUtil {
 		// ex. String arg0 = null;
 		// int arg1 = 0;
 		List<ArgType> argTypes = testMethod.argTypes;
+		List<String> argNames = testMethod.argNames;
 		List<String> args = new ArrayList<String>();
 		int argTypesLen = argTypes.size();
 		if (argTypesLen > 0 && argTypes.get(0).name != null
@@ -607,8 +615,12 @@ public final class TestCaseGenerateUtil {
 					}
 					sb.append(">");
 				}
-				sb.append(" arg");
-				sb.append(i);
+				String argName = argNames.get(i);
+				if (argName == null || argName.length() == 0) {
+					argName = "arg" + i;
+				}
+				sb.append(" ");
+				sb.append(argName);
 				sb.append(" = ");
 				if (PrimitiveTypeUtil.isPrimitive(argType.name)) {
 					String primitiveDefault = PrimitiveTypeUtil
@@ -636,7 +648,7 @@ public final class TestCaseGenerateUtil {
 				sb.append(";");
 				sb.append(CRLF);
 				sb.append("\t\t");
-				args.add("arg" + i);
+				args.add(argName);
 			}
 		}
 		// JMock2 expectations
@@ -772,7 +784,7 @@ public final class TestCaseGenerateUtil {
 		// sample name classes imported or full package class defined
 		// ex. java.util.Date, java.sql.Date
 		arg = arg.replaceAll("\\.", StrConst.empty);
-		arg = arg.trim().split(RegExp.wsReq)[0];
+		arg = arg.trim().split(RegExp.wsPlusMax)[0];
 		return arg;
 	}
 
