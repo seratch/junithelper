@@ -57,8 +57,7 @@ public final class FileResourceUtil {
 	 * @return encoding charset name
 	 * @throws InvalidPreferenceException
 	 */
-	public static String detectEncoding(IFile file)
-			throws InvalidPreferenceException {
+	public static String detectEncoding(IFile file) {
 		InputStream is = null;
 		String encoding = null;
 		try {

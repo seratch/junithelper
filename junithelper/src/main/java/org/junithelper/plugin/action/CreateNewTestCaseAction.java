@@ -233,17 +233,20 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 						StringBuilder dirSb = new StringBuilder();
 						int packageArrLen = tmpDirArr.length - 2;
 						int mainJavaLen = pref.commonSrcMainJavaDir.split("/").length;
-						for (int i = mainJavaLen; i < packageArrLen; i++) {
-							dirSb.append(tmpDirArr[i]);
-							dirSb.append(".");
+						// if not default package
+						if (mainJavaLen != tmpDirArr.length - 1) {
+							for (int i = mainJavaLen; i < packageArrLen; i++) {
+								dirSb.append(tmpDirArr[i]);
+								dirSb.append(".");
+							}
+							dirSb.append(tmpDirArr[packageArrLen]);
+							testPackageString = dirSb.toString();
+							sb.append("package ");
+							sb.append(testPackageString);
+							sb.append(";");
+							sb.append(CRLF);
+							sb.append(CRLF);
 						}
-						dirSb.append(tmpDirArr[packageArrLen]);
-						testPackageString = dirSb.toString();
-						sb.append("package ");
-						sb.append(testPackageString);
-						sb.append(";");
-						sb.append(CRLF);
-						sb.append(CRLF);
 						// get class to extend
 						String testCase = pref.isUsingJUnitHelperRuntime ? RuntimeLibrary.testcase
 								: pref.classToExtend;
@@ -257,10 +260,14 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 								&& pref.isTestMethodGenNotBlankEnabled) {
 							List<String> importedPackageList = testClassInfo.importList;
 							for (String importedPackage : importedPackageList) {
-								sb.append("import ");
-								sb.append(importedPackage);
-								sb.append(";");
-								sb.append(CRLF);
+								importedPackage = importedPackage.trim();
+								if (importedPackage != null
+										&& importedPackage.length() != 0) {
+									sb.append("import ");
+									sb.append(importedPackage);
+									sb.append(";");
+									sb.append(CRLF);
+								}
 							}
 						}
 						sb.append(CRLF);
