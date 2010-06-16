@@ -649,36 +649,39 @@ public final class TestCaseGenerateUtil {
 		// instance method
 		// ex. TestTarget target = new TestTarget();
 		if (!testMethod.isStatic) {
-			if (testClassinfo.constructors != null
-					&& testClassinfo.constructors.size() > 0) {
+			if (testClassinfo.constructors.size() > 0) {
 				ConstructorInfo constructor = testClassinfo.constructors.get(0);
 				List<String> args = new ArrayList<String>();
-				for (int i = 0; i < constructor.argNames.size(); i++) {
+				for (int i = 0; i < constructor.argTypes.size(); i++) {
 					ArgType argType = constructor.argTypes.get(i);
-					sb.append(argType.name);
-					sb.append(" ");
-					sb.append(constructor.argNames.get(i));
-					sb.append(" = ");
-					if (PrimitiveTypeUtil.isPrimitive(argType.name)) {
-						String primitiveDefault = PrimitiveTypeUtil
-								.getTypeDefaultValue(argType.name);
-						sb.append(primitiveDefault);
-					} else {
-						sb.append("null");
+					if (argType.name != null && argType.name.length() > 0) {
+						sb.append(argType.name);
+						sb.append(" ");
+						sb.append(constructor.argNames.get(i));
+						sb.append(" = ");
+						if (PrimitiveTypeUtil.isPrimitive(argType.name)) {
+							String primitiveDefault = PrimitiveTypeUtil
+									.getTypeDefaultValue(argType.name);
+							sb.append(primitiveDefault);
+						} else {
+							sb.append("null");
+						}
+						sb.append(";");
+						sb.append(CRLF);
+						sb.append("\t\t");
+						args.add(constructor.argNames.get(i));
 					}
-					sb.append(";");
-					sb.append(CRLF);
-					sb.append("\t\t");
-					args.add(constructor.argNames.get(i));
 				}
 				sb.append(testTargetClassname);
 				sb.append(" target = new ");
 				sb.append(testTargetClassname);
 				sb.append("(");
-				sb.append(args.get(0));
-				for (int i = 1; i < args.size(); i++) {
-					sb.append(",");
-					sb.append(args.get(i));
+				if (args.size() > 0) {
+					sb.append(args.get(0));
+					for (int i = 1; i < args.size(); i++) {
+						sb.append(",");
+						sb.append(args.get(i));
+					}
 				}
 				sb.append(");");
 			} else {
