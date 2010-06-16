@@ -19,33 +19,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * ClassInfo<br>
+ * ConstructorInfo<br>
  * <br>
- * Information about test target class<br>
+ * Information about the constructors of test target developing class<br>
  * 
  * @author Kazuhiro Sera <seratch@gmail.com>
  * @version 1.0
  */
-public class ClassInfo {
+public class ConstructorInfo {
 
 	/**
-	 * Class name
+	 * Test target method arg types
 	 */
-	public String name;
+	public List<ArgType> argTypes = new ArrayList<ArgType>();
 
 	/**
-	 * Import types
+	 * Test target method arg names
 	 */
-	public List<String> importList = new ArrayList<String>();
+	public List<String> argNames = new ArrayList<String>();
 
 	/**
-	 * Import constructors
+	 * Exceptions that test target method throws
 	 */
-	public List<ConstructorInfo> constructors = new ArrayList<ConstructorInfo>();
+	public List<ExceptionInfo> throwsExceptions = new ArrayList<ExceptionInfo>();
 
-	/**
-	 * Public methods info
-	 */
-	public List<MethodInfo> methods = new ArrayList<MethodInfo>();
+	public static class ExceptionInfo {
+		public String name;
+		public String nameInMethodName;
+	}
+
+	public ExceptionInfo testingTargetException;
 
 }

@@ -215,7 +215,8 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 								.findMember(targetClass);
 						IFile file = (IFile) targetClassResource;
 						ClassInfo testClassInfo = TestCaseGenerateUtil
-								.getTestClassInfoFromTargetClass(file);
+								.getTestClassInfoFromTargetClass(
+										testTargetClassname, file);
 						List<MethodInfo> testMethods = testClassInfo.methods;
 						// generate test class
 						String writeEncoding = FileResourceUtil

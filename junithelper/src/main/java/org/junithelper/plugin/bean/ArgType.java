@@ -19,33 +19,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * ClassInfo<br>
+ * ArgType<br>
  * <br>
- * Information about test target class<br>
+ * Type of args<br>
  * 
  * @author Kazuhiro Sera <seratch@gmail.com>
  * @version 1.0
  */
-public class ClassInfo {
+public class ArgType {
 
-	/**
-	 * Class name
-	 */
 	public String name;
 
-	/**
-	 * Import types
-	 */
-	public List<String> importList = new ArrayList<String>();
+	public String nameInMethodName;
 
-	/**
-	 * Import constructors
-	 */
-	public List<ConstructorInfo> constructors = new ArrayList<ConstructorInfo>();
-
-	/**
-	 * Public methods info
-	 */
-	public List<MethodInfo> methods = new ArrayList<MethodInfo>();
+	public List<String> generics = new ArrayList<String>();
 
 }

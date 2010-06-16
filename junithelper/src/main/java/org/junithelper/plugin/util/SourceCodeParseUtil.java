@@ -25,6 +25,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
+import org.junithelper.plugin.constant.RegExp;
 import org.junithelper.plugin.constant.StrConst;
 
 /**
@@ -196,6 +197,29 @@ public class SourceCodeParseUtil {
 
 	private static String searchTargetMethodRegExpPrefix = "[\\{;\\}](\\s*.*\\s+)?";
 	private static String searchTargetMethodRegExpPostfix = "\\s+?.*\\{";
+
+	/**
+	 * Get target constructors from source code string
+	 * 
+	 * @param source
+	 * @return result
+	 */
+	public static List<String> getTargetConstructors(String className,
+			String source, boolean publicRequired, boolean protectedRequired,
+			boolean packageLocalRequired) {
+		List<String> result = new ArrayList<String>();
+		List<String> methods = getTargetMethods(source, publicRequired,
+				protectedRequired, packageLocalRequired);
+		for (String method : methods) {
+			String matchesConstructors = RegExp.wsAsteriskMax + className
+					+ "\\(([^\\)]*?)\\)" + RegExp.wsAsteriskMax
+					+ "(throws .+)*.*?" + RegExp.wsAsteriskMax + "\\{.*";
+			if (method.matches(matchesConstructors)) {
+				result.add(StrConst.space + method);
+			}
+		}
+		return result;
+	}
 
 	/**
 	 * Get target methods from source code string

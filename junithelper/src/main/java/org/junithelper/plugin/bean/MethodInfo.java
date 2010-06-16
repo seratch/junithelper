@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * MethodInfo<br>
  * <br>
- * Information about test target developing punlic methods<br>
+ * Information about test target developing public methods<br>
  * 
  * @author Kazuhiro Sera <seratch@gmail.com>
  * @version 1.0
@@ -68,17 +68,6 @@ public class MethodInfo {
 	 * Test target method arg names
 	 */
 	public List<String> argNames = new ArrayList<String>();
-
-	/**
-	 * Arg type
-	 * 
-	 * @author Kazuhiro Sera
-	 */
-	public static class ArgType {
-		public String name;
-		public String nameInMethodName;
-		public List<String> generics = new ArrayList<String>();
-	}
 
 	/**
 	 * Exceptions that test target method throws

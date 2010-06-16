@@ -5,8 +5,8 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.junithelper.plugin.bean.ArgType;
 import org.junithelper.plugin.bean.MethodInfo;
-import org.junithelper.plugin.bean.MethodInfo.ArgType;
 
 public class ObjectUtilTest extends TestCase {
 

@@ -34,6 +34,9 @@ import test.bean.SampleBean;
 @SuppressWarnings(value = { "issue 28" })
 public class JUnitHelperTestBean {
 
+	public JUnitHelperTestBean(String constructorArg) {
+	}
+
 	/**
 	 * comment1
 	 * 

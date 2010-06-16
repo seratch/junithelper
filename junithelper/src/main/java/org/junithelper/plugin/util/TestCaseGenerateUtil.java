@@ -28,9 +28,10 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.junithelper.plugin.bean.ArgType;
 import org.junithelper.plugin.bean.ClassInfo;
+import org.junithelper.plugin.bean.ConstructorInfo;
 import org.junithelper.plugin.bean.MethodInfo;
-import org.junithelper.plugin.bean.MethodInfo.ArgType;
 import org.junithelper.plugin.bean.MethodInfo.ExceptionInfo;
 import org.junithelper.plugin.constant.RegExp;
 import org.junithelper.plugin.constant.StrConst;
@@ -58,13 +59,15 @@ public final class TestCaseGenerateUtil {
 	 * @throws Exception
 	 */
 	public static ClassInfo getClassInfoWithUnimplementedTestMethods(
-			IFile testTarget, IFile testCase) throws Exception {
+			String testTargetClassname, IFile testTarget, IFile testCase)
+			throws Exception {
 		PreferenceLoader pref = new PreferenceLoader();
 		ClassInfo classInfo = new ClassInfo();
 		List<MethodInfo> unimplementedMethodNames = new ArrayList<MethodInfo>();
 		// enable public method test
 		if (pref.isTestMethodGenEnabled) {
-			ClassInfo expectedClassInfo = getTestClassInfoFromTargetClass(testTarget);
+			ClassInfo expectedClassInfo = getTestClassInfoFromTargetClass(
+					testTargetClassname, testTarget);
 			List<MethodInfo> expectedMethods = expectedClassInfo.methods;
 			ClassInfo actualClassInfo = getMethodNamesAlreadyExists(testCase);
 			List<MethodInfo> actualMethods = actualClassInfo.methods;
@@ -222,10 +225,13 @@ public final class TestCaseGenerateUtil {
 	 * @return the information on the test methods
 	 * @throws Exception
 	 */
-	public static ClassInfo getTestClassInfoFromTargetClass(IFile javaFile)
+	public static ClassInfo getTestClassInfoFromTargetClass(
+			String testTargetClassname, IFile javaFile)
 			throws InvalidPreferenceException, IOException {
 		PreferenceLoader pref = new PreferenceLoader();
 		ClassInfo classInfo = new ClassInfo();
+		classInfo.name = testTargetClassname;
+		List<ConstructorInfo> constructors = new ArrayList<ConstructorInfo>();
 		List<MethodInfo> testMethods = new ArrayList<MethodInfo>();
 		InputStream is = null;
 		InputStreamReader isr = null;
@@ -294,6 +300,89 @@ public final class TestCaseGenerateUtil {
 					classInfo.importList.add("static org.mockito.BDDMockito.*");
 				}
 			}
+			// get constructors
+			List<String> targetConstructors = SourceCodeParseUtil
+					.getTargetConstructors(classInfo.name,
+							targetClassSourceStr, true, true, true);
+			for (String target : targetConstructors) {
+				String groupConstructor = RegExp.wsAsteriskMax + classInfo.name
+						+ "\\(([^\\)]*?)\\)" + RegExp.wsAsteriskMax
+						+ "(throws .+)*.*?" + RegExp.wsAsteriskMax + "\\{.*";
+				Matcher constructorMatcher = Pattern.compile(groupConstructor)
+						.matcher(target);
+				if (constructorMatcher.find()) {
+					ConstructorInfo each = new ConstructorInfo();
+					String args = constructorMatcher.group(1);
+					// prepare to get generics
+					String[] tmpArr = args.split(StrConst.comma);
+					int tmpArrLen = tmpArr.length;
+					List<String> tmpArrList = new ArrayList<String>();
+					String buf = StrConst.empty;
+					for (int i = 0; i < tmpArrLen; i++) {
+						String element = tmpArr[i].trim();
+						// ex. List<String>
+						if (element.matches(".+?<.+?>.+")) {
+							tmpArrList.add(element);
+							continue;
+						}
+						// ex. Map<String
+						if (element.matches(".+?<.+")) {
+							buf += element;
+							continue;
+						}
+						// ex. (Map<String,) Object>
+						if (element.matches(".+?>.+")) {
+							String result = buf + StrConst.comma + element;
+							tmpArrList.add(result);
+							buf = StrConst.empty;
+							continue;
+						}
+						if (!buf.equals(StrConst.empty)) {
+							buf += StrConst.comma + element;
+							continue;
+						}
+						tmpArrList.add(element);
+					}
+					String[] argArr = tmpArrList.toArray(new String[0]);
+					if (pref.isTestMethodGenNotBlankEnabled) {
+						int argArrLen = argArr.length;
+						for (int i = 0; i < argArrLen; i++) {
+							ArgType argType = new ArgType();
+							String argTypeFull = argArr[i];
+							Matcher toGenericsMatcher = Pattern.compile(
+									RegExp.genericsGroup).matcher(argTypeFull);
+							while (toGenericsMatcher.find()) {
+								String[] generics = toGenericsMatcher.group()
+										.replaceAll("<", StrConst.empty)
+										.replaceAll(">", StrConst.empty).split(
+												StrConst.comma);
+								// convert to java.lang.Object if self
+								// class is included
+								for (String generic : generics) {
+									generic = getClassInSourceCode(generic,
+											StrConst.empty,
+											classInfo.importList);
+									argType.generics.add(generic);
+								}
+							}
+							String argTypeStr = argTypeFull.replaceAll(
+									RegExp.generics, StrConst.empty);
+							argType.name = getType(argTypeStr);
+							argType.nameInMethodName = getTypeAvailableInMethodName(argTypeStr);
+							each.argTypes.add(argType);
+							Matcher nameMatcher = RegExp.groupMethodArgNamePattern
+									.matcher(argTypeFull);
+							if (nameMatcher.find()) {
+								each.argNames.add(nameMatcher.group(1));
+							} else {
+								each.argNames.add("constructorArg" + i);
+							}
+						}
+					}
+					constructors.add(each);
+				}
+			}
+
 			// get test target methods
 			List<String> targets = SourceCodeParseUtil.getTargetMethods(
 					targetClassSourceStr, pref.isTestMethodGenIncludePublic,
@@ -465,9 +554,10 @@ public final class TestCaseGenerateUtil {
 					if (pref.isTestMethodGenExceptions) {
 						String throwsExceptions = matcher.group(4);
 						if (throwsExceptions != null) {
-							String[] exceptions = throwsExceptions.replaceAll(
-									"throws" + RegExp.wsPlusMax, StrConst.empty)
-									.split(StrConst.comma);
+							String[] exceptions = throwsExceptions
+									.replaceAll("throws" + RegExp.wsPlusMax,
+											StrConst.empty).split(
+											StrConst.comma);
 							for (String exp : exceptions) {
 								exp = exp.trim();
 								MethodInfo expTest = ObjectUtil.deepCopy(each);
@@ -491,6 +581,7 @@ public final class TestCaseGenerateUtil {
 			FileResourceUtil.close(isr);
 			FileResourceUtil.close(is);
 		}
+		classInfo.constructors = constructors;
 		classInfo.methods = testMethods;
 		return classInfo;
 	}
@@ -558,10 +649,44 @@ public final class TestCaseGenerateUtil {
 		// instance method
 		// ex. TestTarget target = new TestTarget();
 		if (!testMethod.isStatic) {
-			sb.append(testTargetClassname);
-			sb.append(" target = new ");
-			sb.append(testTargetClassname);
-			sb.append("();");
+			if (testClassinfo.constructors != null
+					&& testClassinfo.constructors.size() > 0) {
+				ConstructorInfo constructor = testClassinfo.constructors.get(0);
+				List<String> args = new ArrayList<String>();
+				for (int i = 0; i < constructor.argNames.size(); i++) {
+					ArgType argType = constructor.argTypes.get(i);
+					sb.append(argType.name);
+					sb.append(" ");
+					sb.append(constructor.argNames.get(i));
+					sb.append(" = ");
+					if (PrimitiveTypeUtil.isPrimitive(argType.name)) {
+						String primitiveDefault = PrimitiveTypeUtil
+								.getTypeDefaultValue(argType.name);
+						sb.append(primitiveDefault);
+					} else {
+						sb.append("null");
+					}
+					sb.append(";");
+					sb.append(CRLF);
+					sb.append("\t\t");
+					args.add(constructor.argNames.get(i));
+				}
+				sb.append(testTargetClassname);
+				sb.append(" target = new ");
+				sb.append(testTargetClassname);
+				sb.append("(");
+				sb.append(args.get(0));
+				for (int i = 1; i < args.size(); i++) {
+					sb.append(",");
+					sb.append(args.get(i));
+				}
+				sb.append(");");
+			} else {
+				sb.append(testTargetClassname);
+				sb.append(" target = new ");
+				sb.append(testTargetClassname);
+				sb.append("();");
+			}
 			sb.append(CRLF);
 			sb.append("\t\t");
 		}
