@@ -74,10 +74,11 @@ public final class TestCaseGenerateUtil {
 			for (MethodInfo expected : expectedMethods) {
 				boolean exist = false;
 				for (MethodInfo actual : actualMethods) {
-					String escapedExp = expected.testMethodName.replace(
-							StrConst.testMethodPrefix4Version3, StrConst.empty)
-							.replaceAll("\\$", "\\\\\\$").replaceAll(
-									"[\\(\\)\\[\\]]", StrConst.empty);
+					String escapedExp = expected.testMethodName
+							.replace(StrConst.testMethodPrefix4Version3,
+									StrConst.empty)
+							.replaceAll("\\$", "\\\\\\$")
+							.replaceAll("[\\(\\)\\[\\]]", StrConst.empty);
 					if (actual.testMethodName.matches(".*" + escapedExp + ".*")) {
 						exist = true;
 						break;
@@ -121,6 +122,9 @@ public final class TestCaseGenerateUtil {
 					classInfo.importList.add("static org.mockito.BDDMockito.*");
 				}
 			}
+			// constructors
+			// needed to generate in test method source code
+			classInfo.constructors = expectedClassInfo.constructors;
 		}
 		classInfo.methods = unimplementedMethodNames;
 		return classInfo;
@@ -218,6 +222,105 @@ public final class TestCaseGenerateUtil {
 	}
 
 	/**
+	 * Get constructor info list
+	 * 
+	 * @param pref
+	 *            preference loader object
+	 * @param classInfo
+	 *            class meta info
+	 * @param targetClassSourceStr
+	 *            target source code string value
+	 * @return constructor info list
+	 */
+	protected static List<ConstructorInfo> getConstructors(
+			PreferenceLoader pref, ClassInfo classInfo,
+			String targetClassSourceStr) {
+		// get constructors
+		List<String> targetConstructors = SourceCodeParseUtil
+				.getTargetConstructors(classInfo.name, targetClassSourceStr,
+						true, true, true);
+		List<ConstructorInfo> constructors = new ArrayList<ConstructorInfo>();
+		for (String target : targetConstructors) {
+			String groupConstructor = RegExp.wsAsteriskMax + classInfo.name
+					+ "\\(([^\\)]*?)\\)" + RegExp.wsAsteriskMax
+					+ "(throws .+)*.*?" + RegExp.wsAsteriskMax + "\\{.*";
+			Matcher constructorMatcher = Pattern.compile(groupConstructor)
+					.matcher(target);
+			if (constructorMatcher.find()) {
+				ConstructorInfo each = new ConstructorInfo();
+				String args = constructorMatcher.group(1);
+				// prepare to get generics
+				String[] tmpArr = args.split(StrConst.comma);
+				int tmpArrLen = tmpArr.length;
+				List<String> tmpArrList = new ArrayList<String>();
+				String buf = StrConst.empty;
+				for (int i = 0; i < tmpArrLen; i++) {
+					String element = tmpArr[i].trim();
+					// ex. List<String>
+					if (element.matches(".+?<.+?>.+")) {
+						tmpArrList.add(element);
+						continue;
+					}
+					// ex. Map<String
+					if (element.matches(".+?<.+")) {
+						buf += element;
+						continue;
+					}
+					// ex. (Map<String,) Object>
+					if (element.matches(".+?>.+")) {
+						String result = buf + StrConst.comma + element;
+						tmpArrList.add(result);
+						buf = StrConst.empty;
+						continue;
+					}
+					if (!buf.equals(StrConst.empty)) {
+						buf += StrConst.comma + element;
+						continue;
+					}
+					tmpArrList.add(element);
+				}
+				String[] argArr = tmpArrList.toArray(new String[0]);
+				if (pref.isTestMethodGenNotBlankEnabled) {
+					int argArrLen = argArr.length;
+					for (int i = 0; i < argArrLen; i++) {
+						ArgType argType = new ArgType();
+						String argTypeFull = argArr[i];
+						Matcher toGenericsMatcher = Pattern.compile(
+								RegExp.genericsGroup).matcher(argTypeFull);
+						while (toGenericsMatcher.find()) {
+							String[] generics = toGenericsMatcher.group()
+									.replaceAll("<", StrConst.empty)
+									.replaceAll(">", StrConst.empty)
+									.split(StrConst.comma);
+							// convert to java.lang.Object if self
+							// class is included
+							for (String generic : generics) {
+								generic = getClassInSourceCode(generic,
+										StrConst.empty, classInfo.importList);
+								argType.generics.add(generic);
+							}
+						}
+						String argTypeStr = argTypeFull.replaceAll(
+								RegExp.generics, StrConst.empty);
+						argType.name = getType(argTypeStr);
+						argType.nameInMethodName = getTypeAvailableInMethodName(argTypeStr);
+						each.argTypes.add(argType);
+						Matcher nameMatcher = RegExp.groupMethodArgNamePattern
+								.matcher(argTypeFull);
+						if (nameMatcher.find()) {
+							each.argNames.add(nameMatcher.group(1));
+						} else {
+							each.argNames.add("constructorArg" + i);
+						}
+					}
+				}
+				constructors.add(each);
+			}
+		}
+		return constructors;
+	}
+
+	/**
 	 * Get the information on the test methods corresponded the developing
 	 * public methods.
 	 * 
@@ -301,87 +404,8 @@ public final class TestCaseGenerateUtil {
 				}
 			}
 			// get constructors
-			List<String> targetConstructors = SourceCodeParseUtil
-					.getTargetConstructors(classInfo.name,
-							targetClassSourceStr, true, true, true);
-			for (String target : targetConstructors) {
-				String groupConstructor = RegExp.wsAsteriskMax + classInfo.name
-						+ "\\(([^\\)]*?)\\)" + RegExp.wsAsteriskMax
-						+ "(throws .+)*.*?" + RegExp.wsAsteriskMax + "\\{.*";
-				Matcher constructorMatcher = Pattern.compile(groupConstructor)
-						.matcher(target);
-				if (constructorMatcher.find()) {
-					ConstructorInfo each = new ConstructorInfo();
-					String args = constructorMatcher.group(1);
-					// prepare to get generics
-					String[] tmpArr = args.split(StrConst.comma);
-					int tmpArrLen = tmpArr.length;
-					List<String> tmpArrList = new ArrayList<String>();
-					String buf = StrConst.empty;
-					for (int i = 0; i < tmpArrLen; i++) {
-						String element = tmpArr[i].trim();
-						// ex. List<String>
-						if (element.matches(".+?<.+?>.+")) {
-							tmpArrList.add(element);
-							continue;
-						}
-						// ex. Map<String
-						if (element.matches(".+?<.+")) {
-							buf += element;
-							continue;
-						}
-						// ex. (Map<String,) Object>
-						if (element.matches(".+?>.+")) {
-							String result = buf + StrConst.comma + element;
-							tmpArrList.add(result);
-							buf = StrConst.empty;
-							continue;
-						}
-						if (!buf.equals(StrConst.empty)) {
-							buf += StrConst.comma + element;
-							continue;
-						}
-						tmpArrList.add(element);
-					}
-					String[] argArr = tmpArrList.toArray(new String[0]);
-					if (pref.isTestMethodGenNotBlankEnabled) {
-						int argArrLen = argArr.length;
-						for (int i = 0; i < argArrLen; i++) {
-							ArgType argType = new ArgType();
-							String argTypeFull = argArr[i];
-							Matcher toGenericsMatcher = Pattern.compile(
-									RegExp.genericsGroup).matcher(argTypeFull);
-							while (toGenericsMatcher.find()) {
-								String[] generics = toGenericsMatcher.group()
-										.replaceAll("<", StrConst.empty)
-										.replaceAll(">", StrConst.empty).split(
-												StrConst.comma);
-								// convert to java.lang.Object if self
-								// class is included
-								for (String generic : generics) {
-									generic = getClassInSourceCode(generic,
-											StrConst.empty,
-											classInfo.importList);
-									argType.generics.add(generic);
-								}
-							}
-							String argTypeStr = argTypeFull.replaceAll(
-									RegExp.generics, StrConst.empty);
-							argType.name = getType(argTypeStr);
-							argType.nameInMethodName = getTypeAvailableInMethodName(argTypeStr);
-							each.argTypes.add(argType);
-							Matcher nameMatcher = RegExp.groupMethodArgNamePattern
-									.matcher(argTypeFull);
-							if (nameMatcher.find()) {
-								each.argNames.add(nameMatcher.group(1));
-							} else {
-								each.argNames.add("constructorArg" + i);
-							}
-						}
-					}
-					constructors.add(each);
-				}
-			}
+			constructors = getConstructors(pref, classInfo,
+					targetClassSourceStr);
 
 			// get test target methods
 			List<String> targets = SourceCodeParseUtil.getTargetMethods(
@@ -402,8 +426,8 @@ public final class TestCaseGenerateUtil {
 						while (toGenericsMatcher.find()) {
 							String[] generics = toGenericsMatcher.group()
 									.replaceAll("<", StrConst.empty)
-									.replaceAll(">", StrConst.empty).split(
-											StrConst.comma);
+									.replaceAll(">", StrConst.empty)
+									.split(StrConst.comma);
 							// convert to java.lang.Object if self
 							// class is included
 							for (String generic : generics) {
@@ -462,8 +486,8 @@ public final class TestCaseGenerateUtil {
 							while (toGenericsMatcher.find()) {
 								String[] generics = toGenericsMatcher.group()
 										.replaceAll("<", StrConst.empty)
-										.replaceAll(">", StrConst.empty).split(
-												StrConst.comma);
+										.replaceAll(">", StrConst.empty)
+										.split(StrConst.comma);
 								// convert to java.lang.Object if self
 								// class is included
 								for (String generic : generics) {
@@ -510,8 +534,8 @@ public final class TestCaseGenerateUtil {
 							fieldName = fieldName.substring(0, 1).toLowerCase()
 									+ fieldName.substring(1);
 							fieldType = fieldType.replaceAll("\\[", "\\\\[")
-									.replaceAll("\\]", "\\\\]").replaceAll(",",
-											"\\\\s*,\\\\s*");
+									.replaceAll("\\]", "\\\\]")
+									.replaceAll(",", "\\\\s*,\\\\s*");
 							String searchRegexp = ".*?private\\s+" + fieldType
 									+ "(" + RegExp.generics + ")*"
 									+ RegExp.wsPlusMax + fieldName + ".+";
