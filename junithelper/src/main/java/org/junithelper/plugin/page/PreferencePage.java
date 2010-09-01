@@ -455,9 +455,10 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				String easyMock = Preference.TestMethodGen.usingMockEasyMock;
 				String jmock2 = Preference.TestMethodGen.usingMockJMock2;
 				String mockito = Preference.TestMethodGen.usingMockMockito;
+				String jmockit = Preference.TestMethodGen.usingMockJMockit;
 				String[][] labelAndValues = new String[][] { { none, none },
 						{ easyMock, easyMock }, { jmock2, jmock2 },
-						{ mockito, mockito } };
+						{ mockito, mockito }, { jmockit, jmockit } };
 				tmgRadioGroupMocks = new RadioGroupFieldEditor(
 						Preference.TestMethodGen.usingMock,
 						"Select your favorite framework.", 4, labelAndValues,
@@ -477,8 +478,8 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 	private Composite tcgArea;
 
 	private boolean isJUnitVersion3() {
-		String value = Activator.getDefault().getPreferenceStore().getString(
-				Preference.TestClassGen.junitVersion);
+		String value = Activator.getDefault().getPreferenceStore()
+				.getString(Preference.TestClassGen.junitVersion);
 		if (value == null || value.equals("")
 				|| value.equals(Preference.TestClassGen.junitVersion3)) {
 			return true;

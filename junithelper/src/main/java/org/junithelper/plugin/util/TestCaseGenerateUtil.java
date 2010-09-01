@@ -121,6 +121,10 @@ public final class TestCaseGenerateUtil {
 				if (pref.isTestMethodGenEnabledSupportMockito) {
 					classInfo.importList.add("static org.mockito.BDDMockito.*");
 				}
+				if (pref.isTestMethodGenEnabledSupportJMockit) {
+					classInfo.importList.add("mockit.Mocked");
+					classInfo.importList.add("mockit.Expectations");
+				}
 			}
 			// constructors
 			// needed to generate in test method source code
@@ -402,6 +406,11 @@ public final class TestCaseGenerateUtil {
 				if (pref.isTestMethodGenEnabledSupportMockito) {
 					classInfo.importList.add("static org.mockito.BDDMockito.*");
 				}
+				// JMockit
+				if (pref.isTestMethodGenEnabledSupportJMockit) {
+					classInfo.importList.add("mockit.Mocked");
+					classInfo.importList.add("mockit.Expectations");
+				}
 			}
 			// get constructors
 			constructors = getConstructors(pref, classInfo,
@@ -611,6 +620,76 @@ public final class TestCaseGenerateUtil {
 	}
 
 	/**
+	 * 
+	 * @param testMethod
+	 * @param testClassinfo
+	 * @param testTargetClassname
+	 * @return
+	 */
+	public static String getRequiredInstanceFieldsForJMockitTestMethod(
+			MethodInfo testMethod, ClassInfo testClassInfo,
+			String testTargetClassname) {
+		if (!new PreferenceLoader().isTestMethodGenEnabledSupportJMockit) {
+			return null;
+		}
+		StringBuilder sb = new StringBuilder();
+		List<ArgType> argTypes = testMethod.argTypes;
+		List<String> argNames = testMethod.argNames;
+		int argTypesLen = argTypes.size();
+		if (argTypesLen > 0 && argTypes.get(0).name != null
+				&& !argTypes.get(0).name.equals(StrConst.empty)) {
+			for (int i = 0; i < argTypesLen; i++) {
+				ArgType argType = argTypes.get(i);
+				// flexible length args
+				if (argType.name.matches(".+\\.\\.\\."))
+					argType.name = argType.name.replaceAll("\\.\\.\\.", "[]");
+				String argTypeName = getClassInSourceCode(argType.name,
+						testTargetClassname, testClassInfo.importList);
+				// generics
+				boolean isNeedToMock = MockGenUtil.isMockableClassName(
+						argTypeName, testClassInfo.importList);
+				if (!isNeedToMock) {
+					continue;
+				}
+				sb.append(StrConst.tab);
+				sb.append("@Mocked ");
+				sb.append(StrConst.carriageReturn);
+				sb.append(StrConst.lineFeed);
+				sb.append(StrConst.tab);
+				sb.append(argTypeName);
+				// add generics
+				if (argType.generics.size() > 0) {
+					sb.append("<");
+					sb.append(argType.generics.get(0));
+					if (argType.generics.size() > 1) {
+						for (int j = 1; j < argType.generics.size(); j++) {
+							sb.append(StrConst.comma);
+							sb.append(argType.generics.get(j));
+						}
+					}
+					sb.append(">");
+				}
+				sb.append(" ");
+				sb.append(testMethod.testMethodName);
+				sb.append("_");
+				String argName = argNames.get(i);
+				if (argName == null || argName.length() == 0) {
+					argName = "arg" + i;
+				}
+				sb.append(argName);
+				sb.append(";");
+				sb.append(StrConst.carriageReturn);
+				sb.append(StrConst.lineFeed);
+			}
+		}
+		if (sb.toString().length() > 0) {
+			sb.append(StrConst.carriageReturn);
+			sb.append(StrConst.lineFeed);
+		}
+		return sb.toString();
+	}
+
+	/**
 	 * Get sample implementation source code of the test methods.
 	 * 
 	 * @param testMethod
@@ -751,6 +830,9 @@ public final class TestCaseGenerateUtil {
 				boolean isMockito = pref.isTestMethodGenEnabledSupportMockito
 						&& MockGenUtil.isMockableClassName(argTypeName,
 								testClassinfo.importList);
+				boolean isJMockit = pref.isTestMethodGenEnabledSupportJMockit
+						&& MockGenUtil.isMockableClassName(argTypeName,
+								testClassinfo.importList);
 				if (isJMock2) {
 					sb.append("final ");
 				}
@@ -793,6 +875,11 @@ public final class TestCaseGenerateUtil {
 						sb.append("mock(");
 						sb.append(argTypeName);
 						sb.append(".class)");
+					} else if (isJMockit) {
+						sb.append("this.");
+						sb.append(testMethod.testMethodName);
+						sb.append("_");
+						sb.append(argName);
 					} else {
 						sb.append("null");
 					}
@@ -830,6 +917,18 @@ public final class TestCaseGenerateUtil {
 			sb.append("// e.g. : given(mocked.called()).willReturn(1);");
 			sb.append(CRLF);
 			sb.append("\t\t// when");
+			sb.append(CRLF);
+			sb.append("\t\t");
+		}
+		// JMockit stubbing
+		// (ex.) mocked.get(anyString); returns(200);
+		if (pref.isTestMethodGenEnabledSupportJMockit) {
+			sb.append("new Expectations(){{");
+			sb.append(CRLF);
+			sb.append("\t\t\t// e.g. : ");
+			sb.append("mocked.get(anyString); returns(200);");
+			sb.append(CRLF);
+			sb.append("\t\t}};");
 			sb.append(CRLF);
 			sb.append("\t\t");
 		}

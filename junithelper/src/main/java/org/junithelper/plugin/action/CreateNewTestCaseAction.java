@@ -288,6 +288,12 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 												.equals(StrConst.empty)) {
 									continue;
 								}
+								if (pref.isTestMethodGenEnabledSupportJMockit) {
+									sb.append(TestCaseGenerateUtil
+											.getRequiredInstanceFieldsForJMockitTestMethod(
+													testMethod, testClassInfo,
+													testTargetClassname));
+								}
 								if (pref.isJUnitVersion4) {
 									sb.append("\t@Test");
 									sb.append(CRLF);

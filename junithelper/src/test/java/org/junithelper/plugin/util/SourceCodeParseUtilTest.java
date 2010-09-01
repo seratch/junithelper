@@ -59,13 +59,13 @@ public class SourceCodeParseUtilTest extends TestCase {
 		assertEquals(exList.size() + "->" + actual.size(), exList.size(),
 				actual.size());
 		for (int i = 0; i < exList.size(); i++) {
-			assertEquals(exList.get(i) + "," + actual, exList.get(i), actual
-					.get(i));
+			assertEquals(exList.get(i) + "," + actual, exList.get(i),
+					actual.get(i));
 		}
 	}
 
 	public void test_getLineList_A$IFile() throws Exception {
-		// SKIP
+		assertTrue("skip", true);
 	}
 
 	public void test_trimLineComments_A$String() throws Exception {

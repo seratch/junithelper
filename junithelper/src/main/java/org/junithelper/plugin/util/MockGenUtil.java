@@ -99,4 +99,9 @@ public final class MockGenUtil {
 		return Preference.TestMethodGen.usingMockMockito.equals(setting);
 	}
 
+	public static final boolean isUsingJMockit(IPreferenceStore store) {
+		String setting = store.getString(Preference.TestMethodGen.usingMock);
+		return Preference.TestMethodGen.usingMockJMockit.equals(setting);
+	}
+
 }

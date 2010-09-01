@@ -172,6 +172,10 @@ public final class Preference {
 		 * Mockito
 		 */
 		public static final String usingMockMockito = "Mockito(BDD)";
+		/**
+		 * JMockit
+		 */
+		public static final String usingMockJMockit = "JMockit";
 
 	}
 

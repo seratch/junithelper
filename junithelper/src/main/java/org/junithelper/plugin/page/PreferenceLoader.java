@@ -46,6 +46,7 @@ public class PreferenceLoader {
 	public boolean isTestMethodGenEnabledSupportJMock2;
 	public boolean isTestMethodGenEnabledSupportEasyMock;
 	public boolean isTestMethodGenEnabledSupportMockito;
+	public boolean isTestMethodGenEnabledSupportJMockit;
 	public boolean isTestMethodGenIncludePublic;
 	public boolean isTestMethodGenIncludeProtected;
 	public boolean isTestMethodGenIncludePackageLocal;
@@ -98,6 +99,8 @@ public class PreferenceLoader {
 				.isUsingEasyMock(store);
 		isTestMethodGenEnabledSupportMockito = MockGenUtil
 				.isUsingMockito(store);
+		isTestMethodGenEnabledSupportJMockit = MockGenUtil
+				.isUsingJMockit(store);
 
 		String version = store.getString(Preference.TestClassGen.junitVersion);
 		isJUnitVersion3 = version.equals(Preference.TestClassGen.junitVersion3);
