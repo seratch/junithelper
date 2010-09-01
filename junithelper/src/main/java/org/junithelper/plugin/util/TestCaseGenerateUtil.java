@@ -39,8 +39,7 @@ import org.junithelper.plugin.exception.InvalidPreferenceException;
 import org.junithelper.plugin.page.PreferenceLoader;
 
 /**
- * TestCaseGenerateUtil<br>
- * <br>
+ * TestCaseGenerateUtil
  * 
  * @author Kazuhiro Sera <seratch@gmail.com>
  * @version 1.0
@@ -53,8 +52,12 @@ public final class TestCaseGenerateUtil {
 	/**
 	 * Get the information on the unimplemented test methods.
 	 * 
+	 * @param testTargetClassname
+	 *            test target class name
 	 * @param testTarget
+	 *            test target class source code file
 	 * @param testCase
+	 *            test class source code file
 	 * @return the information on test class with the unimplemented test methods
 	 * @throws Exception
 	 */
@@ -106,25 +109,8 @@ public final class TestCaseGenerateUtil {
 						notImportedList.add("//" + expImported);
 				}
 				classInfo.importList = notImportedList;
-				if (pref.isTestMethodGenEnabledSupportJMock2) {
-					classInfo.importList.add("org.jmock.Mockery");
-					classInfo.importList.add("org.jmock.Expectations");
-					classInfo.importList
-							.add("org.jmock.lib.legacy.ClassImposteriser");
-				}
-				if (pref.isTestMethodGenEnabledSupportEasyMock) {
-					classInfo.importList
-							.add("org.easymock.classextension.EasyMock");
-					classInfo.importList
-							.add("org.easymock.classextension.IMocksControl");
-				}
-				if (pref.isTestMethodGenEnabledSupportMockito) {
-					classInfo.importList.add("static org.mockito.BDDMockito.*");
-				}
-				if (pref.isTestMethodGenEnabledSupportJMockit) {
-					classInfo.importList.add("mockit.Mocked");
-					classInfo.importList.add("mockit.Expectations");
-				}
+				classInfo.importList = setupRequiredImports(pref,
+						actImportedList, classInfo.importList);
 			}
 			// constructors
 			// needed to generate in test method source code
@@ -135,10 +121,11 @@ public final class TestCaseGenerateUtil {
 	}
 
 	/**
-	 * Get the information on the methods.
+	 * Get the meta information on the class.
 	 * 
 	 * @param javaFile
-	 * @return the information on the methods
+	 *            java source code file
+	 * @return the meta information on the class
 	 * @throws Exception
 	 */
 	public static ClassInfo getMethodNamesAlreadyExists(IFile javaFile)
@@ -226,7 +213,7 @@ public final class TestCaseGenerateUtil {
 	}
 
 	/**
-	 * Get constructor info list
+	 * Get list of constructor meta info.
 	 * 
 	 * @param pref
 	 *            preference loader object
@@ -328,8 +315,11 @@ public final class TestCaseGenerateUtil {
 	 * Get the information on the test methods corresponded the developing
 	 * public methods.
 	 * 
+	 * @param testTargetClassname
+	 *            test target class name
 	 * @param javaFile
-	 * @return the information on the test methods
+	 *            Java source code file
+	 * @return the information on the test case class
 	 * @throws Exception
 	 */
 	public static ClassInfo getTestClassInfoFromTargetClass(
@@ -377,40 +367,8 @@ public final class TestCaseGenerateUtil {
 						classInfo.importList.add(importedPackage);
 					}
 				}
-				// JUnit version 3.x or 4.x
-				if (pref.isJUnitVersion3) {
-					// nothing to do
-				} else if (pref.isJUnitVersion4) {
-					classInfo.importList.add("org.junit.Test");
-					classInfo.importList.add("static org.junit.Assert.*");
-				}
-				// JMock2
-				if (pref.isTestMethodGenEnabledSupportJMock2) {
-					classInfo.importList.add("org.jmock.Mockery");
-					classInfo.importList.add("org.jmock.Expectations");
-					classInfo.importList
-							.add("org.jmock.lib.legacy.ClassImposteriser");
-					if (pref.isUsingJUnitHelperRuntime) {
-						classInfo.importList
-								.add("org.junithelper.runtime.util.JMock2Util");
-					}
-				}
-				// EasyMock
-				if (pref.isTestMethodGenEnabledSupportEasyMock) {
-					classInfo.importList
-							.add("org.easymock.classextension.EasyMock");
-					classInfo.importList
-							.add("org.easymock.classextension.IMocksControl");
-				}
-				// Mockito
-				if (pref.isTestMethodGenEnabledSupportMockito) {
-					classInfo.importList.add("static org.mockito.BDDMockito.*");
-				}
-				// JMockit
-				if (pref.isTestMethodGenEnabledSupportJMockit) {
-					classInfo.importList.add("mockit.Mocked");
-					classInfo.importList.add("mockit.Expectations");
-				}
+				classInfo.importList = setupRequiredImports(pref,
+						new ArrayList<String>(), classInfo.importList);
 			}
 			// get constructors
 			constructors = getConstructors(pref, classInfo,
@@ -620,13 +578,18 @@ public final class TestCaseGenerateUtil {
 	}
 
 	/**
+	 * Get the source code of the area that define required instance fields for
+	 * mocked args by JMockit.
 	 * 
 	 * @param testMethod
+	 *            test method meta info
 	 * @param testClassinfo
+	 *            test case class meta info
 	 * @param testTargetClassname
-	 * @return
+	 *            test target class name
+	 * @return source code string value
 	 */
-	public static String getRequiredInstanceFieldsForJMockitTestMethod(
+	public static String getRequiredInstanceFieldsSourceForJMockitTestMethod(
 			MethodInfo testMethod, ClassInfo testClassInfo,
 			String testTargetClassname) {
 		if (!new PreferenceLoader().isTestMethodGenEnabledSupportJMockit) {
@@ -693,8 +656,11 @@ public final class TestCaseGenerateUtil {
 	 * Get sample implementation source code of the test methods.
 	 * 
 	 * @param testMethod
-	 * @param testMethods
+	 *            test method meta info
+	 * @param testClassinfo
+	 *            test case class meta info
 	 * @param testTargetClassname
+	 *            test target class name
 	 * @return sample implementation source code
 	 */
 	public static String getNotBlankTestMethodSource(MethodInfo testMethod,
@@ -706,28 +672,35 @@ public final class TestCaseGenerateUtil {
 			if (pref.isUsingJUnitHelperRuntime) {
 				// JUnit 4.x does not have the field.
 				if (pref.isJUnitVersion4) {
-					sb.append("\t\t");
+					sb.append(StrConst.tab);
+					sb.append(StrConst.tab);
 					sb.append("Mockery jmock2 = JMock2Util.getNewInstance();");
 					sb.append(CRLF);
 				}
 			} else {
-				sb.append("\t\t");
+				sb.append(StrConst.tab);
+				sb.append(StrConst.tab);
 				sb.append("Mockery context = new Mockery(){{");
 				sb.append(CRLF);
-				sb.append("\t\t\t");
+				sb.append(StrConst.tab);
+				sb.append(StrConst.tab);
+				sb.append(StrConst.tab);
 				sb.append("setImposteriser(ClassImposteriser.INSTANCE);");
 				sb.append(CRLF);
-				sb.append("\t\t");
+				sb.append(StrConst.tab);
+				sb.append(StrConst.tab);
 				sb.append("}};");
 				sb.append(CRLF);
 			}
 		}
 		if (pref.isTestMethodGenEnabledSupportEasyMock) {
-			sb.append("\t\t");
+			sb.append(StrConst.tab);
+			sb.append(StrConst.tab);
 			sb.append("IMocksControl mocks = EasyMock.createControl();");
 			sb.append(CRLF);
 		}
-		sb.append("\t\t");
+		sb.append(StrConst.tab);
+		sb.append(StrConst.tab);
 		String returnTypeName = testMethod.returnType.name;
 		Object returnDefaultValue = null;
 		if (!returnTypeName.equals("void")) {
@@ -771,7 +744,8 @@ public final class TestCaseGenerateUtil {
 						}
 						sb.append(";");
 						sb.append(CRLF);
-						sb.append("\t\t");
+						sb.append(StrConst.tab);
+						sb.append(StrConst.tab);
 						args.add(constructor.argNames.get(i));
 					}
 				}
@@ -794,14 +768,16 @@ public final class TestCaseGenerateUtil {
 				sb.append("();");
 			}
 			sb.append(CRLF);
-			sb.append("\t\t");
+			sb.append(StrConst.tab);
+			sb.append(StrConst.tab);
 		}
 
 		// Mockito BDD
 		if (pref.isTestMethodGenEnabledSupportMockito) {
 			sb.append("// given");
 			sb.append(CRLF);
-			sb.append("\t\t");
+			sb.append(StrConst.tab);
+			sb.append(StrConst.tab);
 		}
 
 		// args define
@@ -886,7 +862,8 @@ public final class TestCaseGenerateUtil {
 				}
 				sb.append(";");
 				sb.append(CRLF);
-				sb.append("\t\t");
+				sb.append(StrConst.tab);
+				sb.append(StrConst.tab);
 				args.add(argName);
 			}
 		}
@@ -895,48 +872,68 @@ public final class TestCaseGenerateUtil {
 			sb.append(pref.isUsingJUnitHelperRuntime ? "jmock2" : "context");
 			sb.append(".checking(new Expectations(){{");
 			sb.append(CRLF);
-			sb.append("\t\t\t// e.g. : ");
+			sb.append(StrConst.tab);
+			sb.append(StrConst.tab);
+			sb.append(StrConst.tab);
+			sb.append("// e.g. : ");
 			sb.append("allowing(mocked).called(); will(returnValue(1));");
 			sb.append(CRLF);
-			sb.append("\t\t}});");
+			sb.append(StrConst.tab);
+			sb.append(StrConst.tab);
+			sb.append("}});");
 			sb.append(CRLF);
-			sb.append("\t\t");
+			sb.append(StrConst.tab);
+			sb.append(StrConst.tab);
 		}
 		// EasyMock expectations
 		if (pref.isTestMethodGenEnabledSupportEasyMock) {
 			sb.append("// e.g. : ");
 			sb.append("EasyMock.expect(mocked.called()).andReturn(1);");
 			sb.append(CRLF);
-			sb.append("\t\tmocks.replay();");
+			sb.append(StrConst.tab);
+			sb.append(StrConst.tab);
+			sb.append("mocks.replay();");
 			sb.append(CRLF);
-			sb.append("\t\t");
+			sb.append(StrConst.tab);
+			sb.append(StrConst.tab);
 		}
 		// Mockito stubbing
 		// (ex.) when(hoge.doSomething()).thenReturn("abc");
 		if (pref.isTestMethodGenEnabledSupportMockito) {
 			sb.append("// e.g. : given(mocked.called()).willReturn(1);");
 			sb.append(CRLF);
-			sb.append("\t\t// when");
+			sb.append(StrConst.tab);
+			sb.append(StrConst.tab);
+			sb.append("// when");
 			sb.append(CRLF);
-			sb.append("\t\t");
+			sb.append(StrConst.tab);
+			sb.append(StrConst.tab);
 		}
 		// JMockit stubbing
 		// (ex.) mocked.get(anyString); returns(200);
 		if (pref.isTestMethodGenEnabledSupportJMockit) {
 			sb.append("new Expectations(){{");
 			sb.append(CRLF);
-			sb.append("\t\t\t// e.g. : ");
+			sb.append(StrConst.tab);
+			sb.append(StrConst.tab);
+			sb.append(StrConst.tab);
+			sb.append("// e.g. : ");
 			sb.append("mocked.get(anyString); returns(200);");
 			sb.append(CRLF);
-			sb.append("\t\t}};");
+			sb.append(StrConst.tab);
+			sb.append(StrConst.tab);
+			sb.append("}};");
 			sb.append(CRLF);
-			sb.append("\t\t");
+			sb.append(StrConst.tab);
+			sb.append(StrConst.tab);
 		}
 		if (pref.isTestMethodGenExceptions
 				&& testMethod.testingTargetException != null) {
 			sb.append("try{");
 			sb.append(CRLF);
-			sb.append("\t\t\t");
+			sb.append(StrConst.tab);
+			sb.append(StrConst.tab);
+			sb.append(StrConst.tab);
 		}
 
 		// execute target method
@@ -968,14 +965,19 @@ public final class TestCaseGenerateUtil {
 		if (pref.isTestMethodGenExceptions
 				&& testMethod.testingTargetException != null) {
 			// exceptions thrown patterns
-			sb.append("\t\t\tfail(\"");
+			sb.append(StrConst.tab);
+			sb.append(StrConst.tab);
+			sb.append(StrConst.tab);
+			sb.append("fail(\"");
 			sb.append(StrConst.expectedExceptionNotThrownMessage);
 			sb.append(" (");
 			sb.append(testMethod.testingTargetException.name);
 			sb.append(")");
 			sb.append("\");");
 			sb.append(CRLF);
-			sb.append("\t\t} catch (");
+			sb.append(StrConst.tab);
+			sb.append(StrConst.tab);
+			sb.append("} catch (");
 			sb.append(testMethod.testingTargetException.name);
 			sb.append(" e) {}");
 			sb.append(CRLF);
@@ -986,13 +988,18 @@ public final class TestCaseGenerateUtil {
 				sb.append(CRLF);
 			}
 			if (pref.isTestMethodGenEnabledSupportMockito) {
-				sb.append("\t\t// then");
+				sb.append(StrConst.tab);
+				sb.append(StrConst.tab);
+				sb.append("// then");
 				sb.append(CRLF);
-				sb.append("\t\t// e.g. : verify(mocked).called();");
+				sb.append(StrConst.tab);
+				sb.append(StrConst.tab);
+				sb.append("// e.g. : verify(mocked).called();");
 				sb.append(CRLF);
 			}
 			if (!returnTypeName.equals("void")) {
-				sb.append("\t\t");
+				sb.append(StrConst.tab);
+				sb.append(StrConst.tab);
 				sb.append(returnTypeName);
 				sb.append(" expected = ");
 				sb.append(returnDefaultValue);
@@ -1002,7 +1009,8 @@ public final class TestCaseGenerateUtil {
 			// assert return value
 			// ex. assertEquals(expected, actual);
 			if (!returnTypeName.equals("void")) {
-				sb.append("\t\t");
+				sb.append(StrConst.tab);
+				sb.append(StrConst.tab);
 				sb.append("assertEquals(expected, actual);");
 				sb.append(CRLF);
 			}
@@ -1022,7 +1030,7 @@ public final class TestCaseGenerateUtil {
 	}
 
 	/**
-	 * Get type converted.
+	 * Get the available type name in method name.
 	 * 
 	 * @param arg
 	 * @return
@@ -1039,6 +1047,17 @@ public final class TestCaseGenerateUtil {
 		return arg;
 	}
 
+	/**
+	 * Get the available class name in source code.
+	 * 
+	 * @param returnTypeToCheck
+	 *            return type to check
+	 * @param testTargetClassname
+	 *            test target class name
+	 * @param importList
+	 *            import list
+	 * @return result
+	 */
 	protected static String getClassInSourceCode(String returnTypeToCheck,
 			String testTargetClassname, List<String> importList) {
 		// defined class with full package
@@ -1088,4 +1107,92 @@ public final class TestCaseGenerateUtil {
 			return isArray ? returnTypeToCheck + "[]" : returnTypeToCheck;
 		}
 	}
+
+	/**
+	 * Setup required import list.
+	 * 
+	 * @param pref
+	 *            preference loader
+	 * @param alreadyImportedList
+	 *            already imported list
+	 * @param importList
+	 *            imported list
+	 * @return result
+	 */
+	public static List<String> setupRequiredImports(PreferenceLoader pref,
+			List<String> alreadyImportedList, List<String> importList) {
+		// JUnit version 3.x or 4.x
+		if (pref.isJUnitVersion3) {
+			// nothing to do
+		} else if (pref.isJUnitVersion4) {
+			if (!containsInList(alreadyImportedList, "org.junit.Test")) {
+				importList.add("org.junit.Test");
+			}
+			if (!containsInList(alreadyImportedList,
+					"static org.junit.Assert.*")) {
+				importList.add("static org.junit.Assert.*");
+			}
+		}
+		// JMock2
+		if (pref.isTestMethodGenEnabledSupportJMock2) {
+			if (!containsInList(alreadyImportedList, "org.jmock.Mockery")) {
+				importList.add("org.jmock.Mockery");
+			}
+			if (!containsInList(alreadyImportedList, "org.jmock.Expectations")) {
+				importList.add("org.jmock.Expectations");
+			}
+			if (!alreadyImportedList
+					.contains("org.jmock.lib.legacy.ClassImposteriser")) {
+				importList.add("org.jmock.lib.legacy.ClassImposteriser");
+			}
+		}
+		// EasyMock
+		if (pref.isTestMethodGenEnabledSupportEasyMock) {
+			if (!alreadyImportedList
+					.contains("org.easymock.classextension.EasyMock")) {
+				importList.add("org.easymock.classextension.EasyMock");
+			}
+			if (!importList
+					.contains("org.easymock.classextension.IMocksControl")) {
+				importList.add("org.easymock.classextension.IMocksControl");
+			}
+		}
+		// Mockito
+		if (pref.isTestMethodGenEnabledSupportMockito) {
+			if (!alreadyImportedList
+					.contains("static org.mockito.BDDMockito.*")) {
+				importList.add("static org.mockito.BDDMockito.*");
+			}
+		}
+		// JMockit
+		if (pref.isTestMethodGenEnabledSupportJMockit) {
+			if (!containsInList(alreadyImportedList, "mockit.Mocked")) {
+				importList.add("mockit.Mocked");
+			}
+			if (!containsInList(alreadyImportedList, "mockit.Expectations")) {
+				importList.add("mockit.Expectations");
+			}
+		}
+		return importList;
+	}
+
+	/**
+	 * Check the target string value is contained in the list of string values.
+	 * 
+	 * @param alreadyExistList
+	 *            list of string values
+	 * @param checkTarget
+	 *            check target string value
+	 * @return result
+	 */
+	public static boolean containsInList(List<String> alreadyExistList,
+			String checkTarget) {
+		for (String alreadyExist : alreadyExistList) {
+			if (checkTarget.equals(alreadyExist)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 }

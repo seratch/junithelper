@@ -29,7 +29,7 @@ import org.junithelper.plugin.constant.RegExp;
 import org.junithelper.plugin.constant.StrConst;
 
 /**
- * Source code parse util<br>
+ * Source code parse util
  * 
  * @author Kazuhiro Sera <seratch@gmail.com>
  * @version 1.0
@@ -67,7 +67,7 @@ public class SourceCodeParseUtil {
 	}
 
 	/**
-	 * Trim the line comment areas from source code string
+	 * Trim the line comment areas from source code string.
 	 * 
 	 * @param source
 	 * @return result without line comments
@@ -77,7 +77,7 @@ public class SourceCodeParseUtil {
 	}
 
 	/**
-	 * Trim the all comment areas from source code string
+	 * Trim the all comment areas from source code string.
 	 * 
 	 * @param source
 	 * @return result without line comments
@@ -234,13 +234,14 @@ public class SourceCodeParseUtil {
 				.replaceAll(StrConst.comma + "\\s+?", StrConst.comma)
 				.replaceAll("<\\s+?", "<").replaceAll("\\s+?>", ">");
 		List<String> result = new ArrayList<String>();
+		// for method signature
 		String regexp = "[\\{;\\}][^\\{;\\}]+?\\([^\\{;\\}]*?\\)[^\\{;\\}]+?\\{";
 		Pattern pat = Pattern.compile(regexp);
 		Matcher mat = pat.matcher(source);
 		while (mat.find()) {
-			String matched = mat.group(0).replaceAll(StrConst.carriageReturn,
-					StrConst.empty).replaceAll(StrConst.lineFeed,
-					StrConst.space);
+			String matched = mat.group(0)
+					.replaceAll(StrConst.carriageReturn, StrConst.empty)
+					.replaceAll(StrConst.lineFeed, StrConst.space);
 			// skip public methods
 			if (!publicRequired && matchesPublic(matched)) {
 				continue;
@@ -257,15 +258,17 @@ public class SourceCodeParseUtil {
 			if (matchesPrivate(matched)) {
 				continue;
 			}
-			matched = matched.replaceAll(StrConst.tab, StrConst.space)
+			matched = matched
+					.replaceAll(StrConst.tab, StrConst.space)
 					.replaceAll(
 							searchTargetMethodRegExpPrefix + "public" + "\\s",
-							StrConst.empty).replaceAll(
+							StrConst.empty)
+					.replaceAll(
 							searchTargetMethodRegExpPrefix + "protected"
-									+ "\\s", StrConst.empty).replaceAll(
-							searchTargetMethodRegExpPrefix + "\\s+?",
-							StrConst.empty).replaceAll("\\sfinal\\s",
-							StrConst.space);
+									+ "\\s", StrConst.empty)
+					.replaceAll(searchTargetMethodRegExpPrefix + "\\s+?",
+							StrConst.empty)
+					.replaceAll("\\sfinal\\s", StrConst.space);
 			result.add(StrConst.space + matched);
 		}
 		return result;

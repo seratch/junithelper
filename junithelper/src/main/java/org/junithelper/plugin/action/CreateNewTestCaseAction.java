@@ -290,7 +290,7 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 								}
 								if (pref.isTestMethodGenEnabledSupportJMockit) {
 									sb.append(TestCaseGenerateUtil
-											.getRequiredInstanceFieldsForJMockitTestMethod(
+											.getRequiredInstanceFieldsSourceForJMockitTestMethod(
 													testMethod, testClassInfo,
 													testTargetClassname));
 								}
