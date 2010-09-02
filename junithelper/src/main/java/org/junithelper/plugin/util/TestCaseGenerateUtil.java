@@ -28,6 +28,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.junithelper.plugin.bean.ArgType;
 import org.junithelper.plugin.bean.ClassInfo;
 import org.junithelper.plugin.bean.ConstructorInfo;
@@ -46,8 +47,19 @@ import org.junithelper.plugin.page.PreferenceLoader;
  */
 public final class TestCaseGenerateUtil {
 
-	static IWorkspace workspace = ResourcesPlugin.getWorkspace();
-	static IWorkspaceRoot workspaceRoot = workspace.getRoot();
+	static IWorkspace workspace = null;
+
+	static IWorkspaceRoot workspaceRoot = null;
+
+	static {
+		try {
+			workspace = ResourcesPlugin.getWorkspace();
+			workspaceRoot = workspace.getRoot();
+		} catch (Exception e) {
+		}
+	}
+
+	public static IPreferenceStore store = null;
 
 	/**
 	 * Get the information on the unimplemented test methods.
@@ -64,7 +76,7 @@ public final class TestCaseGenerateUtil {
 	public static ClassInfo getClassInfoWithUnimplementedTestMethods(
 			String testTargetClassname, IFile testTarget, IFile testCase)
 			throws Exception {
-		PreferenceLoader pref = new PreferenceLoader();
+		PreferenceLoader pref = new PreferenceLoader(store);
 		ClassInfo classInfo = new ClassInfo();
 		List<MethodInfo> unimplementedMethodNames = new ArrayList<MethodInfo>();
 		// enable public method test
@@ -130,7 +142,7 @@ public final class TestCaseGenerateUtil {
 	 */
 	public static ClassInfo getMethodNamesAlreadyExists(IFile javaFile)
 			throws Exception {
-		PreferenceLoader pref = new PreferenceLoader();
+		PreferenceLoader pref = new PreferenceLoader(store);
 		ClassInfo classInfo = new ClassInfo();
 		List<MethodInfo> methodStringInfos = new ArrayList<MethodInfo>();
 		// enable public method test
@@ -325,7 +337,7 @@ public final class TestCaseGenerateUtil {
 	public static ClassInfo getTestClassInfoFromTargetClass(
 			String testTargetClassname, IFile javaFile)
 			throws InvalidPreferenceException, IOException {
-		PreferenceLoader pref = new PreferenceLoader();
+		PreferenceLoader pref = new PreferenceLoader(store);
 		ClassInfo classInfo = new ClassInfo();
 		classInfo.name = testTargetClassname;
 		List<ConstructorInfo> constructors = new ArrayList<ConstructorInfo>();
@@ -567,6 +579,9 @@ public final class TestCaseGenerateUtil {
 					}
 				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			// TODO
 		} finally {
 			FileResourceUtil.close(br);
 			FileResourceUtil.close(isr);
@@ -592,7 +607,7 @@ public final class TestCaseGenerateUtil {
 	public static String getRequiredInstanceFieldsSourceForJMockitTestMethod(
 			MethodInfo testMethod, ClassInfo testClassInfo,
 			String testTargetClassname) {
-		if (!new PreferenceLoader().isTestMethodGenEnabledSupportJMockit) {
+		if (!new PreferenceLoader(store).isTestMethodGenEnabledSupportJMockit) {
 			return null;
 		}
 		StringBuilder sb = new StringBuilder();
@@ -665,7 +680,7 @@ public final class TestCaseGenerateUtil {
 	 */
 	public static String getNotBlankTestMethodSource(MethodInfo testMethod,
 			ClassInfo testClassinfo, String testTargetClassname) {
-		PreferenceLoader pref = new PreferenceLoader();
+		PreferenceLoader pref = new PreferenceLoader(store);
 		StringBuilder sb = new StringBuilder();
 		String CRLF = StrConst.carriageReturn + StrConst.lineFeed;
 		if (pref.isTestMethodGenEnabledSupportJMock2) {

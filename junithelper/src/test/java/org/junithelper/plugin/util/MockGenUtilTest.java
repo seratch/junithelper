@@ -1,6 +1,6 @@
 package org.junithelper.plugin.util;
 
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -132,6 +132,18 @@ public class MockGenUtilTest extends TestCase {
 		// when
 		boolean actual = MockGenUtil.isUsingMockito(store);
 		// then
+		boolean expected = false;
+		assertEquals(expected, actual);
+	}
+
+	public void test_isUsingJMockit_A$IPreferenceStore() throws Exception {
+		// given
+		IPreferenceStore store = mock(IPreferenceStore.class);
+		// e.g. : given(mocked.called()).willReturn(1);
+		// when
+		boolean actual = MockGenUtil.isUsingJMockit(store);
+		// then
+		// e.g. : verify(mocked).called();
 		boolean expected = false;
 		assertEquals(expected, actual);
 	}

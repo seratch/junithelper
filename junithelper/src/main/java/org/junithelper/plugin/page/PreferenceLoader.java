@@ -21,8 +21,7 @@ import org.junithelper.plugin.constant.Preference;
 import org.junithelper.plugin.util.MockGenUtil;
 
 /**
- * PreferenceLoader<br>
- * <br>
+ * PreferenceLoader
  * 
  * @author Kazuhiro Sera <seratch@gmail.com>
  * @version 1.0
@@ -62,16 +61,38 @@ public class PreferenceLoader {
 
 	public String classToExtend;
 
-	public PreferenceLoader() {
+	/**
+	 * Constructor
+	 * 
+	 * @param store
+	 *            preference store
+	 */
+	public PreferenceLoader(IPreferenceStore store) {
+		initialize(store);
+	}
 
-		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+	/**
+	 * Initialize the preference info.
+	 * 
+	 * @param store
+	 *            preference store
+	 */
+	public void initialize(IPreferenceStore store) {
 
+		// loading preference store
+		if (store == null) {
+			store = Activator.getDefault().getPreferenceStore();
+		}
+
+		// source code directory
 		commonSrcMainJavaDir = store.getString(Preference.Common.srcMainPath);
 		commonTestMainJavaDir = store.getString(Preference.Common.srcTestPath);
 
+		// test class gen
 		isTestClassGenEnabled = store
 				.getBoolean(Preference.TestClassGen.enabled);
 
+		// test method gen
 		isTestMethodGenEnabled = store
 				.getBoolean(Preference.TestMethodGen.enabled);
 		isTestMethodGenArgsEnabled = store
@@ -81,9 +102,11 @@ public class PreferenceLoader {
 		isTestMethodGenExceptions = store
 				.getBoolean(Preference.TestMethodGen.enabledException);
 
+		// test method template implementation gen
 		isTestMethodGenNotBlankEnabled = store
 				.getBoolean(Preference.TestMethodGen.enabledTestMethodSampleImpl);
 
+		// access modifier
 		isTestMethodGenIncludePublic = store
 				.getBoolean(Preference.TestMethodGen.includePublic);
 		isTestMethodGenIncludeProtected = store
@@ -91,9 +114,11 @@ public class PreferenceLoader {
 		isTestMethodGenIncludePackageLocal = store
 				.getBoolean(Preference.TestMethodGen.includePackageLocal);
 
+		// accessors
 		isTestMethodGenExecludeAccessors = store
 				.getBoolean(Preference.TestMethodGen.excludesAccessors);
 
+		// mock object frameworks
 		isTestMethodGenEnabledSupportJMock2 = MockGenUtil.isUsingJMock2(store);
 		isTestMethodGenEnabledSupportEasyMock = MockGenUtil
 				.isUsingEasyMock(store);
@@ -102,12 +127,16 @@ public class PreferenceLoader {
 		isTestMethodGenEnabledSupportJMockit = MockGenUtil
 				.isUsingJMockit(store);
 
+		// junit version
 		String version = store.getString(Preference.TestClassGen.junitVersion);
 		isJUnitVersion3 = version.equals(Preference.TestClassGen.junitVersion3);
 		isJUnitVersion4 = version.equals(Preference.TestClassGen.junitVersion4);
+
+		// using junit helper runtime
 		isUsingJUnitHelperRuntime = store
 				.getBoolean(Preference.TestClassGen.usingJunitHelperRuntimeLib);
 
+		// test method signature
 		testMethodDelimiter = store
 				.getString(Preference.TestMethodGen.delimiter);
 		testMethodArgsPrefix = store
@@ -123,7 +152,9 @@ public class PreferenceLoader {
 		testMethodExceptionDelimiter = store
 				.getString(Preference.TestMethodGen.exceptionDelimiter);
 
+		// class to extend
 		classToExtend = store.getString(Preference.TestClassGen.classToExtend);
 
 	}
+
 }

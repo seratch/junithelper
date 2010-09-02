@@ -32,6 +32,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Shell;
@@ -67,6 +68,8 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 
 	private ISelection selection = null;
 
+	public IPreferenceStore store = null;
+
 	/**
 	 * Run method to invoked.
 	 * 
@@ -84,7 +87,7 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 	 * @param action
 	 */
 	public void run(IAction action) {
-		PreferenceLoader pref = new PreferenceLoader();
+		PreferenceLoader pref = new PreferenceLoader(store);
 		InputStream javaFileIStream = null;
 		OutputStreamWriter testFileOSWriter = null;
 		FileOutputStream fos = null;
@@ -302,7 +305,9 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 								sb.append(testMethod.testMethodName);
 								sb.append("() throws Exception {");
 								sb.append(CRLF);
-								sb.append("\t\t//");
+								sb.append(StrConst.tab);
+								sb.append(StrConst.tab);
+								sb.append("//");
 								sb.append(StrConst.autoGenTodoMessage);
 								sb.append(CRLF);
 								if (pref.isTestMethodGenNotBlankEnabled) {
@@ -312,7 +317,8 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 													testTargetClassname);
 									sb.append(notBlankSourceCode);
 								}
-								sb.append("\t}");
+								sb.append(StrConst.tab);
+								sb.append("}");
 								sb.append(CRLF);
 								sb.append(CRLF);
 							}

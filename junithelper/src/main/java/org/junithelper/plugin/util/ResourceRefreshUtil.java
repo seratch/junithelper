@@ -18,7 +18,6 @@ package org.junithelper.plugin.util;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.ui.IActionBars;
@@ -38,12 +37,24 @@ import org.eclipse.ui.internal.WorkbenchWindow;
 public final class ResourceRefreshUtil {
 
 	// get progress monitor
-	private static IWorkbench workbench = PlatformUI.getWorkbench();
-	private static WorkbenchWindow workbenchWindow = (WorkbenchWindow) workbench
-			.getActiveWorkbenchWindow();
-	private static IActionBars bars = workbenchWindow.getActionBars();
-	private static IStatusLineManager lineManager = bars.getStatusLineManager();
-	private static IProgressMonitor monitor = lineManager.getProgressMonitor();
+	private static IWorkbench workbench;
+	private static WorkbenchWindow workbenchWindow;
+	private static IActionBars bars;
+	private static IStatusLineManager lineManager;
+	private static IProgressMonitor monitor;
+
+	static {
+		try {
+			workbench = PlatformUI.getWorkbench();
+			workbenchWindow = (WorkbenchWindow) workbench
+					.getActiveWorkbenchWindow();
+			bars = workbenchWindow.getActionBars();
+			lineManager = bars.getStatusLineManager();
+			monitor = lineManager.getProgressMonitor();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * Reflesh resources.
@@ -54,13 +65,12 @@ public final class ResourceRefreshUtil {
 	 */
 	public static boolean refreshLocal(IWorkbenchWindow window, String param) {
 		try {
-			// get resource
 			IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace()
 					.getRoot();
 			IResource resource = workspaceRoot.findMember(param);
 			// refresh resource
 			resource.refreshLocal(IResource.DEPTH_INFINITE, monitor);
-		} catch (CoreException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}

@@ -15,6 +15,7 @@
  */
 package org.junithelper.plugin.util;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -31,6 +32,8 @@ import org.junithelper.plugin.page.PreferenceLoader;
  */
 public final class ResourcePathUtil {
 
+	public static IPreferenceStore store = null;
+
 	/**
 	 * Get resource path that starts with project root path.
 	 * 
@@ -40,7 +43,7 @@ public final class ResourcePathUtil {
 	@SuppressWarnings("restriction")
 	public static String getPathStartsFromProjectRoot(
 			StructuredSelection structuredSelection) {
-		PreferenceLoader pref = new PreferenceLoader();
+		PreferenceLoader pref = new PreferenceLoader(store);
 		String pathFromProjectRoot = StrConst.empty;
 		if (structuredSelection == null) {
 			// ----------------------------------------
@@ -54,8 +57,8 @@ public final class ResourcePathUtil {
 			// ----------------------------------------
 			// navigator
 			// ----------------------------------------
-			pathFromProjectRoot = structuredSelection.toString().replace("[L",
-					StrConst.empty).replace("]", StrConst.empty);
+			pathFromProjectRoot = structuredSelection.toString()
+					.replace("[L", StrConst.empty).replace("]", StrConst.empty);
 		} else if (structuredSelection.getFirstElement() instanceof org.eclipse.jdt.internal.core.CompilationUnit) {
 			// ----------------------------------------
 			// package explorer
@@ -66,8 +69,8 @@ public final class ResourcePathUtil {
 					.replaceAll("\\.", StrConst.dirSep);
 			String projectName = cuToString.split("\\[in")[3].trim().split("]")[0];
 			String testTargetClassname = cuToString.split(RegExp.javaFileExp)[0]
-					.replaceAll("(\\[|\\])", StrConst.empty).replaceAll(
-							"Working copy ", StrConst.empty).trim();
+					.replaceAll("(\\[|\\])", StrConst.empty)
+					.replaceAll("Working copy ", StrConst.empty).trim();
 			pathFromProjectRoot = StrConst.dirSep + projectName
 					+ StrConst.dirSep + pref.commonSrcMainJavaDir
 					+ StrConst.dirSep + packagePath + StrConst.dirSep
