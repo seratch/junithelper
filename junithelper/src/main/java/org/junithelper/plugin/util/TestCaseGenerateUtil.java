@@ -1156,26 +1156,26 @@ public final class TestCaseGenerateUtil {
 			if (!containsInList(alreadyImportedList, "org.jmock.Expectations")) {
 				importList.add("org.jmock.Expectations");
 			}
-			if (!alreadyImportedList
-					.contains("org.jmock.lib.legacy.ClassImposteriser")) {
+			if (!containsInList(alreadyImportedList,
+					"org.jmock.lib.legacy.ClassImposteriser")) {
 				importList.add("org.jmock.lib.legacy.ClassImposteriser");
 			}
 		}
 		// EasyMock
 		if (pref.isTestMethodGenEnabledSupportEasyMock) {
-			if (!alreadyImportedList
-					.contains("org.easymock.classextension.EasyMock")) {
+			if (!containsInList(alreadyImportedList,
+					"org.easymock.classextension.EasyMock")) {
 				importList.add("org.easymock.classextension.EasyMock");
 			}
-			if (!importList
-					.contains("org.easymock.classextension.IMocksControl")) {
+			if (!containsInList(alreadyImportedList,
+					"org.easymock.classextension.IMocksControl")) {
 				importList.add("org.easymock.classextension.IMocksControl");
 			}
 		}
 		// Mockito
 		if (pref.isTestMethodGenEnabledSupportMockito) {
-			if (!alreadyImportedList
-					.contains("static org.mockito.BDDMockito.*")) {
+			if (!containsInList(alreadyImportedList,
+					"static org.mockito.BDDMockito.*")) {
 				importList.add("static org.mockito.BDDMockito.*");
 			}
 		}
