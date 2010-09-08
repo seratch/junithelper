@@ -31,7 +31,11 @@ public class PreferencePageInitializer extends AbstractPreferenceInitializer {
 
 	@Override
 	public void initializeDefaultPreferences() {
+
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+
+		// Language
+		store.setDefault(Preference.lang, Preference.Lang.English);
 
 		// common
 		store.setDefault(Preference.Common.srcMainPath, "src/main/java");

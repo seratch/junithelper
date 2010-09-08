@@ -22,13 +22,28 @@ package org.junithelper.plugin.constant;
  * @author Kazuhiro Sera <seratch@gmail.com>
  * @version 1.0
  */
-public final class Preference {
+public class Preference {
 
 	/**
 	 * Select language
 	 */
-	// TODO
-	public static final String lang = "Language";
+	public static final String lang = "Preference.lang";
+
+	/**
+	 * Lang
+	 * 
+	 * @author Kazuhiro Sera
+	 */
+	public static class Lang {
+
+		public static final String English = "en";
+
+		public static final String EnglishLabel = "English";
+
+		public static final String Japanese = "ja";
+
+		public static final String JapaneseLabel = "日本語";
+	}
 
 	/**
 	 * Common
@@ -36,18 +51,19 @@ public final class Preference {
 	 * @author Kazuhiro Sera
 	 */
 	public static class Common {
+
 		/**
 		 * Description
 		 */
-		public static final String description = "Settings for JUnit Helper plugin.";
+		public static final String description = "TODO";
 		/**
 		 * Main Source Folder
 		 */
-		public static final String srcMainPath = "Main Source Folder";
+		public static final String srcMainPath = "Preference.Common.srcMainPath";
 		/**
 		 * Test Source Folder
 		 */
-		public static final String srcTestPath = "Test Source Folder";
+		public static final String srcTestPath = "Preference.Common.srcTestPath";
 	}
 
 	public static class TestClassGen {
@@ -55,127 +71,127 @@ public final class Preference {
 		/**
 		 * Enable test methods gen
 		 */
-		public static final String enabled = "Test Class Auto Generate";
+		public static final String enabled = "Preference.TestClassGen.enabled";
 		/**
 		 * JUnit versions
 		 */
-		public static final String junitVersion = "JUnit Version";
+		public static final String junitVersion = "Preference.TestClassGen.junitVersion";
 		/**
 		 * JUnit version 3.x
 		 */
-		public static final String junitVersion3 = "JUnit 3.x";
+		public static final String junitVersion3 = "Preference.TestClassGen.junitVersion3";
 		/**
 		 * JUnit version 4.x
 		 */
-		public static final String junitVersion4 = "JUnit 4.x";
+		public static final String junitVersion4 = "Preference.TestClassGen.junitVersion4";
 		/**
 		 * Class To Extend
 		 */
-		public static final String classToExtend = "Class To Extend";
+		public static final String classToExtend = "Preference.TestClassGen.classToExtend";
 		/**
 		 * Using JUnit Helper runtime library
 		 */
-		public static final String usingJunitHelperRuntimeLib = "Using JUnit Helper Runtime Library.";
+		public static final String usingJunitHelperRuntimeLib = "Preference.TestClassGen.usingJunitHelperRuntimeLib";
 	}
 
 	public static class TestMethodGen {
 		/**
 		 * Enable test methods gen
 		 */
-		public static final String enabled = "Test Method Auto Generate";
+		public static final String enabled = "Preference.TestMethodGen.enabled";
 		/**
 		 * Delimiter to test method name
 		 */
-		public static final String delimiter = " Method Name Delimiter";
+		public static final String delimiter = "Preference.TestMethodGen.delimiter";
 
 		/**
 		 * Enable includes method args in test method name
 		 */
-		public static final String enabledArgs = " Includes Method Args";
+		public static final String enabledArgs = "Preference.TestMethodGen.enabledArgs";
 		/**
 		 * Args prefix
 		 */
-		public static final String argsPrefix = "Args Prefix";
+		public static final String argsPrefix = "Preference.TestMethodGen.argsPrefix";
 		/**
 		 * Args delimiter
 		 */
-		public static final String argsDelimiter = "Args Delimiter";
+		public static final String argsDelimiter = "Preference.TestMethodGen.argsDelimiter";
 
 		/**
 		 * Enable includes method return in test method name
 		 */
-		public static final String enabledReturn = " Includes Method Return";
+		public static final String enabledReturn = "Preference.TestMethodGen.enabledReturn";
 		/**
 		 * Return prefix
 		 */
-		public static final String returnPrefix = "Return Prefix";
+		public static final String returnPrefix = "Preference.TestMethodGen.returnPrefix";
 		/**
 		 * Return delimiter
 		 */
-		public static final String returnDelimiter = "Return Delimiter";
+		public static final String returnDelimiter = "Preference.TestMethodGen.returnDelimiter";
 
 		/**
 		 * Enable includes exceptions that the method throws
 		 */
-		public static final String enabledException = " Includes Exceptions Thrown";
+		public static final String enabledException = "Preference.TestMethodGen.enabledException";
 		/**
 		 * Return prefix
 		 */
-		public static final String exceptionPrefix = "Exception Prefix";
+		public static final String exceptionPrefix = "Preference.TestMethodGen.exceptionPrefix";
 		/**
 		 * Return delimiter
 		 */
-		public static final String exceptionDelimiter = "Exception Delimiter";
+		public static final String exceptionDelimiter = "Preference.TestMethodGen.exceptionDelimiter";
 
 		/**
 		 * Public methods
 		 */
-		public static final String includePublic = " Includes \"public\"";
+		public static final String includePublic = "Preference.TestMethodGen.includePublic";
 
 		/**
 		 * Protected methods
 		 */
-		public static final String includeProtected = " Includes \"protected\"";
+		public static final String includeProtected = "Preference.TestMethodGen.includeProtected";
 
 		/**
 		 * Package local methods
 		 */
-		public static final String includePackageLocal = " Includes \"package local\"";
+		public static final String includePackageLocal = "Preference.TestMethodGen.includePackageLocal";
 
 		/**
 		 * Exclude accessors
 		 */
-		public static final String excludesAccessors = " Exculdes Accessors(setter/getter)";
+		public static final String excludesAccessors = "Preference.TestMethodGen.excludesAccessors";
 
 		/**
 		 * Generate sample implementation to test methods
 		 */
-		public static final String enabledTestMethodSampleImpl = " Generate Sample Implementation";
+		public static final String enabledTestMethodSampleImpl = "Preference.TestMethodGen.enabledTestMethodSampleImpl";
 
 		/**
 		 * Using mock object framework
 		 */
-		public static final String usingMock = "Mock";
+		public static final String usingMock = "Preference.TestMethodGen.usingMock";
 		/**
 		 * None
 		 */
-		public static final String usingMockNone = "None";
+		public static final String usingMockNone = "Preference.TestMethodGen.usingMockNone";
 		/**
 		 * EasyMock
 		 */
-		public static final String usingMockEasyMock = "EasyMock";
+		public static final String usingMockEasyMock = "Preference.TestMethodGen.usingMockEasyMock";
 		/**
 		 * JMock2
 		 */
-		public static final String usingMockJMock2 = "JMock2";
+		public static final String usingMockJMock2 = "Preference.TestMethodGen.usingMockJMock2";
 		/**
 		 * Mockito
 		 */
-		public static final String usingMockMockito = "Mockito(BDD)";
+		public static final String usingMockMockito = "Preference.TestMethodGen.usingMockMockito";
 		/**
 		 * JMockit
 		 */
-		public static final String usingMockJMockit = "JMockit";
+		public static final String usingMockJMockit = "Preference.TestMethodGen.usingMockJMockit";
 
 	}
 
