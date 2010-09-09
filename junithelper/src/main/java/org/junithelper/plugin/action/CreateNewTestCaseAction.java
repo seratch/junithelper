@@ -42,12 +42,16 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
+import org.junithelper.plugin.Activator;
 import org.junithelper.plugin.bean.ClassInfo;
 import org.junithelper.plugin.bean.MethodInfo;
 import org.junithelper.plugin.constant.Dialog;
+import org.junithelper.plugin.constant.Message;
+import org.junithelper.plugin.constant.Preference;
 import org.junithelper.plugin.constant.RuntimeLibrary;
 import org.junithelper.plugin.constant.StrConst;
 import org.junithelper.plugin.exception.InvalidPreferenceException;
+import org.junithelper.plugin.io.PropertiesLoader;
 import org.junithelper.plugin.page.PreferenceLoader;
 import org.junithelper.plugin.util.FileResourceUtil;
 import org.junithelper.plugin.util.ResourcePathUtil;
@@ -87,7 +91,12 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 	 * @param action
 	 */
 	public void run(IAction action) {
+		if (store == null) {
+			store = Activator.getDefault().getPreferenceStore();
+		}
 		PreferenceLoader pref = new PreferenceLoader(store);
+		PropertiesLoader props = new PropertiesLoader(
+				store.getString(Preference.lang));
 		InputStream javaFileIStream = null;
 		OutputStreamWriter testFileOSWriter = null;
 		FileOutputStream fos = null;
@@ -112,15 +121,17 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 			if (structuredSelection != null && structuredSelection.size() == 0) {
 				// required select
 				Shell shell = new Shell();
-				MessageDialog.openWarning(shell, Dialog.Common.title,
-						Dialog.Common.required);
+				MessageDialog.openWarning(shell,
+						props.get(Dialog.Common.title),
+						props.get(Dialog.Common.required));
 				refreshFlag = false;
 			} else if (structuredSelection != null
 					&& structuredSelection.size() > 1) {
 				// select one only
 				Shell shell = new Shell();
-				MessageDialog.openWarning(shell, Dialog.Common.title,
-						Dialog.Common.selectOneOnly);
+				MessageDialog.openWarning(shell,
+						props.get(Dialog.Common.title),
+						props.get(Dialog.Common.selectOneOnly));
 				refreshFlag = false;
 			} else {
 				// path started from project root
@@ -184,9 +195,10 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 						}
 						if (!ResourceRefreshUtil.refreshLocal(null, projectName
 								+ StrConst.dirSep + tmpResourceDirPath + "/..")) {
-							String msg = Dialog.Common.resourceRefreshError;
+							String msg = props
+									.get(Dialog.Common.resourceRefreshError);
 							MessageDialog.openWarning(new Shell(),
-									Dialog.Common.title, msg);
+									props.get(Dialog.Common.title), msg);
 							System.err.println("Resource refresh error!");
 						}
 					}
@@ -198,20 +210,21 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 				// resource sync
 				if (!ResourceRefreshUtil.refreshLocal(null, projectName
 						+ StrConst.dirSep + testCaseDirResource)) {
-					MessageDialog.openWarning(new Shell(), Dialog.Common.title,
-							Dialog.Common.resourceRefreshError);
+					MessageDialog.openWarning(new Shell(),
+							props.get(Dialog.Common.title),
+							props.get(Dialog.Common.resourceRefreshError));
 					System.err.println("Resource refresh error!");
 				}
 				try {
 					// confirm if already exist
 					File outputFile = new File(testCaseCreateDirpath
 							+ StrConst.dirSep + testCaseFilename);
-					String msg = Dialog.Common.alreadyExist + " ("
+					String msg = props.get(Dialog.Common.alreadyExist) + " ("
 							+ testCaseFilename + ")" + StrConst.lineFeed
-							+ Dialog.Common.confirmToProceed;
+							+ props.get(Dialog.Common.confirmToProceed);
 					if (!outputFile.exists()
 							|| MessageDialog.openConfirm(new Shell(),
-									Dialog.Common.title, msg)) {
+									props.get(Dialog.Common.title), msg)) {
 						// get public methods
 						String targetClass = "/" + projectName + "/" + selected;
 						IResource targetClassResource = workspaceRoot
@@ -307,8 +320,8 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 								sb.append(CRLF);
 								sb.append(StrConst.tab);
 								sb.append(StrConst.tab);
-								sb.append("//");
-								sb.append(StrConst.autoGenTodoMessage);
+								sb.append("// ");
+								sb.append(props.get(Message.autoGenTodoMessage));
 								sb.append(CRLF);
 								if (pref.isTestMethodGenNotBlankEnabled) {
 									String notBlankSourceCode = TestCaseGenerateUtil
@@ -328,8 +341,9 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 						testFileOSWriter.write(sb.toString());
 					}
 				} catch (InvalidPreferenceException ipe) {
-					MessageDialog.openWarning(new Shell(), Dialog.Common.title,
-							Dialog.Common.invalidPreference);
+					MessageDialog.openWarning(new Shell(),
+							props.get(Dialog.Common.title),
+							props.get(Dialog.Common.invalidPreference));
 					return;
 				} catch (FileNotFoundException fnfe) {
 					fnfe.printStackTrace();
@@ -349,8 +363,9 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 		if (refreshFlag
 				&& !ResourceRefreshUtil.refreshLocal(null, projectName
 						+ StrConst.dirSep + testCaseDirResource + "/..")) {
-			MessageDialog.openWarning(new Shell(), Dialog.Common.title,
-					Dialog.Common.resourceRefreshError);
+			MessageDialog.openWarning(new Shell(),
+					props.get(Dialog.Common.title),
+					props.get(Dialog.Common.resourceRefreshError));
 			System.err.println("Resource refresh error!");
 		} else {
 			// open test case

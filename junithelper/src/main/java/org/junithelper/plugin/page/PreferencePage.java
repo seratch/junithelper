@@ -30,6 +30,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.junithelper.plugin.Activator;
 import org.junithelper.plugin.constant.Preference;
+import org.junithelper.plugin.io.PropertiesLoader;
 
 /**
  * PreferencePage<br>
@@ -75,7 +76,8 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 							{ Preference.Lang.EnglishLabel, en },
 							{ Preference.Lang.JapaneseLabel, ja }, };
 					langGroup = new RadioGroupFieldEditor(Preference.lang,
-							"Select Language.", 2, labelAndValues, parent);
+							"Settings for JUnit Helper.", 2, labelAndValues,
+							parent);
 					addField(langGroup);
 				}
 			}
@@ -87,34 +89,30 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				parentLayout.marginHeight = 2;
 				parentLayout.marginWidth = 4;
 				commonParentGroup.setLayout(parentLayout);
-				// TODO
-				commonParentGroup.setText("Common");
+				commonParentGroup.setText(props
+						.get(Preference.Common.groupName));
 				GridData gd = new GridData(768);
 				commonParentGroup.setLayoutData(gd);
 
 				Composite grp = new Composite(commonParentGroup, 0);
 				grp.setLayout(new GridLayout(2, false));
 				Label label = new Label(grp, 0);
-				// TODO
-				label.setText("Specify the source folders.");
+				label.setText(props.get(Preference.Common.description));
 				gd = new GridData(768);
 				gd.horizontalSpan = 2;
 				label.setLayoutData(gd);
 				// src/main/java
 				addField(new StringFieldEditor(Preference.Common.srcMainPath,
-						props.get("labels." + Preference.Common.srcMainPath),
-						grp));
+						props.get(Preference.Common.srcMainPath), grp));
 				// src/test/java
 				addField(new StringFieldEditor(Preference.Common.srcTestPath,
-						props.get("labels." + Preference.Common.srcTestPath),
-						grp));
+						props.get(Preference.Common.srcTestPath), grp));
 			}
 
 			// generating test class group
 			// enable extended class gen
 			tcgEnable = new BooleanFieldEditor(Preference.TestClassGen.enabled,
-					props.get("labels." + Preference.TestClassGen.enabled),
-					parent);
+					props.get(Preference.TestClassGen.enabled), parent);
 			addField(tcgEnable);
 			Group classConfigGroup = new Group(parent, 0);
 			{
@@ -122,8 +120,8 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				parentLayout.marginHeight = 2;
 				parentLayout.marginWidth = 4;
 				classConfigGroup.setLayout(parentLayout);
-				// TODO
-				classConfigGroup.setText("Test Class");
+				classConfigGroup.setText(props
+						.get(Preference.TestClassGen.groupName));
 				GridData gd = new GridData(768);
 				classConfigGroup.setLayoutData(gd);
 
@@ -134,12 +132,13 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 					String ver3 = Preference.TestClassGen.junitVersion3;
 					String ver4 = Preference.TestClassGen.junitVersion4;
 					String[][] labelAndValues = new String[][] {
-							{ props.get("labels." + ver3), ver3 },
-							{ props.get("labels." + ver4), ver4 }, };
-					// TODO
+							{ props.get(ver3), ver3 },
+							{ props.get(ver4), ver4 }, };
+
 					tcgRadioGroupVersions = new RadioGroupFieldEditor(
 							Preference.TestClassGen.junitVersion,
-							"Select JUnit Version.", 2, labelAndValues, tcgArea) {
+							props.get(Preference.TestClassGen.description), 2,
+							labelAndValues, tcgArea) {
 						@Override
 						protected void fireValueChanged(String p, Object o,
 								Object n) {
@@ -166,8 +165,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 					// using junit helper runtime lib or not
 					tcgUsingJUnitHelperTestCase = new BooleanFieldEditor(
 							Preference.TestClassGen.usingJunitHelperRuntimeLib,
-							props.get("labels."
-									+ Preference.TestClassGen.usingJunitHelperRuntimeLib),
+							props.get(Preference.TestClassGen.usingJunitHelperRuntimeLib),
 							tcgArea) {
 						@Override
 						protected void valueChanged(boolean oldValue,
@@ -209,8 +207,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 					// class to extend
 					tcgClassToExtend = new StringFieldEditor(
 							Preference.TestClassGen.classToExtend,
-							props.get("labels."
-									+ Preference.TestClassGen.classToExtend),
+							props.get(Preference.TestClassGen.classToExtend),
 							tcgArea);
 					addField(tcgClassToExtend);
 				}
@@ -219,8 +216,8 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 			// generating test methods group
 			// enable test methods gen
 			tmgEnable = new BooleanFieldEditor(
-					Preference.TestMethodGen.enabled, props.get("labels."
-							+ Preference.TestMethodGen.enabled), parent) {
+					Preference.TestMethodGen.enabled,
+					props.get(Preference.TestMethodGen.enabled), parent) {
 				@Override
 				protected void valueChanged(boolean oldValue, boolean newValue) {
 					super.valueChanged(oldValue, newValue);
@@ -246,8 +243,8 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				parentLayout.marginHeight = 4;
 				parentLayout.marginWidth = 4;
 				tmgParentGroup.setLayout(parentLayout);
-				// TODO
-				tmgParentGroup.setText("Test Method Auto Generate");
+				tmgParentGroup.setText(props
+						.get(Preference.TestMethodGen.groupName));
 				GridData gd = new GridData(768);
 				tmgParentGroup.setLayoutData(gd);
 
@@ -258,11 +255,11 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				tmgArea.setLayout(layout);
 
 				{
+					String label = " "
+							+ props.get(Preference.TestMethodGen.delimiter);
 					// common delimiter setting
 					tmgCommonDelimiter = new StringFieldEditor(
-							Preference.TestMethodGen.delimiter,
-							props.get("labels."
-									+ Preference.TestMethodGen.delimiter), 10,
+							Preference.TestMethodGen.delimiter, label, 10,
 							tmgArea);
 					addField(tmgCommonDelimiter);
 				}
@@ -271,8 +268,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				// enable args
 				tmgEnableArgs = new BooleanFieldEditor(
 						Preference.TestMethodGen.enabledArgs,
-						props.get("labels."
-								+ Preference.TestMethodGen.enabledArgs),
+						props.get(Preference.TestMethodGen.enabledArgs),
 						tmgParentGroup) {
 					@Override
 					protected void valueChanged(boolean oldValue,
@@ -300,7 +296,8 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				layout.marginHeight = 4;
 				layout.marginWidth = 4;
 				group.setLayout(layout);
-				group.setText("Args");
+				group.setText(props
+						.get(Preference.TestMethodGen.subGroupNameForArgs));
 				GridData gd = new GridData(768);
 				gd.horizontalSpan = 2;
 				group.setLayoutData(gd);
@@ -309,14 +306,12 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				tmgEnableArgsArea.setLayout(new GridLayout(2, false));
 				tmgArgsPrefix = new StringFieldEditor(
 						Preference.TestMethodGen.argsPrefix,
-						props.get("labels."
-								+ Preference.TestMethodGen.argsPrefix),
+						props.get(Preference.TestMethodGen.argsPrefix),
 						tmgEnableArgsArea);
 				addField(tmgArgsPrefix);
 				tmgArgsDelimiter = new StringFieldEditor(
 						Preference.TestMethodGen.argsDelimiter,
-						props.get("labels."
-								+ Preference.TestMethodGen.argsDelimiter),
+						props.get(Preference.TestMethodGen.argsDelimiter),
 						tmgEnableArgsArea);
 				addField(tmgArgsDelimiter);
 			}
@@ -324,8 +319,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				// enable return
 				tmgEnableReturn = new BooleanFieldEditor(
 						Preference.TestMethodGen.enabledReturn,
-						props.get("labels."
-								+ Preference.TestMethodGen.enabledReturn),
+						props.get(Preference.TestMethodGen.enabledReturn),
 						tmgParentGroup) {
 					@Override
 					protected void valueChanged(boolean oldValue,
@@ -353,7 +347,8 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				layout.marginHeight = 4;
 				layout.marginWidth = 4;
 				group.setLayout(layout);
-				group.setText("Return");
+				group.setText(props
+						.get(Preference.TestMethodGen.subGroupNameForReturn));
 				GridData gd = new GridData(768);
 				gd.horizontalSpan = 2;
 				group.setLayoutData(gd);
@@ -362,14 +357,12 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				tmgReturnArea.setLayout(new GridLayout(2, false));
 				tmgReturnPrefix = new StringFieldEditor(
 						Preference.TestMethodGen.returnPrefix,
-						props.get("labels."
-								+ Preference.TestMethodGen.returnPrefix),
+						props.get(Preference.TestMethodGen.returnPrefix),
 						tmgReturnArea);
 				addField(tmgReturnPrefix);
 				tmgReturnDelimiter = new StringFieldEditor(
 						Preference.TestMethodGen.returnDelimiter,
-						props.get("labels."
-								+ Preference.TestMethodGen.returnDelimiter),
+						props.get(Preference.TestMethodGen.returnDelimiter),
 						tmgReturnArea);
 				addField(tmgReturnDelimiter);
 			}
@@ -378,8 +371,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				// enable exceptions
 				tmgEnableException = new BooleanFieldEditor(
 						Preference.TestMethodGen.enabledException,
-						props.get("labels."
-								+ Preference.TestMethodGen.enabledException),
+						props.get(Preference.TestMethodGen.enabledException),
 						tmgParentGroup) {
 					@Override
 					protected void valueChanged(boolean oldValue,
@@ -407,8 +399,8 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				layout.marginHeight = 4;
 				layout.marginWidth = 4;
 				group.setLayout(layout);
-				// TODO
-				group.setText("Exceptions thrown");
+				group.setText(props
+						.get(Preference.TestMethodGen.subGroupNameForException));
 				GridData gd = new GridData(768);
 				gd.horizontalSpan = 2;
 				group.setLayoutData(gd);
@@ -417,14 +409,12 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				tmgExceptionArea.setLayout(new GridLayout(2, false));
 				tmgExceptionPrefix = new StringFieldEditor(
 						Preference.TestMethodGen.exceptionPrefix,
-						props.get("labels."
-								+ Preference.TestMethodGen.exceptionPrefix),
+						props.get(Preference.TestMethodGen.exceptionPrefix),
 						tmgExceptionArea);
 				addField(tmgExceptionPrefix);
 				tmgExceptionDelimiter = new StringFieldEditor(
 						Preference.TestMethodGen.exceptionDelimiter,
-						props.get("labels."
-								+ Preference.TestMethodGen.exceptionDelimiter),
+						props.get(Preference.TestMethodGen.exceptionDelimiter),
 						tmgExceptionArea);
 				addField(tmgExceptionDelimiter);
 			}
@@ -433,22 +423,19 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				// public methods
 				tmgCommonIncludePublicMethods = new BooleanFieldEditor(
 						Preference.TestMethodGen.includePublic,
-						props.get("labels."
-								+ Preference.TestMethodGen.includePublic),
+						props.get(Preference.TestMethodGen.includePublic),
 						tmgParentGroup);
 				addField(tmgCommonIncludePublicMethods);
 				// protected methods
 				tmgCommonIncludeProtectdMethods = new BooleanFieldEditor(
 						Preference.TestMethodGen.includeProtected,
-						props.get("labels."
-								+ Preference.TestMethodGen.includeProtected),
+						props.get(Preference.TestMethodGen.includeProtected),
 						tmgParentGroup);
 				addField(tmgCommonIncludeProtectdMethods);
 				// package local methods
 				tmgCommonIncludePackageLocalMethods = new BooleanFieldEditor(
 						Preference.TestMethodGen.includePackageLocal,
-						props.get("labels."
-								+ Preference.TestMethodGen.includePackageLocal),
+						props.get(Preference.TestMethodGen.includePackageLocal),
 						tmgParentGroup);
 				addField(tmgCommonIncludePackageLocalMethods);
 			}
@@ -456,8 +443,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				// enable excluding accessors
 				tmgCommonExecludesAccessors = new BooleanFieldEditor(
 						Preference.TestMethodGen.excludesAccessors,
-						props.get("labels."
-								+ Preference.TestMethodGen.excludesAccessors),
+						props.get(Preference.TestMethodGen.excludesAccessors),
 						tmgParentGroup);
 				addField(tmgCommonExecludesAccessors);
 			}
@@ -466,8 +452,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				// enable generate not blank methods
 				tmgEnableGenerateSample = new BooleanFieldEditor(
 						Preference.TestMethodGen.enabledTestMethodSampleImpl,
-						props.get("labels."
-								+ Preference.TestMethodGen.enabledTestMethodSampleImpl),
+						props.get(Preference.TestMethodGen.enabledTestMethodSampleImpl),
 						tmgParentGroup) {
 					@Override
 					protected void valueChanged(boolean oldValue,
@@ -495,8 +480,8 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				layout.marginHeight = 4;
 				layout.marginWidth = 4;
 				group.setLayout(layout);
-				// TODO
-				group.setText("Mock Object Frameworks");
+				group.setText(props
+						.get(Preference.TestMethodGen.subGroupNameForMock));
 				GridData gd = new GridData(350);
 				gd.horizontalSpan = 2;
 				group.setLayoutData(gd);
@@ -508,16 +493,15 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 				String mockito = Preference.TestMethodGen.usingMockMockito;
 				String jmockit = Preference.TestMethodGen.usingMockJMockit;
 				String[][] labelAndValues = new String[][] {
-						{ props.get("labels." + none), none },
-						{ props.get("labels." + easyMock), easyMock },
-						{ props.get("labels." + jmock2), jmock2 },
-						{ props.get("labels." + mockito), mockito },
-						{ props.get("labels." + jmockit), jmockit } };
-				// TODO
+						{ props.get(none), none },
+						{ props.get(easyMock), easyMock },
+						{ props.get(jmock2), jmock2 },
+						{ props.get(mockito), mockito },
+						{ props.get(jmockit), jmockit } };
 				tmgRadioGroupMocks = new RadioGroupFieldEditor(
 						Preference.TestMethodGen.usingMock,
-						"Select your favorite framework.", 4, labelAndValues,
-						tmgSampleImplGenArea);
+						props.get(Preference.TestMethodGen.descriptionForMock),
+						4, labelAndValues, tmgSampleImplGenArea);
 				addField(tmgRadioGroupMocks);
 			}
 		}

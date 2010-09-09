@@ -1,5 +1,7 @@
 package org.junithelper.plugin.page;
 
+import org.junithelper.plugin.io.PropertiesLoader;
+
 import junit.framework.TestCase;
 
 public class PropertiesLoaderTest extends TestCase {

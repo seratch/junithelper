@@ -42,7 +42,7 @@ public class Preference {
 
 		public static final String Japanese = "ja";
 
-		public static final String JapaneseLabel = "日本語";
+		public static final String JapaneseLabel = "Japanese";
 	}
 
 	/**
@@ -51,11 +51,14 @@ public class Preference {
 	 * @author Kazuhiro Sera
 	 */
 	public static class Common {
-
+		/**
+		 * Group Name
+		 */
+		public static final String groupName = "Preference.Common.groupName";
 		/**
 		 * Description
 		 */
-		public static final String description = "TODO";
+		public static final String description = "Preference.Common.description";
 		/**
 		 * Main Source Folder
 		 */
@@ -67,7 +70,14 @@ public class Preference {
 	}
 
 	public static class TestClassGen {
-
+		/**
+		 * Group Name
+		 */
+		public static final String groupName = "Preference.TestClassGen.groupName";
+		/**
+		 * Description
+		 */
+		public static final String description = "Preference.TestClassGen.description";
 		/**
 		 * Enable test methods gen
 		 */
@@ -95,6 +105,22 @@ public class Preference {
 	}
 
 	public static class TestMethodGen {
+		/**
+		 * Group Name
+		 */
+		public static final String groupName = "Preference.TestMethodGen.groupName";
+		/**
+		 * Sub Group Name for Args
+		 */
+		public static final String subGroupNameForArgs = "Preference.TestMethodGen.subGroupNameForArgs";
+		/**
+		 * Sub Group Name for Return Value
+		 */
+		public static final String subGroupNameForReturn = "Preference.TestMethodGen.subGroupNameForReturn";
+		/**
+		 * Sub Group Name for Args
+		 */
+		public static final String subGroupNameForException = "Preference.TestMethodGen.subGroupNameForException";
 		/**
 		 * Enable test methods gen
 		 */
@@ -172,6 +198,14 @@ public class Preference {
 		 * Using mock object framework
 		 */
 		public static final String usingMock = "Preference.TestMethodGen.usingMock";
+		/**
+		 * Sub Group Name for Return Value
+		 */
+		public static final String subGroupNameForMock = "Preference.TestMethodGen.subGroupNameForMock";
+		/**
+		 * Sub Group Name for Return Value
+		 */
+		public static final String descriptionForMock = "Preference.TestMethodGen.descriptionForMock";
 		/**
 		 * None
 		 */

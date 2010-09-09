@@ -1,4 +1,4 @@
-package org.junithelper.plugin.page;
+package org.junithelper.plugin.io;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -29,14 +29,18 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.junithelper.plugin.Activator;
 import org.junithelper.plugin.bean.ArgType;
 import org.junithelper.plugin.bean.ClassInfo;
 import org.junithelper.plugin.bean.ConstructorInfo;
 import org.junithelper.plugin.bean.MethodInfo;
 import org.junithelper.plugin.bean.MethodInfo.ExceptionInfo;
+import org.junithelper.plugin.constant.Message;
+import org.junithelper.plugin.constant.Preference;
 import org.junithelper.plugin.constant.RegExp;
 import org.junithelper.plugin.constant.StrConst;
 import org.junithelper.plugin.exception.InvalidPreferenceException;
+import org.junithelper.plugin.io.PropertiesLoader;
 import org.junithelper.plugin.page.PreferenceLoader;
 
 /**
@@ -55,11 +59,12 @@ public final class TestCaseGenerateUtil {
 		try {
 			workspace = ResourcesPlugin.getWorkspace();
 			workspaceRoot = workspace.getRoot();
+			store = Activator.getDefault().getPreferenceStore();
 		} catch (Exception e) {
 		}
 	}
 
-	public static IPreferenceStore store = null;
+	public static IPreferenceStore store;
 
 	/**
 	 * Get the information on the unimplemented test methods.
@@ -681,6 +686,8 @@ public final class TestCaseGenerateUtil {
 	public static String getNotBlankTestMethodSource(MethodInfo testMethod,
 			ClassInfo testClassinfo, String testTargetClassname) {
 		PreferenceLoader pref = new PreferenceLoader(store);
+		PropertiesLoader props = new PropertiesLoader(
+				store.getString(Preference.lang));
 		StringBuilder sb = new StringBuilder();
 		String CRLF = StrConst.carriageReturn + StrConst.lineFeed;
 		if (pref.isTestMethodGenEnabledSupportJMock2) {
@@ -890,7 +897,9 @@ public final class TestCaseGenerateUtil {
 			sb.append(StrConst.tab);
 			sb.append(StrConst.tab);
 			sb.append(StrConst.tab);
-			sb.append("// e.g. : ");
+			sb.append("// ");
+			sb.append(props.get(Message.exempliGratia));
+			sb.append(" : ");
 			sb.append("allowing(mocked).called(); will(returnValue(1));");
 			sb.append(CRLF);
 			sb.append(StrConst.tab);
@@ -902,7 +911,9 @@ public final class TestCaseGenerateUtil {
 		}
 		// EasyMock expectations
 		if (pref.isTestMethodGenEnabledSupportEasyMock) {
-			sb.append("// e.g. : ");
+			sb.append("// ");
+			sb.append(props.get(Message.exempliGratia));
+			sb.append(" : ");
 			sb.append("EasyMock.expect(mocked.called()).andReturn(1);");
 			sb.append(CRLF);
 			sb.append(StrConst.tab);
@@ -915,7 +926,10 @@ public final class TestCaseGenerateUtil {
 		// Mockito stubbing
 		// (ex.) when(hoge.doSomething()).thenReturn("abc");
 		if (pref.isTestMethodGenEnabledSupportMockito) {
-			sb.append("// e.g. : given(mocked.called()).willReturn(1);");
+			sb.append("// ");
+			sb.append(props.get(Message.exempliGratia));
+			sb.append(" : ");
+			sb.append("given(mocked.called()).willReturn(1);");
 			sb.append(CRLF);
 			sb.append(StrConst.tab);
 			sb.append(StrConst.tab);
@@ -932,7 +946,9 @@ public final class TestCaseGenerateUtil {
 			sb.append(StrConst.tab);
 			sb.append(StrConst.tab);
 			sb.append(StrConst.tab);
-			sb.append("// e.g. : ");
+			sb.append("// ");
+			sb.append(props.get(Message.exempliGratia));
+			sb.append(" : ");
 			sb.append("mocked.get(anyString); returns(200);");
 			sb.append(CRLF);
 			sb.append(StrConst.tab);
@@ -984,7 +1000,7 @@ public final class TestCaseGenerateUtil {
 			sb.append(StrConst.tab);
 			sb.append(StrConst.tab);
 			sb.append("fail(\"");
-			sb.append(StrConst.expectedExceptionNotThrownMessage);
+			sb.append(props.get(Message.expectedExceptionNotThrownMessage));
 			sb.append(" (");
 			sb.append(testMethod.testingTargetException.name);
 			sb.append(")");
@@ -1009,7 +1025,10 @@ public final class TestCaseGenerateUtil {
 				sb.append(CRLF);
 				sb.append(StrConst.tab);
 				sb.append(StrConst.tab);
-				sb.append("// e.g. : verify(mocked).called();");
+				sb.append("// ");
+				sb.append(props.get(Message.exempliGratia));
+				sb.append(" : ");
+				sb.append("verify(mocked).called();");
 				sb.append(CRLF);
 			}
 			if (!returnTypeName.equals("void")) {
