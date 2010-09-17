@@ -92,20 +92,10 @@ public final class TestCaseGenerateUtil {
 			ClassInfo actualClassInfo = getMethodNamesAlreadyExists(testCase);
 			List<MethodInfo> actualMethods = actualClassInfo.methods;
 			for (MethodInfo expected : expectedMethods) {
-				boolean exist = false;
-				for (MethodInfo actual : actualMethods) {
-					String escapedExp = expected.testMethodName
-							.replace(StrConst.testMethodPrefix4Version3,
-									StrConst.empty)
-							.replaceAll("\\$", "\\\\\\$")
-							.replaceAll("[\\(\\)\\[\\]]", StrConst.empty);
-					if (actual.testMethodName.matches(".*" + escapedExp + ".*")) {
-						exist = true;
-						break;
-					}
-				}
-				if (!exist)
+				if (!isAlreadyExistInActualTestCase(expected.methodName,
+						actualMethods)) {
 					unimplementedMethodNames.add(expected);
+				}
 			}
 			// imported types
 			if (pref.isTestMethodGenNotBlankEnabled) {
@@ -135,6 +125,31 @@ public final class TestCaseGenerateUtil {
 		}
 		classInfo.methods = unimplementedMethodNames;
 		return classInfo;
+	}
+
+	/**
+	 * Expected method name is already exist in the actual test case
+	 * 
+	 * @param expectedTestMethodName
+	 *            expected test method name
+	 * @param actualMethods
+	 *            method names that are already exist
+	 * @return Expected method name is already exist in the actual test case
+	 */
+	protected static boolean isAlreadyExistInActualTestCase(
+			String expectedTestMethodName, List<MethodInfo> actualMethods) {
+		boolean exist = false;
+		for (MethodInfo actual : actualMethods) {
+			String escapedExp = expectedTestMethodName
+					.replaceFirst(StrConst.testMethodPrefix4Version3,
+							StrConst.empty).replaceAll("\\$", "\\\\\\$")
+					.replaceAll("[\\(\\)\\[\\]]", StrConst.empty);
+			if (actual.testMethodName.matches(".*" + escapedExp + ".*")) {
+				exist = true;
+				break;
+			}
+		}
+		return exist;
 	}
 
 	/**

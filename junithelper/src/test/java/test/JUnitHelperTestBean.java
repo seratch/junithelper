@@ -321,4 +321,9 @@ public class JUnitHelperTestBean {
 		return dest;
 	}
 
+	@Deprecated()
+	public String testUser() {
+		return "result";
+	}
+
 }

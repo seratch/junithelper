@@ -37,6 +37,26 @@ public class TestCaseGenerateUtilTest extends TestCase {
 		assertNotNull(actual);
 	}
 
+	public void test_getClassInfoWithUnimplementedTestMethods_A$String$IFile$IFile_methodNameStartWithTest()
+			throws Exception {
+		// given
+		String testTargetClassname = "testTargetClassname";
+		IFile testTarget = mock(IFile.class, "testTarget");
+		IFile testCase = mock(IFile.class, "testCase");
+		IPreferenceStore store = mock(IPreferenceStore.class);
+		TestCaseGenerateUtil.store = store;
+		when(store.getString(Preference.TestClassGen.junitVersion)).thenReturn(
+				Preference.TestClassGen.junitVersion3);
+		// e.g. : given(mocked.called()).willReturn(1);
+		// when
+		ClassInfo actual = TestCaseGenerateUtil
+				.getClassInfoWithUnimplementedTestMethods(testTargetClassname,
+						testTarget, testCase);
+		// then
+		// e.g. : verify(mocked).called();
+		assertNotNull(actual);
+	}
+
 	public void test_getMethodNamesAlreadyExists_A$IFile() throws Exception {
 		// given
 		IFile javaFile = mock(IFile.class);
@@ -205,6 +225,25 @@ public class TestCaseGenerateUtilTest extends TestCase {
 		// when
 		boolean actual = TestCaseGenerateUtil.containsInList(alreadyExistList,
 				checkTarget);
+		// then
+		// e.g. : verify(mocked).called();
+		boolean expected = true;
+		assertEquals(expected, actual);
+	}
+
+	public void test_isAlreadyExistInActualTestCase_A$String$List()
+			throws Exception {
+		// given
+		String expectedTestMethodName = "test_testUser_A$";
+		List<MethodInfo> actualMethods = new ArrayList<MethodInfo>();
+		MethodInfo method1 = new MethodInfo();
+		method1.methodName = "testUser";
+		method1.testMethodName = "test_testUser_A$";
+		actualMethods.add(method1);
+		// e.g. : given(mocked.called()).willReturn(1);
+		// when
+		boolean actual = TestCaseGenerateUtil.isAlreadyExistInActualTestCase(
+				expectedTestMethodName, actualMethods);
 		// then
 		// e.g. : verify(mocked).called();
 		boolean expected = true;
