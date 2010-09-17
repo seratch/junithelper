@@ -33,6 +33,10 @@
 
 	<distributionManagement/>
 
+	<properties>
+		<jmockit.version>0.999.2</jmockit.version> 
+	</properties>
+
 	<dependencies>
 
 		<!-- juniversalchardet -->
@@ -102,14 +106,18 @@
 			<scope>provided</scope>
 		</dependency>
 		<!-- JMockit -->
-		<!-- 
 		<dependency>
-			<groupId>jmockit</groupId>
+			<groupId>mockit</groupId>
 			<artifactId>jmockit</artifactId>
-		   <version>0.999.2</version>
-		   <scope>test</scope>
+			<version>${jmockit.version}</version>
+			<scope>provided</scope>
 		</dependency>
-		 -->
+		<dependency>
+			<groupId>mockit</groupId>
+			<artifactId>jmockit-coverage</artifactId>
+			<version>${jmockit.version}</version>
+			<scope>runtime</scope>
+		</dependency>
 		<!-- EasyMock -->
 		<dependency>
 			<groupId>easymock</groupId>
