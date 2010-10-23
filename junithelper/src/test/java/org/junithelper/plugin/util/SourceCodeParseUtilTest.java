@@ -107,4 +107,11 @@ public class SourceCodeParseUtilTest extends TestCase {
 		}
 	}
 
+	public void test_trimAllAnnotations_A$String() throws Exception {
+		String src = "@Deprecated public static void main(@SuppressWarnings(value\"\") @Depreacted String hoge, @Web(method=\"GET\",count=3) Object var) { }";
+		String actual = SourceCodeParseUtil.trimAllAnnotations(src);
+		String expected = " public static void main(  String hoge,  Object var) { }";
+		assertEquals(expected, actual);
+	}
+
 }

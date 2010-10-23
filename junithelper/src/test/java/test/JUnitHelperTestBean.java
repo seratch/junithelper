@@ -326,4 +326,11 @@ public class JUnitHelperTestBean {
 		return "result";
 	}
 
+	@Deprecated
+	public String issue39_argAnnotaions(@Deprecated @SuppressWarnings({ "a",
+			"b", "c" }) String hoge,
+			@SuppressWarnings(value = "abbabb") Object value) {
+		return null;
+	}
+
 }

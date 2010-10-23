@@ -274,4 +274,12 @@ public class SourceCodeParseUtil {
 		return result;
 	}
 
+	public static String trimAllAnnotations(String source) {
+		if (source == null) {
+			return source;
+		}
+		return source.replaceAll("@[^\\(]\\([^\\)]+\\)", "").replaceAll(
+				"@[^\\s]+", "");
+	}
+
 }

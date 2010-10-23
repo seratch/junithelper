@@ -380,10 +380,11 @@ public final class TestCaseGenerateUtil {
 				tmpsb.append(StrConst.space);
 			}
 			// source code string (inner class methods are excluded)
-			String targetClassSourceStrWithoutComments = SourceCodeParseUtil
-					.trimAllComments(tmpsb.toString());
+			String targetClassSourceStrWithoutCommentsAndAnnotaions = SourceCodeParseUtil
+					.trimAllAnnotations(SourceCodeParseUtil
+							.trimAllComments(tmpsb.toString()));
 			String targetClassSourceStr = SourceCodeParseUtil
-					.trimInsideOfBraces(targetClassSourceStrWithoutComments);
+					.trimInsideOfBraces(targetClassSourceStrWithoutCommentsAndAnnotaions);
 			// get imported types
 			if (pref.isTestMethodGenNotBlankEnabled) {
 				if (testMethods.size() <= 0 || testMethods.get(0) == null)
@@ -1142,11 +1143,15 @@ public final class TestCaseGenerateUtil {
 			for (String importedPackage : importList) {
 				importedPackage = importedPackage.replaceAll("//",
 						StrConst.empty);
-				if (importedPackage.matches(".+?\\."
-						+ returnTypeToCheck.replaceAll("\\[", "\\\\[")
-								.replaceAll("\\]", "\\\\]") + "$")) {
-					returnTypeFound = true;
-					break;
+				try {
+					if (importedPackage.matches(".+?\\."
+							+ returnTypeToCheck.replaceAll("\\[", "\\\\[")
+									.replaceAll("\\]", "\\\\]") + "$")) {
+						returnTypeFound = true;
+						break;
+					}
+				} catch (Exception e2) {
+					e2.printStackTrace();
 				}
 			}
 		}
