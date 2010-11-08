@@ -1,6 +1,6 @@
 <projectDescription>
-  <name>plugin</name>
-  <comment>JUnit Helper Eclipse Plugin. NO_M2ECLIPSE_SUPPORT: Project files created with the maven-eclipse-plugin are not supported in M2Eclipse.</comment>
+  <name>junithelper-plugin</name>
+  <comment>JUnit Helper Eclipse Plugin</comment>
   <projects/>
   <buildSpec>
     <buildCommand>
