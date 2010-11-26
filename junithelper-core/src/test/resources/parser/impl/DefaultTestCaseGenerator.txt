@@ -1,0 +1,273 @@
+/* 
+ * Copyright 2009-2010 junithelper.org. 
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at 
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0 
+ * 
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+ * either express or implied. See the License for the specific language 
+ * governing permissions and limitations under the License. 
+ */
+package org.junithelper.core.generator.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.junithelper.core.config.Configulation;
+import org.junithelper.core.config.JUnitVersion;
+import org.junithelper.core.config.MessageValue;
+import org.junithelper.core.constant.RegExp;
+import org.junithelper.core.constant.StringValue;
+import org.junithelper.core.generator.TestCaseGenerator;
+import org.junithelper.core.generator.TestMethodGenerator;
+import org.junithelper.core.meta.AccessModifier;
+import org.junithelper.core.meta.ClassMeta;
+import org.junithelper.core.meta.ExceptionMeta;
+import org.junithelper.core.meta.MethodMeta;
+import org.junithelper.core.meta.TestCaseMeta;
+import org.junithelper.core.meta.TestMethodMeta;
+import org.junithelper.core.parser.extract.ClassMetaExtractor;
+
+public class DefaultTestCaseGenerator implements TestCaseGenerator {
+
+	private Configulation config;
+	private ClassMeta targetClassMeta;
+	private MessageValue messageValue = new MessageValue();
+	private TestMethodGenerator testMethodGenerator = new DefaultTestMethodGenerator();
+
+	@Override
+	public void initialize(Configulation config, String targetSourceCodeString) {
+		this.config = config;
+		ClassMetaExtractor classMetaExtractor = new ClassMetaExtractor();
+		this.targetClassMeta = classMetaExtractor
+				.extract(targetSourceCodeString);
+		this.testMethodGenerator.initialize(config);
+		this.messageValue.initialize(config.language);
+	}
+
+	@Override
+	public void initialize(Configulation config, ClassMeta targetClassMeta) {
+		this.config = config;
+		this.targetClassMeta = targetClassMeta;
+		this.testMethodGenerator.initialize(config);
+		this.messageValue.initialize(config.language);
+	}
+
+	@Override
+	public TestCaseMeta getNewTestCaseMeta() {
+		TestCaseMeta testCaseMeta = new TestCaseMeta();
+		testCaseMeta.target = targetClassMeta;
+		for (MethodMeta targetMethodMeta : testCaseMeta.target.methods) {
+			testCaseMeta.tests.add(testMethodGenerator
+					.getTestMethodMeta(targetMethodMeta));
+		}
+		return testCaseMeta;
+	}
+
+	@Override
+	public List<TestMethodMeta> getLackingTestMethodMetaList(
+			String currentTestCaseSourceCode) {
+		List<TestMethodMeta> dest = new ArrayList<TestMethodMeta>();
+		for (MethodMeta methodMeta : targetClassMeta.methods) {
+			String testMethodNamePrefix = testMethodGenerator
+					.getTestMethodNamePrefix(methodMeta);
+			if (!currentTestCaseSourceCode
+					.matches(RegExp.Anything_ZeroOrMore_Min
+							+ testMethodNamePrefix.replaceAll("\\$", "\\\\\\$")
+							+ RegExp.Anything_ZeroOrMore_Min)) {
+				// the test method is not already exist
+				if ((methodMeta.accessModifier == AccessModifier.Public && config.target.isPublicMethodRequired)
+						|| (methodMeta.accessModifier == AccessModifier.Protected && config.target.isProtectedMethodRequired)
+						|| (methodMeta.accessModifier == AccessModifier.PackageLocal && config.target.isPackageLocalMethodRequired)) {
+					dest.add(testMethodGenerator.getTestMethodMeta(methodMeta));
+					// TODO accessor pattern
+					if (config.target.isExceptionPatternRequired) {
+						// testing exception patterns
+						for (ExceptionMeta exceptionMeta : methodMeta.throwsExceptions) {
+							dest.add(testMethodGenerator.getTestMethodMeta(
+									methodMeta, exceptionMeta));
+						}
+					}
+				}
+			}
+		}
+		return dest;
+	}
+
+	@Override
+	public String getNewTestCaseSourceCode() {
+		StringBuilder buf = new StringBuilder();
+		buf.append("package ");
+		buf.append(targetClassMeta.packageName);
+		buf.append(";");
+		buf.append(StringValue.CarriageReturn);
+		buf.append(StringValue.LineFeed);
+		buf.append(StringValue.CarriageReturn);
+		buf.append(StringValue.LineFeed);
+		for (String imported : targetClassMeta.importedList) {
+			buf.append("import ");
+			buf.append(imported);
+			buf.append(";");
+			buf.append(StringValue.CarriageReturn);
+			buf.append(StringValue.LineFeed);
+		}
+		buf.append(StringValue.CarriageReturn);
+		buf.append(StringValue.LineFeed);
+		buf.append("public class ");
+		buf.append(targetClassMeta.name);
+		buf.append("Test ");
+		if (config.junitVersion == JUnitVersion.version3) {
+			buf.append("extends ");
+			buf.append(config.testCaseClassNameToExtend);
+			buf.append(" ");
+		}
+		buf.append("{");
+		buf.append(StringValue.CarriageReturn);
+		buf.append(StringValue.LineFeed);
+		buf.append(StringValue.CarriageReturn);
+		buf.append(StringValue.LineFeed);
+		buf.append("}");
+		buf.append(StringValue.CarriageReturn);
+		buf.append(StringValue.LineFeed);
+		return getTestCaseSourceCodeWithLackingTestMethod(buf.toString());
+	}
+
+	@Override
+	public String getTestCaseSourceCodeWithLackingTestMethod(
+			String currentTestCaseSourceCode) {
+		StringBuilder buf = new StringBuilder();
+		boolean isInsideOfString = false;
+		boolean isInsideOfChar = false;
+		boolean isInsideOfTargetClass = false;
+		boolean isInsideOfFirstBrace = false;
+		boolean isInsideOfSecondBrace = false;
+		Stack<Character> braceStack = new Stack<Character>();
+		int len = currentTestCaseSourceCode.length();
+		for (int i = 0; i < len; i++) {
+			char current = currentTestCaseSourceCode.charAt(i);
+			// check inside of String or char
+			if (i > 0) {
+				if (current == '"'
+						&& currentTestCaseSourceCode.charAt(i - 1) != '\\') {
+					isInsideOfString = (isInsideOfString) ? false : true;
+					buf.append(current);
+					continue;
+				}
+				if (current == '\''
+						&& currentTestCaseSourceCode.charAt(i - 1) != '\\') {
+					isInsideOfChar = (isInsideOfChar) ? false : true;
+					buf.append(current);
+					continue;
+				}
+			}
+			if (isInsideOfChar || isInsideOfString) {
+				continue;
+			}
+			// waiting for inside of the target class
+			if (!isInsideOfTargetClass) {
+				buf.append(current);
+				// might be started class def
+				if (i >= 6 && currentTestCaseSourceCode.charAt(i - 6) == ' '
+						&& currentTestCaseSourceCode.charAt(i - 5) == 'c'
+						&& currentTestCaseSourceCode.charAt(i - 4) == 'l'
+						&& currentTestCaseSourceCode.charAt(i - 3) == 'a'
+						&& currentTestCaseSourceCode.charAt(i - 2) == 's'
+						&& currentTestCaseSourceCode.charAt(i - 1) == 's'
+						&& current == ' ') {
+					isInsideOfTargetClass = true;
+				}
+				continue;
+			}
+			if (isInsideOfTargetClass && isInsideOfFirstBrace
+					&& !isInsideOfSecondBrace) {
+				if (current == '}') {
+					// is it the end of the brace of class def
+					break;
+				}
+			}
+			// waiting for inside of the first level brace
+			if (!isInsideOfFirstBrace) {
+				if (current == '{') {
+					isInsideOfFirstBrace = true;
+				}
+				buf.append(current);
+				continue;
+			}
+			// excluding inside of top brace
+			// outer of top braced
+			if (!isInsideOfSecondBrace) {
+				buf.append(current);
+			}
+			// brace start
+			if (current == '{') {
+				isInsideOfSecondBrace = true;
+				braceStack.push(current);
+			}
+			// brace end
+			if (!braceStack.empty() && current == '}') {
+				braceStack.pop();
+				if (braceStack.empty()) {
+					buf.append(current);
+				}
+			}
+			// check the brace stack state
+			if (braceStack.empty()) {
+				isInsideOfSecondBrace = false;
+			}
+		}
+		// add new test methods at the end of source code
+		List<TestMethodMeta> lackingTestMethodMetaList = getLackingTestMethodMetaList(currentTestCaseSourceCode);
+		for (TestMethodMeta testMethodMeta : lackingTestMethodMetaList) {
+			// method signature
+			buf.append(testMethodGenerator
+					.getTestMethodSourceCode(testMethodMeta));
+			buf.append(StringValue.CarriageReturn);
+			buf.append(StringValue.LineFeed);
+		}
+
+		buf.append("}");
+		buf.append(StringValue.CarriageReturn);
+		buf.append(StringValue.LineFeed);
+		String dest = buf.toString();
+		StringBuilder importedListBuf = new StringBuilder();
+		for (String imported : targetClassMeta.importedList) {
+			StringBuilder tmp = new StringBuilder();
+			tmp.append("import ");
+			tmp.append(imported);
+			tmp.append(";");
+			String newOne = tmp.toString();
+			if (!currentTestCaseSourceCode.replaceAll(RegExp.CRLF,
+					StringValue.Space).matches(
+					RegExp.Anything_ZeroOrMore_Min + newOne
+							+ RegExp.Anything_ZeroOrMore_Min)) {
+				importedListBuf.append(StringValue.CarriageReturn);
+				importedListBuf.append(StringValue.LineFeed);
+				importedListBuf.append(newOne);
+			}
+		}
+		if (importedListBuf.length() > 0) {
+			Matcher matcher = Pattern.compile("(package\\s+.+;)").matcher(
+					currentTestCaseSourceCode.replaceAll(RegExp.CRLF,
+							StringValue.Space));
+			if (matcher.find()) {
+				String packageDef = matcher.group(1);
+				String replacement = packageDef + StringValue.CarriageReturn
+						+ StringValue.LineFeed + importedListBuf.toString();
+				dest = dest.replaceFirst(packageDef, replacement);
+			} else {
+				dest = importedListBuf.toString() + StringValue.CarriageReturn
+						+ StringValue.LineFeed + dest;
+			}
+		}
+		return dest;
+	}
+
+}

@@ -1,0 +1,83 @@
+/* 
+ * Copyright 2009-2010 junithelper.org. 
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at 
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0 
+ * 
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+ * either express or implied. See the License for the specific language 
+ * governing permissions and limitations under the License. 
+ */
+package org.junithelper.command;
+
+import java.io.File;
+import java.util.List;
+
+import org.junithelper.core.config.Configulation;
+import org.junithelper.core.config.JUnitVersion;
+import org.junithelper.core.file.FileReader;
+import org.junithelper.core.file.impl.CommonsIOFileReader;
+import org.junithelper.core.file.impl.CommonsIOFileWriter;
+import org.junithelper.core.generator.TestCaseGenerator;
+import org.junithelper.core.generator.impl.DefaultTestCaseGenerator;
+import org.junithelper.core.util.Stdout;
+
+public class ForceJUnitVersion3Command extends AbstractCommand {
+
+	private ForceJUnitVersion3Command() {
+	}
+
+	public static Configulation config = new Configulation();
+
+	public static void main(String[] args) throws Exception {
+		config = overrideConfigulation(config);
+		config.junitVersion = JUnitVersion.version3;
+		String dirOrFile = (args != null && args.length > 0 && args[0] != null) ? args[0]
+				: config.directoryPathOfProductSourceCode;
+		List<File> javaFiles = findTargets(config, dirOrFile);
+		for (File javaFile : javaFiles) {
+			Stdout.p("  Target: " + javaFile.getAbsolutePath());
+		}
+		// confirm input from stdin
+		if (confirmToExecute() > 0) {
+			return;
+		}
+		TestCaseGenerator testCaseGenerator = new DefaultTestCaseGenerator(
+				config);
+		FileReader fileReader = new CommonsIOFileReader();
+		for (File javaFile : javaFiles) {
+			File testFile = null;
+			String currentTestCaseSourceCode = null;
+			try {
+				testFile = new File(javaFile
+						.getAbsolutePath()
+						.replaceAll("\\\\", "/")
+						.replaceFirst(
+								getDirectoryPathOfProductSourceCode(config),
+								getDirectoryPathOfTestSourceCode(config))
+						.replaceFirst("\\.java", "Test.java"));
+				currentTestCaseSourceCode = fileReader.readAsString(testFile);
+			} catch (Exception e) {
+			}
+			testCaseGenerator.initialize(fileReader.readAsString(javaFile));
+			String testCodeString = null;
+			if (currentTestCaseSourceCode != null) {
+				testCodeString = testCaseGenerator
+						.getUnifiedVersionTestCaseSourceCode(
+								testCaseGenerator
+										.getTestCaseSourceCodeWithLackingTestMethod(currentTestCaseSourceCode),
+								JUnitVersion.version3);
+			} else {
+				testCodeString = testCaseGenerator.getNewTestCaseSourceCode();
+			}
+			new CommonsIOFileWriter(testFile).writeText(testCodeString);
+			Stdout.p("  Forced JUnit 3.x: " + testFile.getAbsolutePath());
+		}
+	}
+
+}

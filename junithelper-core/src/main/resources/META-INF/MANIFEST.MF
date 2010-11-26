@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Created-By: Apache Maven
+Built-By: junithelper.org
+Main-Class: org.junithelper.command.CommandLine
+Class-Path: lib/juniversalchardet-1.0.3.jar lib/commons-io-2.0.jar

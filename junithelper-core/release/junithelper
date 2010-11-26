@@ -1,0 +1,8 @@
+#!/bin/sh 
+dir=`dirname $0`
+java \
+    -Djunithelper.configProperties=${dir}/junithelper-config.properties \
+    -jar ${dir}/junithelper-core-${project.version}.jar \
+    $1 \
+    $2
+

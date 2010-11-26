@@ -1,0 +1,9 @@
+package org.junithelper.core.parser.impl;
+
+public class Sample {
+
+	public String doSomething(String arg) throws Exception {
+		// do something
+	}
+
+}
