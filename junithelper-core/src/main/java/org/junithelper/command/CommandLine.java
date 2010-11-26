@@ -63,11 +63,11 @@ public class CommandLine {
 			Stdout.p("");
 			Stdout.p("Commands:");
 			Stdout.p("  junithelper make [baseDir/targetJavaFile]");
-			Stdout.p("  junithelper force3 [baseDir]");
-			Stdout.p("  junithelper force4 [baseDir]");
+			Stdout.p("  junithelper force3 [baseDir/targetJavaFile]");
+			Stdout.p("  junithelper force4 [baseDir/targetJavaFile]");
 			Stdout.p("");
 			Stdout.p("JVM Options:");
-			Stdout.p("  -Djunithelper.config=[filepath]");
+			Stdout.p("  -Djunithelper.configProperties=[filepath]");
 			Stdout.p("");
 		}
 	}

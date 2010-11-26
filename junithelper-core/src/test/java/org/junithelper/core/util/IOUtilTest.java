@@ -2,17 +2,26 @@ package org.junithelper.core.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.List;
 
 import org.junit.Test;
 
 public class IOUtilTest {
+
+	@Test
+	public void type() throws Exception {
+		assertNotNull(IOUtil.class);
+	}
 
 	@Test
 	public void getResourceAsStream_A$String() throws Exception {
@@ -65,6 +74,32 @@ public class IOUtilTest {
 	public void close_A$OutputStreamWriter() throws Exception {
 		OutputStreamWriter osw = null;
 		IOUtil.close(osw);
+	}
+
+	@Test
+	public void readAsLineList_A$InputStream() throws Exception {
+		// given
+		String name = "parser/impl/Sample.txt";
+		InputStream is = IOUtil.getResourceAsStream(name);
+		// e.g. : given(mocked.called()).willReturn(1);
+		// when
+		List<String> actual = IOUtil.readAsLineList(is);
+		// then
+		// e.g. : verify(mocked).called();
+		assertNotNull(actual);
+	}
+
+	@Test
+	public void readAsLineList_A$InputStream_E$IOException() throws Exception {
+		// given
+		InputStream is = mock(InputStream.class);
+		try {
+			// when
+			IOUtil.readAsLineList(is);
+			fail("Expected exception was not thrown!");
+		} catch (IOException e) {
+			// then
+		}
 	}
 
 }
