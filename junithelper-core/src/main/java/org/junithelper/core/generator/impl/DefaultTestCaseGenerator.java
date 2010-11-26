@@ -151,13 +151,15 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 	@Override
 	public String getNewTestCaseSourceCode() {
 		StringBuilder buf = new StringBuilder();
-		buf.append("package ");
-		buf.append(targetClassMeta.packageName);
-		buf.append(";");
-		buf.append(StringValue.CarriageReturn);
-		buf.append(StringValue.LineFeed);
-		buf.append(StringValue.CarriageReturn);
-		buf.append(StringValue.LineFeed);
+		if (targetClassMeta.packageName != null) {
+			buf.append("package ");
+			buf.append(targetClassMeta.packageName);
+			buf.append(";");
+			buf.append(StringValue.CarriageReturn);
+			buf.append(StringValue.LineFeed);
+			buf.append(StringValue.CarriageReturn);
+			buf.append(StringValue.LineFeed);
+		}
 		for (String imported : targetClassMeta.importedList) {
 			buf.append("import ");
 			buf.append(imported);
