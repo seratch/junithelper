@@ -20,8 +20,8 @@ public class Stdout {
 	private Stdout() {
 	}
 
-	public static final void printf(String format, String str) {
-		System.out.printf(format, str);
+	public static final void printf(String format, Object... values) {
+		System.out.printf(format, values);
 	}
 
 	public static final void p(String str) {
