@@ -25,8 +25,8 @@ public class TrimAnnotationFilter implements TrimFilter {
 			return null;
 		}
 		return src.replaceFirst("@interface", "interface")
-				.replaceAll("@[^\\(\\s]*(\\([^\\)]*\\))*\\s+", " ")
-				.replaceAll("@[^\\s]+", "");
+				.replaceAll("@[^\\s\r\n\\(]+(\\([^\\)]*\\))*", " ")
+				.replaceAll("@[^\\s\r\n]+", "");
 	}
 
 }
