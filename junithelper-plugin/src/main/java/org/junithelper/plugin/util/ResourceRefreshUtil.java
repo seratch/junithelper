@@ -26,13 +26,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchWindow;
 
-/**
- * ResourceRefreshUtil<br>
- * <br>
- * 
- * @author Kazuhiro Sera <seratch@gmail.com>
- * @version 1.0
- */
 @SuppressWarnings("restriction")
 public final class ResourceRefreshUtil {
 
@@ -56,13 +49,6 @@ public final class ResourceRefreshUtil {
 		}
 	}
 
-	/**
-	 * Reflesh resources.
-	 * 
-	 * @param window
-	 * @param param
-	 * @return
-	 */
 	public static boolean refreshLocal(IWorkbenchWindow window, String param) {
 		try {
 			IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace()

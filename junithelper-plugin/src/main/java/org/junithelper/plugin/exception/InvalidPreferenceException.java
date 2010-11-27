@@ -15,12 +15,6 @@
  */
 package org.junithelper.plugin.exception;
 
-/**
- * InvalidPreferenceException
- * 
- * @author Kazuhiro Sera <seratch@gmail.com>
- * @version 1.0
- */
 public class InvalidPreferenceException extends Exception {
 
 	private static final long serialVersionUID = 1L;

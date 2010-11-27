@@ -15,85 +15,42 @@
  */
 package org.junithelper.plugin.constant;
 
-/**
- * Constant for dialogs<br>
- * <br>
- * 
- * @author Kazuhiro Sera <seratch@gmail.com>
- * @version 1.0
- */
 public final class Dialog {
 
 	private static final String common = "Dialog.Common.";
 
 	public static class Common {
-		/**
-		 * Title
-		 */
+
 		public static final String title = common + "title";
 
-		/**
-		 * Invalid preference error
-		 */
 		public static final String invalidPreference = common
 				+ "invalidPreference";
 
-		/**
-		 * Confirm to execute
-		 */
 		public static final String confirmToExecute = common
 				+ "confirmToExecute";
-		/**
-		 * Select required
-		 */
+
 		public static final String required = common + "required";
-		/**
-		 * Select only one
-		 */
+
 		public static final String selectOneOnly = common + "selectOneOnly";
 
-		/**
-		 * Already file exists
-		 */
 		public static final String alreadyExist = common + "alreadyExist";
 
-		/**
-		 * File does not exist
-		 */
 		public static final String notExist = common + "notExist";
 
-		/**
-		 * Confirm to proceed
-		 */
 		public static final String confirmToProceed = common
 				+ "confirmToProceed";
 
-		/**
-		 * Setting not to create new file
-		 */
 		public static final String notToCreateNewFilePreference = common
 				+ "notToCreateNewFilePreference";
 
-		/**
-		 * Confirm to create new file
-		 */
 		public static final String confirmToCreateNewFile = common
 				+ "confirmToCreateNewFile";
 
-		/**
-		 * Error occurred when refreshing resource
-		 */
 		public static final String resourceRefreshError = common
 				+ "resourceRefreshError";
 
-		/**
-		 * Select java extension file
-		 */
 		public static final String selectJavaFile = common + "selectJavaFile";
 
-		/**
-		 * Select Test.java extension file
-		 */
 		public static final String notTestClass = common + "notTestClass";
 
 	}

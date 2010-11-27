@@ -19,46 +19,34 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
-import org.junithelper.plugin.constant.RegExp;
-import org.junithelper.plugin.constant.StrConst;
+import org.junithelper.core.constant.RegExp;
+import org.junithelper.core.constant.StringValue;
 import org.junithelper.plugin.page.PreferenceLoader;
 
-/**
- * ResourcePathUtil<br>
- * <br>
- * 
- * @author Kazuhiro Sera <seratch@gmail.com>
- * @version 1.0
- */
 public final class ResourcePathUtil {
 
 	public static IPreferenceStore store = null;
 
-	/**
-	 * Get resource path that starts with project root path.
-	 * 
-	 * @param structuredSelection
-	 * @return
-	 */
 	@SuppressWarnings("restriction")
 	public static String getPathStartsFromProjectRoot(
 			StructuredSelection structuredSelection) {
 		PreferenceLoader pref = new PreferenceLoader(store);
-		String pathFromProjectRoot = StrConst.empty;
+		String pathFromProjectRoot = StringValue.Empty;
 		if (structuredSelection == null) {
 			// ----------------------------------------
 			// java editor
 			// ----------------------------------------
 			IWorkbenchPage activePage = PlatformUI.getWorkbench()
 					.getActiveWorkbenchWindow().getActivePage();
-			pathFromProjectRoot = StrConst.dirSep
+			pathFromProjectRoot = StringValue.DirectorySeparator.General
 					+ activePage.getActiveEditor().getTitleToolTip();
 		} else if (structuredSelection.getFirstElement() instanceof org.eclipse.core.internal.resources.File) {
 			// ----------------------------------------
 			// navigator
 			// ----------------------------------------
 			pathFromProjectRoot = structuredSelection.toString()
-					.replace("[L", StrConst.empty).replace("]", StrConst.empty);
+					.replace("[L", StringValue.Empty)
+					.replace("]", StringValue.Empty);
 		} else if (structuredSelection.getFirstElement() instanceof org.eclipse.jdt.internal.core.CompilationUnit) {
 			// ----------------------------------------
 			// package explorer
@@ -66,15 +54,19 @@ public final class ResourcePathUtil {
 			// TODO better implementation
 			String cuToString = structuredSelection.toString();
 			String packagePath = cuToString.split("\\[in")[1].trim()
-					.replaceAll("\\.", StrConst.dirSep);
+					.replaceAll("\\.", StringValue.DirectorySeparator.General);
 			String projectName = cuToString.split("\\[in")[3].trim().split("]")[0];
-			String testTargetClassname = cuToString.split(RegExp.javaFileExp)[0]
-					.replaceAll("(\\[|\\])", StrConst.empty)
-					.replaceAll("Working copy ", StrConst.empty).trim();
-			pathFromProjectRoot = StrConst.dirSep + projectName
-					+ StrConst.dirSep + pref.commonSrcMainJavaDir
-					+ StrConst.dirSep + packagePath + StrConst.dirSep
-					+ testTargetClassname + StrConst.javaFileExp;
+			String testTargetClassname = cuToString
+					.split(RegExp.FileExtension.JavaFile)[0]
+					.replaceAll("(\\[|\\])", StringValue.Empty)
+					.replaceAll("Working copy ", StringValue.Empty).trim();
+			pathFromProjectRoot = StringValue.DirectorySeparator.General
+					+ projectName + StringValue.DirectorySeparator.General
+					+ pref.directoryPathOfProductSourceCode
+					+ StringValue.DirectorySeparator.General + packagePath
+					+ StringValue.DirectorySeparator.General
+					+ testTargetClassname
+					+ StringValue.DirectorySeparator.General;
 		}
 		return pathFromProjectRoot;
 	}

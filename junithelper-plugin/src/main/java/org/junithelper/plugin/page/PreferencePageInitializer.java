@@ -20,13 +20,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.junithelper.plugin.Activator;
 import org.junithelper.plugin.constant.Preference;
 
-/**
- * PreferencePageInitializer<br>
- * <br>
- * 
- * @author Kazuhiro Sera <seratch@gmail.com>
- * @version 1.0
- */
 public class PreferencePageInitializer extends AbstractPreferenceInitializer {
 
 	@Override
@@ -42,17 +35,12 @@ public class PreferencePageInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(Preference.Common.srcTestPath, "src/test/java");
 
 		// generating extended test class
-		store.setDefault(Preference.TestClassGen.enabled, true);
 		store.setDefault(Preference.TestClassGen.junitVersion,
 				Preference.TestClassGen.junitVersion3);
 		store.setDefault(Preference.TestClassGen.classToExtend,
 				"junit.framework.TestCase");
-		store.setDefault(Preference.TestClassGen.usingJunitHelperRuntimeLib,
-				false);
 
 		// generating test methods
-		store.setDefault(Preference.TestMethodGen.enabled, true);
-
 		store.setDefault(Preference.TestMethodGen.includePublic, true);
 		store.setDefault(Preference.TestMethodGen.includeProtected, true);
 		store.setDefault(Preference.TestMethodGen.includePackageLocal, true);

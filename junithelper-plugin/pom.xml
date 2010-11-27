@@ -4,8 +4,8 @@
 	<packaging>jar</packaging>
 
 	<groupId>org.junithelper</groupId>
-	<artifactId>plugin</artifactId>
-	<version>0.4.4</version>
+	<artifactId>junithelper-plugin</artifactId>
+	<version>0.9.1</version>
 
 	<name>${project.artifactId}</name>
 	<description>JUnit Helper Eclipse Plugin</description>
@@ -56,6 +56,15 @@
 
 	<dependencies>
 
+		<!-- JUnit Helper Core -->
+		<dependency>
+			<groupId>junithelper-core</groupId>
+			<artifactId>junithelper-core</artifactId>
+			<version>0.9.1</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/junithelper-core-0.9.1.jar</systemPath>
+		</dependency>
+
 		<!-- juniversalchardet -->
 		<dependency>
 			<groupId>juniversalchardet</groupId>
@@ -63,6 +72,14 @@
 			<version>1.0.3</version>
 			<scope>system</scope>
 			<systemPath>${basedir}/lib/juniversalchardet-1.0.3.jar</systemPath>
+		</dependency>
+
+		<!-- Commons IO -->
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.0</version>
+			<scope>compile</scope>
 		</dependency>
 
 		<!-- JUnit -->

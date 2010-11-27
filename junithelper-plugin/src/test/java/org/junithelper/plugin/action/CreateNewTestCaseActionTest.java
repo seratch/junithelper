@@ -2,7 +2,6 @@ package org.junithelper.plugin.action;
 
 import static org.mockito.Mockito.*;
 import junit.framework.TestCase;
-
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;

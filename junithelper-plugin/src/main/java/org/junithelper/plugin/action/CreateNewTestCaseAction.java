@@ -21,7 +21,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -42,31 +41,23 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
+import org.junithelper.core.config.Configulation;
+import org.junithelper.core.constant.RegExp;
+import org.junithelper.core.constant.StringValue;
+import org.junithelper.core.generator.TestCaseGenerator;
+import org.junithelper.core.generator.impl.DefaultTestCaseGenerator;
+import org.junithelper.core.meta.extractor.ClassMetaExtractor;
+import org.junithelper.core.util.IOUtil;
+import org.junithelper.core.util.ThreadUtil;
 import org.junithelper.plugin.Activator;
-import org.junithelper.plugin.bean.ClassInfo;
-import org.junithelper.plugin.bean.MethodInfo;
 import org.junithelper.plugin.constant.Dialog;
-import org.junithelper.plugin.constant.Message;
-import org.junithelper.plugin.constant.Preference;
-import org.junithelper.plugin.constant.RuntimeLibrary;
-import org.junithelper.plugin.constant.StrConst;
 import org.junithelper.plugin.exception.InvalidPreferenceException;
 import org.junithelper.plugin.io.PropertiesLoader;
 import org.junithelper.plugin.page.PreferenceLoader;
-import org.junithelper.plugin.util.FileResourceUtil;
+import org.junithelper.plugin.util.EclipseIFileUtil;
 import org.junithelper.plugin.util.ResourcePathUtil;
 import org.junithelper.plugin.util.ResourceRefreshUtil;
-import org.junithelper.plugin.util.TestCaseGenerateUtil;
-import org.junithelper.plugin.util.ThreadUtil;
 
-/**
- * CreateNewTestCaseAction<br>
- * <br>
- * Create new test case file.<br>
- * 
- * @author Kazuhiro Sera <seratch@gmail.com>
- * @version 1.0
- */
 public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 		IEditorActionDelegate {
 
@@ -74,32 +65,21 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 
 	public IPreferenceStore store = null;
 
-	/**
-	 * Run method to invoked.
-	 * 
-	 * @param action
-	 * @param selection
-	 */
 	public void run(IAction action, ISelection selection) {
 		this.selection = selection;
 		this.run(action);
 	}
 
-	/**
-	 * Run method to invoked.
-	 * 
-	 * @param action
-	 */
 	public void run(IAction action) {
 		if (store == null) {
 			store = Activator.getDefault().getPreferenceStore();
 		}
-		PreferenceLoader pref = new PreferenceLoader(store);
-		PropertiesLoader props = new PropertiesLoader(
-				store.getString(Preference.lang));
-		InputStream javaFileIStream = null;
-		OutputStreamWriter testFileOSWriter = null;
-		FileOutputStream fos = null;
+		Configulation config = new PreferenceLoader(store).getConfig();
+		PropertiesLoader props = new PropertiesLoader(config.language);
+
+		InputStream inputStream = null;
+		OutputStreamWriter writer = null;
+		FileOutputStream outputStream = null;
 		boolean refreshFlag = true;
 		String projectName = null;
 		String testCaseDirResource = null;
@@ -140,61 +120,82 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 				// path started from project root
 				// ex. /{projectName}/src/main/java/hoge/foo/var/TestTarget.java
 				String[] dirArrFromProjectRoot = pathFromProjectRoot
-						.split(StrConst.dirSep);
+						.split(StringValue.DirectorySeparator.General);
 				// test case file create filesystem path
-				String selected = StrConst.empty;
+				// TODO
+				String selected = StringValue.Empty;
 				int len = dirArrFromProjectRoot.length;
-				for (int i = 2; i < len - 1; i++)
-					selected += dirArrFromProjectRoot[i] + StrConst.dirSep;
-				selected += dirArrFromProjectRoot[len - 1];
+				for (int i = 2; i < len; i++) {
+					selected += dirArrFromProjectRoot[i]
+							+ StringValue.DirectorySeparator.General;
+				}
+				selected = selected
+						.replaceAll(RegExp.CRLF, StringValue.Empty)
+						.replaceFirst("\\.java.+", ".java")
+						.replace(
+								StringValue.JUnit.TestClassNameSuffix
+										+ StringValue.FileExtension.JavaFile,
+								StringValue.FileExtension.JavaFile);
 				// current project name
 				projectName = dirArrFromProjectRoot[1];
 				// last element is test class file name
-				String testTargetClassFilename = dirArrFromProjectRoot[dirArrFromProjectRoot.length - 1];
+				String[] selectedSplittedArray = selected.split("/");
+				String testTargetClassFilename = selectedSplittedArray[selectedSplittedArray.length - 1]
+						.split("\\.")[0];
 				testTargetClassname = testTargetClassFilename.replace(
-						StrConst.javaFileExp, StrConst.empty);
+						StringValue.FileExtension.JavaFile, StringValue.Empty);
 				// test class name to create
 				testCaseClassname = testTargetClassname
-						+ StrConst.suffixOfTestcase;
+						+ StringValue.JUnit.TestClassNameSuffix;
 				// test case name to open
-				testCaseFilename = testCaseClassname + StrConst.javaFileExp;
+				testCaseFilename = testCaseClassname
+						+ StringValue.FileExtension.JavaFile;
 
 				// get workspace path on os file system
 				String projectRootPath = workspaceRoot.getLocation()
-						+ StrConst.dirSep + projectName + StrConst.dirSep;
+						+ StringValue.DirectorySeparator.General + projectName
+						+ StringValue.DirectorySeparator.General;
 
-				testCaseResource = selected.replace(pref.commonSrcMainJavaDir,
-						pref.commonTestMainJavaDir).replace(
-						StrConst.javaFileExp,
-						StrConst.suffixOfTestcase + StrConst.javaFileExp);
-				String[] selectedDirArr = selected.split(StrConst.dirSep);
+				testCaseResource = selected.replace(
+						config.directoryPathOfProductSourceCode,
+						config.directoryPathOfTestSourceCode).replace(
+						StringValue.FileExtension.JavaFile,
+						StringValue.JUnit.TestClassNameSuffix
+								+ StringValue.FileExtension.JavaFile);
+				String[] selectedDirArr = selected
+						.split(StringValue.DirectorySeparator.General);
 				testCaseDirResource = "";
 				int selectedDirArrLength = selectedDirArr.length;
 				for (int i = 0; i < selectedDirArrLength - 1; i++)
-					testCaseDirResource += selectedDirArr[i] + StrConst.dirSep;
+					testCaseDirResource += selectedDirArr[i]
+							+ StringValue.DirectorySeparator.General;
 				testCaseDirResource = testCaseDirResource.replace(
-						pref.commonSrcMainJavaDir, pref.commonTestMainJavaDir);
+						config.directoryPathOfProductSourceCode,
+						config.directoryPathOfTestSourceCode);
 				testCaseCreateDirpath = projectRootPath + testCaseDirResource;
 				File testDir = new File(testCaseCreateDirpath);
 				// check directory exist
-				String[] dirArr = testCaseCreateDirpath.split(StrConst.dirSep);
-				String tmpDirPath = StrConst.empty;
-				String tmpResourceDirPath = StrConst.empty;
+				String[] dirArr = testCaseCreateDirpath
+						.split(StringValue.DirectorySeparator.General);
+				String tmpDirPath = StringValue.Empty;
+				String tmpResourceDirPath = StringValue.Empty;
 				for (String each : dirArr) {
-					tmpDirPath += StrConst.dirSep + each;
+					tmpDirPath += StringValue.DirectorySeparator.General + each;
 					File tmpDir = new File(tmpDirPath);
 					// skip until project root dir
 					if (tmpDir.getPath().length() <= projectRootPath.length()) {
 						continue;
 					}
-					tmpResourceDirPath += StrConst.dirSep + each;
+					tmpResourceDirPath += StringValue.DirectorySeparator.General
+							+ each;
 					if (!tmpDir.exists()) {
 						if (!tmpDir.mkdir()) {
 							System.err.println("create directory error : "
 									+ tmpDir.getPath());
 						}
 						if (!ResourceRefreshUtil.refreshLocal(null, projectName
-								+ StrConst.dirSep + tmpResourceDirPath + "/..")) {
+								+ StringValue.DirectorySeparator.General
+								+ tmpResourceDirPath + "/..")) {
 							String msg = props
 									.get(Dialog.Common.resourceRefreshError);
 							MessageDialog.openWarning(new Shell(),
@@ -209,7 +210,8 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 				}
 				// resource sync
 				if (!ResourceRefreshUtil.refreshLocal(null, projectName
-						+ StrConst.dirSep + testCaseDirResource)) {
+						+ StringValue.DirectorySeparator.General
+						+ testCaseDirResource)) {
 					MessageDialog.openWarning(new Shell(),
 							props.get(Dialog.Common.title),
 							props.get(Dialog.Common.resourceRefreshError));
@@ -218,9 +220,10 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 				try {
 					// confirm if already exist
 					File outputFile = new File(testCaseCreateDirpath
-							+ StrConst.dirSep + testCaseFilename);
+							+ StringValue.DirectorySeparator.General
+							+ testCaseFilename);
 					String msg = props.get(Dialog.Common.alreadyExist) + " ("
-							+ testCaseFilename + ")" + StrConst.lineFeed
+							+ testCaseFilename + ")" + StringValue.LineFeed
 							+ props.get(Dialog.Common.confirmToProceed);
 					if (!outputFile.exists()
 							|| MessageDialog.openConfirm(new Shell(),
@@ -230,117 +233,21 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 						IResource targetClassResource = workspaceRoot
 								.findMember(targetClass);
 						IFile file = (IFile) targetClassResource;
-						ClassInfo testClassInfo = TestCaseGenerateUtil
-								.getTestClassInfoFromTargetClass(
-										testTargetClassname, file);
-						List<MethodInfo> testMethods = testClassInfo.methods;
-						// generate test class
-						String writeEncoding = FileResourceUtil
-								.detectEncoding(file);
-						fos = new FileOutputStream(testCaseCreateDirpath
-								+ StrConst.dirSep + testCaseFilename);
-						testFileOSWriter = new OutputStreamWriter(fos,
-								writeEncoding);
-						StringBuilder sb = new StringBuilder();
-						String CRLF = StrConst.carriageReturn
-								+ StrConst.lineFeed;
-						// get package
-						String testPackageString = StrConst.empty;
-						String[] tmpDirArr = selected.split(StrConst.dirSep);
-						StringBuilder dirSb = new StringBuilder();
-						int packageArrLen = tmpDirArr.length - 2;
-						int mainJavaLen = pref.commonSrcMainJavaDir.split("/").length;
-						// if not default package
-						if (mainJavaLen != tmpDirArr.length - 1) {
-							for (int i = mainJavaLen; i < packageArrLen; i++) {
-								dirSb.append(tmpDirArr[i]);
-								dirSb.append(".");
-							}
-							dirSb.append(tmpDirArr[packageArrLen]);
-							testPackageString = dirSb.toString();
-							sb.append("package ");
-							sb.append(testPackageString);
-							sb.append(";");
-							sb.append(CRLF);
-							sb.append(CRLF);
-						}
-						// get class to extend
-						String testCase = pref.isUsingJUnitHelperRuntime ? RuntimeLibrary.testcase
-								: pref.classToExtend;
-						String[] tmpTestCaseArr = testCase.split("\\.");
-						String testCaseName = tmpTestCaseArr[tmpTestCaseArr.length - 1];
-						sb.append("import ");
-						sb.append(testCase);
-						sb.append(";");
-						sb.append(CRLF);
-						if (pref.isTestMethodGenEnabled
-								&& pref.isTestMethodGenNotBlankEnabled) {
-							List<String> importedPackageList = testClassInfo.importList;
-							for (String importedPackage : importedPackageList) {
-								importedPackage = importedPackage.trim();
-								if (importedPackage != null
-										&& importedPackage.length() != 0) {
-									sb.append("import ");
-									sb.append(importedPackage);
-									sb.append(";");
-									sb.append(CRLF);
-								}
-							}
-						}
-						sb.append(CRLF);
-						sb.append("public class ");
-						sb.append(testCaseClassname);
-						if (pref.isJUnitVersion3) {
-							sb.append(" extends ");
-							sb.append(testCaseName);
-						}
-						sb.append(" {");
-						sb.append(CRLF);
-						sb.append(CRLF);
-						if (pref.isTestMethodGenEnabled) {
-							for (MethodInfo testMethod : testMethods) {
-								if (testMethod.testMethodName == null
-										|| testMethod.testMethodName
-												.equals(StrConst.empty)) {
-									continue;
-								}
-								if (pref.isTestMethodGenEnabledSupportJMockit) {
-									sb.append(TestCaseGenerateUtil
-											.getRequiredInstanceFieldsSourceForJMockitTestMethod(
-													testMethod, testClassInfo,
-													testTargetClassname));
-								}
-								if (pref.isJUnitVersion4) {
-									sb.append("\t@Test");
-									sb.append(CRLF);
-								}
-								sb.append("\tpublic void ");
-								sb.append(testMethod.testMethodName);
-								sb.append("() throws Exception {");
-								sb.append(CRLF);
-								sb.append(StrConst.tab);
-								sb.append(StrConst.tab);
-								sb.append("// ");
-								sb.append(props.get(Message.autoGenTodoMessage));
-								sb.append(CRLF);
-								if (pref.isTestMethodGenNotBlankEnabled) {
-									String notBlankSourceCode = TestCaseGenerateUtil
-											.getNotBlankTestMethodSource(
-													testMethod, testClassInfo,
-													testTargetClassname);
-									sb.append(notBlankSourceCode);
-								}
-								sb.append(StrConst.tab);
-								sb.append("}");
-								sb.append(CRLF);
-								sb.append(CRLF);
-							}
-						}
-						sb.append("}");
-						sb.append(CRLF);
-						testFileOSWriter.write(sb.toString());
+						outputStream = new FileOutputStream(
+								testCaseCreateDirpath
+										+ StringValue.DirectorySeparator.General
+										+ testCaseFilename);
+						TestCaseGenerator generator = new DefaultTestCaseGenerator(
+								config);
+						generator.initialize(new ClassMetaExtractor(config)
+								.extract(IOUtil.readAsString(EclipseIFileUtil
+										.getInputStreamFrom(file))));
+						writer = new OutputStreamWriter(outputStream,
+								EclipseIFileUtil.getDetectedEncodingFrom(file));
+						writer.write(generator.getNewTestCaseSourceCode());
 					}
 				} catch (InvalidPreferenceException ipe) {
+					ipe.printStackTrace();
 					MessageDialog.openWarning(new Shell(),
 							props.get(Dialog.Common.title),
 							props.get(Dialog.Common.invalidPreference));
@@ -348,21 +255,22 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 				} catch (FileNotFoundException fnfe) {
 					fnfe.printStackTrace();
 				} finally {
-					FileResourceUtil.close(testFileOSWriter);
-					FileResourceUtil.close(fos);
+					IOUtil.close(writer);
+					IOUtil.close(outputStream);
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			FileResourceUtil.close(javaFileIStream);
-			FileResourceUtil.close(testFileOSWriter);
+			IOUtil.close(inputStream);
+			IOUtil.close(writer);
 		}
 
 		// resource refresh
 		if (refreshFlag
 				&& !ResourceRefreshUtil.refreshLocal(null, projectName
-						+ StrConst.dirSep + testCaseDirResource + "/..")) {
+						+ StringValue.DirectorySeparator.General
+						+ testCaseDirResource + "/..")) {
 			MessageDialog.openWarning(new Shell(),
 					props.get(Dialog.Common.title),
 					props.get(Dialog.Common.resourceRefreshError));
@@ -397,16 +305,10 @@ public class CreateNewTestCaseAction extends Action implements IActionDelegate,
 		}
 	}
 
-	/**
-	 * Method to catch the event selection has been changed.
-	 */
 	public void selectionChanged(IAction action, ISelection selection) {
 		this.selection = selection;
 	}
 
-	/**
-	 * Required in IEditorActionDelegate(ex. Java editor)
-	 */
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 	}
 
