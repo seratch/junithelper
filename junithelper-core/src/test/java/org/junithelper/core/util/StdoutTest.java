@@ -1,6 +1,6 @@
 package org.junithelper.core.util;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 

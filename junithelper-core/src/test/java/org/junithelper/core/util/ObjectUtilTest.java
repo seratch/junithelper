@@ -1,16 +1,6 @@
 package org.junithelper.core.util;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import static org.junit.Assert.*;
-import org.junit.Test;
-import static org.mockito.BDDMockito.*;
-
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,7 +88,7 @@ public class ObjectUtilTest {
 		// then
 		// e.g. : verify(mocked).called();
 		Object expected = null;
-		assertEquals(expected,actual);
+		assertEquals(expected, actual);
 	}
 
 }

@@ -38,16 +38,17 @@ public class ClassMetaExtractor {
 	}
 
 	public ClassMeta extract(String sourceCodeString) {
-		sourceCodeString = TrimFilterUtil.doAllFilters(sourceCodeString);
+		String modifiedSourceCodeString = TrimFilterUtil
+				.doAllFilters(sourceCodeString);
 		ClassMeta meta = new ClassMeta();
 		// -----------------
 		// package name
 		Matcher matcherGroupingPackageName = RegExp.PatternObject.Pacakge_Group
-				.matcher(sourceCodeString);
+				.matcher(modifiedSourceCodeString);
 		if (matcherGroupingPackageName.find()) {
 			meta.packageName = matcherGroupingPackageName.group(1);
 		}
-		String outOfBrace = sourceCodeString.split("\\{")[0];
+		String outOfBrace = modifiedSourceCodeString.split("\\{")[0];
 		String[] splittedBySpace = outOfBrace.split("\\s+");
 		if (!outOfBrace.matches(".*\\s+class\\s+.*")
 				&& !outOfBrace.matches(".*\\s+enum\\s+.*")) {
@@ -73,15 +74,16 @@ public class ClassMetaExtractor {
 		}
 		// -----------------
 		// imported list
-		meta.importedList = importedListExtractor.extract(sourceCodeString);
+		meta.importedList = importedListExtractor
+				.extract(modifiedSourceCodeString);
 		// -----------------
 		// constructors
 		meta.constructors = constructorMetaExtractor.initialize(meta,
-				sourceCodeString).extract(sourceCodeString);
+				modifiedSourceCodeString).extract(modifiedSourceCodeString);
 		// -----------------
 		// methods
-		meta.methods = methodMetaExtractor.initialize(meta, sourceCodeString)
-				.extract(sourceCodeString);
+		meta.methods = methodMetaExtractor.initialize(meta,
+				modifiedSourceCodeString).extract(modifiedSourceCodeString);
 		return meta;
 
 	}
