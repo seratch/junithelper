@@ -1,6 +1,6 @@
 <projectDescription>
   <name>junithelper-core</name>
-  <comment/>
+  <comment>JUnit Helper core modules</comment>
   <projects/>
   <buildSpec>
     <buildCommand>
