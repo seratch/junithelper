@@ -1,12 +1,12 @@
 package org.junithelper.core.generator.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import java.util.List;
 
 import org.junit.Test;
 import org.junithelper.core.config.Configulation;
+import org.junithelper.core.config.JUnitVersion;
 import org.junithelper.core.meta.AccessModifier;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.TestCaseMeta;
@@ -116,6 +116,43 @@ public class DefaultTestCaseGeneratorTest {
 		DefaultTestCaseGenerator actual = target
 				.initialize(targetSourceCodeString);
 		assertNotNull(actual);
+	}
+
+	@Test
+	public void getUnifiedVersionTestCaseSourceCode_A$String$JUnitVersion()
+			throws Exception {
+		String currentTestCaseSourceCode = "package hoge; public class SampleTest extends TestCase {}";
+		String sourceCodeString = "package hoge.foo; import java.util.List; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\") } }";
+		ClassMeta targetClassMeta = classMetaExtractor
+				.extract(sourceCodeString);
+		target.initialize(targetClassMeta);
+		JUnitVersion version = JUnitVersion.version3;
+		String actual = target.getUnifiedVersionTestCaseSourceCode(
+				currentTestCaseSourceCode, version);
+		String expected = "package hoge;\r\n\r\nimport java.util.List;\r\nimport static org.junit.Assert.*;\r\nimport org.junit.Test;\r\n public class SampleTest extends TestCase {}";
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void addRequiredImportList_A$String() throws Exception {
+		String sourceCodeString = "package hoge.foo; import java.util.List; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\") } }";
+		ClassMeta targetClassMeta = classMetaExtractor
+				.extract(sourceCodeString);
+		target.initialize(targetClassMeta);
+		String src = "package hoge; public class SampleTest extends TestCase {}";
+		String actual = target.addRequiredImportList(src);
+		String expected = "package hoge;\r\n\r\nimport java.util.List;\r\nimport static org.junit.Assert.*;\r\nimport org.junit.Test;\r\n public class SampleTest extends TestCase {}";
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void appendIfNotExists_A$StringBuilder$String$String()
+			throws Exception {
+		StringBuilder buf = new StringBuilder();
+		String src = "package hoge.foo; import junit.framework.TestCase; public class Sample { }";
+		String importLine = "import junit.framework.TestCase;";
+		target.appendIfNotExists(buf, src, importLine);
+		assertEquals("", buf.toString());
 	}
 
 }

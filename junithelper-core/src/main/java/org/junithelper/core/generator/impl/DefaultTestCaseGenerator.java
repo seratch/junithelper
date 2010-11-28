@@ -315,7 +315,7 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 	void appendIfNotExists(StringBuilder buf, String src, String importLine) {
 		String oneline = src.replaceAll(RegExp.CRLF, StringValue.Space);
 		if (!oneline.matches(RegExp.Anything_ZeroOrMore_Min
-				+ importLine.replaceAll("\\s+", "\\s+")
+				+ importLine.replaceAll("\\s+", "\\\\s+")
 				+ RegExp.Anything_ZeroOrMore_Min)) {
 			buf.append(importLine);
 			buf.append(StringValue.CarriageReturn);
