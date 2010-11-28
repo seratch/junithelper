@@ -32,8 +32,6 @@ public class Preference {
 
 	public static class Common {
 
-		public static final String groupName = "Preference.Common.groupName";
-
 		public static final String description = "Preference.Common.description";
 
 		public static final String srcMainPath = "Preference.Common.srcMainPath";
@@ -44,11 +42,7 @@ public class Preference {
 
 	public static class TestClassGen {
 
-		public static final String groupName = "Preference.TestClassGen.groupName";
-
 		public static final String description = "Preference.TestClassGen.description";
-
-		public static final String enabled = "Preference.TestClassGen.enabled";
 
 		public static final String junitVersion = "Preference.TestClassGen.junitVersion";
 
@@ -61,16 +55,6 @@ public class Preference {
 	}
 
 	public static class TestMethodGen {
-
-		public static final String groupName = "Preference.TestMethodGen.groupName";
-
-		public static final String subGroupNameForArgs = "Preference.TestMethodGen.subGroupNameForArgs";
-
-		public static final String subGroupNameForReturn = "Preference.TestMethodGen.subGroupNameForReturn";
-
-		public static final String subGroupNameForException = "Preference.TestMethodGen.subGroupNameForException";
-
-		public static final String enabled = "Preference.TestMethodGen.enabled";
 
 		public static final String delimiter = "Preference.TestMethodGen.delimiter";
 
@@ -103,8 +87,6 @@ public class Preference {
 		public static final String enabledTestMethodSampleImpl = "Preference.TestMethodGen.enabledTestMethodSampleImpl";
 
 		public static final String usingMock = "Preference.TestMethodGen.usingMock";
-
-		public static final String subGroupNameForMock = "Preference.TestMethodGen.subGroupNameForMock";
 
 		public static final String descriptionForMock = "Preference.TestMethodGen.descriptionForMock";
 

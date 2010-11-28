@@ -20,6 +20,8 @@ import java.nio.charset.Charset;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.ui.IEditorDescriptor;
+import org.eclipse.ui.ide.IDE;
 import org.junithelper.core.util.IOUtil;
 import org.junithelper.plugin.exception.InvalidPreferenceException;
 import org.mozilla.universalchardet.UniversalDetector;
@@ -59,6 +61,11 @@ public final class EclipseIFileUtil {
 			}
 		}
 		return encoding;
+	}
+
+	public static IEditorDescriptor getIEditorDescriptorFrom(IFile file)
+			throws Exception {
+		return IDE.getEditorDescriptor(file.getName());
 	}
 
 }
