@@ -72,17 +72,18 @@ public class DefaultTestCaseGeneratorTest {
 
 	@Test
 	public void getLackingTestMethodMetaList_A$String() throws Exception {
-		String sourceCodeString = "package hoge.foo; import java.util.List; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\") } }";
+		String sourceCodeString = "package hoge.foo; import java.util.List; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\") } public void overload(String str) { } public void overload(String str, Object obj) { } }";
 		ClassMeta targetClassMeta = classMetaExtractor
 				.extract(sourceCodeString);
 		target.initialize(targetClassMeta);
-		String currentTestCaseSourceCode = "package hoge.foo; public class SampleTest extends TestCase { }";
+		String currentTestCaseSourceCode = "package hoge.foo; public class SampleTest extends TestCase { public void test_overload_A$String$Object() throws Exception { } }";
 		List<TestMethodMeta> actual = target
 				.getLackingTestMethodMetaList(currentTestCaseSourceCode);
-		assertEquals(3, actual.size());
+		assertEquals(4, actual.size());
 		assertEquals(true, actual.get(0).isTypeTest);
 		assertEquals(true, actual.get(1).isInstantiationTest);
 		assertEquals("doSomething", actual.get(2).methodMeta.name);
+		assertEquals("overload", actual.get(3).methodMeta.name);
 	}
 
 	@Test

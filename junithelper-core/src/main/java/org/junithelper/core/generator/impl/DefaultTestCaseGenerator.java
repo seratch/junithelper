@@ -125,7 +125,7 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 			// the test method is not already exist
 			if (!checkTargetSourceCode.matches(RegExp.Anything_ZeroOrMore_Min
 					+ testMethodNamePrefix.replaceAll("\\$", "\\\\\\$")
-					+ RegExp.Anything_ZeroOrMore_Min)) {
+					+ "[^\\$]" + RegExp.Anything_ZeroOrMore_Min)) {
 				// exclude accessors
 				if (config.target.isAccessorExcluded && methodMeta.isAccessor) {
 					continue;
