@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: JUnit Helper
+Bundle-Name: JUnit Helper Eclipse Plugin
 Bundle-SymbolicName: org.junithelper.plugin;singleton:=true
 Bundle-Version: 0.9.1
 Bundle-ClassPath: .,
