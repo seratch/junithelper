@@ -247,7 +247,7 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 					appendCRLF(buf);
 					// assertion
 					appendTabs(buf, 2);
-					buf.append("assertEquals(expected,actual)");
+					buf.append("assertEquals(expected, actual)");
 					buf.append(StringValue.Semicolon);
 					appendCRLF(buf);
 				}
