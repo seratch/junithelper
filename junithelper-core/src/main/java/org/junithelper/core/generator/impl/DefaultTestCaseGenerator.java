@@ -123,9 +123,18 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 			String testMethodNamePrefix = testMethodGenerator
 					.getTestMethodNamePrefix(testMethodMeta);
 			// the test method is not already exist
-			if (!checkTargetSourceCode.matches(RegExp.Anything_ZeroOrMore_Min
-					+ testMethodNamePrefix.replaceAll("\\$", "\\\\\\$")
-					+ "[^\\$]" + RegExp.Anything_ZeroOrMore_Min)) {
+			String regExpForDiscriminateOverloadMethods = "";
+			if (!config.testMethodName.isReturnRequired) {
+				String argDelimiter = Matcher
+						.quoteReplacement(config.testMethodName.argsAreaDelimiter);
+				regExpForDiscriminateOverloadMethods = "[^" + argDelimiter
+						+ "]";
+			}
+			String regExpForCheckAlreadyExists = RegExp.Anything_ZeroOrMore_Min
+					+ Matcher.quoteReplacement(testMethodNamePrefix)
+					+ regExpForDiscriminateOverloadMethods
+					+ RegExp.Anything_ZeroOrMore_Min;
+			if (!checkTargetSourceCode.matches(regExpForCheckAlreadyExists)) {
 				// exclude accessors
 				if (config.target.isAccessorExcluded && methodMeta.isAccessor) {
 					continue;
