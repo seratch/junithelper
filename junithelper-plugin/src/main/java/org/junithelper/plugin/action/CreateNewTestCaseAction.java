@@ -39,6 +39,7 @@ import org.junithelper.core.generator.impl.DefaultTestCaseGenerator;
 import org.junithelper.core.meta.extractor.ClassMetaExtractor;
 import org.junithelper.core.util.IOUtil;
 import org.junithelper.core.util.ThreadUtil;
+import org.junithelper.core.util.UniversalDetectorUtil;
 import org.junithelper.plugin.constant.Dialog;
 import org.junithelper.plugin.exception.InvalidPreferenceException;
 import org.junithelper.plugin.io.PropertiesLoader;
@@ -193,9 +194,14 @@ public class CreateNewTestCaseAction extends AbstractAction implements
 				// generate test case source code string
 				TestCaseGenerator generator = new DefaultTestCaseGenerator(
 						config);
+				String encoding = UniversalDetectorUtil
+						.getDetectedEncoding(EclipseIFileUtil
+								.getInputStreamFrom(targetClassFile));
+				String sourceCodeString = IOUtil.readAsString(
+						EclipseIFileUtil.getInputStreamFrom(targetClassFile),
+						encoding);
 				generator.initialize(new ClassMetaExtractor(config)
-						.extract(IOUtil.readAsString(EclipseIFileUtil
-								.getInputStreamFrom(targetClassFile))));
+						.extract(sourceCodeString));
 				// ---------------
 				// write test case
 				outputStream = new FileOutputStream(testCaseCreateDirPath
