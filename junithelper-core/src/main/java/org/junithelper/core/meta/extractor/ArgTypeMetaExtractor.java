@@ -159,6 +159,7 @@ public class ArgTypeMetaExtractor {
 				buf.append(eachArea);
 				continue;
 			}
+			eachArea = eachArea.replaceFirst("\\).*\\{\\s*", StringValue.Empty);
 			args.add(eachArea);
 		}
 		return args;

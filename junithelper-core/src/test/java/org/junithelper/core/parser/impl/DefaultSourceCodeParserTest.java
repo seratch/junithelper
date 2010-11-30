@@ -1,7 +1,6 @@
 package org.junithelper.core.parser.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.InputStream;
 import java.util.List;
@@ -15,6 +14,18 @@ import org.junithelper.core.meta.extractor.ClassMetaExtractor;
 import org.junithelper.core.util.IOUtil;
 
 public class DefaultSourceCodeParserTest {
+
+	@Test
+	public void type() throws Exception {
+		assertNotNull(DefaultSourceCodeParser.class);
+	}
+
+	@Test
+	public void instantiation() throws Exception {
+		Configulation config = null;
+		DefaultSourceCodeParser target = new DefaultSourceCodeParser(config);
+		assertNotNull(target);
+	}
 
 	Configulation config = new Configulation();
 	DefaultSourceCodeParser target = new DefaultSourceCodeParser(config);

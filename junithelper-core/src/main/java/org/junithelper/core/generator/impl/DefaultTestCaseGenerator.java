@@ -36,6 +36,7 @@ import org.junithelper.core.meta.MethodMeta;
 import org.junithelper.core.meta.TestCaseMeta;
 import org.junithelper.core.meta.TestMethodMeta;
 import org.junithelper.core.meta.extractor.ClassMetaExtractor;
+import org.junithelper.core.util.ObjectUtil;
 
 public class DefaultTestCaseGenerator implements TestCaseGenerator {
 
@@ -237,6 +238,7 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 		String dest = currentTestCaseSourceCode;
 		ClassMeta classMeta = new ClassMetaExtractor(config)
 				.extract(currentTestCaseSourceCode);
+		Configulation config = ObjectUtil.deepCopy(this.config);
 		if (version == JUnitVersion.version3) {
 			dest = dest.replaceAll("@Test[\\s\r\n]*public void ",
 					"public void test" + config.testMethodName.basicDelimiter);
@@ -245,23 +247,27 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 			String testCaseName = splittedArray[splittedArray.length - 1];
 			dest = dest.replaceFirst(classMeta.name + "\\s*\\{", classMeta.name
 					+ " extends " + testCaseName + " {");
-			dest = addRequiredImportList(dest);
+			config.junitVersion = JUnitVersion.version3;
+			dest = addRequiredImportList(dest, config);
 		} else if (version == JUnitVersion.version4) {
 			dest = dest.replaceAll("public void test"
 					+ config.testMethodName.basicDelimiter,
 					"@Test \r\n\tpublic void ");
 			dest = dest.replaceFirst(classMeta.name
 					+ "\\s+extends\\s+.+\\s*\\{", classMeta.name + " {");
-			dest = addRequiredImportList(dest);
+			config.junitVersion = JUnitVersion.version4;
+			dest = addRequiredImportList(dest, config);
 		}
 		return dest;
 	}
 
 	String addRequiredImportList(String src) {
+		return addRequiredImportList(src, config);
+	}
 
+	String addRequiredImportList(String src, Configulation config) {
 		String dest = src;
 		String oneline = TrimFilterUtil.doAllFilters(src);
-
 		StringBuilder importedListBuf = new StringBuilder();
 		for (String imported : targetClassMeta.importedList) {
 			String newOne = "import " + imported + ";";
@@ -272,7 +278,6 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 				importedListBuf.append(StringValue.LineFeed);
 			}
 		}
-
 		// JUnit
 		if (config.junitVersion == JUnitVersion.version3) {
 			appendIfNotExists(importedListBuf, oneline, "import "
@@ -309,9 +314,12 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 					.matcher(src.replaceAll(RegExp.CRLF, StringValue.Space));
 			if (matcher.find()) {
 				String packageDef = matcher.group(1);
-				String replacement = packageDef + StringValue.CarriageReturn
-						+ StringValue.LineFeed + StringValue.CarriageReturn
-						+ StringValue.LineFeed + importedListBuf.toString();
+				String CRLF = StringValue.CarriageReturn + StringValue.LineFeed;
+				String replacement = packageDef
+						+ CRLF
+						+ CRLF
+						+ importedListBuf.toString().replaceAll("\r\n*$",
+								StringValue.Empty);
 				dest = dest.replaceFirst(packageDef, replacement);
 			} else {
 				dest = importedListBuf.toString() + dest;
@@ -323,6 +331,8 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 
 	void appendIfNotExists(StringBuilder buf, String src, String importLine) {
 		String oneline = src.replaceAll(RegExp.CRLF, StringValue.Space);
+		importLine = importLine.replace(StringValue.CarriageReturn
+				+ StringValue.LineFeed, StringValue.Empty);
 		if (!oneline.matches(RegExp.Anything_ZeroOrMore_Min
 				+ importLine.replaceAll("\\s+", "\\\\s+")
 				+ RegExp.Anything_ZeroOrMore_Min)) {

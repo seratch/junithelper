@@ -1,15 +1,17 @@
 package org.junithelper.core.constant;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.util.regex.Matcher;
 
 import org.junit.Test;
 
 public class RegExpTest {
+
+	@Test
+	public void type() throws Exception {
+		assertNotNull(RegExp.class);
+	}
 
 	@Test
 	public void MethodSignatureArea_true() {

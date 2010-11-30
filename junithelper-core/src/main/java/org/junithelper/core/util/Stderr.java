@@ -13,26 +13,19 @@
  * either express or implied. See the License for the specific language 
  * governing permissions and limitations under the License. 
  */
-package org.junithelper.core.config;
+package org.junithelper.core.util;
 
-public class TestMethodName {
+public class Stderr {
 
-	public boolean isArgsRequired = true;
+	private Stderr() {
+	}
 
-	public boolean isReturnRequired = false;
+	public static final void printf(String format, Object... values) {
+		System.err.printf(format, values);
+	}
 
-	public String basicDelimiter = "_";
-
-	public String argsAreaPrefix = "A";
-
-	public String argsAreaDelimiter = "$";
-
-	public String returnAreaPrefix = "R";
-
-	public String returnAreaDelimiter = "$";
-
-	public String exceptionAreaPrefix = "T";
-
-	public String exceptionAreaDelimiter = "$";
+	public static final void p(String str) {
+		System.err.println(str);
+	}
 
 }

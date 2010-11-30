@@ -22,6 +22,19 @@ public class TrimFilterManager {
 
 	private List<TrimFilter> filters = new ArrayList<TrimFilter>();
 
+	public List<TrimFilter> getFilters() {
+		return this.filters;
+	}
+
+	public void removeFilter(Class<?> filterClass) {
+		for (TrimFilter filter : filters) {
+			if (filter.getClass().equals(filterClass)) {
+				filters.remove(filter);
+				break;
+			}
+		}
+	}
+
 	public void addFilter(TrimFilter... filters) {
 		for (TrimFilter filter : filters) {
 			this.filters.add(filter);

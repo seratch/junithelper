@@ -1,10 +1,20 @@
 package org.junithelper.core.filter;
 
 import static org.junit.Assert.*;
-
 import org.junit.Test;
 
 public class TrimFilterUtilTest {
+
+	@Test
+	public void type() throws Exception {
+		assertNotNull(TrimFilterUtil.class);
+	}
+
+	@Test
+	public void instantiation() throws Exception {
+		TrimFilterUtil target = new TrimFilterUtil();
+		assertNotNull(target);
+	}
 
 	@Test
 	public void doAllFilters_A$String() throws Exception {

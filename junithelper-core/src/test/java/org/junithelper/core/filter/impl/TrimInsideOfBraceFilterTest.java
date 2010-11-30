@@ -1,10 +1,20 @@
 package org.junithelper.core.filter.impl;
 
-import static org.junit.Assert.assertEquals;
-
+import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class TrimInsideOfBraceFilterTest {
+
+	@Test
+	public void type() throws Exception {
+		assertNotNull(TrimInsideOfBraceFilter.class);
+	}
+
+	@Test
+	public void instantiation() throws Exception {
+		TrimInsideOfBraceFilter target = new TrimInsideOfBraceFilter();
+		assertNotNull(target);
+	}
 
 	@Test
 	public void trimAll_A$String() throws Exception {

@@ -1,10 +1,20 @@
 package org.junithelper.core.parser.detect;
 
-import static org.junit.Assert.assertEquals;
-
+import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class AccessModifierDetectorTest {
+
+	@Test
+	public void type() throws Exception {
+		assertNotNull(AccessModifierDetector.class);
+	}
+
+	@Test
+	public void instantiation() throws Exception {
+		AccessModifierDetector target = new AccessModifierDetector();
+		assertNotNull(target);
+	}
 
 	AccessModifierDetector target = new AccessModifierDetector();
 

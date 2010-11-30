@@ -1,10 +1,20 @@
 package org.junithelper.core.filter.impl;
 
-import static org.junit.Assert.assertEquals;
-
+import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class TrimCommentFilterTest {
+
+	@Test
+	public void type() throws Exception {
+		assertNotNull(TrimCommentFilter.class);
+	}
+
+	@Test
+	public void instantiation() throws Exception {
+		TrimCommentFilter target = new TrimCommentFilter();
+		assertNotNull(target);
+	}
 
 	@Test
 	public void trimAll_A$String() throws Exception {

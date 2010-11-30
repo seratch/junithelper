@@ -1,10 +1,20 @@
 package org.junithelper.core.filter.impl;
 
 import static org.junit.Assert.*;
-
 import org.junit.Test;
 
 public class TrimAnnotationFilterTest {
+
+	@Test
+	public void type() throws Exception {
+		assertNotNull(TrimAnnotationFilter.class);
+	}
+
+	@Test
+	public void instantiation() throws Exception {
+		TrimAnnotationFilter target = new TrimAnnotationFilter();
+		assertNotNull(target);
+	}
 
 	@Test
 	public void trimAll_A$String_annotationClass() throws Exception {

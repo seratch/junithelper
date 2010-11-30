@@ -1,15 +1,25 @@
 package org.junithelper.core.file.impl;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.util.List;
 
 import org.junit.Test;
 import org.junithelper.core.file.FileSearcher;
-import org.junithelper.core.file.impl.CommonsIOFileSearcher;
 
 public class CommonsIOFileSearcherTest {
+
+	@Test
+	public void type() throws Exception {
+		assertNotNull(CommonsIOFileSearcher.class);
+	}
+
+	@Test
+	public void instantiation() throws Exception {
+		CommonsIOFileSearcher target = new CommonsIOFileSearcher();
+		assertNotNull(target);
+	}
 
 	@Test
 	public void searchFilesRecursivelyByName_A$String$String() throws Exception {

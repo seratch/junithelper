@@ -1,12 +1,27 @@
 package org.junithelper.core.meta.extractor;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
+import java.util.List;
 
 import org.junit.Test;
 import org.junithelper.core.config.Configulation;
 import org.junithelper.core.meta.ClassMeta;
 
 public class ArgTypeMetaExtractorTest {
+
+	@Test
+	public void type() throws Exception {
+		assertNotNull(ArgTypeMetaExtractor.class);
+	}
+
+	@Test
+	public void instantiation() throws Exception {
+		Configulation config = null;
+		ArgTypeMetaExtractor target = new ArgTypeMetaExtractor(config);
+		assertNotNull(target);
+	}
 
 	@Test
 	public void initialize_A$String() throws Exception {
@@ -38,6 +53,37 @@ public class ArgTypeMetaExtractorTest {
 		assertEquals(target.getExtractedMetaList().get(0).name, "String");
 		assertEquals(target.getExtractedNameList().size(), 1);
 		assertEquals(target.getExtractedNameList().get(0), "str");
+	}
+
+	@Test
+	public void initialize_A$ClassMeta() throws Exception {
+		Configulation config = new Configulation();
+		ArgTypeMetaExtractor target = new ArgTypeMetaExtractor(config);
+		// given
+		ClassMeta classMeta = mock(ClassMeta.class);
+		// e.g. : given(mocked.called()).willReturn(1);
+		// when
+		ArgTypeMetaExtractor actual = target.initialize(classMeta);
+		// then
+		// e.g. : verify(mocked).called();
+		ArgTypeMetaExtractor expected = target;
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void getArgListFromArgsDefAreaString_A$String() throws Exception {
+		Configulation config = new Configulation();
+		ArgTypeMetaExtractor target = new ArgTypeMetaExtractor(config);
+		// given
+		String argsDefAreaString = "String str, List<String> list, Map<Object, Object> map, Object obj) {";
+		// when
+		List<String> actual = target
+				.getArgListFromArgsDefAreaString(argsDefAreaString);
+		// then
+		assertEquals("String str", actual.get(0));
+		assertEquals("List<String> list", actual.get(1));
+		assertEquals("Map<Object,Object> map", actual.get(2));
+		assertEquals("Object obj", actual.get(3));
 	}
 
 }

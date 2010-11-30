@@ -25,6 +25,7 @@ import org.junithelper.core.constant.StringValue;
 import org.junithelper.core.file.impl.CommonsIOFileSearcher;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.util.PrimitiveTypeUtil;
+import org.junithelper.core.util.Stderr;
 
 public class AvailableTypeDetector {
 
@@ -35,14 +36,17 @@ public class AvailableTypeDetector {
 	}
 
 	public boolean isPrimitive(String typeName) {
-		return PrimitiveTypeUtil.isPrimitive(typeName);
+		return typeName != null && PrimitiveTypeUtil.isPrimitive(typeName);
 	}
 
 	public boolean isArray(String typeName) {
-		return typeName.matches(".+?\\[\\]$");
+		return typeName != null && typeName.matches(".+?\\[\\]$");
 	}
 
 	public boolean isJavaLangPackageType(String typeName) {
+		if (typeName == null) {
+			return false;
+		}
 		if (typeName.matches("java\\.lang\\.[^\\.]+$")) {
 			return true;
 		}
@@ -55,6 +59,9 @@ public class AvailableTypeDetector {
 	}
 
 	public boolean isAvailableType(String typeName, Configulation config) {
+		if (typeName == null) {
+			return false;
+		}
 		boolean isTypeAvailable = false;
 		String[] packageArr = typeName.split("\\.");
 		String packageName = null;
@@ -75,13 +82,17 @@ public class AvailableTypeDetector {
 		} catch (Exception ignore) {
 			if (config != null && packageName != null) {
 				// check same package class
-				List<File> files = new CommonsIOFileSearcher()
-						.searchFilesRecursivelyByName(
-								config.directoryPathOfProductSourceCode + "/"
-										+ packageName.replaceAll("\\.", "/"),
-								typeName + RegExp.FileExtension.JavaFile);
-				if (files != null && files.size() > 0) {
-					isTypeAvailable = true;
+				String searchPath = config.directoryPathOfProductSourceCode
+						+ "/" + packageName.replaceAll("\\.", "/");
+				try {
+					List<File> files = new CommonsIOFileSearcher()
+							.searchFilesRecursivelyByName(searchPath, typeName
+									+ RegExp.FileExtension.JavaFile);
+					if (files != null && files.size() > 0) {
+						isTypeAvailable = true;
+					}
+				} catch (Exception e) {
+					Stderr.p(e.getLocalizedMessage() + " - " + searchPath);
 				}
 			}
 		}

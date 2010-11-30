@@ -1,12 +1,23 @@
 package org.junithelper.core.meta.extractor;
 
 import static org.junit.Assert.*;
-
 import org.junit.Test;
 import org.junithelper.core.config.Configulation;
 import org.junithelper.core.meta.ClassMeta;
 
 public class ClassMetaExtractorTest {
+
+	@Test
+	public void type() throws Exception {
+		assertNotNull(ClassMetaExtractor.class);
+	}
+
+	@Test
+	public void instantiation() throws Exception {
+		Configulation config = null;
+		ClassMetaExtractor target = new ClassMetaExtractor(config);
+		assertNotNull(target);
+	}
 
 	@Test
 	public void extract_A$String() throws Exception {

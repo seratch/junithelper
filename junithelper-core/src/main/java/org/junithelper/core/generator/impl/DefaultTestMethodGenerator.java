@@ -58,6 +58,9 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 	@Override
 	public TestMethodMeta getTestMethodMeta(MethodMeta targetMethodMeta,
 			ExceptionMeta exception) {
+		if (targetClassMeta == null) {
+			throw new IllegalStateException("Not initialized");
+		}
 		TestMethodMeta testMethodMeta = new TestMethodMeta();
 		testMethodMeta.classMeta = targetClassMeta;
 		testMethodMeta.methodMeta = targetMethodMeta;
