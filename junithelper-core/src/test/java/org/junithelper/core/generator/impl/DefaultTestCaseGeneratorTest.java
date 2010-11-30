@@ -13,6 +13,7 @@ import org.junithelper.core.meta.TestCaseMeta;
 import org.junithelper.core.meta.TestMethodMeta;
 import org.junithelper.core.meta.extractor.ClassMetaExtractor;
 import org.junithelper.core.util.IOUtil;
+import org.junithelper.core.util.UniversalDetectorUtil;
 
 public class DefaultTestCaseGeneratorTest {
 
@@ -55,9 +56,13 @@ public class DefaultTestCaseGeneratorTest {
 
 	@Test
 	public void getNewTestCaseMeta_A$_2() throws Exception {
-		String sourceCodeString = IOUtil
-				.readAsString(IOUtil
+		String encoding = UniversalDetectorUtil
+				.getDetectedEncoding(IOUtil
 						.getResourceAsStream("parser/impl/DefaultTestCaseGenerator.txt"));
+		String sourceCodeString = IOUtil
+				.readAsString(
+						IOUtil.getResourceAsStream("parser/impl/DefaultTestCaseGenerator.txt"),
+						encoding);
 		ClassMeta targetClassMeta = classMetaExtractor
 				.extract(sourceCodeString);
 		target.initialize(targetClassMeta);
@@ -69,8 +74,12 @@ public class DefaultTestCaseGeneratorTest {
 
 	@Test
 	public void getNewTestCaseMeta_A$_3() throws Exception {
-		String sourceCodeString = IOUtil.readAsString(IOUtil
-				.getResourceAsStream("parser/impl/ObjectUtil.txt"));
+		String encoding = UniversalDetectorUtil
+				.getDetectedEncoding(IOUtil
+						.getResourceAsStream("parser/impl/DefaultTestCaseGenerator.txt"));
+		String sourceCodeString = IOUtil.readAsString(
+				IOUtil.getResourceAsStream("parser/impl/ObjectUtil.txt"),
+				encoding);
 		ClassMeta targetClassMeta = classMetaExtractor
 				.extract(sourceCodeString);
 		target.initialize(targetClassMeta);

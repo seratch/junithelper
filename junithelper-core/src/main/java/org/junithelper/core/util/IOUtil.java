@@ -25,9 +25,12 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junithelper.core.config.Configulation;
 import org.junithelper.core.constant.StringValue;
 
 public final class IOUtil {
+
+	private static final String DEFAULT_OUTPUT_FILE_ENCODING = new Configulation().outputFileEncoding;
 
 	private IOUtil() {
 	}
@@ -37,10 +40,14 @@ public final class IOUtil {
 				.getResourceAsStream(name);
 	}
 
-	public static final String readAsString(InputStream is) throws IOException {
+	public static final String readAsString(InputStream is, String encoding)
+			throws IOException {
 		BufferedReader br = null;
 		try {
-			br = new BufferedReader(new InputStreamReader(is));
+			if (encoding == null) {
+				encoding = DEFAULT_OUTPUT_FILE_ENCODING;
+			}
+			br = new BufferedReader(new InputStreamReader(is, encoding));
 			StringBuilder sb = new StringBuilder();
 			String line = null;
 			while ((line = br.readLine()) != null) {

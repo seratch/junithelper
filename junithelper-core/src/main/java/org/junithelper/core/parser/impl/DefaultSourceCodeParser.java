@@ -43,8 +43,8 @@ public class DefaultSourceCodeParser implements SourceCodeParser {
 	}
 
 	@Override
-	public ClassMeta parse(InputStream is) throws IOException {
-		return parse(IOUtil.readAsString(is));
+	public ClassMeta parse(InputStream is, String encoding) throws IOException {
+		return parse(IOUtil.readAsString(is, encoding));
 	}
 
 	@Override

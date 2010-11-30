@@ -22,7 +22,7 @@ import org.junithelper.core.meta.ClassMeta;
 
 public interface SourceCodeParser {
 
-	public ClassMeta parse(InputStream is) throws IOException;
+	public ClassMeta parse(InputStream is, String encoding) throws IOException;
 
 	public ClassMeta parse(String sourceCodeString);
 

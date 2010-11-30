@@ -31,6 +31,7 @@ import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.extractor.ClassMetaExtractor;
 import org.junithelper.core.util.IOUtil;
 import org.junithelper.core.util.Stdout;
+import org.junithelper.core.util.UniversalDetectorUtil;
 
 public abstract class AbstractCommand {
 
@@ -84,8 +85,9 @@ public abstract class AbstractCommand {
 		ClassMetaExtractor extractor = new ClassMetaExtractor(config);
 		if (dirOrFile.matches(".+\\.java$")) {
 			File file = new File(dirOrFile);
-			ClassMeta classMeta = extractor.extract(IOUtil
-					.readAsString(new FileInputStream(file)));
+			String encoding = UniversalDetectorUtil.getDetectedEncoding(file);
+			ClassMeta classMeta = extractor.extract(IOUtil.readAsString(
+					new FileInputStream(file), encoding));
 			if (!classMeta.isAbstract) {
 				dest.add(file);
 			}
@@ -95,8 +97,10 @@ public abstract class AbstractCommand {
 			javaFiles = fileSearcher.searchFilesRecursivelyByName(dirOrFile,
 					RegExp.FileExtension.JavaFile);
 			for (File file : javaFiles) {
-				ClassMeta classMeta = extractor.extract(IOUtil
-						.readAsString(new FileInputStream(file)));
+				String encoding = UniversalDetectorUtil
+						.getDetectedEncoding(file);
+				ClassMeta classMeta = extractor.extract(IOUtil.readAsString(
+						new FileInputStream(file), encoding));
 				if (!classMeta.name.matches(".*Test$") && !classMeta.isAbstract) {
 					dest.add(file);
 				}

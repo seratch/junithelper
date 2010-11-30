@@ -37,7 +37,7 @@ public class Version {
 			try {
 				InputStream is = this.getClass().getClassLoader()
 						.getResourceAsStream("version.txt");
-				version = IOUtil.readAsString(is);
+				version = IOUtil.readAsString(is, null);
 			} catch (Exception e) {
 				e.printStackTrace();
 				version = "unknown";

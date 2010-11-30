@@ -36,10 +36,10 @@ public class IOUtilTest {
 	}
 
 	@Test
-	public void readAsString_A$InputStream() throws Exception {
+	public void readAsString_A$InputStream$String() throws Exception {
 		String name = "parser/impl/Sample.txt";
 		InputStream is = IOUtil.getResourceAsStream(name);
-		String actual = IOUtil.readAsString(is);
+		String actual = IOUtil.readAsString(is, null);
 		String expected = "package org.junithelper.core.parser.impl;\r\n\r\npublic class Sample {\r\n\r\n	public String doSomething(String arg) throws Exception {\r\n		// do something\r\n	}\r\n\r\n}\r\n";
 		assertEquals(expected, actual);
 	}

@@ -12,6 +12,7 @@ import org.junithelper.core.meta.ConstructorMeta;
 import org.junithelper.core.meta.MethodMeta;
 import org.junithelper.core.meta.extractor.ClassMetaExtractor;
 import org.junithelper.core.util.IOUtil;
+import org.junithelper.core.util.UniversalDetectorUtil;
 
 public class DefaultSourceCodeParserTest {
 
@@ -31,9 +32,11 @@ public class DefaultSourceCodeParserTest {
 	DefaultSourceCodeParser target = new DefaultSourceCodeParser(config);
 
 	@Test
-	public void parse_A$InputStream() throws Exception {
+	public void parse_A$InputStream$String() throws Exception {
+		String encoding = UniversalDetectorUtil.getDetectedEncoding(IOUtil
+				.getResourceAsStream("parser/impl/Sample.txt"));
 		InputStream is = IOUtil.getResourceAsStream("parser/impl/Sample.txt");
-		ClassMeta actual = target.parse(is);
+		ClassMeta actual = target.parse(is, encoding);
 		assertTrue(actual.name.equals("Sample"));
 		assertTrue(actual.constructors.size() == 1);
 		assertTrue(actual.methods.size() == 1);
