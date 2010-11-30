@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
 import org.junithelper.core.config.Configulation;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
+import org.junithelper.core.filter.TrimFilterUtil;
 import org.junithelper.core.meta.AccessModifier;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.ExceptionMeta;
@@ -62,11 +63,7 @@ public class MethodMetaExtractor {
 
 	public List<MethodMeta> extract(String sourceCodeString) {
 		List<MethodMeta> dest = new ArrayList<MethodMeta>();
-		sourceCodeString = sourceCodeString
-				.replaceAll("\\s+?" + StringValue.Comma, StringValue.Comma)
-				.replaceAll(StringValue.Comma + "\\s+?", StringValue.Comma)
-				.replaceAll("<\\s+?", "<").replaceAll("\\s+?>", ">")
-				.replaceAll(RegExp.CRLF, StringValue.Empty);
+		sourceCodeString = TrimFilterUtil.doAllFilters(sourceCodeString);
 		// -----------------
 		// for method signature
 		Matcher mat = RegExp.PatternObject.MethodSignatureArea

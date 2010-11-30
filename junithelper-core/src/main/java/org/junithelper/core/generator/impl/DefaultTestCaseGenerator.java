@@ -37,6 +37,7 @@ import org.junithelper.core.meta.TestCaseMeta;
 import org.junithelper.core.meta.TestMethodMeta;
 import org.junithelper.core.meta.extractor.ClassMetaExtractor;
 import org.junithelper.core.util.ObjectUtil;
+import org.junithelper.core.util.Stderr;
 
 public class DefaultTestCaseGenerator implements TestCaseGenerator {
 
@@ -132,27 +133,39 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 						+ "]";
 			}
 			String regExpForCheckAlreadyExists = RegExp.Anything_ZeroOrMore_Min
-					+ Matcher.quoteReplacement(testMethodNamePrefix)
+					+ testMethodNamePrefix
 					+ regExpForDiscriminateOverloadMethods
 					+ RegExp.Anything_ZeroOrMore_Min;
-			if (!checkTargetSourceCode.matches(regExpForCheckAlreadyExists)) {
-				// exclude accessors
-				if (config.target.isAccessorExcluded && methodMeta.isAccessor) {
-					continue;
-				}
-				// testing target access modifier
-				if ((methodMeta.accessModifier == AccessModifier.Public && config.target.isPublicMethodRequired)
-						|| (methodMeta.accessModifier == AccessModifier.Protected && config.target.isProtectedMethodRequired)
-						|| (methodMeta.accessModifier == AccessModifier.PackageLocal && config.target.isPackageLocalMethodRequired)) {
-					dest.add(testMethodGenerator.getTestMethodMeta(methodMeta));
-					if (config.target.isExceptionPatternRequired) {
-						// testing exception patterns
-						for (ExceptionMeta exceptionMeta : methodMeta.throwsExceptions) {
-							dest.add(testMethodGenerator.getTestMethodMeta(
-									methodMeta, exceptionMeta));
+			regExpForCheckAlreadyExists = Matcher
+					.quoteReplacement(regExpForCheckAlreadyExists);
+			try {
+				if (!checkTargetSourceCode.matches(regExpForCheckAlreadyExists)) {
+					// exclude accessors
+					if (config.target.isAccessorExcluded
+							&& methodMeta.isAccessor) {
+						continue;
+					}
+					// testing target access modifier
+					if ((methodMeta.accessModifier == AccessModifier.Public && config.target.isPublicMethodRequired)
+							|| (methodMeta.accessModifier == AccessModifier.Protected && config.target.isProtectedMethodRequired)
+							|| (methodMeta.accessModifier == AccessModifier.PackageLocal && config.target.isPackageLocalMethodRequired)) {
+						dest.add(testMethodGenerator
+								.getTestMethodMeta(methodMeta));
+						if (config.target.isExceptionPatternRequired) {
+							// testing exception patterns
+							for (ExceptionMeta exceptionMeta : methodMeta.throwsExceptions) {
+								dest.add(testMethodGenerator.getTestMethodMeta(
+										methodMeta, exceptionMeta));
+							}
 						}
 					}
 				}
+			} catch (Exception e) {
+				String errorMessage = "  I'm sorry, \"" + methodMeta.name
+						+ "\" is skipped because of internal error("
+						+ e.getClass().getName() + ","
+						+ e.getLocalizedMessage() + ").";
+				Stderr.p(errorMessage);
 			}
 		}
 		return dest;

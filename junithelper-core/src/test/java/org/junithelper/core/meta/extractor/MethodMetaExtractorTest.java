@@ -55,6 +55,18 @@ public class MethodMetaExtractorTest {
 	}
 
 	@Test
+	public void extract_A$String_somethingWrong() throws Exception {
+		String sourceCodeString = "package foo.var; public class Something { 	public String toLable() {\r\n		String label = \"\";\r\n		try {\r\n			if(name.equals(relax.name)){\r\n				label = \"aaa\";\r\n			} else if(name.equals(nurturing.name)){\r\n				label = \"bbb\";\r\n			} else if(name.equals(word.name)){\r\n				label = \"ccc\";\r\n			}\r\n		}catch (Exception e) {}\r\n		return label;\r\n	}\r\n }";
+		ClassMeta classMeta = classMetaExtractor.extract(sourceCodeString);
+		target.initialize(classMeta, sourceCodeString);
+		List<MethodMeta> actual = target.extract(sourceCodeString);
+		assertEquals(1, actual.size());
+		assertEquals("toLable", actual.get(0).name);
+		assertEquals(0, actual.get(0).argTypes.size());
+		assertEquals(0, actual.get(0).argNames.size());
+	}
+
+	@Test
 	public void initialize_A$ClassMeta() throws Exception {
 		// given
 		ClassMeta classMeta = mock(ClassMeta.class);

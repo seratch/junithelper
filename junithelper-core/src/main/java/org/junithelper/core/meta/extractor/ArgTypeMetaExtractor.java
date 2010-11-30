@@ -121,7 +121,7 @@ public class ArgTypeMetaExtractor {
 					.matcher(argTypeFull);
 			if (argNameMatcher.find()) {
 				extractedNameList.add(argNameMatcher.group(1));
-			} else {
+			} else if (extractedMetaList.size() > 0) {
 				extractedNameList.add("arg" + i);
 			}
 
