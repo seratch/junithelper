@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.junithelper.plugin"
-      label="JUnit Helper"
-      version="0.9.1"
+      label="JUnit Helper Eclipse Plugin"
+      version="0.9.2"
       provider-name="junithelper.org"
       plugin="org.junithelper.plugin"
       image="icon/junithelper.png"
@@ -10,24 +10,9 @@
       colocation-affinity="org.junithelper.plugin.feature">
 
    <description url="http://code.google.com/p/junithelper/">
-      &quot;JUnit Helper&quot; &quot;JUnit Helper&quot; is a project to reduce frustrations of Java unit-testing on Eclipse IDE by getting off the routine works when making test cases. 
-http://junithelper.org/
+      &quot;JUnit Helper&quot; is a product to support JUnit testing which provides CUI interface and Eclipse plugin.
 
-How to use
-
-The following commands are available on Java Editor, Package
-Explorer and Navigator.
-* Alt + 8 (Open target from test) 
-When selecting test class, open test target class. 
-* Alt + 9 (Create/Open test from target)
-When selecting test target class, open test class or create test
-class if it does not exist. 
-
-Install
-
-This plugin runs on Eclipse 3.3 or above.
-Install from following update site
-http://junithelper.org/eclipse/plugins/site.xml
+It supports to cover all the tests for public, protected and package local methods by making it easier to start writing new test case.
    </description>
 
    <copyright url="http://code.google.com/p/junithelper/">
@@ -260,7 +245,7 @@ limitations under the License.
 
    <url>
       <update label="http://junithelper.org/eclipse/plugins/site.xml" url="http://junithelper.org/eclipse/plugins/site.xml"/>
-      <discovery label="Project website" url="http://code.google.com/p/junithelper/"/>
+      <discovery label="Project website" url="http://junithelper.org/"/>
    </url>
 
    <requires>
@@ -281,7 +266,7 @@ limitations under the License.
          id="org.junithelper.plugin"
          download-size="0"
          install-size="0"
-         version="0.9.1"
+         version="0.9.2"
          unpack="false"/>
 
 </feature>

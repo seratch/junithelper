@@ -49,6 +49,12 @@ public final class Dialog {
 		public static final String resourceRefreshError = common
 				+ "resourceRefreshError";
 
+		public static final String confirmToChangeToJUnitVersion3 = common
+				+ "confirmToChangeToJUnitVersion3";
+
+		public static final String confirmToChangeToJUnitVersion4 = common
+				+ "confirmToChangeToJUnitVersion4";
+
 		public static final String selectJavaFile = common + "selectJavaFile";
 
 		public static final String notTestClass = common + "notTestClass";

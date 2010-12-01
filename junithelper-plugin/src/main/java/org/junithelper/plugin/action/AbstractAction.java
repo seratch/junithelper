@@ -54,7 +54,7 @@ public abstract class AbstractAction extends Action {
 	}
 
 	protected String getProjectName(StructuredSelection structuredSelection) {
-		String pathFromProjectRoot = getPathFrmProjectRoot(structuredSelection);
+		String pathFromProjectRoot = getPathFromProjectRoot(structuredSelection);
 		String[] dirArrFromProjectRoot = pathFromProjectRoot
 				.split(StringValue.DirectorySeparator.General);
 		return dirArrFromProjectRoot[1];
@@ -63,7 +63,7 @@ public abstract class AbstractAction extends Action {
 	// -------------------
 	// Path
 
-	protected String getPathFrmProjectRoot(
+	protected String getPathFromProjectRoot(
 			StructuredSelection structuredSelection) {
 		return ResourcePathUtil
 				.getPathStartsFromProjectRoot(structuredSelection);
@@ -73,10 +73,10 @@ public abstract class AbstractAction extends Action {
 		return workspaceRoot.getLocation().toString();
 	}
 
-	protected String getResourcePathForClassFile(
+	protected String getResourcePathForTargetClassFile(
 			StructuredSelection structuredSelection) {
 		// path started from project root
-		String pathFromProjectRoot = getPathFrmProjectRoot(structuredSelection);
+		String pathFromProjectRoot = getPathFromProjectRoot(structuredSelection);
 		// path started from project root
 		// ex. /{projectName}/src/main/java/hoge/foo/var/TestTarget.java
 		String[] dirArrFromProjectRoot = pathFromProjectRoot

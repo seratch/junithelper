@@ -100,7 +100,7 @@ public class CreateNewTestCaseAction extends AbstractAction implements
 			// -------------------------
 			// get project path, resource path
 			projectName = getProjectName(structuredSelection);
-			resourcePathForTargetClassFile = getResourcePathForClassFile(structuredSelection);
+			resourcePathForTargetClassFile = getResourcePathForTargetClassFile(structuredSelection);
 			String projectRootAbsolutePath = getWorkspaceRootAbsolutePath(getIWorkspaceRoot())
 					+ StringValue.DirectorySeparator.General
 					+ projectName
@@ -113,7 +113,7 @@ public class CreateNewTestCaseAction extends AbstractAction implements
 							StringValue.JUnit.TestClassNameSuffix
 									+ StringValue.FileExtension.JavaFile);
 			testCaseCreateFilePath = projectRootAbsolutePath
-					+ getResourcePathForClassFile(structuredSelection).replace(
+					+ getResourcePathForTargetClassFile(structuredSelection).replace(
 							config.directoryPathOfProductSourceCode,
 							config.directoryPathOfTestSourceCode).replace(
 							StringValue.FileExtension.JavaFile,

@@ -15,28 +15,26 @@
  */
 package org.junithelper.plugin.action;
 
-import java.io.File;
-
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPage;
+import org.junithelper.command.ForceJUnitVersion3Command;
 import org.junithelper.core.config.Configulation;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
 import org.junithelper.core.util.ThreadUtil;
+import org.junithelper.plugin.constant.Dialog;
 import org.junithelper.plugin.constant.Preference;
 import org.junithelper.plugin.io.PropertiesLoader;
+import org.junithelper.plugin.util.ResourceRefreshUtil;
 
-public class OpenTestTargetAction extends AbstractAction implements
+public class Force3TestCaseAction extends AbstractAction implements
 		IActionDelegate, IEditorActionDelegate {
 
-	ISelection selection;
+	ISelection selection = null;
 
 	public void selectionChanged(IAction action, ISelection selection) {
 		this.selection = selection;
@@ -72,59 +70,82 @@ public class OpenTestTargetAction extends AbstractAction implements
 
 			// ----------------------------------------
 			// get project path, resource path
-			String resourcePathForTestClassFile = getResourcePathForTargetClassFile(structuredSelection);
+			String resourcePathForTargetClassFile = getResourcePathForTargetClassFile(
+					structuredSelection).replaceFirst(
+					config.directoryPathOfTestSourceCode,
+					config.directoryPathOfProductSourceCode);
+			String resourcePathForTestCaseFile = resourcePathForTargetClassFile
+					.replaceFirst(config.directoryPathOfProductSourceCode,
+							config.directoryPathOfTestSourceCode).replaceFirst(
+							"[^(Test)]\\.java$",
+							StringValue.JUnit.TestClassNameSuffix
+									+ StringValue.FileExtension.JavaFile);
 			String projectName = getProjectName(structuredSelection);
-			String projectRootPath = getWorkspaceRootAbsolutePath(getIWorkspaceRoot())
+			String projectRootAbsolutePath = getWorkspaceRootAbsolutePath(getIWorkspaceRoot())
 					+ StringValue.DirectorySeparator.General
 					+ projectName
 					+ StringValue.DirectorySeparator.General;
 
 			// ----------------------------------------
 			// check selection
-			if (!resourcePathForTestClassFile.matches(".*"
+			if (!resourcePathForTestCaseFile.matches(".*"
 					+ RegExp.FileExtension.JavaFile)) {
 				openWarningForSelectJavaFile(props);
 				return;
 			}
 
 			// ----------------------------------------
-			// check the target file existence
-			String resourcePathForTargetClassFile = resourcePathForTestClassFile
-					.replaceFirst(config.directoryPathOfTestSourceCode,
-							config.directoryPathOfProductSourceCode);
-			File openTargetIOFile = new File(projectRootPath
-					+ resourcePathForTargetClassFile);
-			if (!openTargetIOFile.exists()) {
-				// skip
+			// confirm to execute
+			String targetClassName = getClassNameFromResourcePathForTargetClassFile(resourcePathForTargetClassFile);
+			String testCaseFilename = getTestClassNameFromClassName(targetClassName);
+			String msg = props
+					.get(Dialog.Common.confirmToChangeToJUnitVersion3)
+					+ " ("
+					+ testCaseFilename + ")";
+			if (testCaseFilename == null || !openConfirm(props, msg)) {
 				return;
 			}
 
 			// ----------------------------------------
-			// try to open file
+			// force version 3.x
+			System.setProperty("junithelper.skipConfirming", "true");
+			ForceJUnitVersion3Command
+					.main(new String[] { projectRootAbsolutePath
+							+ resourcePathForTargetClassFile });
+
+			// ----------------------------------------
+			// open test case
+			ThreadUtil.sleep(200);
 			int retryCount = 0;
-			IEditorPart editorPart = null;
 			while (true) {
 				try {
-					IProject project = getIProject(projectName);
-					IWorkbenchPage page = getIWorkbenchPage();
-					IFile targetClassFile = getIFile(project,
-							resourcePathForTargetClassFile);
-					editorPart = getIEditorPart(page, targetClassFile);
-					editorPart.setFocus();
+					// ----------------------------------------
+					// resource refresh
+					if (!ResourceRefreshUtil.refreshLocal(null, projectName
+							+ StringValue.DirectorySeparator.General
+							+ resourcePathForTestCaseFile + "/..")) {
+						openWarningForResourceRefreshError(props);
+						System.err.println("Resource refresh error!");
+						return;
+					}
+
+					// ----------------------------------------
+					// open test case file
+					retryCount = 0;
+					ThreadUtil.sleep(1500);
 				} catch (Exception e) {
-					e.printStackTrace();
 					retryCount++;
 					if (retryCount > 10) {
 						break;
 					}
+					e.printStackTrace();
 					ThreadUtil.sleep(1500);
 				}
 				break;
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
 
+	}
 }

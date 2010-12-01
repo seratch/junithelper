@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.ide.IDE;
 import org.junithelper.core.util.IOUtil;
+import org.junithelper.core.util.Stderr;
 import org.junithelper.plugin.exception.InvalidPreferenceException;
 import org.mozilla.universalchardet.UniversalDetector;
 
@@ -53,7 +54,8 @@ public final class EclipseIFileUtil {
 			detector.dataEnd();
 			encoding = detector.getDetectedCharset();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Stderr.p("EclipseIFileUtil.getDetectedEncodingFrom(IFile): "
+					+ e.getClass().getName() + "," + e.getLocalizedMessage());
 		} finally {
 			IOUtil.close(is);
 			if (encoding == null) {

@@ -22,6 +22,16 @@
 			name="JUnit Helper">
 		</category>
 		<command
+			id="org.junithelper.plugin.action.Force3TestCaseActionCommand"
+			categoryId="org.junithelper.plugin.category"
+			name="Force JUnit 3.x">
+		</command>
+		<command
+			id="org.junithelper.plugin.action.Force4TestCaseActionCommand"
+			categoryId="org.junithelper.plugin.category"
+			name="Force JUnit 4.x">
+		</command>
+		<command
 			id="org.junithelper.plugin.action.OpenTestCaseActionCommand"
 			categoryId="org.junithelper.plugin.category"
 			name="Open Test Class">
@@ -36,6 +46,14 @@
 	<extension
 		point="org.eclipse.ui.handlers">
 		<handler
+			class="org.junithelper.plugin.handler.Force3TestCaseHandler"
+			commandId="org.junithelper.plugin.action.Force3TestCaseActionCommand" >
+		</handler>
+		<handler
+			class="org.junithelper.plugin.handler.Force4TestCaseHandler"
+			commandId="org.junithelper.plugin.action.Force4TestCaseActionCommand" >
+		</handler>
+		<handler
 			class="org.junithelper.plugin.handler.OpenTestCaseHandler"
 			commandId="org.junithelper.plugin.action.OpenTestCaseActionCommand" >
 		</handler>
@@ -47,6 +65,16 @@
 
 	<extension
 		point="org.eclipse.ui.bindings">
+		<key
+			commandId="org.junithelper.plugin.action.Force3TestCaseActionCommand"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			sequence="M3+3">
+		</key>
+		<key
+			commandId="org.junithelper.plugin.action.Force4TestCaseActionCommand"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			sequence="M3+4">
+		</key>
 		<key
 			commandId="org.junithelper.plugin.action.OpenTestTargetActionCommand"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
@@ -72,6 +100,18 @@
 			path="additions">
 		</menu>
 		<action
+			label="Force JUnit 3.x Style Alt+3"
+			class="org.junithelper.plugin.action.Force3TestCaseAction"
+			id="org.junithelper.plugin.action.Force3TestCaseAction.pe"
+			menubarPath="org.junithelper.plugin.popupmenu/additions" >
+		</action>
+		<action
+			label="Force JUnit 4.x Style Alt+4"
+			class="org.junithelper.plugin.action.Force4TestCaseAction"
+			id="org.junithelper.plugin.action.Force4TestCaseAction.pe"
+			menubarPath="org.junithelper.plugin.popupmenu/additions" >
+		</action>
+		<action
 			label="Open Test Target Alt+8"
 			class="org.junithelper.plugin.action.OpenTestTargetAction"
 			id="org.junithelper.plugin.action.OpenTestTargetAction.pe"
@@ -96,6 +136,18 @@
 			path="additions">
 		</menu>
 		<action
+			label="Force JUnit 3.x Style Alt+3"
+			class="org.junithelper.plugin.action.Force3TestCaseAction"
+			id="org.junithelper.plugin.action.Force3TestCaseAction.nvg"
+			menubarPath="org.junithelper.plugin.popupmenu/additions" >
+		</action>
+		<action
+			label="Force JUnit 4.x Style Alt+4"
+			class="org.junithelper.plugin.action.Force4TestCaseAction"
+			id="org.junithelper.plugin.action.Force4TestCaseAction.nvg"
+			menubarPath="org.junithelper.plugin.popupmenu/additions" >
+		</action>
+		<action
 			label="Open Test Target Alt+8"
 			class="org.junithelper.plugin.action.OpenTestTargetAction"
 			id="org.junithelper.plugin.action.OpenTestTargetAction.nvg"
@@ -113,6 +165,16 @@
 	<viewerContribution
 		targetID="#CompilationUnitEditorContext"
 		id="org.junithelper.plugin.test.framework.create">
+		<action
+			label="Force JUnit 3 Style Alt+3"
+			class="org.junithelper.plugin.action.Force3TestCaseAction"
+			id="org.junithelper.plugin.action.Force3TestCaseAction.je">
+		</action>
+		<action
+			label="Force JUnit 4.x Style Alt+4"
+			class="org.junithelper.plugin.action.Force4TestCaseAction"
+			id="org.junithelper.plugin.action.Force4TestCaseAction.je">
+		</action>
 		<action
 			label="Open Test Target Alt+8"
 			class="org.junithelper.plugin.action.OpenTestTargetAction"
