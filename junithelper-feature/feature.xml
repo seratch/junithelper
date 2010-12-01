@@ -2,7 +2,7 @@
 <feature
       id="org.junithelper.plugin"
       label="JUnit Helper Eclipse Plugin"
-      version="0.9.2"
+      version="0.9.3"
       provider-name="junithelper.org"
       plugin="org.junithelper.plugin"
       image="icon/junithelper.png"
@@ -266,7 +266,7 @@ limitations under the License.
          id="org.junithelper.plugin"
          download-size="0"
          install-size="0"
-         version="0.9.2"
+         version="0.9.3"
          unpack="false"/>
 
 </feature>

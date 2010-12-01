@@ -28,7 +28,10 @@ public class PropertiesLoader {
 	}
 
 	public String get(String key) {
-		return props.getProperty(key);
+		String value = props.getProperty(key);
+		if (value == null)
+			value = "";
+		return value;
 	}
 
 }

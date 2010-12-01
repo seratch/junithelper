@@ -41,9 +41,11 @@ public final class EclipseIFileUtil {
 		return is;
 	}
 
-	public static String getDetectedEncodingFrom(IFile file) {
+	public static String getDetectedEncodingFrom(IFile file,
+			String defaultEncoding) {
 		InputStream is = null;
-		String encoding = null;
+		String encoding = defaultEncoding == null ? Charset.defaultCharset()
+				.name() : defaultEncoding;
 		try {
 			is = EclipseIFileUtil.getInputStreamFrom(file);
 			UniversalDetector detector = new UniversalDetector(null);
@@ -59,7 +61,7 @@ public final class EclipseIFileUtil {
 		} finally {
 			IOUtil.close(is);
 			if (encoding == null) {
-				return Charset.defaultCharset().name();
+				return defaultEncoding;
 			}
 		}
 		return encoding;

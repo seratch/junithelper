@@ -34,6 +34,8 @@ public class Preference {
 
 		public static final String description = "Preference.Common.description";
 
+		public static final String outputFileEncoding = "Preference.Common.outputFileEncoding";
+
 		public static final String srcMainPath = "Preference.Common.srcMainPath";
 
 		public static final String srcTestPath = "Preference.Common.srcTestPath";

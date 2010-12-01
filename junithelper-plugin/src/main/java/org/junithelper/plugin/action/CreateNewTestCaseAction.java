@@ -113,12 +113,13 @@ public class CreateNewTestCaseAction extends AbstractAction implements
 							StringValue.JUnit.TestClassNameSuffix
 									+ StringValue.FileExtension.JavaFile);
 			testCaseCreateFilePath = projectRootAbsolutePath
-					+ getResourcePathForTargetClassFile(structuredSelection).replace(
-							config.directoryPathOfProductSourceCode,
-							config.directoryPathOfTestSourceCode).replace(
-							StringValue.FileExtension.JavaFile,
-							StringValue.JUnit.TestClassNameSuffix
-									+ StringValue.FileExtension.JavaFile);
+					+ getResourcePathForTargetClassFile(structuredSelection)
+							.replace(config.directoryPathOfProductSourceCode,
+									config.directoryPathOfTestSourceCode)
+							.replace(
+									StringValue.FileExtension.JavaFile,
+									StringValue.JUnit.TestClassNameSuffix
+											+ StringValue.FileExtension.JavaFile);
 			testCaseFileName = (getClassNameFromResourcePathForTargetClassFile(resourcePathForTargetClassFile) + StringValue.FileExtension.JavaFile)
 					.replace(StringValue.FileExtension.JavaFile,
 							StringValue.JUnit.TestClassNameSuffix
@@ -208,7 +209,8 @@ public class CreateNewTestCaseAction extends AbstractAction implements
 						+ StringValue.DirectorySeparator.General
 						+ testCaseFileName);
 				writer = new OutputStreamWriter(outputStream,
-						getDetectedEncodingFrom(targetClassFile));
+						getDetectedEncodingFrom(targetClassFile,
+								config.outputFileEncoding));
 				writer.write(generator.getNewTestCaseSourceCode());
 
 			} catch (InvalidPreferenceException ipe) {

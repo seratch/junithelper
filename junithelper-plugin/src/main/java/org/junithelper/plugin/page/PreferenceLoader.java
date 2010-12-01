@@ -27,6 +27,8 @@ public class PreferenceLoader {
 	public String directoryPathOfProductSourceCode;
 	public String directoryPathOfTestSourceCode;
 
+	public String outputFileEncoding;
+
 	public boolean isJUnitVersion3;
 	public boolean isJUnitVersion4;
 
@@ -62,6 +64,7 @@ public class PreferenceLoader {
 	public Configulation getConfig() {
 		config.language = Activator.getDefault().getPreferenceStore()
 				.getString(Preference.lang);
+		config.outputFileEncoding = outputFileEncoding;
 		config.directoryPathOfProductSourceCode = directoryPathOfProductSourceCode;
 		config.directoryPathOfTestSourceCode = directoryPathOfTestSourceCode;
 		config.isTemplateImplementationRequired = isTemplateImplementationRequired;
@@ -113,6 +116,8 @@ public class PreferenceLoader {
 				.getString(Preference.Common.srcMainPath);
 		directoryPathOfTestSourceCode = store
 				.getString(Preference.Common.srcTestPath);
+		outputFileEncoding = store
+				.getString(Preference.Common.outputFileEncoding);
 
 		isTestMethodNameArgsRequired = store
 				.getBoolean(Preference.TestMethodGen.enabledArgs);

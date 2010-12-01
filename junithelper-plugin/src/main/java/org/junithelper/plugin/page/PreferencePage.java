@@ -33,6 +33,8 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 
 	RadioGroupFieldEditor editor_Language;
 
+	StringFieldEditor editor_outputFileEncoding;
+
 	RadioGroupFieldEditor editor_JUnitVersion;
 
 	StringFieldEditor editor_ClassToExtend;
@@ -87,6 +89,12 @@ public class PreferencePage extends FieldEditorPreferencePage implements
 							Preference.lang, "Select your language.", 2,
 							labelAndValues, parent);
 					addField(editor_Language);
+
+					// output fileencoding
+					addField(new StringFieldEditor(
+							Preference.Common.outputFileEncoding,
+							props.get(Preference.Common.outputFileEncoding),
+							parent));
 
 					// src/main/java
 					addField(new StringFieldEditor(

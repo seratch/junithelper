@@ -42,8 +42,8 @@ public abstract class AbstractAction extends Action {
 				+ StringValue.FileExtension.JavaFile;
 	}
 
-	protected String getDetectedEncodingFrom(IFile file) {
-		return EclipseIFileUtil.getDetectedEncodingFrom(file);
+	protected String getDetectedEncodingFrom(IFile file, String defaultEncoding) {
+		return EclipseIFileUtil.getDetectedEncodingFrom(file, defaultEncoding);
 	}
 
 	protected String getClassNameFromResourcePathForTargetClassFile(

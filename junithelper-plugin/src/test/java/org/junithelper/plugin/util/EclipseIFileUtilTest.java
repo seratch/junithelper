@@ -34,13 +34,15 @@ public class EclipseIFileUtilTest extends TestCase {
 		}
 	}
 
-	public void test_detectEncoding_A$IFile() throws Exception {
+	public void test_detectEncoding_A$IFile$String() throws Exception {
 		// given
 		IFile file = mock(IFile.class);
+		String defaultEncoding = "abc";
 		// when
-		String actual = EclipseIFileUtil.getDetectedEncodingFrom(file);
+		String actual = EclipseIFileUtil.getDetectedEncodingFrom(file,
+				defaultEncoding);
 		// then
-		String expected = "UTF-8";
+		String expected = "abc";
 		assertEquals(expected, actual);
 	}
 
