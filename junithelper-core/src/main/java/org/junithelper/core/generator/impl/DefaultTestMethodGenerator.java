@@ -22,6 +22,7 @@ import org.junithelper.core.config.Configulation;
 import org.junithelper.core.config.JUnitVersion;
 import org.junithelper.core.config.MessageValue;
 import org.junithelper.core.config.MockObjectFramework;
+import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
 import org.junithelper.core.generator.ConstructorGenerator;
 import org.junithelper.core.generator.TestMethodGenerator;
@@ -478,10 +479,13 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 			targetClassMeta.importedList.add("java.util.HashMap");
 			return "new HashMap" + argTypeMeta.getGenericsAsString() + "()";
 		} else if (config.mockObjectFramework == MockObjectFramework.EasyMock) {
-			return "mocks.createMock(" + argTypeMeta.nameInMethodName
-					+ ".class)";
+			return "mocks.createMock("
+					+ argTypeMeta.name.replaceAll(RegExp.Generics,
+							StringValue.Empty) + ".class)";
 		} else if (config.mockObjectFramework == MockObjectFramework.JMock2) {
-			return "context.mock(" + argTypeMeta.nameInMethodName + ".class)";
+			return "context.mock("
+					+ argTypeMeta.name.replaceAll(RegExp.Generics,
+							StringValue.Empty) + ".class)";
 		} else if (config.mockObjectFramework == MockObjectFramework.JMockit) {
 			if (new AvailableTypeDetector(targetClassMeta)
 					.isJMockitMockableType(argTypeMeta.name)) {
@@ -493,7 +497,9 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 				return "null";
 			}
 		} else if (config.mockObjectFramework == MockObjectFramework.Mockito) {
-			return "mock(" + argTypeMeta.nameInMethodName + ".class)";
+			return "mock("
+					+ argTypeMeta.name.replaceAll(RegExp.Generics,
+							StringValue.Empty) + ".class)";
 		} else {
 			return "null";
 		}

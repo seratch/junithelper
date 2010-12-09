@@ -7,7 +7,6 @@ import java.util.List;
 import org.junit.Test;
 import org.junithelper.core.config.Configulation;
 import org.junithelper.core.config.MockObjectFramework;
-import org.junithelper.core.meta.ArgTypeMeta;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.ExceptionMeta;
 import org.junithelper.core.meta.MethodMeta;
@@ -431,21 +430,174 @@ public class DefaultTestMethodGeneratorTest {
 	public void getArgValue_A$TestMethodMeta$ArgTypeMeta$String()
 			throws Exception {
 		// given
-		String sourceCodeString = "package hoge.foo; import java.util.List; public class Sample { public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\") } }";
+		String sourceCodeString = "package hoge.foo; import java.util.List; import java.util.Map; public class Sample { public int doSomething(String str, long longValue, List<String> list, Map<String,Object> map, java.util.HashMap<String, String> hashMap) throws Throwable { System.out.println(\"aaaa\") } }";
 		ClassMeta targetClassMeta = classMetaExtractor
 				.extract(sourceCodeString);
 		target.initialize(targetClassMeta);
 		MethodMeta targetMethodMeta = targetClassMeta.methods.get(0);
 		TestMethodMeta testMethodMeta = target
 				.getTestMethodMeta(targetMethodMeta);
-		ArgTypeMeta argTypeMeta = targetMethodMeta.argTypes.get(0);
-		String argName = targetMethodMeta.argNames.get(0);
 		// when
-		String actual = target
-				.getArgValue(testMethodMeta, argTypeMeta, argName);
 		// then
-		String expected = "null";
-		assertEquals(expected, actual);
+		assertEquals("null", target.getArgValue(testMethodMeta,
+				targetMethodMeta.argTypes.get(0),
+				targetMethodMeta.argNames.get(0)));
+		assertEquals("0L", target.getArgValue(testMethodMeta,
+				targetMethodMeta.argTypes.get(1),
+				targetMethodMeta.argNames.get(1)));
+		assertEquals("new ArrayList<String>()", target.getArgValue(
+				testMethodMeta, targetMethodMeta.argTypes.get(2),
+				targetMethodMeta.argNames.get(2)));
+		assertEquals("new HashMap<String, Object>()", target.getArgValue(
+				testMethodMeta, targetMethodMeta.argTypes.get(3),
+				targetMethodMeta.argNames.get(3)));
+		assertEquals("null", target.getArgValue(testMethodMeta,
+				targetMethodMeta.argTypes.get(4),
+				targetMethodMeta.argNames.get(4)));
+	}
+
+	@Test
+	public void getArgValue_A$TestMethodMeta$ArgTypeMeta$String_Mockito()
+			throws Exception {
+		// given
+		Configulation config = new Configulation();
+		config.mockObjectFramework = MockObjectFramework.Mockito;
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(
+				config);
+		ClassMetaExtractor classMetaExtractor = new ClassMetaExtractor(config);
+		String sourceCodeString = "package hoge.foo; import java.util.List; import java.util.Map; public class Sample { public int doSomething(String str, long longValue, List<String> list, Map<String,Object> map, java.util.HashMap<String, String> hashMap) throws Throwable { System.out.println(\"aaaa\") } }";
+		ClassMeta targetClassMeta = classMetaExtractor
+				.extract(sourceCodeString);
+		target.initialize(targetClassMeta);
+		MethodMeta targetMethodMeta = targetClassMeta.methods.get(0);
+		TestMethodMeta testMethodMeta = target
+				.getTestMethodMeta(targetMethodMeta);
+		// when
+		// then
+		assertEquals("null", target.getArgValue(testMethodMeta,
+				targetMethodMeta.argTypes.get(0),
+				targetMethodMeta.argNames.get(0)));
+		assertEquals("0L", target.getArgValue(testMethodMeta,
+				targetMethodMeta.argTypes.get(1),
+				targetMethodMeta.argNames.get(1)));
+		assertEquals("new ArrayList<String>()", target.getArgValue(
+				testMethodMeta, targetMethodMeta.argTypes.get(2),
+				targetMethodMeta.argNames.get(2)));
+		assertEquals("new HashMap<String, Object>()", target.getArgValue(
+				testMethodMeta, targetMethodMeta.argTypes.get(3),
+				targetMethodMeta.argNames.get(3)));
+		assertEquals("mock(java.util.HashMap.class)", target.getArgValue(
+				testMethodMeta, targetMethodMeta.argTypes.get(4),
+				targetMethodMeta.argNames.get(4)));
+	}
+
+	@Test
+	public void getArgValue_A$TestMethodMeta$ArgTypeMeta$String_EasyMock()
+			throws Exception {
+		// given
+		Configulation config = new Configulation();
+		config.mockObjectFramework = MockObjectFramework.EasyMock;
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(
+				config);
+		ClassMetaExtractor classMetaExtractor = new ClassMetaExtractor(config);
+		String sourceCodeString = "package hoge.foo; import java.util.List; import java.util.Map; public class Sample { public int doSomething(String str, long longValue, List<String> list, Map<String,Object> map, java.util.HashMap<String, String> hashMap) throws Throwable { System.out.println(\"aaaa\") } }";
+		ClassMeta targetClassMeta = classMetaExtractor
+				.extract(sourceCodeString);
+		target.initialize(targetClassMeta);
+		MethodMeta targetMethodMeta = targetClassMeta.methods.get(0);
+		TestMethodMeta testMethodMeta = target
+				.getTestMethodMeta(targetMethodMeta);
+		// when
+		// then
+		assertEquals("null", target.getArgValue(testMethodMeta,
+				targetMethodMeta.argTypes.get(0),
+				targetMethodMeta.argNames.get(0)));
+		assertEquals("0L", target.getArgValue(testMethodMeta,
+				targetMethodMeta.argTypes.get(1),
+				targetMethodMeta.argNames.get(1)));
+		assertEquals("new ArrayList<String>()", target.getArgValue(
+				testMethodMeta, targetMethodMeta.argTypes.get(2),
+				targetMethodMeta.argNames.get(2)));
+		assertEquals("new HashMap<String, Object>()", target.getArgValue(
+				testMethodMeta, targetMethodMeta.argTypes.get(3),
+				targetMethodMeta.argNames.get(3)));
+		assertEquals("mocks.createMock(java.util.HashMap.class)",
+				target.getArgValue(testMethodMeta,
+						targetMethodMeta.argTypes.get(4),
+						targetMethodMeta.argNames.get(4)));
+	}
+
+	@Test
+	public void getArgValue_A$TestMethodMeta$ArgTypeMeta$String_JMock2()
+			throws Exception {
+		// given
+		Configulation config = new Configulation();
+		config.mockObjectFramework = MockObjectFramework.JMock2;
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(
+				config);
+		ClassMetaExtractor classMetaExtractor = new ClassMetaExtractor(config);
+		String sourceCodeString = "package hoge.foo; import java.util.List; import java.util.Map; public class Sample { public int doSomething(String str, long longValue, List<String> list, Map<String,Object> map, java.util.HashMap<String, String> hashMap) throws Throwable { System.out.println(\"aaaa\") } }";
+		ClassMeta targetClassMeta = classMetaExtractor
+				.extract(sourceCodeString);
+		target.initialize(targetClassMeta);
+		MethodMeta targetMethodMeta = targetClassMeta.methods.get(0);
+		TestMethodMeta testMethodMeta = target
+				.getTestMethodMeta(targetMethodMeta);
+		// when
+		// then
+		assertEquals("null", target.getArgValue(testMethodMeta,
+				targetMethodMeta.argTypes.get(0),
+				targetMethodMeta.argNames.get(0)));
+		assertEquals("0L", target.getArgValue(testMethodMeta,
+				targetMethodMeta.argTypes.get(1),
+				targetMethodMeta.argNames.get(1)));
+		assertEquals("new ArrayList<String>()", target.getArgValue(
+				testMethodMeta, targetMethodMeta.argTypes.get(2),
+				targetMethodMeta.argNames.get(2)));
+		assertEquals("new HashMap<String, Object>()", target.getArgValue(
+				testMethodMeta, targetMethodMeta.argTypes.get(3),
+				targetMethodMeta.argNames.get(3)));
+		assertEquals("context.mock(java.util.HashMap.class)",
+				target.getArgValue(testMethodMeta,
+						targetMethodMeta.argTypes.get(4),
+						targetMethodMeta.argNames.get(4)));
+	}
+
+	@Test
+	public void getArgValue_A$TestMethodMeta$ArgTypeMeta$String_JMockit()
+			throws Exception {
+		// given
+		Configulation config = new Configulation();
+		config.mockObjectFramework = MockObjectFramework.JMockit;
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(
+				config);
+		ClassMetaExtractor classMetaExtractor = new ClassMetaExtractor(config);
+		String sourceCodeString = "package hoge.foo; import java.util.List; import java.util.Map; public class Sample { public int doSomething(String str, long longValue, List<String> list, Map<String,Object> map, java.util.HashMap<String, String> hashMap) throws Throwable { System.out.println(\"aaaa\") } }";
+		ClassMeta targetClassMeta = classMetaExtractor
+				.extract(sourceCodeString);
+		target.initialize(targetClassMeta);
+		MethodMeta targetMethodMeta = targetClassMeta.methods.get(0);
+		TestMethodMeta testMethodMeta = target
+				.getTestMethodMeta(targetMethodMeta);
+		// when
+		// then
+		assertEquals("null", target.getArgValue(testMethodMeta,
+				targetMethodMeta.argTypes.get(0),
+				targetMethodMeta.argNames.get(0)));
+		assertEquals("0L", target.getArgValue(testMethodMeta,
+				targetMethodMeta.argTypes.get(1),
+				targetMethodMeta.argNames.get(1)));
+		assertEquals("new ArrayList<String>()", target.getArgValue(
+				testMethodMeta, targetMethodMeta.argTypes.get(2),
+				targetMethodMeta.argNames.get(2)));
+		assertEquals("new HashMap<String, Object>()", target.getArgValue(
+				testMethodMeta, targetMethodMeta.argTypes.get(3),
+				targetMethodMeta.argNames.get(3)));
+		assertEquals(
+				"this.doSomething_A$String$long$List$Map$javautilHashMap_hashMap",
+				target.getArgValue(testMethodMeta,
+						targetMethodMeta.argTypes.get(4),
+						targetMethodMeta.argNames.get(4)));
 	}
 
 }
