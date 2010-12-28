@@ -75,7 +75,7 @@ public class ArgTypeMetaExtractorTest {
 		Configulation config = new Configulation();
 		ArgTypeMetaExtractor target = new ArgTypeMetaExtractor(config);
 		// given
-		String argsDefAreaString = "String str, List<String> list, Map<Object, Object> map, Object obj, Map<String, List<String>> listMap, List<Map<String,String>> mapList) {";
+		String argsDefAreaString = "String str, List<String> list, Map<Object, Object> map, Object obj, Map<String, List<String>> listMap, List<Map<String,String>> mapList, List<Map<Map<String,Object>,List<String>>> deepNest) {";
 		// when
 		List<String> actual = target
 				.getArgListFromArgsDefAreaString(argsDefAreaString);
@@ -86,6 +86,7 @@ public class ArgTypeMetaExtractorTest {
 		assertEquals("Object obj", actual.get(3));
 		assertEquals("Map listMap", actual.get(4));
 		assertEquals("List mapList", actual.get(5));
+		assertEquals("List deepNest", actual.get(6));
 	}
 
 	@Test
