@@ -122,9 +122,15 @@ public class ArgTypeMetaExtractor {
 				String argName = argNameMatcher.group(1);
 				if (argName.matches(".+\\[\\s*\\]")) {
 					// ex. String strArr[] = null;
-					argName = argName.replaceFirst("\\[\\s*\\]",
+					String arrayPart = "";
+					Matcher mat = Pattern.compile("\\[\\s*\\]")
+							.matcher(argName);
+					while (mat.find()) {
+						arrayPart += "[]";
+					}
+					argName = argName.replaceAll("\\[\\s*\\]",
 							StringValue.Empty);
-					argTypeMeta.name = argTypeMeta.name + "[]";
+					argTypeMeta.name = argTypeMeta.name + arrayPart;
 					argTypeMeta.nameInMethodName = new TypeNameConverter(config)
 							.toAvailableInMethodName(argTypeMeta.name);
 				}

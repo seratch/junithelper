@@ -17,6 +17,8 @@ package org.junithelper.core.parser.convert;
 
 import java.io.File;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.junithelper.core.config.Configulation;
 import org.junithelper.core.constant.RegExp;
@@ -63,8 +65,13 @@ public class TypeNameConverter {
 		}
 		// array object
 		boolean isArray = false;
-		if (typeName.matches(".+?\\[\\]")) {
+		String arrayPart = "";
+		if (typeName.matches(".+?\\[\\s*\\]")) {
 			isArray = true;
+			Matcher mat = Pattern.compile("\\[\\s*\\]").matcher(typeName);
+			while (mat.find()) {
+				arrayPart += "[]";
+			}
 			typeName = typeName.replaceAll("\\[\\]", "");
 		}
 		// remove generics
@@ -139,10 +146,13 @@ public class TypeNameConverter {
 		if (destTypeName == null || destTypeName.equals(StringValue.Empty)) {
 			destTypeName = "Object";
 		}
+		if (arrayPart == null || arrayPart.length() == 0) {
+			arrayPart = "[]";
+		}
 		if (isTypeAvailable) {
-			return isArray ? typeName + "[]" : typeName;
+			return isArray ? typeName + arrayPart : typeName;
 		} else {
-			return isArray ? destTypeName + "[]" : destTypeName;
+			return isArray ? destTypeName + arrayPart : destTypeName;
 		}
 	}
 

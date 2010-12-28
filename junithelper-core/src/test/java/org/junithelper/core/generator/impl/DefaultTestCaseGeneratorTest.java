@@ -47,7 +47,7 @@ public class DefaultTestCaseGeneratorTest {
 	public void getNewTestCaseMeta_A$() throws Exception {
 
 		// given
-		String sourceCodeString = "package hoge.foo; import java.util.List; import java.util.Map; public class Sample { public Sample() {}\r\n public Map<String, List<String>> doSomething(String str, long longValue, Map<String,Obeject> map, Map<String,List<String>> nested, List<List<String>> nestedList, String arr[]) throws Throwable { System.out.println(\"aaaa\") } }";
+		String sourceCodeString = "package hoge.foo; import java.util.List; import java.util.Map; public class Sample { public Sample() {}\r\n public Map<String, List<String>> doSomething(String str, long longValue, Map<String,Obeject> map, Map<String,List<String>> nested, List<List<String>> nestedList, String arr[], String arrOfArr[][]) throws Throwable { System.out.println(\"aaaa\") } }";
 		// when
 		ClassMeta targetClassMeta = classMetaExtractor
 				.extract(sourceCodeString);
@@ -72,6 +72,8 @@ public class DefaultTestCaseGeneratorTest {
 		assertEquals(0, argTypes.get(4).generics.size());
 		assertEquals("String[]", argTypes.get(5).name);
 		assertEquals("arr", actual.target.methods.get(0).argNames.get(5));
+		assertEquals("String[][]", argTypes.get(6).name);
+		assertEquals("arrOfArr", actual.target.methods.get(0).argNames.get(6));
 
 		ReturnTypeMeta returnType = actual.target.methods.get(0).returnType;
 		assertEquals("Map", returnType.name);
