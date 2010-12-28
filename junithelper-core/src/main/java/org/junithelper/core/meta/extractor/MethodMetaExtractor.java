@@ -83,7 +83,9 @@ public class MethodMetaExtractor {
 			}
 			// -----------------
 			// skip not method signature
-			String methodSignatureAreaWithoutAccessModifier = trimAccessModifierFromMethodSignatureArea(methodSignatureArea);
+			String methodSignatureAreaWithoutAccessModifier = trimAccessModifierFromMethodSignatureArea(methodSignatureArea
+					.replaceAll("\\s*,\\s*", ",").replaceAll("\\s*<\\s*", "<")
+					.replaceAll("\\s*>", ">"));
 			Matcher matcherGrouping = RegExp.PatternObject.MethodSignatureWithoutAccessModifier_Group
 					.matcher(StringValue.Space
 							+ methodSignatureAreaWithoutAccessModifier);
@@ -104,10 +106,13 @@ public class MethodMetaExtractor {
 			meta.accessModifier = getAccessModifier(methodSignatureArea);
 			// -----------------
 			// return type
-			String returnTypeFull = matcherGrouping.group(1)
-					.replaceAll("final ", StringValue.Empty).split("\\s+")[0]
-					.trim();
+			String grouped = matcherGrouping.group(1);
+			String returnTypeFull = grouped.replaceAll("final ",
+					StringValue.Empty).split("\\s+")[0].trim();
 			// generics
+
+			// remove generics if nested
+			returnTypeFull = trimGenericsIfNested(returnTypeFull);
 			Matcher toGenericsMatcherForReturn = Pattern.compile(
 					RegExp.Generics_Group).matcher(returnTypeFull);
 			while (toGenericsMatcherForReturn.find()) {
@@ -220,7 +225,8 @@ public class MethodMetaExtractor {
 		}
 	}
 
-	String trimAccessModifierFromMethodSignatureArea(String methodSignatureArea) {
+	static String trimAccessModifierFromMethodSignatureArea(
+			String methodSignatureArea) {
 		String regExpForAccessModifier_public = AccessModifierDetector.RegExp.Prefix
 				+ "public" + "\\s+";
 		String regExpForAccessModifier_protected = AccessModifierDetector.RegExp.Prefix
@@ -232,6 +238,41 @@ public class MethodMetaExtractor {
 						StringValue.Space)
 				.replaceAll("\\sfinal\\s", StringValue.Space);
 		return methodSignatureAreaWithoutAccessModifier;
+	}
+
+	static String trimGenericsIfNested(String returnTypeDef) {
+		if (returnTypeDef == null) {
+			return null;
+		}
+		boolean isInsideOfGeneric = false;
+		boolean hasNestedGenerics = false;
+		int len = returnTypeDef.length();
+		for (int i = 0; i < len; i++) {
+			char c = returnTypeDef.charAt(i);
+			if (isInsideOfGeneric) {
+				if (c == '<') {
+					hasNestedGenerics = true;
+					break;
+				}
+				if (c == '>') {
+					isInsideOfGeneric = false;
+				}
+			} else {
+				if (c == '<') {
+					isInsideOfGeneric = true;
+				}
+				if (c == '>') {
+					isInsideOfGeneric = false;
+				}
+			}
+		}
+		if (hasNestedGenerics) {
+			return returnTypeDef
+					.replaceFirst(RegExp.Generics, StringValue.Empty)
+					.replaceAll("<", StringValue.Empty)
+					.replaceAll(">", StringValue.Empty);
+		}
+		return returnTypeDef;
 	}
 
 }

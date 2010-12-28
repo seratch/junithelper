@@ -43,15 +43,29 @@ public class MethodMetaExtractorTest {
 	}
 
 	@Test
-	public void extract_A$String() throws Exception {
-		String sourceCodeString = "package hoge.foo; public class Sample { public Sample() {}\r\n public String doSomething(Integer intVal, long longVal) { System.out.println(\"aaaa\") } }";
+	public void extract_A$String_generics() throws Exception {
+		String sourceCodeString = "package hoge.foo; import java.util.List; import java.util.Map; public class Sample { public Sample() {}\r\n public List<String> doSomething(Integer intVal, long longVal) { System.out.println(\"aaaa\") } }";
 		ClassMeta classMeta = classMetaExtractor.extract(sourceCodeString);
 		target.initialize(classMeta, sourceCodeString);
 		List<MethodMeta> actual = target.extract(sourceCodeString);
 		assertEquals(1, actual.size());
 		assertEquals("doSomething", actual.get(0).name);
 		assertEquals(2, actual.get(0).argNames.size());
-		assertEquals("String", actual.get(0).returnType.name);
+		assertEquals("List<String>", actual.get(0).returnType.name);
+		assertEquals(1, actual.get(0).returnType.generics.size());
+	}
+
+	@Test
+	public void extract_A$String_nestedGenerics() throws Exception {
+		String sourceCodeString = "package hoge.foo; import java.util.List; import java.util.Map; public class Sample { public Sample() {}\r\n public List< Map< String, Object>> doSomething(Integer intVal, long longVal) { System.out.println(\"aaaa\") } }";
+		ClassMeta classMeta = classMetaExtractor.extract(sourceCodeString);
+		target.initialize(classMeta, sourceCodeString);
+		List<MethodMeta> actual = target.extract(sourceCodeString);
+		assertEquals(1, actual.size());
+		assertEquals("doSomething", actual.get(0).name);
+		assertEquals(2, actual.get(0).argNames.size());
+		assertEquals("List", actual.get(0).returnType.name);
+		assertEquals(0, actual.get(0).returnType.generics.size());
 	}
 
 	@Test
@@ -112,7 +126,7 @@ public class MethodMetaExtractorTest {
 		String methodSignatureArea = "} public static void main(String[] args) {";
 		// e.g. : given(mocked.called()).willReturn(1);
 		// when
-		String actual = target
+		String actual = MethodMetaExtractor
 				.trimAccessModifierFromMethodSignatureArea(methodSignatureArea);
 		// then
 		// e.g. : verify(mocked).called();
@@ -120,4 +134,25 @@ public class MethodMetaExtractorTest {
 		assertEquals(expected, actual);
 	}
 
+	@Test
+	public void trimGenericsIfNested_A$String_argNull() throws Exception {
+		// given
+		String returnTypeDef = null;
+		// when
+		String actual = MethodMetaExtractor.trimGenericsIfNested(returnTypeDef);
+		// then
+		String expected = null;
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void trimGenericsIfNested_A$String() throws Exception {
+		// given
+		String returnTypeDef = "List<String,Map<String,String>>";
+		// when
+		String actual = MethodMetaExtractor.trimGenericsIfNested(returnTypeDef);
+		// then
+		String expected = "List";
+		assertEquals(expected, actual);
+	}
 }

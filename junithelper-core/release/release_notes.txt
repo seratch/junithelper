@@ -7,4 +7,4 @@
 
 ** Feature Request
 	* Issue 44:	Supporting args with nested generics in generating template test code
-
+	* Issue 45:	Supporting return type with nested generics in generating template test code

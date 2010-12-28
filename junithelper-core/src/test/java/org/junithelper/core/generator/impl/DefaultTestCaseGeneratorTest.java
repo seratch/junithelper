@@ -10,6 +10,7 @@ import org.junithelper.core.config.JUnitVersion;
 import org.junithelper.core.meta.AccessModifier;
 import org.junithelper.core.meta.ArgTypeMeta;
 import org.junithelper.core.meta.ClassMeta;
+import org.junithelper.core.meta.ReturnTypeMeta;
 import org.junithelper.core.meta.TestCaseMeta;
 import org.junithelper.core.meta.TestMethodMeta;
 import org.junithelper.core.meta.extractor.ClassMetaExtractor;
@@ -44,15 +45,21 @@ public class DefaultTestCaseGeneratorTest {
 
 	@Test
 	public void getNewTestCaseMeta_A$() throws Exception {
-		String sourceCodeString = "package hoge.foo; import java.util.List; import java.util.Map; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue, Map<String,Obeject> map, Map<String,List<String>> nested, List<List<String>> nestedList) throws Throwable { System.out.println(\"aaaa\") } }";
+
+		// given
+		String sourceCodeString = "package hoge.foo; import java.util.List; import java.util.Map; public class Sample { public Sample() {}\r\n public Map<String, List<String>> doSomething(String str, long longValue, Map<String,Obeject> map, Map<String,List<String>> nested, List<List<String>> nestedList) throws Throwable { System.out.println(\"aaaa\") } }";
+		// when
 		ClassMeta targetClassMeta = classMetaExtractor
 				.extract(sourceCodeString);
 		target.initialize(targetClassMeta);
 		TestCaseMeta actual = target.getNewTestCaseMeta();
+
+		// then
 		assertEquals("Sample", actual.target.name);
 		assertEquals(1, actual.target.constructors.size());
 		assertEquals(1, actual.target.methods.size());
 		assertEquals("doSomething", actual.target.methods.get(0).name);
+
 		List<ArgTypeMeta> argTypes = actual.target.methods.get(0).argTypes;
 		assertEquals("String", argTypes.get(0).name);
 		assertEquals("long", argTypes.get(1).name);
@@ -63,6 +70,10 @@ public class DefaultTestCaseGeneratorTest {
 		assertEquals(0, argTypes.get(3).generics.size());
 		assertEquals("List", argTypes.get(4).name);
 		assertEquals(0, argTypes.get(4).generics.size());
+
+		ReturnTypeMeta returnType = actual.target.methods.get(0).returnType;
+		assertEquals("Map", returnType.name);
+
 	}
 
 	@Test
