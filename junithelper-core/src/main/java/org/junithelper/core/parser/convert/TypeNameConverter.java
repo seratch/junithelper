@@ -32,57 +32,57 @@ public class TypeNameConverter {
 		this.config = config;
 	}
 
-	public String toAvailableInMethodName(String arg) {
-		arg = arg.replaceAll(RegExp.Generics, StringValue.Empty);
-		arg = arg.replaceAll("final ", StringValue.Empty);
-		arg = arg.replaceAll("\\.\\.\\.", "Array")
-				.replaceAll("\\[\\]", "Array");
+	public String toAvailableInMethodName(String typeName) {
+		typeName = typeName.replaceAll(RegExp.Generics, StringValue.Empty);
+		typeName = typeName.replaceAll("final ", StringValue.Empty);
+		typeName = typeName.replaceAll("\\.\\.\\.", "Array").replaceAll(
+				"\\[\\]", "Array");
 		// sample name classes imported or full package class defined
 		// ex. java.util.Date, java.sql.Date
-		arg = arg.replaceAll("\\.", StringValue.Empty);
-		arg = arg.trim().split(RegExp.WhiteSpace.Consecutive_OneOrMore_Max)[0];
-		return arg;
+		typeName = typeName.replaceAll("\\.", StringValue.Empty);
+		typeName = typeName.trim().split(
+				RegExp.WhiteSpace.Consecutive_OneOrMore_Max)[0];
+		return typeName;
 	}
 
-	public String toCompilableType(String className, List<String> importedList,
+	public String toCompilableType(String typeName, List<String> importedList,
 			String callerClassPackageName) {
-		return toCompilableType(className, null, importedList,
+		return toCompilableType(typeName, null, importedList,
 				callerClassPackageName);
 	}
 
-	public String toCompilableType(String className, List<String> generics,
+	public String toCompilableType(String typeName, List<String> generics,
 			List<String> importedList, String callerClassPackageName) {
-		if (className == null) {
-			return className;
+		if (typeName == null) {
+			return typeName;
 		}
-		className = className.replaceAll("\\.\\.\\.", "[]");
+		typeName = typeName.replaceAll("\\.\\.\\.", "[]");
 		// defined class with full package
-		if (className.matches(".+?\\..+")) {
-			return className;
+		if (typeName.matches(".+?\\..+")) {
+			return typeName;
 		}
 		// array object
 		boolean isArray = false;
-		if (className.matches(".+?\\[\\]")) {
+		if (typeName.matches(".+?\\[\\]")) {
 			isArray = true;
-			className = className.replaceAll("\\[\\]", "");
+			typeName = typeName.replaceAll("\\[\\]", "");
 		}
 		// remove generics
-		if (className.matches(RegExp.Anything_ZeroOrMore_Min + RegExp.Generics
+		if (typeName.matches(RegExp.Anything_ZeroOrMore_Min + RegExp.Generics
 				+ RegExp.Anything_ZeroOrMore_Min)) {
-			className = className
-					.replaceAll(RegExp.Generics, StringValue.Empty);
+			typeName = typeName.replaceAll(RegExp.Generics, StringValue.Empty);
 		}
 		boolean isTypeAvailable = false;
 		String destTypeName = "Object";
 		try {
-			if (PrimitiveTypeUtil.isPrimitive(className)) {
+			if (PrimitiveTypeUtil.isPrimitive(typeName)) {
 				isTypeAvailable = true;
 				if (!destTypeName.matches(".+?\\[\\]$"))
 					destTypeName = PrimitiveTypeUtil
-							.getTypeDefaultValue(className);
+							.getTypeDefaultValue(typeName);
 			} else {
 				try {
-					Class.forName("java.lang." + className);
+					Class.forName("java.lang." + typeName);
 					isTypeAvailable = true;
 				} catch (Exception ignore) {
 					// check same package class
@@ -92,13 +92,13 @@ public class TypeNameConverter {
 											+ "/"
 											+ callerClassPackageName
 													.replaceAll("\\.", "/"),
-									className + RegExp.FileExtension.JavaFile);
+									typeName + RegExp.FileExtension.JavaFile);
 					if (files != null && files.size() > 0) {
 						isTypeAvailable = true;
 					}
 				}
 				if (!isTypeAvailable)
-					Class.forName(className);
+					Class.forName(typeName);
 			}
 		} catch (Exception e) {
 			// class not found
@@ -107,7 +107,7 @@ public class TypeNameConverter {
 						StringValue.Empty);
 				try {
 					String regexp = ".+?\\."
-							+ className.replaceAll("\\[", "\\\\[").replaceAll(
+							+ typeName.replaceAll("\\[", "\\\\[").replaceAll(
 									"\\]", "\\\\]") + "$";
 					if (importedPackage.matches(regexp)) {
 						isTypeAvailable = true;
@@ -131,16 +131,16 @@ public class TypeNameConverter {
 				}
 				buf.append(">");
 			}
-			className += buf.toString();
+			typeName += buf.toString();
 		}
-		if (className == null || className.equals(StringValue.Empty)) {
-			className = "Object";
+		if (typeName == null || typeName.equals(StringValue.Empty)) {
+			typeName = "Object";
 		}
 		if (destTypeName == null || destTypeName.equals(StringValue.Empty)) {
 			destTypeName = "Object";
 		}
 		if (isTypeAvailable) {
-			return isArray ? className + "[]" : className;
+			return isArray ? typeName + "[]" : typeName;
 		} else {
 			return isArray ? destTypeName + "[]" : destTypeName;
 		}
