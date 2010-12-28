@@ -77,7 +77,7 @@ public class TrimFilterManagerTest {
 		// when
 		String actual = target.doTrimAll(src);
 		// then
-		String expected = "package foo.var;   public class Sample {    public void hoge() {} }";
+		String expected = "package foo.var;  public class Sample {  public void hoge() {} }";
 		assertEquals(expected, actual);
 	}
 

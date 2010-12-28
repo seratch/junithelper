@@ -87,7 +87,8 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 		List<TestMethodMeta> dest = new ArrayList<TestMethodMeta>();
 		String checkTargetSourceCode = TrimFilterUtil
 				.doAllFilters(currentTestCaseSourceCode);
-		// type safe test
+
+		// is testing type safe required
 		if (!checkTargetSourceCode.matches(RegExp.Anything_ZeroOrMore_Min
 				+ "public\\s+void\\s+[^\\s]*type\\("
 				+ RegExp.Anything_ZeroOrMore_Min)) {

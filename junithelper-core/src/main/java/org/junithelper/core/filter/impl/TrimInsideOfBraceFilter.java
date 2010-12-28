@@ -44,15 +44,15 @@ public class TrimInsideOfBraceFilter implements TrimFilter {
 				if (current == '"') {
 					int count = countPreviousContinuedBackslash(src, i, 0);
 					if (count % 2 == 0) {
-						isInsideOfString = (isInsideOfString) ? false : true;
+						isInsideOfString = !isInsideOfString;
 						sb.append(current);
 						continue;
 					}
 				}
-				if (current == '\'') {
+				if (!isInsideOfString && current == '\'') {
 					int count = countPreviousContinuedBackslash(src, i, 0);
 					if (count % 2 == 0) {
-						isInsideOfChar = (isInsideOfChar) ? false : true;
+						isInsideOfChar = !isInsideOfChar;
 						sb.append(current);
 						continue;
 					}
@@ -106,7 +106,7 @@ public class TrimInsideOfBraceFilter implements TrimFilter {
 		return sb.toString();
 	}
 
-	int countPreviousContinuedBackslash(String str,
+	static int countPreviousContinuedBackslash(String str,
 			int currentNotBackslashCharIndex, int count) {
 		Character previous = null;
 		if (currentNotBackslashCharIndex > 0) {
@@ -121,4 +121,5 @@ public class TrimInsideOfBraceFilter implements TrimFilter {
 		}
 		return count;
 	}
+
 }

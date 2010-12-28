@@ -1,6 +1,7 @@
 package org.junithelper.core.meta.extractor;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 
@@ -28,6 +29,21 @@ public class ArgExtractorHelperTest {
 		assertEquals("Map listMap", actual.get(4));
 		assertEquals("List mapList", actual.get(5));
 		assertEquals("List deepNest", actual.get(6));
+	}
+
+	@Test
+	public void trimGenericsAreaIfNestedGenericsExists_A$String()
+			throws Exception {
+		// given
+		String target = "List<Map" + ArgExtractorHelper.NESTED_GENERICS_MARK
+				+ "> aaa";
+		// e.g. : given(mocked.called()).willReturn(1);
+		// when
+		String actual = ArgExtractorHelper
+				.trimGenericsAreaIfNestedGenericsExists(target);
+		// then
+		String expected = "List aaa";
+		assertEquals(expected, actual);
 	}
 
 }

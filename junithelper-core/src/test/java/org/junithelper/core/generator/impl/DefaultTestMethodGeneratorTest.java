@@ -1,6 +1,7 @@
 package org.junithelper.core.generator.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 
@@ -199,8 +200,8 @@ public class DefaultTestMethodGeneratorTest {
 		// when
 		target.appendPreparingArgs(buf, testMethodMeta);
 		// then
-		assertEquals("		String str = null;\r\n		long longValue = 0L;\r\n",
-				buf.toString());
+		assertEquals("		String str = null;\r\n		long longValue = 0L;\r\n", buf
+				.toString());
 	}
 
 	@Test
@@ -440,11 +441,11 @@ public class DefaultTestMethodGeneratorTest {
 		// when
 		// then
 		assertEquals("null", target.getArgValue(testMethodMeta,
-				targetMethodMeta.argTypes.get(0),
-				targetMethodMeta.argNames.get(0)));
+				targetMethodMeta.argTypes.get(0), targetMethodMeta.argNames
+						.get(0)));
 		assertEquals("0L", target.getArgValue(testMethodMeta,
-				targetMethodMeta.argTypes.get(1),
-				targetMethodMeta.argNames.get(1)));
+				targetMethodMeta.argTypes.get(1), targetMethodMeta.argNames
+						.get(1)));
 		assertEquals("new ArrayList<String>()", target.getArgValue(
 				testMethodMeta, targetMethodMeta.argTypes.get(2),
 				targetMethodMeta.argNames.get(2)));
@@ -452,8 +453,8 @@ public class DefaultTestMethodGeneratorTest {
 				testMethodMeta, targetMethodMeta.argTypes.get(3),
 				targetMethodMeta.argNames.get(3)));
 		assertEquals("null", target.getArgValue(testMethodMeta,
-				targetMethodMeta.argTypes.get(4),
-				targetMethodMeta.argNames.get(4)));
+				targetMethodMeta.argTypes.get(4), targetMethodMeta.argNames
+						.get(4)));
 	}
 
 	@Test
@@ -475,11 +476,11 @@ public class DefaultTestMethodGeneratorTest {
 		// when
 		// then
 		assertEquals("null", target.getArgValue(testMethodMeta,
-				targetMethodMeta.argTypes.get(0),
-				targetMethodMeta.argNames.get(0)));
+				targetMethodMeta.argTypes.get(0), targetMethodMeta.argNames
+						.get(0)));
 		assertEquals("0L", target.getArgValue(testMethodMeta,
-				targetMethodMeta.argTypes.get(1),
-				targetMethodMeta.argNames.get(1)));
+				targetMethodMeta.argTypes.get(1), targetMethodMeta.argNames
+						.get(1)));
 		assertEquals("new ArrayList<String>()", target.getArgValue(
 				testMethodMeta, targetMethodMeta.argTypes.get(2),
 				targetMethodMeta.argNames.get(2)));
@@ -510,20 +511,19 @@ public class DefaultTestMethodGeneratorTest {
 		// when
 		// then
 		assertEquals("null", target.getArgValue(testMethodMeta,
-				targetMethodMeta.argTypes.get(0),
-				targetMethodMeta.argNames.get(0)));
+				targetMethodMeta.argTypes.get(0), targetMethodMeta.argNames
+						.get(0)));
 		assertEquals("0L", target.getArgValue(testMethodMeta,
-				targetMethodMeta.argTypes.get(1),
-				targetMethodMeta.argNames.get(1)));
+				targetMethodMeta.argTypes.get(1), targetMethodMeta.argNames
+						.get(1)));
 		assertEquals("new ArrayList<String>()", target.getArgValue(
 				testMethodMeta, targetMethodMeta.argTypes.get(2),
 				targetMethodMeta.argNames.get(2)));
 		assertEquals("new HashMap<String, Object>()", target.getArgValue(
 				testMethodMeta, targetMethodMeta.argTypes.get(3),
 				targetMethodMeta.argNames.get(3)));
-		assertEquals("mocks.createMock(java.util.HashMap.class)",
-				target.getArgValue(testMethodMeta,
-						targetMethodMeta.argTypes.get(4),
+		assertEquals("mocks.createMock(java.util.HashMap.class)", target
+				.getArgValue(testMethodMeta, targetMethodMeta.argTypes.get(4),
 						targetMethodMeta.argNames.get(4)));
 	}
 
@@ -546,20 +546,19 @@ public class DefaultTestMethodGeneratorTest {
 		// when
 		// then
 		assertEquals("null", target.getArgValue(testMethodMeta,
-				targetMethodMeta.argTypes.get(0),
-				targetMethodMeta.argNames.get(0)));
+				targetMethodMeta.argTypes.get(0), targetMethodMeta.argNames
+						.get(0)));
 		assertEquals("0L", target.getArgValue(testMethodMeta,
-				targetMethodMeta.argTypes.get(1),
-				targetMethodMeta.argNames.get(1)));
+				targetMethodMeta.argTypes.get(1), targetMethodMeta.argNames
+						.get(1)));
 		assertEquals("new ArrayList<String>()", target.getArgValue(
 				testMethodMeta, targetMethodMeta.argTypes.get(2),
 				targetMethodMeta.argNames.get(2)));
 		assertEquals("new HashMap<String, Object>()", target.getArgValue(
 				testMethodMeta, targetMethodMeta.argTypes.get(3),
 				targetMethodMeta.argNames.get(3)));
-		assertEquals("context.mock(java.util.HashMap.class)",
-				target.getArgValue(testMethodMeta,
-						targetMethodMeta.argTypes.get(4),
+		assertEquals("context.mock(java.util.HashMap.class)", target
+				.getArgValue(testMethodMeta, targetMethodMeta.argTypes.get(4),
 						targetMethodMeta.argNames.get(4)));
 	}
 
@@ -582,11 +581,11 @@ public class DefaultTestMethodGeneratorTest {
 		// when
 		// then
 		assertEquals("null", target.getArgValue(testMethodMeta,
-				targetMethodMeta.argTypes.get(0),
-				targetMethodMeta.argNames.get(0)));
+				targetMethodMeta.argTypes.get(0), targetMethodMeta.argNames
+						.get(0)));
 		assertEquals("0L", target.getArgValue(testMethodMeta,
-				targetMethodMeta.argTypes.get(1),
-				targetMethodMeta.argNames.get(1)));
+				targetMethodMeta.argTypes.get(1), targetMethodMeta.argNames
+						.get(1)));
 		assertEquals("new ArrayList<String>()", target.getArgValue(
 				testMethodMeta, targetMethodMeta.argTypes.get(2),
 				targetMethodMeta.argNames.get(2)));
@@ -595,9 +594,8 @@ public class DefaultTestMethodGeneratorTest {
 				targetMethodMeta.argNames.get(3)));
 		assertEquals(
 				"this.doSomething_A$String$long$List$Map$javautilHashMap_hashMap",
-				target.getArgValue(testMethodMeta,
-						targetMethodMeta.argTypes.get(4),
-						targetMethodMeta.argNames.get(4)));
+				target.getArgValue(testMethodMeta, targetMethodMeta.argTypes
+						.get(4), targetMethodMeta.argNames.get(4)));
 	}
 
 }

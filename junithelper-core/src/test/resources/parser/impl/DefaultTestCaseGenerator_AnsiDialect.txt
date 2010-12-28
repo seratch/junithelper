@@ -1,5 +1,10 @@
 package hoge.db;
 
+import hoge.db.DBConnectionWrapper;
+import hoge.db.JoinDescriptor;
+import hoge.db.JoinSearchPeer;
+import hoge.db.JoinCondition;
+
 import hoge.exception.ApplicationException;
 import hoge.log.Log;
 import hoge.utils.StringUtils;
