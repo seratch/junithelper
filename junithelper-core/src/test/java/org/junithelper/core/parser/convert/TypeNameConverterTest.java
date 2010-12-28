@@ -40,7 +40,7 @@ public class TypeNameConverterTest {
 	}
 
 	@Test
-	public void toCompilableType_A$String$List$List() throws Exception {
+	public void toCompilableType_A$List$List$String() throws Exception {
 		String[] argList = new String[] { "String", "hoge.foo.Var",
 				"List<String>", "Map<String,Object>", "List<?>", "Map<?,?>" };
 		String[] expectedList = new String[] { "String", "hoge.foo.Var",
@@ -50,15 +50,15 @@ public class TypeNameConverterTest {
 		importedList.add("java.util.Map");
 		for (int i = 0; i < argList.length; i++) {
 			String className = argList[i];
-			String actual = target.toCompilableType(null, className,
-					importedList);
+			String actual = target.toCompilableType(className, importedList,
+					null);
 			String expected = expectedList[i];
 			assertEquals(i + "," + expected + "-" + actual, expected, actual);
 		}
 	}
 
 	@Test
-	public void toCompilableType_A$String$String$List() throws Exception {
+	public void toCompilableType_A$String$List$String() throws Exception {
 		Configulation config = new Configulation();
 		TypeNameConverter target = new TypeNameConverter(config);
 		// given
@@ -67,15 +67,15 @@ public class TypeNameConverterTest {
 		List<String> importedList = new ArrayList<String>();
 		importedList.add("java.io.InputStream");
 		// when
-		String actual = target.toCompilableType(packageName, className,
-				importedList);
+		String actual = target.toCompilableType(className, importedList,
+				packageName);
 		// then
 		String expected = "InputStream";
 		assertEquals(expected, actual);
 	}
 
 	@Test
-	public void toCompilableType_A$String$String$List$List() throws Exception {
+	public void toCompilableType_A$String$List$List$String() throws Exception {
 		Configulation config = null;
 		TypeNameConverter target = new TypeNameConverter(config);
 		// given
@@ -86,8 +86,8 @@ public class TypeNameConverterTest {
 		List<String> importedList = new ArrayList<String>();
 		importedList.add("java.util.List");
 		// when
-		String actual = target.toCompilableType(packageName, className,
-				generics, importedList);
+		String actual = target.toCompilableType(className, generics,
+				importedList, packageName);
 		// then
 		String expected = "List<String>";
 		assertEquals(expected, actual);

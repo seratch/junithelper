@@ -117,8 +117,8 @@ public class MethodMetaExtractor {
 						.split(StringValue.Comma);
 				for (String generic : generics) {
 					generic = new TypeNameConverter(config).toCompilableType(
-							classMeta.packageName, generic,
-							classMeta.importedList).trim();
+							generic, classMeta.importedList,
+							classMeta.packageName).trim();
 					meta.returnType.generics.add(generic);
 				}
 			}
@@ -126,9 +126,10 @@ public class MethodMetaExtractor {
 					StringValue.Empty);
 			if (!returnTypeName.equals("void")) {
 				meta.returnType.name = new TypeNameConverter(config)
-						.toCompilableType(classMeta.packageName,
-								returnTypeName, meta.returnType.generics,
-								classMeta.importedList).trim();
+						.toCompilableType(returnTypeName,
+								meta.returnType.generics,
+								classMeta.importedList, classMeta.packageName)
+						.trim();
 				meta.returnType.nameInMethodName = new TypeNameConverter(config)
 						.toAvailableInMethodName(meta.returnType.name);
 			}

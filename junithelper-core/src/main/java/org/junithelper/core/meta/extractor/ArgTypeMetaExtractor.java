@@ -94,8 +94,8 @@ public class ArgTypeMetaExtractor {
 				// convert to java.lang.Object if self class is included
 				for (String generic : generics) {
 					generic = new TypeNameConverter(config).toCompilableType(
-							classMeta.packageName, generic,
-							classMeta.importedList);
+							generic, classMeta.importedList,
+							classMeta.packageName);
 					argTypeMeta.generics.add(generic);
 				}
 			}
@@ -108,8 +108,8 @@ public class ArgTypeMetaExtractor {
 					.split("\\s+")[0].trim();
 			if (argTypeName != null && !"".equals(argTypeName)) {
 				argTypeMeta.name = new TypeNameConverter(config)
-						.toCompilableType(classMeta.packageName, argTypeName,
-								argTypeMeta.generics, classMeta.importedList);
+						.toCompilableType(argTypeName, argTypeMeta.generics,
+								classMeta.importedList, classMeta.packageName);
 				argTypeMeta.nameInMethodName = new TypeNameConverter(config)
 						.toAvailableInMethodName(argTypeMeta.name);
 				extractedMetaList.add(argTypeMeta);

@@ -44,13 +44,14 @@ public class TypeNameConverter {
 		return arg;
 	}
 
-	public String toCompilableType(String packageName, String className,
-			List<String> importedList) {
-		return toCompilableType(packageName, className, null, importedList);
+	public String toCompilableType(String className, List<String> importedList,
+			String callerClassPackageName) {
+		return toCompilableType(className, null, importedList,
+				callerClassPackageName);
 	}
 
-	public String toCompilableType(String packageName, String className,
-			List<String> generics, List<String> importedList) {
+	public String toCompilableType(String className, List<String> generics,
+			List<String> importedList, String callerClassPackageName) {
 		if (className == null) {
 			return className;
 		}
@@ -89,7 +90,7 @@ public class TypeNameConverter {
 							.searchFilesRecursivelyByName(
 									config.directoryPathOfProductSourceCode
 											+ "/"
-											+ packageName
+											+ callerClassPackageName
 													.replaceAll("\\.", "/"),
 									className + RegExp.FileExtension.JavaFile);
 					if (files != null && files.size() > 0) {

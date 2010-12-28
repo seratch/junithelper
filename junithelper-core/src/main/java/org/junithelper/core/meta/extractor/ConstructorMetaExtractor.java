@@ -153,8 +153,9 @@ public class ConstructorMetaExtractor {
 					// class is included
 					for (String generic : generics) {
 						generic = new TypeNameConverter(config)
-								.toCompilableType(classMeta.packageName,
-										generic, classMeta.importedList);
+								.toCompilableType(generic,
+										classMeta.importedList,
+										classMeta.packageName);
 						argTypeMeta.generics.add(generic);
 					}
 				}
@@ -164,9 +165,10 @@ public class ConstructorMetaExtractor {
 						.trim();
 				if (argTypeName != null && !argTypeName.equals("")) {
 					argTypeMeta.name = new TypeNameConverter(config)
-							.toCompilableType(classMeta.packageName,
-									argTypeName, argTypeMeta.generics,
-									classMeta.importedList);
+							.toCompilableType(argTypeName,
+									argTypeMeta.generics,
+									classMeta.importedList,
+									classMeta.packageName);
 					argTypeMeta.nameInMethodName = new TypeNameConverter(config)
 							.toAvailableInMethodName(argTypeMeta.name);
 					meta.argTypes.add(argTypeMeta);
