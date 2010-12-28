@@ -1,0 +1,254 @@
+package hoge;
+
+import hoge.exception.ApplicationException;
+import hoge.log.Log;
+import hoge.session.ClientSideUserState;
+import hoge.utils.ServletUtils;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+public class SimpleHttpClient implements Runnable, HttpClient {
+    private static Log log = new Log(SimpleHttpClient.class);
+    
+//    private static boolean IS_JDK15 = true; // start with true, then false if an exception
+    
+    private String url;
+    private Map bodyParams;
+    private List cookieHeaders;
+    private boolean isPost;
+    private String encoding;
+
+//    private Integer connectTimeout;
+//    private Integer readTimeout;
+
+    public SimpleHttpClient() {
+        this.bodyParams = new HashMap();        
+        this.cookieHeaders = new ArrayList();        
+    }
+
+    public void setRequestEncoding(String encoding) {
+        this.encoding = encoding;
+    }
+
+    public void setPost(boolean isPost) {
+        this.isPost = isPost;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public void setConnectTimeout(int timeout) {
+//        this.connectTimeout = new Integer(timeout);
+    }
+    public void setReadTimeout(int timeout) {
+//        this.readTimeout = new Integer(timeout);
+    }
+    
+    public HttpResponse get() {
+        HttpURLConnection conn = null;
+        try {
+            if (this.encoding == null) {
+                this.encoding = "ISO-8859-1";
+            }
+            String workingURL = this.url;
+            if (!this.isPost) {
+                workingURL = writeBodyString(this.url, this.bodyParams, this.encoding);
+            }
+            
+            
+            
+            int statusCode = 302; // act like a redirect on the first request
+            Map headers = new HashMap();
+            ByteArrayOutputStream buffer = null;
+            while (statusCode == 302) {
+                log.debug("SimpleHttpClient: Accessing " + 
+                        workingURL + ", method=" + (this.isPost ? "POST" : "GET"));
+                URL location = new URL(workingURL);
+                HttpURLConnection.setFollowRedirects(true);
+                conn = (HttpURLConnection) location.openConnection();
+                conn.setDoInput(true);
+                conn.setInstanceFollowRedirects(true);
+//                if (IS_JDK15) {
+//                    try {
+//                        conn.setUseCaches(false);
+//                        if (this.connectTimeout != null) {
+//                            conn.setConnectTimeout(this.connectTimeout.intValue());
+//                        }
+//                        if (this.readTimeout != null) {
+//                            conn.setReadTimeout(this.readTimeout.intValue());
+//                        }
+//                    } catch (Throwable err) {
+//                        log.debug("JDK1.5 methods unavailable for " +
+//                                "HttpURLConnection");
+//                        IS_JDK15 = false;
+//                    }
+//                }
+                
+                // Write cookies
+                for (Iterator i = this.cookieHeaders.iterator(); i.hasNext(); ) {
+                    conn.addRequestProperty("Cookie", (String) i.next());
+                }
+
+                if (this.isPost) {
+                    conn.setDoOutput(true);
+                    String content = writeBodyString("", this.bodyParams, this.encoding);
+                    conn.setRequestMethod("POST");
+                    conn.setRequestProperty("Content-length", "" + content.length());
+
+                    // Write in 8859_1, because we've already url encoded
+                    OutputStream body = conn.getOutputStream();
+                    body.write(content.getBytes("8859_1"));
+                    body.close();
+                } else {
+                    conn.setRequestMethod("GET");
+                    conn.setDoOutput(false);
+                }
+
+                // Get results
+                statusCode = conn.getResponseCode();
+                if (statusCode == 302) {
+                    workingURL = conn.getHeaderField("Location");
+                    log.fullDebug(
+                            "SimpleHttpClient received a redirect to " + 
+                            workingURL);
+                    continue;
+                }
+                
+                InputStream inContent = conn.getInputStream();
+                int contentLength = conn.getContentLength();
+                headers = conn.getHeaderFields();
+                buffer = new ByteArrayOutputStream();
+                int bytesRead = 0;
+                int read = 0;
+                byte readBuffer[] = new byte[1024];
+
+                // Read until we've exhausted the stream
+                while (((contentLength == -1) || (bytesRead <= contentLength)) && 
+                       ((read = inContent.read(readBuffer)) != -1)) {
+                    buffer.write(readBuffer, 0, read);
+                    bytesRead += read;
+                }
+                inContent.close();
+
+                if ((contentLength >= 0) && (contentLength != bytesRead)) {
+                    log.warning("WARNING: SimpleHttpClient had a " + 
+                               "mismatch between contentLength=" + contentLength
+                               + " and bytesRead=" + bytesRead + " for URL: " + 
+                               this.url);
+                }
+
+                if (statusCode != 200) {
+                    log.warning("SimpleHttpClient returned response " +
+                            "code " + statusCode + " for url " + this.url + 
+                            " - response follows:\n" + 
+                            new String(buffer.toByteArray(), this.encoding));
+                    throw new ApplicationException("SimpleHttpClient returned " +
+                            "response code " + statusCode + " for url " + this.url);
+                } else {
+                    log.fullDebug("SimpleHttpClient successfully received " +
+                            buffer.size() + " bytes for url " + this.url + 
+                            " - response follows:\n" + 
+                            new String(buffer.toByteArray(), this.encoding));
+                }
+            }
+            return new HttpResponse(buffer.toByteArray(), statusCode, headers);
+        } catch (IOException err) {
+            throw new ApplicationException("Error getting content from URL: " + this.url, err);
+        } finally {
+            if (conn != null) {
+                try {conn.disconnect();} catch (Throwable err) {}
+            }
+        }
+    }
+
+    /**
+     * Make a url-encoded string from the parameter set
+     */
+    public static String writeBodyString(String prefix, 
+            Map inputParams, String encoding) throws IOException {
+        List paramList = new ArrayList();
+
+        for (Iterator i = inputParams.keySet().iterator(); i.hasNext(); ) {
+            String key = (String) i.next();
+            Object value = inputParams.get(key);
+            if (value instanceof String[]) {
+                String multipleValues[] = (String[]) value;
+                for (int n = 0; n < multipleValues.length; n++) {
+                    paramList.add(new String[] {key, multipleValues[n]});                
+                }
+            } else if (value != null) {
+                paramList.add(new String[] {key, "" + value});
+            }
+        }
+
+        String params[][] = (String[][]) paramList.toArray(new String[0][0]);
+        String bodyString = ServletUtils.addParamsToURL(prefix, params, 
+                encoding, false);
+        if (bodyString.startsWith("?")) {
+            return bodyString.substring(1);
+        } else {
+            return bodyString;
+        }
+    }
+
+    /**
+     * Thread run() implementation. This executes get(), and discards the results
+     * but logs any errors
+     */
+    public void run() {
+        try {
+            HttpResponse response = get();
+            log.fullDebug("SimpleHttpClient returned: " + 
+                    response.getContentString());
+        } catch (Throwable err) {
+            log.error("ERROR in SimpleHttpClient: url=" + 
+                    this.url, err);
+        }
+    }
+
+    public void getThreaded() {
+        Thread thread = new Thread(this, "SimpleHttpClient:" + this.url);
+        thread.setDaemon(true);
+        thread.start();
+    }
+    
+    public void addRequestParameter(String name, String value) {
+        Object oldValue = this.bodyParams.get(name);
+        if (oldValue == null) {
+            this.bodyParams.put(name, value);
+        } else {
+            String oldValueArr[] = null;
+            if (oldValue instanceof String[]) {
+                oldValueArr = (String[]) oldValue;
+            } else {
+                oldValueArr = new String[] {"" + oldValue};
+            }
+            String newValueArr[] = new String[oldValueArr.length + 1];
+            System.arraycopy(oldValueArr, 0, newValueArr, 0, oldValueArr.length);
+            newValueArr[oldValueArr.length] = value;
+            this.bodyParams.put(name, newValueArr);
+        }
+    }
+    
+    public void setRequestParameters(Map parameters) {
+        if (parameters != null) {
+            this.bodyParams.putAll(parameters);
+        }
+    }
+
+    public void addCookie(ClientSideUserState cookie) {
+        log.warning("WARNING: Cookie support not implemented in " +
+                "SimpleHttpClient. Ignoring cookie: " + cookie);
+    }
+}

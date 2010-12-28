@@ -73,6 +73,27 @@ public class ConstructorMetaExtractorTest {
 	}
 
 	@Test
+	public void extract_A$String_issue47() throws Exception {
+		Configulation config = new Configulation();
+		ConstructorMetaExtractor target = new ConstructorMetaExtractor(config);
+		// given
+		String sourceCodeString = "import java.util.Map; public class HttpResponse {\r\n    private byte content[];\r\n    private int statusCode; \r\n    private Map headers;\r\n    public HttpResponse(byte content[], int statusCode, Map headers) {\r\n        this.content = content;\r\n        this.statusCode = statusCode;\r\n        this.headers = headers;\r\n    }\r\n\r\n";
+		target.initialize(sourceCodeString);
+		// e.g. : given(mocked.called()).willReturn(1);
+		// when
+		List<ConstructorMeta> actual = target.extract(sourceCodeString);
+		// then
+		// e.g. : verify(mocked).called();
+		assertEquals(1, actual.size());
+		assertEquals("byte[]", actual.get(0).argTypes.get(0).name);
+		assertEquals("int", actual.get(0).argTypes.get(1).name);
+		assertEquals("Map", actual.get(0).argTypes.get(2).name);
+		assertEquals("content", actual.get(0).argNames.get(0));
+		assertEquals("statusCode", actual.get(0).argNames.get(1));
+		assertEquals("headers", actual.get(0).argNames.get(2));
+	}
+
+	@Test
 	public void getAccessModifier_A$String() throws Exception {
 		Configulation config = new Configulation();
 		ConstructorMetaExtractor target = new ConstructorMetaExtractor(config);

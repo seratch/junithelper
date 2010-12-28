@@ -1,0 +1,347 @@
+package hoge.db;
+
+import hoge.exception.ApplicationException;
+import hoge.log.Log;
+import hoge.utils.StringUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class AnsiDialect implements SQLDialect {
+    private static Log log = new Log(AnsiDialect.class);
+    
+    static final String EMULATE_SEQUENCE_GET_SQL = 
+        "SELECT last_used_value FROM sequence_emulator " 
+        + "WHERE name = ?";
+    final String EMULATE_SEQUENCE_INSERT_SQL = 
+        "INSERT INTO sequence_emulator (name, last_used_value) "
+        + "VALUES (?, 0)";
+    final String EMULATE_SEQUENCE_UPDATE_SQL = 
+        "UPDATE sequence_emulator "
+        + "SET last_used_value = last_used_value + 1 " 
+        + "WHERE name = ?"
+        + "AND last_used_value = ?";
+
+    /**
+     * Makes a sql expression matching the case-when style syntax
+     */
+    public String makeWhenSQL(String checkExpression, 
+            String checkOperator, String checkValue,
+            String trueExpression, String falseExpression) {
+        return "CASE WHEN " + checkExpression + " " 
+               + checkOperator + " " + checkValue 
+               + " THEN " + trueExpression
+               + " ELSE " + falseExpression + " END";
+    }
+
+    public String makeWhenSQL(String checkExpression,
+            String trueExpression, String falseExpression) {
+        return "CASE WHEN " + checkExpression 
+               + " THEN " + trueExpression
+               + " ELSE " + falseExpression + " END";
+    }
+
+    protected Connection getSequenceConnection(DBConnectionWrapper dbConn) throws SQLException {
+        return dbConn.getConnection(true);
+    }
+
+    protected void releaseSequenceConnection(DBConnectionWrapper dbConn, Connection conn) throws SQLException {
+        // do nothing - rely on the normal closing to release this
+    }
+    
+    /**
+     * Use standard syntax to select from a sequence
+     */
+    public Long getSequenceValue(DBConnectionWrapper dbConn, 
+            String sequenceName) throws SQLException {
+        
+        Connection conn = null;
+        PreparedStatement qryGet = null;
+        ResultSet rstGet = null;
+        try {
+            conn = getSequenceConnection(dbConn);
+            
+            String sql = "SELECT nextval('" + sequenceName + "')";
+            qryGet = conn.prepareStatement(sql);
+            rstGet = qryGet.executeQuery();
+
+            Long sequenceValue = null;
+
+            if (rstGet.next()) {
+                sequenceValue = new Long(rstGet.getLong(1));
+            }
+
+            rstGet.close();
+            rstGet = null;
+            qryGet.close();
+            qryGet = null;
+
+            dbConn.logExecutedSQL(createLogStatement(sql, new Object[0], 0), true);
+            return sequenceValue;
+        } finally {
+            if (rstGet != null) {
+                try {rstGet.close();} catch (SQLException err) {}
+                rstGet = null;
+            }
+            if (qryGet != null) {
+                try {qryGet.close();} catch (SQLException err) {}
+                qryGet = null;
+            }
+            if (conn != null) {
+                releaseSequenceConnection(dbConn, conn);
+                conn = null;
+            }
+        }
+        
+    }
+    
+    /**
+     * Emulate sequences using the sequence_emulator table.
+     */
+    protected Long getEmulatedSequenceValue(DBConnectionWrapper dbConn, 
+            String sequenceName) throws SQLException {
+        Long sequenceValue = null;
+
+        Connection conn = null;
+        PreparedStatement qryGet = null;
+        PreparedStatement qryInsert = null;
+        PreparedStatement qryUpdate = null;
+        ResultSet rstGet = null;
+        
+        try {
+            conn = getSequenceConnection(dbConn);
+            
+            // Set up queries
+            qryGet = conn.prepareStatement(
+                    EMULATE_SEQUENCE_GET_SQL);
+            qryInsert = conn.prepareStatement(
+                    EMULATE_SEQUENCE_INSERT_SQL);
+            qryUpdate = conn.prepareStatement(
+                    EMULATE_SEQUENCE_UPDATE_SQL);
+
+            conn.setAutoCommit(true);
+            qryGet.setString(1, sequenceName);
+            qryInsert.setString(1, sequenceName);
+            qryUpdate.setString(1, sequenceName);
+
+            boolean continueFlag = true;
+            long lastUsed = 0;
+
+            while (continueFlag) {
+                log.frameworkDebug("Getting sequence value for " + sequenceName);
+
+                // Get value from the table
+                rstGet = qryGet.executeQuery();
+                dbConn.logExecutedSQL(createLogStatement(EMULATE_SEQUENCE_GET_SQL, 
+                        new Object[] {sequenceName}, 1), false);
+
+                lastUsed = -1;
+
+                if (rstGet.next()) {
+                    lastUsed = rstGet.getLong(1);
+                }
+
+                rstGet.close();
+                rstGet = null;
+
+                // If it was not there, insert a blank row
+                if (lastUsed == -1) {
+                    qryInsert.executeUpdate();
+                    dbConn.logExecutedSQL(createLogStatement(EMULATE_SEQUENCE_INSERT_SQL, 
+                            new Object[] {sequenceName}, 1), true);
+                    lastUsed = 0;
+                }
+
+                // Update the last used value
+                qryUpdate.setLong(2, lastUsed);
+
+                int rowsAffected = qryUpdate.executeUpdate();
+                dbConn.logExecutedSQL(createLogStatement(EMULATE_SEQUENCE_UPDATE_SQL, 
+                        new Object[] {sequenceName, new Long(lastUsed)}, 2), true);
+
+                continueFlag = (rowsAffected != 1);
+            }
+
+            sequenceValue = new Long(lastUsed + 1);
+            qryGet.close();
+            qryGet = null;
+            qryInsert.close();
+            qryInsert = null;
+            qryUpdate.close();
+            qryUpdate = null;
+
+            return sequenceValue;
+            
+        } finally {
+            if (rstGet != null) {
+                try {rstGet.close();} catch (SQLException err) {}
+                rstGet = null;
+            }
+            if (qryGet != null) {
+                try {qryGet.close();} catch (SQLException err) {}
+                qryGet = null;
+            }
+            if (qryInsert != null) {
+                try {qryInsert.close();} catch (SQLException err) {}
+                qryInsert = null;
+            }
+            if (qryUpdate != null) {
+                try {qryUpdate.close();} catch (SQLException err) {}
+                qryUpdate = null;
+            }
+            if (conn != null) {
+                releaseSequenceConnection(dbConn, conn);
+                conn = null;
+            }
+        }
+    }
+    
+    public String makeJoinFromClause(String prefix, 
+            JoinDescriptor join, JoinSearchPeer caller) {
+        
+        // Get the peers we want
+        String oneClause = "";
+        String twoClause = caller.fromClauseFromPeer(join.getPeerTwo(), 
+                join.getAliasTwo(), prefix);
+
+        // Recurse through the nested joins
+        if (join.getNestedJoin() != null) { 
+            oneClause = makeJoinFromClause(prefix, 
+                    join.getNestedJoin(), caller);
+        } else if (join.getPeerOne() != null) {
+            oneClause = caller.fromClauseFromPeer(join.getPeerOne(), 
+                    join.getAliasOne(), prefix);
+        } else {
+            return twoClause;
+        }   
+
+        return makeJoinFromClause(oneClause, twoClause,
+                join.getJoinType(), join.getConditions(), 
+                prefix, caller);
+        
+    }
+    
+    protected String makeJoinFromClause(String oneClause, String twoClause, 
+            String joinType, JoinCondition conditions[],
+            String prefix, JoinSearchPeer caller) {
+        
+        StringBuffer fromSQL = new StringBuffer();
+        
+        fromSQL.append(oneClause).append(" ")
+                       .append(joinType)
+                       .append(" ")
+                       .append(twoClause);
+
+        for (int j = 0; j < conditions.length; j++) {
+            fromSQL.append((j == 0) ? " ON " : " AND ");
+
+            String joinField1 = caller.getFieldName(prefix, 
+                    conditions[j].getPeerAliasOne(), 
+                    conditions[j].getFieldOne());
+            String joinField2 = caller.getFieldName(prefix, 
+                    conditions[j].getPeerAliasTwo(), 
+                    conditions[j].getFieldTwo());
+            if (joinField1 == null) {
+                throw new ApplicationException("Join field " +
+                        "1 not found");
+            } else if (joinField2 == null) {
+                throw new ApplicationException("Join field " +
+                        "2 not found");
+            }
+            
+            fromSQL.append(joinField1)
+                   .append(" = ")
+                   .append(joinField2);
+        }
+
+        return fromSQL.toString();
+        
+    }
+    
+    public String makeJoinWhereClause(String prefix, 
+            JoinDescriptor join, JoinSearchPeer caller) {
+        return "";
+    }
+
+    public String makeFromPhrase(String tableName, String alias){
+        return tableName + " AS " + alias;
+    }
+
+    public String makeRowLimitedSQL(String inputSQL, long maxRows) {
+        return inputSQL;
+    }
+    
+    public int getMaxQueryParameterCount() {
+        return 4096;
+    }
+    
+    public int getMaxQuerySQLLength() {
+        return 32768;
+    }
+    
+    public String createLogStatement(String parameterSQL, Object parameters[], int paramCount) {
+        StringBuffer outLog = new StringBuffer();
+        int checkedUntil = 0;
+        for (int n = 0; n < paramCount; n++) {
+            int variablePos = parameterSQL.indexOf('?', Math.min(checkedUntil, parameterSQL.length()));
+            if (variablePos == -1) {
+                throw new ApplicationException("Error in logging: parameter count = " 
+                        + paramCount + ", but there are not enough variable markers: "
+                        + parameterSQL);
+            }
+            outLog.append(parameterSQL.substring(checkedUntil, variablePos))
+                  .append(encodeParameterForLogging(parameters[n]));
+            checkedUntil = variablePos + 1;
+        }
+        if (checkedUntil < parameterSQL.length()) {
+            outLog.append(parameterSQL.substring(checkedUntil));
+        }
+        return outLog.toString();
+    }
+
+    protected static final DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    
+    protected String encodeParameterForLogging(Object parameter) {
+        if (parameter == null) {
+            return "NULL";
+        } else if (parameter instanceof Long) {
+            return ((Long) parameter).longValue() + "";
+        } else if (parameter instanceof Integer) {
+            return ((Integer) parameter).intValue() + "";
+        } else if (parameter instanceof Float) {
+            return ((Float) parameter).floatValue() + "";
+        } else if (parameter instanceof Double) {
+            return ((Double) parameter).doubleValue() + "";
+        } else if (parameter instanceof Date) {
+            synchronized (sdf) {
+               return "'" + sdf.format((Date) parameter) + "'"; 
+            }
+        } else {
+            // Assume it must be a string, so escape it
+            return "'" + escapeStringParameterForLogging("" + parameter) + "'";
+        }
+    }
+    
+    protected String escapeStringParameterForLogging(String input) {
+        return StringUtils.stringReplace(input, new String[][] {
+                {"'", "\\'"}, {"\n", "\\n"}, {"\r", "\\r"}, {"??", "\\??"}
+        });
+    }
+
+    public boolean supportsAutonumberColumns() {
+        return false;
+    }
+
+    public String makeUppercaseFunction(String fieldName) {
+        return "UPPER(" + fieldName + ")";
+    }
+    
+    public String makeDateFormatFunction(String fieldName, String dateFormat) {
+        return "TO_CHAR(" + fieldName + ", '" + dateFormat + "')";
+    }
+}

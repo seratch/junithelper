@@ -40,7 +40,7 @@ public class ImportedListExtractor {
 		int len = splittedArray.length;
 		for (int i = 1; i < len; i++) {
 			String each = splittedArray[i].trim();
-			if (each.matches("\\s*(static)*.+?;")) {
+			if (each.matches("\\s*(static)*[^;]+?;")) {
 				dest.add(each.replaceAll(";", ""));
 			} else if (each.matches("\\s*(static)*.+?;.+")) {
 				dest.add(each.split(";")[0]);

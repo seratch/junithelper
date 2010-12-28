@@ -80,11 +80,15 @@ public class ConstructorMetaExtractor {
 			// method signature area without access modifier
 			String methodSignatureAreaWithoutAccessModifier = trimAccessModifierFromMethodSignatureArea(methodSignatureArea);
 			String matchesConstructors = RegExp.Anything_ZeroOrMore_Min
-					+ RegExp.WhiteSpace.Consecutive_ZeroOrMore_Max
-					+ classMeta.name + "\\(([^\\)]*?)\\)"
-					+ RegExp.WhiteSpace.Consecutive_ZeroOrMore_Max
-					+ "(throws\\s.+)*.*?"
-					+ RegExp.WhiteSpace.Consecutive_ZeroOrMore_Max + "\\{.*";
+					+ RegExp.WhiteSpace.Consecutive_OneOrMore_Max
+					+ classMeta.name + "\\(" + RegExp.Anything_ZeroOrMore_Min
+					+ "\\)" + RegExp.Anything_ZeroOrMore_Min;
+			// String matchesConstructors = RegExp.Anything_ZeroOrMore_Min
+			// + RegExp.WhiteSpace.Consecutive_ZeroOrMore_Max
+			// + classMeta.name + "\\(([^\\)]*?)\\)"
+			// + RegExp.WhiteSpace.Consecutive_ZeroOrMore_Max
+			// + "(throws\\s.+)*.*?"
+			// + RegExp.WhiteSpace.Consecutive_ZeroOrMore_Max + "\\{.*";
 			if (!methodSignatureAreaWithoutAccessModifier
 					.matches(matchesConstructors)) {
 				continue;
@@ -106,42 +110,13 @@ public class ConstructorMetaExtractor {
 			}
 			// -----------------
 			// args
-			String args = constructorMatcher.group(1);
-			// generics
-			String[] tmpArr = args.split(StringValue.Comma);
-			int tmpArrLen = tmpArr.length;
-			List<String> tmpArrList = new ArrayList<String>();
-			String buf = StringValue.Empty;
-			for (int i = 0; i < tmpArrLen; i++) {
-				String element = tmpArr[i].trim();
-				// ex. List<String>
-				if (element.matches(".+?<.+?>.+")) {
-					tmpArrList.add(element);
-					continue;
-				}
-				// ex. Map<String
-				if (element.matches(".+?<.+")) {
-					buf += element;
-					continue;
-				}
-				// ex. (Map<String,) Object>
-				if (element.matches(".+?>.+")) {
-					String result = buf + StringValue.Comma + element;
-					tmpArrList.add(result);
-					buf = StringValue.Empty;
-					continue;
-				}
-				if (!buf.equals(StringValue.Empty)) {
-					buf += StringValue.Comma + element;
-					continue;
-				}
-				tmpArrList.add(element);
-			}
-			String[] argArr = tmpArrList.toArray(new String[0]);
-			int argArrLen = argArr.length;
+			String argsDefAreaString = constructorMatcher.group(1);
+			List<String> argArr = ArgExtractorHelper
+					.getArgListFromArgsDefAreaString(argsDefAreaString);
+			int argArrLen = argArr.size();
 			for (int i = 0; i < argArrLen; i++) {
 				ArgTypeMeta argTypeMeta = new ArgTypeMeta();
-				String argTypeFull = argArr[i];
+				String argTypeFull = argArr.get(i);
 				Matcher toGenericsMatcher = Pattern.compile(
 						RegExp.Generics_Group).matcher(argTypeFull);
 				while (toGenericsMatcher.find()) {
@@ -175,7 +150,23 @@ public class ConstructorMetaExtractor {
 					Matcher nameMatcher = RegExp.PatternObject.MethodArg_Group
 							.matcher(argTypeFull);
 					if (nameMatcher.find()) {
-						meta.argNames.add(nameMatcher.group(1));
+						String argName = nameMatcher.group(1);
+						if (argName.matches(".+\\[\\s*\\]")) {
+							// ex. String strArr[] = null;
+							String arrayPart = "";
+							Matcher mat = Pattern.compile("\\[\\s*\\]")
+									.matcher(argName);
+							while (mat.find()) {
+								arrayPart += "[]";
+							}
+							argName = argName.replaceAll("\\[\\s*\\]",
+									StringValue.Empty);
+							argTypeMeta.name = argTypeMeta.name + arrayPart;
+							argTypeMeta.nameInMethodName = new TypeNameConverter(
+									config)
+									.toAvailableInMethodName(argTypeMeta.name);
+						}
+						meta.argNames.add(argName);
 					} else {
 						meta.argNames.add("constructorArg" + i);
 					}

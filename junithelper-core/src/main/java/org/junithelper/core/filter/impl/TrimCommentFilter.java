@@ -25,9 +25,10 @@ public class TrimCommentFilter implements TrimFilter {
 		if (src == null) {
 			return null;
 		}
-		String withoutLineComments = src.replaceFirst("^[\\s\\t]*//[^\n]+",
-				StringValue.Space).replaceAll("\n[\\s\\t]*//[^\n]+",
-				StringValue.Space);
+		String withoutLineComments = src
+				.replaceFirst("^[\\s\\t]*//[^\n]+", StringValue.Space)
+				.replaceFirst("^(.+)//[^\n]+", "$1")
+				.replaceAll("\n(.*)//[^\n]+", "$1");
 		String withoutLineBreak = withoutLineComments.replaceAll("\r|\n",
 				StringValue.Empty);
 		String withoutComments = withoutLineBreak.replaceAll("/\\*.*?\\*/",

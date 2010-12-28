@@ -1,0 +1,141 @@
+
+public class Log {
+
+    private String sourceClassName;
+    private LogBackend writeStreams[];
+    private int highestLogLevel = Logger.MAX;
+    private long loggerLastInitializedTimestamp = 0L; // used for checking if the main logger has been re-init'd
+    
+    public Log(Class sourceClass) {
+        this(sourceClass.getName());
+    }
+    
+    public Log(String sourceClassName) {
+        this.sourceClassName = sourceClassName;
+    }
+ 
+    private void logInternal(int level, String message, Throwable error) {
+        LogBackend streams[] = this.writeStreams;
+        
+        // Check once unsync'd, and if different check again (to avoid unnecessary sync)
+        if ((this.loggerLastInitializedTimestamp != Logger.getLastInitializedTimestamp()) || (streams == null)) {
+            // Logger refresh detected - block and re-cache 
+            synchronized (this) {
+                // Check again, in case we have queued up requests on this sync block
+                long masterTimestamp = Logger.getLastInitializedTimestamp();
+                if ((this.loggerLastInitializedTimestamp != masterTimestamp) || (this.writeStreams == null)) {
+                    this.writeStreams = Logger.getLogStreams(this.sourceClassName);
+                    
+                    // Find the highest log level
+                    this.highestLogLevel = Logger.MIN;
+                    for (int n = 0; n < this.writeStreams.length; n++) {
+                        this.highestLogLevel = Math.max(this.highestLogLevel, 
+                                this.writeStreams[n].getCurrentLogLevel());
+                    }
+                    
+                    this.loggerLastInitializedTimestamp = masterTimestamp;
+                }
+                streams = this.writeStreams;
+            }
+        }
+        
+        // Don't even bother if the level is lower than the lowest for this class
+        if (this.highestLogLevel >= level) {
+            // Write out to each stream
+            for (int n = 0; n < streams.length; n++) {
+                LogBackend stream = streams[n];
+                if ((stream != null) && (level <= stream.getCurrentLogLevel())) {
+                    stream.log(level, message, error, sourceClassName, null, 2, Log.class.getName());
+                }
+            }
+        }
+    }
+    
+    public void log(int level, String message) {
+        logInternal(level, message, null);
+    }
+
+    public void log(int level, String message, Throwable error) {
+        logInternal(level, message, error);
+    }
+    
+    public void min(String message) {
+        logInternal(Logger.MIN, message, null);
+    }
+    
+    public void min(String message, Throwable err) {
+        logInternal(Logger.MIN, message, err);
+    }
+    
+    public void error(String message) {
+        logInternal(Logger.ERROR, message, null);
+    }
+    
+    public void error(String message, Throwable err) {
+        logInternal(Logger.ERROR, message, err);
+    }
+    
+    public void warning(String message) {
+        logInternal(Logger.WARNING, message, null);
+    }
+    
+    public void warning(String message, Throwable err) {
+        logInternal(Logger.WARNING, message, err);
+    }
+    
+    public void info(String message) {
+        logInternal(Logger.INFO, message, null);
+    }
+    
+    public void info(String message, Throwable err) {
+        logInternal(Logger.INFO, message, err);
+    }
+    
+    public void speed(String message) {
+        logInternal(Logger.SPEED, message, null);
+    }
+    
+    public void speed(String message, Throwable err) {
+        logInternal(Logger.SPEED, message, err);
+    }
+    
+    public void debug(String message) {
+        logInternal(Logger.DEBUG, message, null);
+    }
+    
+    public void debug(String message, Throwable err) {
+        logInternal(Logger.DEBUG, message, err);
+    }
+    
+    public void fullDebug(String message) {
+        logInternal(Logger.FULL_DEBUG, message, null);
+    }
+    
+    public void fullDebug(String message, Throwable err) {
+        logInternal(Logger.FULL_DEBUG, message, err);
+    }
+    
+    public void frameworkDebug(String message) {
+        logInternal(Logger.FRAMEWORK_DEBUG, message, null);
+    }
+    
+    public void frameworkDebug(String message, Throwable err) {
+        logInternal(Logger.FRAMEWORK_DEBUG, message, err);
+    }
+    
+    public void stylesheetFull(String message) {
+        logInternal(Logger.STYLESHEET_FULL, message, null);
+    }
+    
+    public void stylesheetFull(String message, Throwable err) {
+        logInternal(Logger.STYLESHEET_FULL, message, err);
+    }
+    
+    public void max(String message) {
+        logInternal(Logger.MAX, message, null);
+    }
+    
+    public void max(String message, Throwable err) {
+        logInternal(Logger.MAX, message, err);
+    }
+}

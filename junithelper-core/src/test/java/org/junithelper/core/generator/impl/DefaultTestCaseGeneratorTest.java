@@ -118,6 +118,67 @@ public class DefaultTestCaseGeneratorTest {
 	}
 
 	@Test
+	public void getNewTestCaseMeta_A$_Log() throws Exception {
+		String encoding = UniversalDetectorUtil
+				.getDetectedEncoding(IOUtil
+						.getResourceAsStream("parser/impl/DefaultTestCaseGenerator_Log.txt"));
+		String sourceCodeString = IOUtil
+				.readAsString(
+						IOUtil.getResourceAsStream("parser/impl/DefaultTestCaseGenerator_Log.txt"),
+						encoding);
+		ClassMeta targetClassMeta = classMetaExtractor
+				.extract(sourceCodeString);
+		target.initialize(targetClassMeta);
+		TestCaseMeta actual = target.getNewTestCaseMeta();
+		assertEquals("Log", actual.target.name);
+		assertEquals(2, actual.target.constructors.size());
+		assertEquals("Class",
+				actual.target.constructors.get(0).argTypes.get(0).name);
+		assertEquals("String",
+				actual.target.constructors.get(1).argTypes.get(0).name);
+		assertEquals(23, actual.target.methods.size());
+	}
+
+	@Test
+	public void getNewTestCaseSourceCode_A$_SimpleHttpClient() throws Exception {
+		String encoding = UniversalDetectorUtil
+				.getDetectedEncoding(IOUtil
+						.getResourceAsStream("parser/impl/DefaultTestCaseGenerator_SimpleHttpClient.txt"));
+		String sourceCodeString = IOUtil
+				.readAsString(
+						IOUtil.getResourceAsStream("parser/impl/DefaultTestCaseGenerator_SimpleHttpClient.txt"),
+						encoding);
+		ClassMeta targetClassMeta = classMetaExtractor
+				.extract(sourceCodeString);
+		target.initialize(targetClassMeta);
+		String actual = target.getNewTestCaseSourceCode();
+		assertNotNull(actual);
+	}
+
+	@Test
+	public void getLackingTestMethodMetaList_A$String_AnsiDialect()
+			throws Exception {
+		// TODO
+		String encoding = UniversalDetectorUtil
+				.getDetectedEncoding(IOUtil
+						.getResourceAsStream("parser/impl/DefaultTestCaseGenerator_AnsiDialect.txt"));
+		String sourceCodeString = IOUtil
+				.readAsString(
+						IOUtil.getResourceAsStream("parser/impl/DefaultTestCaseGenerator_AnsiDialect.txt"),
+						encoding);
+		ClassMeta targetClassMeta = classMetaExtractor
+				.extract(sourceCodeString);
+		target.initialize(targetClassMeta);
+		String currentTestCaseSourceCode = IOUtil
+				.readAsString(
+						IOUtil.getResourceAsStream("parser/impl/DefaultTestCaseGenerator_AnsiDialectTest.txt"),
+						encoding);
+		List<TestMethodMeta> actual = target
+				.getLackingTestMethodMetaList(currentTestCaseSourceCode);
+		assertEquals("", 0, actual.size());
+	}
+
+	@Test
 	public void getLackingTestMethodMetaList_A$String() throws Exception {
 		String sourceCodeString = "package hoge.foo; import java.util.List; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\") } public void overload(String str) { } public void overload(String str, Object obj) { } }";
 		ClassMeta targetClassMeta = classMetaExtractor

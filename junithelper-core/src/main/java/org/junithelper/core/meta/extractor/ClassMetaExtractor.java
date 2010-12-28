@@ -38,9 +38,12 @@ public class ClassMetaExtractor {
 	}
 
 	public ClassMeta extract(String sourceCodeString) {
+
+		ClassMeta meta = new ClassMeta();
+
 		String modifiedSourceCodeString = TrimFilterUtil
 				.doAllFilters(sourceCodeString);
-		ClassMeta meta = new ClassMeta();
+
 		// -----------------
 		// package name
 		Matcher matcherGroupingPackageName = RegExp.PatternObject.Pacakge_Group
