@@ -114,13 +114,21 @@ public class ArgTypeMetaExtractor {
 						.toAvailableInMethodName(argTypeMeta.name);
 				extractedMetaList.add(argTypeMeta);
 			}
-
 			// -----------------
 			// arg name string
 			Matcher argNameMatcher = RegExp.PatternObject.MethodArg_Group
 					.matcher(argTypeFull);
 			if (argNameMatcher.find()) {
-				extractedNameList.add(argNameMatcher.group(1));
+				String argName = argNameMatcher.group(1);
+				if (argName.matches(".+\\[\\s*\\]")) {
+					// ex. String strArr[] = null;
+					argName = argName.replaceFirst("\\[\\s*\\]",
+							StringValue.Empty);
+					argTypeMeta.name = argTypeMeta.name + "[]";
+					argTypeMeta.nameInMethodName = new TypeNameConverter(config)
+							.toAvailableInMethodName(argTypeMeta.name);
+				}
+				extractedNameList.add(argName);
 			} else if (extractedMetaList.size() > 0) {
 				extractedNameList.add("arg" + i);
 			}
