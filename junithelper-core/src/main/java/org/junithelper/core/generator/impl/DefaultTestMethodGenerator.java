@@ -468,12 +468,12 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 			return PrimitiveTypeUtil.getTypeDefaultValue(argTypeMeta.name);
 		} else if (argTypeMeta.name.matches(".+?\\[\\]$")) {
 			return "new " + argTypeMeta.name + " {}";
-		} else if (argTypeMeta.name.matches("List<[^>]+>")
+		} else if (argTypeMeta.name.matches("List(<[^>]+>)?")
 				&& availableTypeDetector.isAvailableType("java.util.List",
 						config)) {
 			targetClassMeta.importedList.add("java.util.ArrayList");
 			return "new ArrayList" + argTypeMeta.getGenericsAsString() + "()";
-		} else if (argTypeMeta.name.matches("Map<[^>]+>")
+		} else if (argTypeMeta.name.matches("Map(<[^>]+>)?")
 				&& availableTypeDetector.isAvailableType("java.util.Map",
 						config)) {
 			targetClassMeta.importedList.add("java.util.HashMap");
