@@ -70,6 +70,11 @@ public class TrimInsideOfBraceFilter implements TrimFilter {
 						&& src.charAt(i - 3) == 'a' && src.charAt(i - 2) == 's'
 						&& src.charAt(i - 1) == 's' && current == ' ') {
 					isInsideOfTargetClass = true;
+				} else if (i >= 5 && src.charAt(i - 5) == ' '
+						&& src.charAt(i - 4) == 'e' && src.charAt(i - 3) == 'n'
+						&& src.charAt(i - 2) == 'u' && src.charAt(i - 1) == 'm'
+						&& current == ' ') {
+					isInsideOfTargetClass = true;
 				}
 				continue;
 			}

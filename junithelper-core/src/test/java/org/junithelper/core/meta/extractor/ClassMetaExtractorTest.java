@@ -123,6 +123,21 @@ public class ClassMetaExtractorTest {
 	}
 
 	@Test
+	public void extract_A$String_Enum_ContentType() throws Exception {
+		Configulation config = new Configulation();
+		ClassMetaExtractor target = new ClassMetaExtractor(config);
+		String sourceCodeString = IOUtil.readAsString(
+				IOUtil.getResourceAsStream("parser/impl/Enum_ContentType.txt"),
+				"UTF-8");
+		ClassMeta actual = target.extract(sourceCodeString);
+		assertEquals("a.b.c", actual.packageName);
+		assertEquals(false, actual.isAbstract);
+		assertEquals(true, actual.isEnum);
+		assertEquals("ContentType", actual.name);
+		assertEquals(2, actual.methods.size());
+	}
+
+	@Test
 	public void renameIfDuplicatedToConstructorArgNames_A$String$List$List_target()
 			throws Exception {
 		Configulation config = new Configulation();

@@ -1,0 +1,35 @@
+package a.b.c;
+
+public enum ContentType {
+
+	relax("relax"),
+	nurturing("nurturing"),
+	word("word");
+
+	private String name;
+	
+	public String lable;
+
+	private ContentType(String name) {
+		this.name = name;
+	}
+
+	public String toString() {
+		return name;
+	}
+	
+	public String toLable() {
+		String label = "";
+		try {
+			if(name.equals(relax.name)){
+				label = "aaa";
+			} else if(name.equals(nurturing.name)){
+				label = "aaa";
+			} else if(name.equals(word.name)){
+				label = "aaa";
+			}
+		}catch (Exception e) {}
+		return label;
+	}
+
+}
