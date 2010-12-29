@@ -156,7 +156,19 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 		}
 		buf.append(getTestMethodNamePrefix(testMethodMeta,
 				testMethodMeta.testingTargetException));
-		buf.append("() throws Exception {");
+		boolean isThrowableRequired = false;
+		if (testMethodMeta.methodMeta != null
+				&& testMethodMeta.methodMeta.throwsExceptions != null) {
+			for (ExceptionMeta ex : testMethodMeta.methodMeta.throwsExceptions) {
+				if (ex.name.equals("Throwable")) {
+					isThrowableRequired = true;
+					break;
+				}
+			}
+		}
+		buf.append("() throws ");
+		buf.append(isThrowableRequired ? "Throwable" : "Exception");
+		buf.append(" {");
 		appendCRLF(buf);
 
 		// auto generated todo message
