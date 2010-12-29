@@ -56,7 +56,7 @@ public final class RegExp {
 
 	public static final String ReturnType = "[a-zA-Z1-9\\[\\]_,\\$<>\\.]+?";
 
-	public static final String Generics = "<[^>]+>";
+	public static final String Generics = "<.+>";
 
 	public static final String Generics_Group = "<([a-zA-Z0-9,\\$_\\?]+?)>";
 

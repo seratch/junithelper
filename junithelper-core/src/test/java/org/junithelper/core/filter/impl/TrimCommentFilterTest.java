@@ -1,8 +1,6 @@
 package org.junithelper.core.filter.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
+import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junithelper.core.util.IOUtil;
 
@@ -39,4 +37,14 @@ public class TrimCommentFilterTest {
 		assertEquals(expected, actual);
 	}
 
+	@Test
+	public void trimAll_A$String_Slim3_HtmlUtil() throws Exception {
+		TrimCommentFilter target = new TrimCommentFilter();
+		String src = IOUtil.readAsString(
+				IOUtil.getResourceAsStream("parser/impl/Slim3_HtmlUtil.txt"),
+				"UTF-8");
+		String actual = target.trimAll(src);
+		String expected = " package org.slim3.util;   public final class HtmlUtil {      private static final int HIGHEST_SPECIAL = '';      private static char[][] specialCharactersRepresentation =         new char[HIGHEST_SPECIAL + 1][];      static {         specialCharactersRepresentation[''] = \"\".toCharArray();         specialCharactersRepresentation[''] = \"\".toCharArray();         specialCharactersRepresentation[''] = \"\".toCharArray();         specialCharactersRepresentation[''] = \"\".toCharArray();         specialCharactersRepresentation[''] = \"\".toCharArray();     }           public static String escape(String input) {         int start = 0;         char[] arrayBuffer = input.toCharArray();         int length = arrayBuffer.length;         StringBuilder escapedBuffer = null;         for (int i = 0; i < length; i++) {             char c = arrayBuffer[i];             if (c <= HIGHEST_SPECIAL) {                 char[] escaped = specialCharactersRepresentation[c];                 if (escaped != null) {                     if (start == 0) {                         escapedBuffer = new StringBuilder(length + 5);                     }                     if (start < i) {                         escapedBuffer.append(arrayBuffer, start, i - start);                     }                     start = i + 1;                     escapedBuffer.append(escaped);                 }             }         }         if (start == 0) {             return input;         }         if (start < length) {             escapedBuffer.append(arrayBuffer, start, length - start);         }         return escapedBuffer.toString();     }      private HtmlUtil() {     } } ";
+		assertEquals(expected, actual);
+	}
 }

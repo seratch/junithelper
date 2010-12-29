@@ -21,6 +21,7 @@ import java.util.regex.Matcher;
 
 import org.junithelper.core.config.Configulation;
 import org.junithelper.core.constant.RegExp;
+import org.junithelper.core.constant.StringValue;
 import org.junithelper.core.filter.TrimFilterUtil;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.ConstructorMeta;
@@ -55,7 +56,9 @@ public class ClassMetaExtractor {
 			meta.packageName = matcherGroupingPackageName.group(1);
 		}
 		String outOfBrace = modifiedSourceCodeString.split("\\{")[0];
-		String[] splittedBySpace = outOfBrace.split("\\s+");
+		String[] splittedBySpace = outOfBrace.replaceAll("\\s*,\\s*", ",")
+				.replaceAll("<\\s+", "<").replaceAll("\\s+>", ">")
+				.split("\\s+");
 		if (!outOfBrace.matches(".*\\s+class\\s+.*")
 				&& !outOfBrace.matches(".*\\s+enum\\s+.*")) {
 			meta.isAbstract = true;
@@ -73,11 +76,13 @@ public class ClassMetaExtractor {
 		}
 		// -----------------
 		// class name
-		meta.name = splittedBySpace[splittedBySpace.length - 1];
+		meta.name = splittedBySpace[splittedBySpace.length - 1].replaceFirst(
+				RegExp.Generics, StringValue.Empty);
 		for (int i = 0; i < splittedBySpace.length; i++) {
 			if (splittedBySpace[i].equals("extends")
 					|| splittedBySpace[i].equals("implements")) {
-				meta.name = splittedBySpace[i - 1];
+				meta.name = splittedBySpace[i - 1].replaceFirst(
+						RegExp.Generics, StringValue.Empty);
 				break;
 			}
 		}
@@ -100,8 +105,8 @@ public class ClassMetaExtractor {
 			for (ConstructorMeta cons : meta.constructors) {
 				int len = cons.argNames.size();
 				for (int i = 0; i < len; i++) {
-					if (cons.argNames.get(i).equals("target")) {
-						cons.argNames.set(i, "target_");
+					if (isDuplicatedVariableName(cons.argNames.get(i))) {
+						cons.argNames.set(i, cons.argNames.get(i) + "_");
 					}
 				}
 			}
@@ -135,9 +140,7 @@ public class ClassMetaExtractor {
 		if (argName == null) {
 			return null;
 		}
-		if (argName.equals("target") || argName.equals("actual")
-				|| argName.equals("expected") || argName.equals("context")
-				|| argName.equals("mocks")) {
+		if (isDuplicatedVariableName(argName)) {
 			return renameIfDuplicatedToConstructorArgNames(argName + "_",
 					constructorArgs, methodArgs);
 		}
@@ -154,5 +157,11 @@ public class ClassMetaExtractor {
 			}
 		}
 		return argName;
+	}
+
+	boolean isDuplicatedVariableName(String name) {
+		return name.equals("target") || name.equals("actual")
+				|| name.equals("expected") || name.equals("context")
+				|| name.equals("mocks");
 	}
 }

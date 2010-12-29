@@ -103,7 +103,7 @@ public class DefaultConstructorGenerator implements ConstructorGenerator {
 			return null;
 		}
 		for (ConstructorMeta constructor : classMeta.constructors) {
-			if (constructor.accessModifier == AccessModifier.Public) {
+			if (constructor.accessModifier != AccessModifier.Private) {
 				return constructor;
 			}
 		}

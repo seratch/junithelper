@@ -14,7 +14,7 @@ public class TrimInsideOfStringFilter implements TrimFilter {
 			char current = src.charAt(i);
 			// check inside of String or char
 			if (i > 0) {
-				if (current == '"') {
+				if (!isInsideOfChar && current == '"') {
 					int count = countPreviousContinuedBackslash(src, i, 0);
 					if (count % 2 == 0) {
 						isInsideOfString = !isInsideOfString;

@@ -1,8 +1,6 @@
 package org.junithelper.core.filter.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
+import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class TrimInsideOfStringFilterTest {
@@ -27,6 +25,18 @@ public class TrimInsideOfStringFilterTest {
 		String actual = target.trimAll(src);
 		// then
 		String expected = "public class Hoge { { } static { System.out.println(\"\"); } public static void main(String[] args) { // hogehoge\r\n System.out.println(\"\");\r\n } }";
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void trimAll_A$String_doubleQuateInChar() throws Exception {
+		TrimInsideOfStringFilter target = new TrimInsideOfStringFilter();
+		// given
+		String src = "specialCharactersRepresentation['\"'] = \"&#034;\".toCharArray();specialCharactersRepresentation['\\''] = \"&#039;\".toCharArray();";
+		// when
+		String actual = target.trimAll(src);
+		// then
+		String expected = "specialCharactersRepresentation[''] = \"\".toCharArray();specialCharactersRepresentation[''] = \"\".toCharArray();";
 		assertEquals(expected, actual);
 	}
 

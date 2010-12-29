@@ -156,6 +156,21 @@ public class DefaultTestCaseGeneratorTest {
 	}
 
 	@Test
+	public void getNewTestCaseSourceCode_A$_Slim3_AbstractModelRef()
+			throws Exception {
+		String encoding = UniversalDetectorUtil.getDetectedEncoding(IOUtil
+				.getResourceAsStream("parser/impl/Slim3_AbstractModelRef.txt"));
+		String sourceCodeString = IOUtil.readAsString(IOUtil
+				.getResourceAsStream("parser/impl/Slim3_AbstractModelRef.txt"),
+				encoding);
+		ClassMeta targetClassMeta = classMetaExtractor
+				.extract(sourceCodeString);
+		target.initialize(targetClassMeta);
+		String actual = target.getNewTestCaseSourceCode();
+		assertNotNull(actual);
+	}
+
+	@Test
 	public void getLackingTestMethodMetaList_A$String_AnsiDialect()
 			throws Exception {
 		String encoding = UniversalDetectorUtil
@@ -195,6 +210,23 @@ public class DefaultTestCaseGeneratorTest {
 		List<TestMethodMeta> actual = target
 				.getLackingTestMethodMetaList(currentTestCaseSourceCode);
 		assertEquals("", 0, actual.size());
+	}
+
+	@Test
+	public void getLackingTestMethodMetaList_A$String_Slim3_AbstractModelRef()
+			throws Exception {
+		String encoding = UniversalDetectorUtil.getDetectedEncoding(IOUtil
+				.getResourceAsStream("parser/impl/Slim3_AbstractModelRef.txt"));
+		String sourceCodeString = IOUtil.readAsString(IOUtil
+				.getResourceAsStream("parser/impl/Slim3_AbstractModelRef.txt"),
+				encoding);
+		ClassMeta targetClassMeta = classMetaExtractor
+				.extract(sourceCodeString);
+		target.initialize(targetClassMeta);
+		String currentTestCaseSourceCode = "";
+		List<TestMethodMeta> actual = target
+				.getLackingTestMethodMetaList(currentTestCaseSourceCode);
+		assertEquals("", 6, actual.size());
 	}
 
 	@Test
@@ -305,6 +337,16 @@ public class DefaultTestCaseGeneratorTest {
 		target.appendIfNotExists(buf, src, importLine);
 		assertEquals("import org.junit.Test;\r\nimport org.junit.Test;\r\n",
 				buf.toString());
+	}
+
+	@Test
+	public void appendIfNotExists_A$StringBuilder$String$String_staticImportAsssert()
+			throws Exception {
+		StringBuilder buf = new StringBuilder();
+		String src = "package hoge.foo;\r\nimport static org.junit.Assert.assertNotNull;\r\nimport junit.framework.TestCase;\r\n\r\npublic class Sample {\r\n\r\n}";
+		String importLine = "import static org.junit.Assert.*;";
+		target.appendIfNotExists(buf, src, importLine);
+		assertEquals("import static org.junit.Assert.*;\r\n", buf.toString());
 	}
 
 }

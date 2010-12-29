@@ -347,8 +347,9 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 		String oneline = src.replaceAll(RegExp.CRLF, StringValue.Space);
 		importLine = importLine.replace(StringValue.CarriageReturn
 				+ StringValue.LineFeed, StringValue.Empty);
-		if (!oneline.matches(RegExp.Anything_ZeroOrMore_Min
-				+ importLine.replaceAll("\\s+", "\\\\s+")
+		String importLineRegExp = importLine.replaceAll("\\s+", "\\\\s+")
+				.replaceAll("\\.", "\\\\.").replaceAll("\\*", "\\\\*");
+		if (!oneline.matches(RegExp.Anything_ZeroOrMore_Min + importLineRegExp
 				+ RegExp.Anything_ZeroOrMore_Min)) {
 			buf.append(importLine);
 			buf.append(StringValue.CarriageReturn);

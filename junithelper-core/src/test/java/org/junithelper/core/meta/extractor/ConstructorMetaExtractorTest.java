@@ -10,6 +10,7 @@ import org.junithelper.core.config.Configulation;
 import org.junithelper.core.meta.AccessModifier;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.ConstructorMeta;
+import org.junithelper.core.util.IOUtil;
 
 public class ConstructorMetaExtractorTest {
 
@@ -91,6 +92,24 @@ public class ConstructorMetaExtractorTest {
 		assertEquals("content", actual.get(0).argNames.get(0));
 		assertEquals("statusCode", actual.get(0).argNames.get(1));
 		assertEquals("headers", actual.get(0).argNames.get(2));
+	}
+
+	@Test
+	public void extract_A$String_Slim3_HtmlUtil() throws Exception {
+		Configulation config = new Configulation();
+		ConstructorMetaExtractor target = new ConstructorMetaExtractor(config);
+		// given
+		String sourceCodeString = IOUtil.readAsString(
+				IOUtil.getResourceAsStream("parser/impl/Slim3_HtmlUtil.txt"),
+				"UTF-8");
+		target.initialize(sourceCodeString);
+		// e.g. : given(mocked.called()).willReturn(1);
+		// when
+		List<ConstructorMeta> actual = target.extract(sourceCodeString);
+		// then
+		// e.g. : verify(mocked).called();
+		assertEquals(1, actual.size());
+		assertEquals(AccessModifier.Private, actual.get(0).accessModifier);
 	}
 
 	@Test

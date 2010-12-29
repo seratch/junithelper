@@ -7,7 +7,9 @@ import java.util.List;
 
 import org.junit.Test;
 import org.junithelper.core.config.Configulation;
+import org.junithelper.core.meta.AccessModifier;
 import org.junithelper.core.meta.ClassMeta;
+import org.junithelper.core.util.IOUtil;
 
 public class ClassMetaExtractorTest {
 
@@ -31,6 +33,55 @@ public class ClassMetaExtractorTest {
 		ClassMeta actual = target.extract(sourceCodeString);
 		assertEquals("hoge.foo", actual.packageName);
 		assertEquals("Sample", actual.name);
+	}
+
+	@Test
+	public void extract_A$String_classNameWithGenerics1() throws Exception {
+		Configulation config = new Configulation();
+		ClassMetaExtractor target = new ClassMetaExtractor(config);
+		String sourceCodeString = "package hoge.foo; @SuppressWarnings(value = { \"issue 28\" })public class Sample<T> { public Sample() {}\r\n public void doSomething(String str) { System.out.println(\"aaaa\") } }";
+		ClassMeta actual = target.extract(sourceCodeString);
+		assertEquals("hoge.foo", actual.packageName);
+		assertEquals("Sample", actual.name);
+	}
+
+	@Test
+	public void extract_A$String_classNameWithGenerics2() throws Exception {
+		Configulation config = new Configulation();
+		ClassMetaExtractor target = new ClassMetaExtractor(config);
+		String sourceCodeString = "package hoge.foo; @SuppressWarnings(value = { \"issue 28\" })public class Sample<M, A> { public Sample() {}\r\n public void doSomething(String str) { System.out.println(\"aaaa\") } }";
+		ClassMeta actual = target.extract(sourceCodeString);
+		assertEquals("hoge.foo", actual.packageName);
+		assertEquals("Sample", actual.name);
+	}
+
+	@Test
+	public void extract_A$String_Slim3_AbstractModelRef() throws Exception {
+		Configulation config = new Configulation();
+		ClassMetaExtractor target = new ClassMetaExtractor(config);
+		String sourceCodeString = IOUtil.readAsString(IOUtil
+				.getResourceAsStream("parser/impl/Slim3_AbstractModelRef.txt"),
+				"UTF-8");
+		ClassMeta actual = target.extract(sourceCodeString);
+		assertEquals("org.slim3.datastore", actual.packageName);
+		assertEquals(false, actual.isAbstract);
+		assertEquals("AbstractModelRef", actual.name);
+	}
+
+	@Test
+	public void extract_A$String_Slim3_HtmlUtil() throws Exception {
+		Configulation config = new Configulation();
+		ClassMetaExtractor target = new ClassMetaExtractor(config);
+		String sourceCodeString = IOUtil.readAsString(
+				IOUtil.getResourceAsStream("parser/impl/Slim3_HtmlUtil.txt"),
+				"UTF-8");
+		ClassMeta actual = target.extract(sourceCodeString);
+		assertEquals("org.slim3.util", actual.packageName);
+		assertEquals("HtmlUtil", actual.name);
+		assertEquals(false, actual.isAbstract);
+		assertEquals(1, actual.constructors.size());
+		assertEquals(AccessModifier.Private,
+				actual.constructors.get(0).accessModifier);
 	}
 
 	@Test
@@ -91,6 +142,31 @@ public class ClassMetaExtractorTest {
 				constructorArgs, methodArgs);
 		String expected = "name__";
 		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void isDuplicatedVariableName_A$String_true() throws Exception {
+		Configulation config = new Configulation();
+		ClassMetaExtractor target = new ClassMetaExtractor(config);
+		String[] args = new String[] { "target", "actual", "expected",
+				"context", "mocks" };
+		for (String name : args) {
+			boolean actual = target.isDuplicatedVariableName(name);
+			boolean expected = true;
+			assertEquals(expected, actual);
+		}
+	}
+
+	@Test
+	public void isDuplicatedVariableName_A$String_false() throws Exception {
+		Configulation config = new Configulation();
+		ClassMetaExtractor target = new ClassMetaExtractor(config);
+		String[] args = new String[] { "target_", "name", "hoge", };
+		for (String name : args) {
+			boolean actual = target.isDuplicatedVariableName(name);
+			boolean expected = false;
+			assertEquals(expected, actual);
+		}
 	}
 
 }
