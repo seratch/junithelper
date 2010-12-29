@@ -3,7 +3,7 @@
 	http://junithelper.org/
 ------------------------------------------
 
-* Release Notes - 0.9.4
+* Release Notes - 1.0.0
 
 ** Bug
 	* Issue 46:	Compile error at generated template test code when "[]" exists after variable name
