@@ -1,5 +1,5 @@
 <projectDescription>
-  <name>junithelper-plugin</name>
+  <name>junithelper-eclipse-plugin</name>
   <comment>JUnit Helper Eclipse Plugin</comment>
   <projects/>
   <buildSpec>
