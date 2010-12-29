@@ -98,7 +98,7 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 			dest.add(testMethod);
 		}
 		// is testing instantiation required
-		if (targetClassMeta.constructors.size() > 0) {
+		if (!targetClassMeta.isEnum && targetClassMeta.constructors.size() > 0) {
 			ConstructorMeta notPrivateConstructor = null;
 			for (ConstructorMeta constructor : targetClassMeta.constructors) {
 				if (constructor.accessModifier != AccessModifier.Private) {

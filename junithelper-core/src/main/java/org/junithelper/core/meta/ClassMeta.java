@@ -22,6 +22,8 @@ public class ClassMeta {
 
 	public boolean isAbstract;
 
+	public boolean isEnum;
+
 	public String packageName;
 
 	public String name;

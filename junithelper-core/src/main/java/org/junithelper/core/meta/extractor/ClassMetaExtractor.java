@@ -44,7 +44,6 @@ public class ClassMetaExtractor {
 	public ClassMeta extract(String sourceCodeString) {
 
 		ClassMeta meta = new ClassMeta();
-
 		String modifiedSourceCodeString = TrimFilterUtil
 				.doAllFilters(sourceCodeString);
 
@@ -67,6 +66,9 @@ public class ClassMetaExtractor {
 					meta.isAbstract = true;
 					break;
 				}
+			}
+			if (outOfBrace.matches(".*\\s+enum\\s+.*")) {
+				meta.isEnum = true;
 			}
 		}
 		// -----------------
