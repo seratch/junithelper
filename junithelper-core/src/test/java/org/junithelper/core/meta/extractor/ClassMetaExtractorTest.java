@@ -85,6 +85,23 @@ public class ClassMetaExtractorTest {
 	}
 
 	@Test
+	public void extract_A$String_Slim3_GlobalTransaction() throws Exception {
+		Configulation config = new Configulation();
+		config.target.isExceptionPatternRequired = false;
+		ClassMetaExtractor target = new ClassMetaExtractor(config);
+		String sourceCodeString = IOUtil
+				.readAsString(
+						IOUtil.getResourceAsStream("parser/impl/Slim3_GlobalTransaction.txt"),
+						"UTF-8");
+		ClassMeta actual = target.extract(sourceCodeString);
+		assertEquals("org.slim3.datastore", actual.packageName);
+		assertEquals("GlobalTransaction", actual.name);
+		assertEquals(false, actual.isAbstract);
+		assertEquals(1, actual.constructors.size());
+		assertEquals(4, actual.methods.size());
+	}
+
+	@Test
 	public void renameIfDuplicatedToConstructorArgNames_A$String$List$List_target()
 			throws Exception {
 		Configulation config = new Configulation();

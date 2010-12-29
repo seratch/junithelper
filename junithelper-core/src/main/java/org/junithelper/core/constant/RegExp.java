@@ -60,7 +60,7 @@ public final class RegExp {
 
 	public static final String Generics_Group = "<([a-zA-Z0-9,\\$_\\?]+?)>";
 
-	public static String MethodSignatureArea = "[\\{;\\}][^\\{;\\}]+\\([^\\{;\\}]*\\)[^\\{;\\}]*\\{\\s*";
+	public static String MethodSignatureArea = "[\\{;\\}][^\\{=;\\}]+\\([^\\{;\\}]*\\)[^\\{;\\}]*\\{\\s*";
 
 	/**
 	 * Regular expression to search static method syntax

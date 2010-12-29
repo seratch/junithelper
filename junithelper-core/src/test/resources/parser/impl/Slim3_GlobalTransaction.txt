@@ -1,0 +1,178 @@
+/*
+ * Copyright 2004-2010 the Seasar Foundation and the Others.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+package org.slim3.datastore;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.ConcurrentModificationException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.slim3.util.ThrowableUtil;
+
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.Transaction;
+import com.google.appengine.api.labs.taskqueue.Queue;
+import com.google.appengine.api.labs.taskqueue.QueueFactory;
+import com.google.appengine.api.labs.taskqueue.TaskOptions;
+import com.google.apphosting.api.DeadlineExceededException;
+
+/**
+ * The global transaction coordinator. If an error occurs during transaction,
+ * this transaction will be rolled back automatically.
+ * 
+ * @author higa
+ * @since 1.0.0
+ * 
+ */
+public class GlobalTransaction {
+
+    /**
+     * The kind of global transaction entity.
+     */
+    public static final String KIND = "slim3.GlobalTransaction";
+
+    /**
+     * The valid property name.
+     */
+    public static final String VALID_PROPERTY = "valid";
+
+    /**
+     * The queue name.
+     */
+    protected static final String QUEUE_NAME = "slim3-gtx-queue";
+
+    /**
+     * The number of milliseconds delay before execution of the roll-forward
+     * task.
+     */
+    protected static final long ROLL_FORWARD_DELAY = 60000;
+
+    /**
+     * The active global transactions.
+     */
+    protected static final ThreadLocal<Stack<GlobalTransaction>> activeTransactions =
+        new ThreadLocal<Stack<GlobalTransaction>>() {
+
+            @Override
+            protected Stack<GlobalTransaction> initialValue() {
+                return new Stack<GlobalTransaction>();
+            }
+        };
+
+    private static final Logger logger =
+        Logger.getLogger(GlobalTransaction.class.getName());
+
+    /**
+     * The local transaction.
+     */
+    protected Transaction localTransaction;
+
+    /**
+     * The root key of local transaction.
+     */
+    protected Key localTransactionRootKey;
+
+    /**
+     * The global transaction key.
+     */
+    protected Key globalTransactionKey;
+
+    /**
+     * The time-stamp that a process begun.
+     */
+    protected long timestamp;
+
+    /**
+     * The map of {@link Lock}.
+     */
+    protected Map<Key, Lock> lockMap;
+
+    /**
+     * The map of journals for global transaction.
+     */
+    protected Map<Key, Entity> globalJournalMap;
+
+    /**
+     * The map of journals for local transaction.
+     */
+    protected Map<Key, Entity> localJournalMap;
+
+    /**
+     * Whether this global transaction is valid.
+     */
+    protected boolean valid = true;
+
+    /**
+     * Returns the current transaction.
+     * 
+     * @return the current transaction
+     */
+    protected static GlobalTransaction getCurrentTransaction() {
+        Stack<GlobalTransaction> stack = activeTransactions.get();
+        if (stack.isEmpty()) {
+            return null;
+        }
+        return stack.peek();
+    }
+
+    /**
+     * Returns the active transactions.
+     * 
+     * @return the active transactions
+     */
+    protected static Collection<GlobalTransaction> getActiveTransactions() {
+        Stack<GlobalTransaction> stack = activeTransactions.get();
+        Stack<GlobalTransaction> copy = new Stack<GlobalTransaction>();
+        copy.addAll(stack);
+        return copy;
+    }
+
+    /**
+     * Clears the active transactions.
+     */
+    protected static void clearActiveTransactions() {
+        activeTransactions.get().clear();
+    }
+
+    /**
+     * Returns a global transaction specified by the key. Returns null if no
+     * entity is found.
+     * 
+     * @param tx
+     *            the transaction
+     * @param key
+     *            the global transaction key
+     * @return a global transaction
+     */
+    protected static GlobalTransaction getOrNull(Transaction tx, Key key) {
+        Entity entity = Datastore.getOrNull(tx, key);
+        if (entity == null) {
+            return null;
+        }
+        return toGlobalTransaction(entity);
+    }
+
+
+}
