@@ -430,7 +430,7 @@ public class DefaultTestMethodGeneratorTest {
 	public void getArgValue_A$TestMethodMeta$ArgTypeMeta$String()
 			throws Exception {
 		// given
-		String sourceCodeString = "package hoge.foo; import java.util.List; import java.util.Map; public class Sample { public int doSomething(String str, long longValue, List<String> list, Map<String,Object> map, java.util.HashMap<String, String> hashMap) throws Throwable { System.out.println(\"aaaa\") } }";
+		String sourceCodeString = "package hoge.foo; import java.util.List; import java.util.Map; public class Sample { public int doSomething(String str, long longValue, List<String> list, Map<String,Object> map, java.util.HashMap<String, String> hashMap, List<?> list2, Map<?,Object> map2) throws Throwable { System.out.println(\"aaaa\") } }";
 		ClassMeta targetClassMeta = classMetaExtractor
 				.extract(sourceCodeString);
 		target.initialize(targetClassMeta);
@@ -454,6 +454,12 @@ public class DefaultTestMethodGeneratorTest {
 		assertEquals("null", target.getArgValue(testMethodMeta,
 				targetMethodMeta.argTypes.get(4),
 				targetMethodMeta.argNames.get(4)));
+		assertEquals("new ArrayList()", target.getArgValue(testMethodMeta,
+				targetMethodMeta.argTypes.get(5),
+				targetMethodMeta.argNames.get(5)));
+		assertEquals("new HashMap()", target.getArgValue(testMethodMeta,
+				targetMethodMeta.argTypes.get(6),
+				targetMethodMeta.argNames.get(6)));
 	}
 
 	@Test

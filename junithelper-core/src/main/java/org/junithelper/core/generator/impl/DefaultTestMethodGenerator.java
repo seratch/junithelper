@@ -484,12 +484,20 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 				&& availableTypeDetector.isAvailableType("java.util.List",
 						config)) {
 			targetClassMeta.importedList.add("java.util.ArrayList");
-			return "new ArrayList" + argTypeMeta.getGenericsAsString() + "()";
+			String genericsString = argTypeMeta.getGenericsAsString();
+			if (genericsString.equals("<?>")) {
+				genericsString = "";
+			}
+			return "new ArrayList" + genericsString + "()";
 		} else if (argTypeMeta.name.matches("Map(<[^>]+>)?")
 				&& availableTypeDetector.isAvailableType("java.util.Map",
 						config)) {
 			targetClassMeta.importedList.add("java.util.HashMap");
-			return "new HashMap" + argTypeMeta.getGenericsAsString() + "()";
+			String genericsString = argTypeMeta.getGenericsAsString();
+			if (genericsString.matches("<.*\\?.*>")) {
+				genericsString = "";
+			}
+			return "new HashMap" + genericsString + "()";
 		} else if (config.mockObjectFramework == MockObjectFramework.EasyMock) {
 			return "mocks.createMock("
 					+ argTypeMeta.name.replaceAll(RegExp.Generics,

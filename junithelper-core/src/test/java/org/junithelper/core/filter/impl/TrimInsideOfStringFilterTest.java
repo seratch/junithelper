@@ -40,4 +40,19 @@ public class TrimInsideOfStringFilterTest {
 		assertEquals(expected, actual);
 	}
 
+	@Test
+	public void countPreviousContinuedBackslash_A$String$int$int()
+			throws Exception {
+		// given
+		String str = "\\'";
+		int currentNotBackslashCharIndex = 1;
+		int count = 0;
+		// when
+		int actual = TrimInsideOfStringFilter.countPreviousContinuedBackslash(
+				str, currentNotBackslashCharIndex, count);
+		// then
+		int expected = 1;
+		assertEquals(expected, actual);
+	}
+
 }
