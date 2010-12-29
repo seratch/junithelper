@@ -135,7 +135,9 @@ public class ClassMetaExtractor {
 		if (argName == null) {
 			return null;
 		}
-		if (argName.equals("target")) {
+		if (argName.equals("target") || argName.equals("actual")
+				|| argName.equals("expected") || argName.equals("context")
+				|| argName.equals("mocks")) {
 			return renameIfDuplicatedToConstructorArgNames(argName + "_",
 					constructorArgs, methodArgs);
 		}
