@@ -56,9 +56,29 @@ public class ClassMetaExtractor {
 			meta.packageName = matcherGroupingPackageName.group(1);
 		}
 		String outOfBrace = modifiedSourceCodeString.split("\\{")[0];
-		String[] splittedBySpace = outOfBrace.replaceAll("\\s*,\\s*", ",")
-				.replaceAll("<\\s+", "<").replaceAll("\\s+>", ">")
-				.split("\\s+");
+		int lenForOutOfBrace = outOfBrace.length();
+		StringBuilder bufForOutOfBrace = new StringBuilder();
+		boolean isInsideOfGenerics = false;
+		int depth = 0;
+		for (int i = 0; i < lenForOutOfBrace; i++) {
+			char current = outOfBrace.charAt(i);
+			if (current == '<') {
+				isInsideOfGenerics = true;
+				depth++;
+			}
+			if (current == '>') {
+				depth--;
+				if (depth <= 0) {
+					isInsideOfGenerics = false;
+					continue;
+				}
+			}
+			if (!isInsideOfGenerics) {
+				bufForOutOfBrace.append(current);
+			}
+		}
+		String outOfBraceWithoutGenerics = bufForOutOfBrace.toString();
+		String[] splittedBySpace = outOfBraceWithoutGenerics.split("\\s+");
 		if (!outOfBrace.matches(".*\\s+class\\s+.*")
 				&& !outOfBrace.matches(".*\\s+enum\\s+.*")) {
 			meta.isAbstract = true;

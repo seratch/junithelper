@@ -56,6 +56,16 @@ public class ClassMetaExtractorTest {
 	}
 
 	@Test
+	public void extract_A$String_classNameWithGenerics3() throws Exception {
+		Configulation config = new Configulation();
+		ClassMetaExtractor target = new ClassMetaExtractor(config);
+		String sourceCodeString = "package hoge.foo; @SuppressWarnings(value = { \"issue 28\" })public class Sample<M extends Object> { public Sample() {}\r\n public void doSomething(String str) { System.out.println(\"aaaa\") } }";
+		ClassMeta actual = target.extract(sourceCodeString);
+		assertEquals("hoge.foo", actual.packageName);
+		assertEquals("Sample", actual.name);
+	}
+
+	@Test
 	public void extract_A$String_Slim3_AbstractModelRef() throws Exception {
 		Configulation config = new Configulation();
 		ClassMetaExtractor target = new ClassMetaExtractor(config);
