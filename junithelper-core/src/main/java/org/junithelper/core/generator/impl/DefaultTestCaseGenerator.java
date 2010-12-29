@@ -292,6 +292,10 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 				importedListBuf.append(StringValue.LineFeed);
 			}
 		}
+		// Inner classes of test target class
+		appendIfNotExists(importedListBuf, oneline, "import "
+				+ targetClassMeta.packageName + "." + targetClassMeta.name
+				+ ".*;");
 		// JUnit
 		if (config.junitVersion == JUnitVersion.version3) {
 			appendIfNotExists(importedListBuf, oneline, "import "
