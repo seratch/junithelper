@@ -1,7 +1,6 @@
 package org.junithelper.core.generator.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import java.util.List;
 
@@ -88,8 +87,7 @@ public class DefaultTestCaseGeneratorTest {
 						.getResourceAsStream("parser/impl/DefaultTestCaseGenerator.txt"));
 		String sourceCodeString = IOUtil
 				.readAsString(
-						IOUtil
-								.getResourceAsStream("parser/impl/DefaultTestCaseGenerator.txt"),
+						IOUtil.getResourceAsStream("parser/impl/DefaultTestCaseGenerator.txt"),
 						encoding);
 		ClassMeta targetClassMeta = classMetaExtractor
 				.extract(sourceCodeString);
@@ -105,8 +103,9 @@ public class DefaultTestCaseGeneratorTest {
 		String encoding = UniversalDetectorUtil
 				.getDetectedEncoding(IOUtil
 						.getResourceAsStream("parser/impl/DefaultTestCaseGenerator.txt"));
-		String sourceCodeString = IOUtil.readAsString(IOUtil
-				.getResourceAsStream("parser/impl/ObjectUtil.txt"), encoding);
+		String sourceCodeString = IOUtil.readAsString(
+				IOUtil.getResourceAsStream("parser/impl/ObjectUtil.txt"),
+				encoding);
 		ClassMeta targetClassMeta = classMetaExtractor
 				.extract(sourceCodeString);
 		target.initialize(targetClassMeta);
@@ -125,8 +124,7 @@ public class DefaultTestCaseGeneratorTest {
 						.getResourceAsStream("parser/impl/DefaultTestCaseGenerator_Log.txt"));
 		String sourceCodeString = IOUtil
 				.readAsString(
-						IOUtil
-								.getResourceAsStream("parser/impl/DefaultTestCaseGenerator_Log.txt"),
+						IOUtil.getResourceAsStream("parser/impl/DefaultTestCaseGenerator_Log.txt"),
 						encoding);
 		ClassMeta targetClassMeta = classMetaExtractor
 				.extract(sourceCodeString);
@@ -136,8 +134,8 @@ public class DefaultTestCaseGeneratorTest {
 		assertEquals(2, actual.target.constructors.size());
 		assertEquals("Class",
 				actual.target.constructors.get(0).argTypes.get(0).name);
-		assertEquals("String", actual.target.constructors.get(1).argTypes
-				.get(0).name);
+		assertEquals("String",
+				actual.target.constructors.get(1).argTypes.get(0).name);
 		assertEquals(23, actual.target.methods.size());
 	}
 
@@ -148,8 +146,7 @@ public class DefaultTestCaseGeneratorTest {
 						.getResourceAsStream("parser/impl/DefaultTestCaseGenerator_SimpleHttpClient.txt"));
 		String sourceCodeString = IOUtil
 				.readAsString(
-						IOUtil
-								.getResourceAsStream("parser/impl/DefaultTestCaseGenerator_SimpleHttpClient.txt"),
+						IOUtil.getResourceAsStream("parser/impl/DefaultTestCaseGenerator_SimpleHttpClient.txt"),
 						encoding);
 		ClassMeta targetClassMeta = classMetaExtractor
 				.extract(sourceCodeString);
@@ -166,16 +163,14 @@ public class DefaultTestCaseGeneratorTest {
 						.getResourceAsStream("parser/impl/DefaultTestCaseGenerator_AnsiDialect.txt"));
 		String sourceCodeString = IOUtil
 				.readAsString(
-						IOUtil
-								.getResourceAsStream("parser/impl/DefaultTestCaseGenerator_AnsiDialect.txt"),
+						IOUtil.getResourceAsStream("parser/impl/DefaultTestCaseGenerator_AnsiDialect.txt"),
 						encoding);
 		ClassMeta targetClassMeta = classMetaExtractor
 				.extract(sourceCodeString);
 		target.initialize(targetClassMeta);
 		String currentTestCaseSourceCode = IOUtil
 				.readAsString(
-						IOUtil
-								.getResourceAsStream("parser/impl/DefaultTestCaseGenerator_AnsiDialectTest.txt"),
+						IOUtil.getResourceAsStream("parser/impl/DefaultTestCaseGenerator_AnsiDialectTest.txt"),
 						encoding);
 		List<TestMethodMeta> actual = target
 				.getLackingTestMethodMetaList(currentTestCaseSourceCode);
@@ -187,9 +182,10 @@ public class DefaultTestCaseGeneratorTest {
 			throws Exception {
 		String encoding = UniversalDetectorUtil.getDetectedEncoding(IOUtil
 				.getResourceAsStream("parser/impl/TrimFilterManager.txt"));
-		String sourceCodeString = IOUtil.readAsString(IOUtil
-				.getResourceAsStream("parser/impl/TrimFilterManager.txt"),
-				encoding);
+		String sourceCodeString = IOUtil
+				.readAsString(
+						IOUtil.getResourceAsStream("parser/impl/TrimFilterManager.txt"),
+						encoding);
 		ClassMeta targetClassMeta = classMetaExtractor
 				.extract(sourceCodeString);
 		target.initialize(targetClassMeta);
