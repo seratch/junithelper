@@ -22,11 +22,11 @@ import org.junithelper.core.meta.ConstructorMeta;
 
 public interface ConstructorGenerator {
 
-	public List<String> getAllInstantiationSourceCodeList(ClassMeta classMeta);
+	List<String> getAllInstantiationSourceCodeList(ClassMeta classMeta);
 
-	public String getFirstInstantiationSourceCode(ClassMeta classMeta);
+	String getFirstInstantiationSourceCode(ClassMeta classMeta);
 
-	public String getInstantiationSourceCode(ClassMeta classMeta,
+	String getInstantiationSourceCode(ClassMeta classMeta,
 			ConstructorMeta constructorMeta);
 
 }

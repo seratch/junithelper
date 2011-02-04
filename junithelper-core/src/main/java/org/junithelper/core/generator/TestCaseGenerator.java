@@ -24,21 +24,21 @@ import org.junithelper.core.meta.TestMethodMeta;
 
 public interface TestCaseGenerator {
 
-	public TestCaseGenerator initialize(String targetSourceCodeString);
+	TestCaseGenerator initialize(String targetSourceCodeString);
 
-	public TestCaseGenerator initialize(ClassMeta targetClassMeta);
+	TestCaseGenerator initialize(ClassMeta targetClassMeta);
 
-	public TestCaseMeta getNewTestCaseMeta();
+	TestCaseMeta getNewTestCaseMeta();
 
-	public List<TestMethodMeta> getLackingTestMethodMetaList(
+	List<TestMethodMeta> getLackingTestMethodMetaList(
 			String currentTestCaseSourceCode);
 
-	public String getNewTestCaseSourceCode();
+	String getNewTestCaseSourceCode();
 
-	public String getTestCaseSourceCodeWithLackingTestMethod(
+	String getTestCaseSourceCodeWithLackingTestMethod(
 			String currentTestCaseSourceCode);
 
-	public String getUnifiedVersionTestCaseSourceCode(
+	String getUnifiedVersionTestCaseSourceCode(
 			String currentTestCaseSourceCode, JUnitVersion version);
 
 }

@@ -21,10 +21,10 @@ import java.io.InputStream;
 
 public interface FileReader {
 
-	public InputStream getResourceAsStream(String name);
+	InputStream getResourceAsStream(String name);
 
-	public String readAsString(File file) throws IOException;
+	String readAsString(File file) throws IOException;
 
-	public String getDetectedEncoding(File file) throws IOException;
+	String getDetectedEncoding(File file) throws IOException;
 
 }

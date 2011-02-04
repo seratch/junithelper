@@ -20,6 +20,6 @@ import java.util.List;
 
 public interface FileSearcher {
 
-	public List<File> searchFilesRecursivelyByName(String baseDir, String regexp);
+	List<File> searchFilesRecursivelyByName(String baseDir, String regexp);
 
 }

@@ -22,18 +22,18 @@ import org.junithelper.core.meta.TestMethodMeta;
 
 public interface TestMethodGenerator {
 
-	public void initialize(ClassMeta targetClassMeta);
+	void initialize(ClassMeta targetClassMeta);
 
-	public TestMethodMeta getTestMethodMeta(MethodMeta targetMethodMeta);
+	TestMethodMeta getTestMethodMeta(MethodMeta targetMethodMeta);
 
-	public TestMethodMeta getTestMethodMeta(MethodMeta targetMethodMeta,
+	TestMethodMeta getTestMethodMeta(MethodMeta targetMethodMeta,
 			ExceptionMeta exception);
 
-	public String getTestMethodNamePrefix(TestMethodMeta testMethodMeta);
+	String getTestMethodNamePrefix(TestMethodMeta testMethodMeta);
 
-	public String getTestMethodNamePrefix(TestMethodMeta testMethodMeta,
+	String getTestMethodNamePrefix(TestMethodMeta testMethodMeta,
 			ExceptionMeta exception);
 
-	public String getTestMethodSourceCode(TestMethodMeta testMethodMeta);
+	String getTestMethodSourceCode(TestMethodMeta testMethodMeta);
 
 }
