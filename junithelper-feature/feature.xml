@@ -10,9 +10,12 @@
       colocation-affinity="org.junithelper.plugin.feature">
 
    <description url="http://code.google.com/p/junithelper/">
-      &quot;JUnit Helper&quot; is a product to support JUnit testing which provides CUI interface and Eclipse plugin.
-
-It supports to cover all the tests for public, protected and package local methods by making it easier to start writing new test case.
+      &quot;JUnit Helper&quot; is an open-source project helping JUnit users
+to cover all tests for public, protected and package local methods
+by saving much labor to start writing new test cases.
+Eclipse plugin also has an advantage of making it easier to go
+back and forth between developing class and test class by &quot;Alt
++ 8 &quot;(test-&gt;dev) and &quot;Alt + 9&quot;(dev-&gt;test).
    </description>
 
    <copyright url="http://code.google.com/p/junithelper/">
