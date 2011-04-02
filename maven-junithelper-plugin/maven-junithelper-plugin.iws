@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" readonly="true" id="0b9972a9-84fe-4956-af4a-6f559e48c261" name="Default" comment="">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/org/junithelper/mavenplugin/MakeallMojo.java" afterPath="$PROJECT_DIR$/src/main/java/org/junithelper/mavenplugin/MakeMojo.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/test/java/org/junithelper/mavenplugin/MakeallMojoTest.java" afterPath="$PROJECT_DIR$/src/test/java/org/junithelper/mavenplugin/MakeMojoTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maven-junithelper-plugin.ipr" afterPath="$PROJECT_DIR$/maven-junithelper-plugin.ipr" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maven-junithelper-plugin.iws" afterPath="$PROJECT_DIR$/maven-junithelper-plugin.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
-    </list>
+    <list default="true" readonly="true" id="0b9972a9-84fe-4956-af4a-6f559e48c261" name="Default" comment="" />
     <ignored path="maven-junithelper-plugin.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
