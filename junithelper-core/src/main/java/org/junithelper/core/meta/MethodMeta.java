@@ -20,31 +20,31 @@ import java.util.List;
 
 public class MethodMeta {
 
-	public String name = "";
+    public String name = "";
 
-	public boolean isStatic = false;
+    public boolean isStatic = false;
 
-	public boolean isAccessor = false;
+    public boolean isAccessor = false;
 
-	public AccessModifier accessModifier;
+    public AccessModifier accessModifier;
 
-	public ReturnTypeMeta returnType = new ReturnTypeMeta();
+    public ReturnTypeMeta returnType = new ReturnTypeMeta();
 
-	public List<ArgTypeMeta> argTypes = new ArrayList<ArgTypeMeta>();
+    public List<ArgTypeMeta> argTypes = new ArrayList<ArgTypeMeta>();
 
-	public List<String> argNames = new ArrayList<String>();
+    public List<String> argNames = new ArrayList<String>();
 
-	public List<ExceptionMeta> throwsExceptions = new ArrayList<ExceptionMeta>();
+    public List<ExceptionMeta> throwsExceptions = new ArrayList<ExceptionMeta>();
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(name);
-		for (ArgTypeMeta argTypeMeta : argTypes) {
-			sb.append("$");
-			sb.append(argTypeMeta.nameInMethodName);
-		}
-		return sb.toString();
-	}
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(name);
+        for (ArgTypeMeta argTypeMeta : argTypes) {
+            sb.append("$");
+            sb.append(argTypeMeta.nameInMethodName);
+        }
+        return sb.toString();
+    }
 
 }

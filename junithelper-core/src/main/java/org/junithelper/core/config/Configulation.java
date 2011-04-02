@@ -17,24 +17,24 @@ package org.junithelper.core.config;
 
 public class Configulation {
 
-	public String language = "en";
+    public String language = "en";
 
-	public String outputFileEncoding = "UTF-8";
+    public String outputFileEncoding = "UTF-8";
 
-	public String directoryPathOfProductSourceCode = "src/main/java";
+    public String directoryPathOfProductSourceCode = "src/main/java";
 
-	public String directoryPathOfTestSourceCode = "src/test/java";
+    public String directoryPathOfTestSourceCode = "src/test/java";
 
-	public JUnitVersion junitVersion = JUnitVersion.version4;
+    public JUnitVersion junitVersion = JUnitVersion.version4;
 
-	public String testCaseClassNameToExtend = "junit.framework.TestCase";
+    public String testCaseClassNameToExtend = "junit.framework.TestCase";
 
-	public boolean isTemplateImplementationRequired = true;
+    public boolean isTemplateImplementationRequired = true;
 
-	public TestingTarget target = new TestingTarget();
+    public TestingTarget target = new TestingTarget();
 
-	public TestMethodName testMethodName = new TestMethodName();
+    public TestMethodName testMethodName = new TestMethodName();
 
-	public MockObjectFramework mockObjectFramework = null;
+    public MockObjectFramework mockObjectFramework = null;
 
 }

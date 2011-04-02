@@ -17,8 +17,8 @@ package org.junithelper.core.meta;
 
 public class ExceptionMeta {
 
-	public String name;
+    public String name;
 
-	public String nameInMethodName;
+    public String nameInMethodName;
 
 }

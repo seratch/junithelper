@@ -15,10 +15,6 @@
  */
 package org.junithelper.core.parser.detect;
 
-import java.io.File;
-import java.lang.reflect.Modifier;
-import java.util.List;
-
 import org.junithelper.core.config.Configulation;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
@@ -27,111 +23,115 @@ import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.util.PrimitiveTypeUtil;
 import org.junithelper.core.util.Stderr;
 
+import java.io.File;
+import java.lang.reflect.Modifier;
+import java.util.List;
+
 public class AvailableTypeDetector {
 
-	private ClassMeta classMeta;
+    private ClassMeta classMeta;
 
-	public AvailableTypeDetector(ClassMeta classMeta) {
-		this.classMeta = classMeta;
-	}
+    public AvailableTypeDetector(ClassMeta classMeta) {
+        this.classMeta = classMeta;
+    }
 
-	public boolean isPrimitive(String typeName) {
-		return typeName != null && PrimitiveTypeUtil.isPrimitive(typeName);
-	}
+    public boolean isPrimitive(String typeName) {
+        return typeName != null && PrimitiveTypeUtil.isPrimitive(typeName);
+    }
 
-	public boolean isArray(String typeName) {
-		return typeName != null && typeName.matches(".+?\\[\\]$");
-	}
+    public boolean isArray(String typeName) {
+        return typeName != null && typeName.matches(".+?\\[\\]$");
+    }
 
-	public boolean isJavaLangPackageType(String typeName) {
-		if (typeName == null) {
-			return false;
-		}
-		if (typeName.matches("java\\.lang\\.[^\\.]+$")) {
-			return true;
-		}
-		try {
-			Class.forName("java.lang." + typeName);
-			return true;
-		} catch (Exception e) {
-		}
-		return false;
-	}
+    public boolean isJavaLangPackageType(String typeName) {
+        if (typeName == null) {
+            return false;
+        }
+        if (typeName.matches("java\\.lang\\.[^\\.]+$")) {
+            return true;
+        }
+        try {
+            Class.forName("java.lang." + typeName);
+            return true;
+        } catch (Exception e) {
+        }
+        return false;
+    }
 
-	public boolean isAvailableType(String typeName, Configulation config) {
-		if (typeName == null) {
-			return false;
-		}
-		boolean isTypeAvailable = false;
-		String[] packageArr = typeName.split("\\.");
-		String packageName = null;
-		if (packageArr.length > 1) {
-			packageName = typeName.replaceFirst("\\.[^\\.]+$",
-					StringValue.Empty);
-		}
-		for (String imported : classMeta.importedList) {
-			if (packageName != null && imported.equals(typeName)) {
-				return true;
-			} else if (imported.matches(".+\\." + typeName + "$")) {
-				return true;
-			}
-		}
-		try {
-			Class.forName("java.lang." + typeName);
-			isTypeAvailable = true;
-		} catch (Exception ignore) {
-			if (config != null && packageName != null) {
-				// check same package class
-				String searchPath = config.directoryPathOfProductSourceCode
-						+ "/" + packageName.replaceAll("\\.", "/");
-				try {
-					List<File> files = new CommonsIOFileSearcher()
-							.searchFilesRecursivelyByName(searchPath, typeName
-									+ RegExp.FileExtension.JavaFile);
-					if (files != null && files.size() > 0) {
-						isTypeAvailable = true;
-					}
-				} catch (Exception e) {
-					Stderr.p(e.getLocalizedMessage() + " - " + searchPath);
-				}
-			}
-		}
-		return isTypeAvailable;
-	}
+    public boolean isAvailableType(String typeName, Configulation config) {
+        if (typeName == null) {
+            return false;
+        }
+        boolean isTypeAvailable = false;
+        String[] packageArr = typeName.split("\\.");
+        String packageName = null;
+        if (packageArr.length > 1) {
+            packageName = typeName.replaceFirst("\\.[^\\.]+$",
+                    StringValue.Empty);
+        }
+        for (String imported : classMeta.importedList) {
+            if (packageName != null && imported.equals(typeName)) {
+                return true;
+            } else if (imported.matches(".+\\." + typeName + "$")) {
+                return true;
+            }
+        }
+        try {
+            Class.forName("java.lang." + typeName);
+            isTypeAvailable = true;
+        } catch (Exception ignore) {
+            if (config != null && packageName != null) {
+                // check same package class
+                String searchPath = config.directoryPathOfProductSourceCode
+                        + "/" + packageName.replaceAll("\\.", "/");
+                try {
+                    List<File> files = new CommonsIOFileSearcher()
+                            .searchFilesRecursivelyByName(searchPath, typeName
+                                    + RegExp.FileExtension.JavaFile);
+                    if (files != null && files.size() > 0) {
+                        isTypeAvailable = true;
+                    }
+                } catch (Exception e) {
+                    Stderr.p(e.getLocalizedMessage() + " - " + searchPath);
+                }
+            }
+        }
+        return isTypeAvailable;
+    }
 
-	public boolean isJMockitMockableType(String typeName) {
-		if (typeName == null) {
-			return false;
-		}
-		if (PrimitiveTypeUtil.isPrimitive(typeName)
-				|| typeName.matches(".+?\\[\\]$")) {
-			return false;
-		}
-		try {
-			// java.lang class name
-			Class<?> clazz = Class.forName("java.lang." + typeName);
-			return (Modifier.isFinal(clazz.getModifiers())) ? false : true;
-		} catch (Exception ignore) {
-			// imported class name
-			for (String importedPackage : classMeta.importedList) {
-				importedPackage = importedPackage.replaceAll("//",
-						StringValue.Empty);
-				if (importedPackage.matches(".+?\\." + typeName + "$")) {
-					return true;
-				}
-			}
-			// full package class name
-			if (typeName.matches(".+?\\..+")) {
-				try {
-					Class<?> clazz = Class.forName(typeName);
-					return (Modifier.isFinal(clazz.getModifiers())) ? false
-							: true;
-				} catch (Exception e) {
-					return false;
-				}
-			}
-		}
-		return false;
-	}
+    public boolean isJMockitMockableType(String typeName) {
+        if (typeName == null) {
+            return false;
+        }
+        if (PrimitiveTypeUtil.isPrimitive(typeName)
+                || typeName.matches(".+?\\[\\]$")) {
+            return false;
+        }
+        try {
+            // java.lang class name
+            Class<?> clazz = Class.forName("java.lang." + typeName);
+            return (Modifier.isFinal(clazz.getModifiers())) ? false : true;
+        } catch (Exception ignore) {
+            // imported class name
+            for (String importedPackage : classMeta.importedList) {
+                importedPackage = importedPackage.replaceAll("//",
+                        StringValue.Empty);
+                if (importedPackage.matches(".+?\\." + typeName + "$")) {
+                    return true;
+                }
+            }
+            // full package class name
+            if (typeName.matches(".+?\\..+")) {
+                try {
+                    Class<?> clazz = Class.forName(typeName);
+                    return (Modifier.isFinal(clazz.getModifiers())) ? false
+                            : true;
+                } catch (Exception e) {
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
 
 }

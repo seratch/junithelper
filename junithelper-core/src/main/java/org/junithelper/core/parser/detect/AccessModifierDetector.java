@@ -17,39 +17,39 @@ package org.junithelper.core.parser.detect;
 
 public class AccessModifierDetector {
 
-	public boolean isPublic(String methodSignature) {
-		return methodSignature != null
-				&& methodSignature.matches(RegExp.Prefix + "public"
-						+ RegExp.Suffix);
-	}
+    public boolean isPublic(String methodSignature) {
+        return methodSignature != null
+                && methodSignature.matches(RegExp.Prefix + "public"
+                + RegExp.Suffix);
+    }
 
-	public boolean isProtected(String methodSignature) {
-		return methodSignature != null
-				&& methodSignature.matches(RegExp.Prefix + "protected"
-						+ RegExp.Suffix);
-	}
+    public boolean isProtected(String methodSignature) {
+        return methodSignature != null
+                && methodSignature.matches(RegExp.Prefix + "protected"
+                + RegExp.Suffix);
+    }
 
-	public boolean isPackageLocal(String methodSignature) {
-		return methodSignature != null
-				&& !methodSignature.matches(RegExp.Prefix + "public"
-						+ RegExp.Suffix)
-				&& !methodSignature.matches(RegExp.Prefix + "protected"
-						+ RegExp.Suffix)
-				&& !methodSignature.matches(RegExp.Prefix + "private"
-						+ RegExp.Suffix);
-	}
+    public boolean isPackageLocal(String methodSignature) {
+        return methodSignature != null
+                && !methodSignature.matches(RegExp.Prefix + "public"
+                + RegExp.Suffix)
+                && !methodSignature.matches(RegExp.Prefix + "protected"
+                + RegExp.Suffix)
+                && !methodSignature.matches(RegExp.Prefix + "private"
+                + RegExp.Suffix);
+    }
 
-	public boolean isPrivate(String methodSignature) {
-		return methodSignature != null
-				&& methodSignature.matches(RegExp.Prefix + "private"
-						+ RegExp.Suffix);
-	}
+    public boolean isPrivate(String methodSignature) {
+        return methodSignature != null
+                && methodSignature.matches(RegExp.Prefix + "private"
+                + RegExp.Suffix);
+    }
 
-	public static final class RegExp {
+    public static final class RegExp {
 
-		public static final String Prefix = "\\s*[\\{;\\}]*(\\s*.*\\s+)?";
-		public static final String Suffix = "\\s+?.*\\{\\s*";
+        public static final String Prefix = "\\s*[\\{;\\}]*(\\s*.*\\s+)?";
+        public static final String Suffix = "\\s+?.*\\{\\s*";
 
-	}
+    }
 
 }

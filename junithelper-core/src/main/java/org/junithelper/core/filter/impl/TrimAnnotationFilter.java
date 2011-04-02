@@ -19,14 +19,14 @@ import org.junithelper.core.filter.TrimFilter;
 
 public class TrimAnnotationFilter implements TrimFilter {
 
-	@Override
-	public String trimAll(String src) {
-		if (src == null) {
-			return null;
-		}
-		return src.replaceFirst("@interface", "interface")
-				.replaceAll("@[^\\s\r\n\\(]+(\\([^\\)]*\\))*", " ")
-				.replaceAll("@[^\\s\r\n]+", "");
-	}
+    @Override
+    public String trimAll(String src) {
+        if (src == null) {
+            return null;
+        }
+        return src.replaceFirst("@interface", "interface")
+                .replaceAll("@[^\\s\r\n\\(]+(\\([^\\)]*\\))*", " ")
+                .replaceAll("@[^\\s\r\n]+", "");
+    }
 
 }

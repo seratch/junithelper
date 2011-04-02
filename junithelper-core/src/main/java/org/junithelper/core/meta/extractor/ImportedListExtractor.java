@@ -15,38 +15,38 @@
  */
 package org.junithelper.core.meta.extractor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junithelper.core.config.Configulation;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
 import org.junithelper.core.filter.TrimFilterUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ImportedListExtractor {
 
-	@SuppressWarnings("unused")
-	private Configulation config;
+    @SuppressWarnings("unused")
+    private Configulation config;
 
-	public ImportedListExtractor(Configulation config) {
-		this.config = config;
-	}
+    public ImportedListExtractor(Configulation config) {
+        this.config = config;
+    }
 
-	public List<String> extract(String sourceCodeString) {
-		List<String> dest = new ArrayList<String>();
-		sourceCodeString = TrimFilterUtil.doAllFilters(sourceCodeString)
-				.replaceAll(RegExp.CRLF, StringValue.Space);
-		String[] splittedArray = sourceCodeString.split("import\\s+");
-		int len = splittedArray.length;
-		for (int i = 1; i < len; i++) {
-			String each = splittedArray[i].trim();
-			if (each.matches("\\s*(static)*[^;]+?;")) {
-				dest.add(each.replaceAll(";", ""));
-			} else if (each.matches("\\s*(static)*.+?;.+")) {
-				dest.add(each.split(";")[0]);
-			}
-		}
-		return dest;
-	}
+    public List<String> extract(String sourceCodeString) {
+        List<String> dest = new ArrayList<String>();
+        sourceCodeString = TrimFilterUtil.doAllFilters(sourceCodeString)
+                .replaceAll(RegExp.CRLF, StringValue.Space);
+        String[] splittedArray = sourceCodeString.split("import\\s+");
+        int len = splittedArray.length;
+        for (int i = 1; i < len; i++) {
+            String each = splittedArray[i].trim();
+            if (each.matches("\\s*(static)*[^;]+?;")) {
+                dest.add(each.replaceAll(";", ""));
+            } else if (each.matches("\\s*(static)*.+?;.+")) {
+                dest.add(each.split(";")[0]);
+            }
+        }
+        return dest;
+    }
 
 }

@@ -17,18 +17,18 @@ package org.junithelper.core.config;
 
 public enum MockObjectFramework {
 
-	JMock2("JMock2"), EasyMock("EasyMock"), Mockito("Mockito"), JMockit(
-			"JMockit");
+    JMock2("JMock2"), EasyMock("EasyMock"), Mockito("Mockito"), JMockit(
+            "JMockit");
 
-	private String name;
+    private String name;
 
-	private MockObjectFramework(String name) {
-		this.name = name;
-	}
+    private MockObjectFramework(String name) {
+        this.name = name;
+    }
 
-	@Override
-	public String toString() {
-		return this.name;
-	}
+    @Override
+    public String toString() {
+        return this.name;
+    }
 
 }

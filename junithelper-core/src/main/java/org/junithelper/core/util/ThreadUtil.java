@@ -17,15 +17,15 @@ package org.junithelper.core.util;
 
 public class ThreadUtil {
 
-	private ThreadUtil() {
-	}
+    private ThreadUtil() {
+    }
 
-	public static final void sleep(long millisec) {
-		try {
-			Thread.sleep(millisec);
-		} catch (InterruptedException ignore) {
-			Thread.currentThread().interrupt();
-		}
-	}
+    public static final void sleep(long millisec) {
+        try {
+            Thread.sleep(millisec);
+        } catch (InterruptedException ignore) {
+            Thread.currentThread().interrupt();
+        }
+    }
 
 }

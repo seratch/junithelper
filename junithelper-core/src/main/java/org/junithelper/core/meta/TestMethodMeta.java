@@ -17,14 +17,14 @@ package org.junithelper.core.meta;
 
 public class TestMethodMeta {
 
-	public boolean isTypeTest;
+    public boolean isTypeTest;
 
-	public boolean isInstantiationTest;
+    public boolean isInstantiationTest;
 
-	public ClassMeta classMeta;
+    public ClassMeta classMeta;
 
-	public MethodMeta methodMeta;
+    public MethodMeta methodMeta;
 
-	public ExceptionMeta testingTargetException;
+    public ExceptionMeta testingTargetException;
 
 }

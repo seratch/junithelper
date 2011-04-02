@@ -15,34 +15,34 @@
  */
 package org.junithelper.core.file.impl;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.file.FileSearcher;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 public class CommonsIOFileSearcher implements FileSearcher {
 
-	@Override
-	public List<File> searchFilesRecursivelyByName(String baseAbsoluteDir,
-			String regexp) {
-		File dir = new File(baseAbsoluteDir);
-		IOFileFilter fileFilter = new RegexFileFilter(
-				RegExp.Anything_ZeroOrMore_Min + regexp
-						+ RegExp.Anything_ZeroOrMore_Min);
-		IOFileFilter dirFilter = new RegexFileFilter("[^(/\\.)]*");
-		Collection<File> files = FileUtils
-				.listFiles(dir, fileFilter, dirFilter);
-		List<File> dest = new ArrayList<File>();
-		for (File file : files) {
-			dest.add(file);
-		}
-		return dest;
-	}
+    @Override
+    public List<File> searchFilesRecursivelyByName(String baseAbsoluteDir,
+                                                   String regexp) {
+        File dir = new File(baseAbsoluteDir);
+        IOFileFilter fileFilter = new RegexFileFilter(
+                RegExp.Anything_ZeroOrMore_Min + regexp
+                        + RegExp.Anything_ZeroOrMore_Min);
+        IOFileFilter dirFilter = new RegexFileFilter("[^(/\\.)]*");
+        Collection<File> files = FileUtils
+                .listFiles(dir, fileFilter, dirFilter);
+        List<File> dest = new ArrayList<File>();
+        for (File file : files) {
+            dest.add(file);
+        }
+        return dest;
+    }
 
 }

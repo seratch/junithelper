@@ -17,15 +17,15 @@ package org.junithelper.core.util;
 
 public class Stdout {
 
-	private Stdout() {
-	}
+    private Stdout() {
+    }
 
-	public static final void printf(String format, Object... values) {
-		System.out.printf(format, values);
-	}
+    public static final void printf(String format, Object... values) {
+        System.out.printf(format, values);
+    }
 
-	public static final void p(String str) {
-		System.out.println(str);
-	}
+    public static final void p(String str) {
+        System.out.println(str);
+    }
 
 }

@@ -15,54 +15,54 @@
  */
 package org.junithelper.core.file.impl;
 
+import org.apache.commons.io.FileUtils;
+import org.junithelper.core.file.FileReader;
+import org.junithelper.core.util.IOUtil;
+import org.mozilla.universalchardet.UniversalDetector;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
-import org.apache.commons.io.FileUtils;
-import org.junithelper.core.file.FileReader;
-import org.junithelper.core.util.IOUtil;
-import org.mozilla.universalchardet.UniversalDetector;
-
 public class CommonsIOFileReader implements FileReader {
 
-	@Override
-	public InputStream getResourceAsStream(String name) {
-		return CommonsIOFileReader.class.getClassLoader().getResourceAsStream(
-				name);
-	}
+    @Override
+    public InputStream getResourceAsStream(String name) {
+        return CommonsIOFileReader.class.getClassLoader().getResourceAsStream(
+                name);
+    }
 
-	@Override
-	public String readAsString(File file) throws IOException {
-		String readResult = FileUtils.readFileToString(file,
-				getDetectedEncoding(file));
-		return readResult;
-	}
+    @Override
+    public String readAsString(File file) throws IOException {
+        String readResult = FileUtils.readFileToString(file,
+                getDetectedEncoding(file));
+        return readResult;
+    }
 
-	@Override
-	public String getDetectedEncoding(File file) {
-		InputStream is = null;
-		String encoding = null;
-		try {
-			is = new FileInputStream(file);
-			UniversalDetector detector = new UniversalDetector(null);
-			byte[] buf = new byte[4096];
-			int nread;
-			while ((nread = is.read(buf)) > 0 && !detector.isDone())
-				detector.handleData(buf, 0, nread);
-			detector.dataEnd();
-			encoding = detector.getDetectedCharset();
-		} catch (IOException e) {
-			// nothing to do
-		} finally {
-			IOUtil.close(is);
-			if (encoding == null) {
-				return Charset.defaultCharset().name();
-			}
-		}
-		return encoding;
-	}
+    @Override
+    public String getDetectedEncoding(File file) {
+        InputStream is = null;
+        String encoding = null;
+        try {
+            is = new FileInputStream(file);
+            UniversalDetector detector = new UniversalDetector(null);
+            byte[] buf = new byte[4096];
+            int nread;
+            while ((nread = is.read(buf)) > 0 && !detector.isDone())
+                detector.handleData(buf, 0, nread);
+            detector.dataEnd();
+            encoding = detector.getDetectedCharset();
+        } catch (IOException e) {
+            // nothing to do
+        } finally {
+            IOUtil.close(is);
+            if (encoding == null) {
+                return Charset.defaultCharset().name();
+            }
+        }
+        return encoding;
+    }
 
 }

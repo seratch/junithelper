@@ -20,14 +20,14 @@ import java.util.List;
 
 public class ConstructorMeta {
 
-	public AccessModifier accessModifier = AccessModifier.Public;
+    public AccessModifier accessModifier = AccessModifier.Public;
 
-	public List<ArgTypeMeta> argTypes = new ArrayList<ArgTypeMeta>();
+    public List<ArgTypeMeta> argTypes = new ArrayList<ArgTypeMeta>();
 
-	public List<String> argNames = new ArrayList<String>();
+    public List<String> argNames = new ArrayList<String>();
 
-	public List<ExceptionMeta> throwsExceptions = new ArrayList<ExceptionMeta>();
+    public List<ExceptionMeta> throwsExceptions = new ArrayList<ExceptionMeta>();
 
-	public ExceptionMeta testingTargetException;
+    public ExceptionMeta testingTargetException;
 
 }

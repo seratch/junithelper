@@ -17,17 +17,17 @@ package org.junithelper.core.config;
 
 public enum JUnitVersion {
 
-	version3("version3"), version4("version4");
+    version3("version3"), version4("version4");
 
-	private String name;
+    private String name;
 
-	private JUnitVersion(String name) {
-		this.name = name;
-	}
+    private JUnitVersion(String name) {
+        this.name = name;
+    }
 
-	@Override
-	public String toString() {
-		return this.name;
-	}
+    @Override
+    public String toString() {
+        return this.name;
+    }
 
 }
