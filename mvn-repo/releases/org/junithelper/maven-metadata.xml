@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <plugins>
+    <plugin>
+      <name>maven-junithelper-plugin Maven Mojo</name>
+      <prefix>junithelper</prefix>
+      <artifactId>maven-junithelper-plugin</artifactId>
+    </plugin>
+  </plugins>
+</metadata>
