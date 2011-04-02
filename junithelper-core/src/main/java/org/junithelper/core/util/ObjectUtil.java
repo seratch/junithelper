@@ -26,7 +26,7 @@ public final class ObjectUtil {
     }
 
     @SuppressWarnings("unchecked")
-    public static final <T> T deepCopy(T obj) {
+    public static <T> T deepCopy(T obj) {
         try {
             if (obj == null) {
                 return null;
@@ -39,8 +39,7 @@ public final class ObjectUtil {
                 field.setAccessible(true);
                 if (!Modifier.isFinal(field.getModifiers())) {
                     if (field.get(obj) instanceof List<?>) {
-                        List<?> copiedList = deepCopyList((List<?>) field
-                                .get(obj));
+                        List<?> copiedList = deepCopyList((List<?>) field.get(obj));
                         field.set(clone, copiedList);
                     } else {
                         field.set(clone, field.get(obj));
@@ -58,8 +57,7 @@ public final class ObjectUtil {
                     field.setAccessible(true);
                     if (!Modifier.isFinal(field.getModifiers())) {
                         if (field.get(obj) instanceof List<?>) {
-                            List<?> copiedList = deepCopyList((List<?>) field
-                                    .get(obj));
+                            List<?> copiedList = deepCopyList((List<?>) field.get(obj));
                             field.set(clone, copiedList);
                         } else {
                             field.set(clone, field.get(obj));
@@ -75,7 +73,7 @@ public final class ObjectUtil {
         }
     }
 
-    public static final <T> List<T> deepCopyList(List<T> arg) {
+    public static <T> List<T> deepCopyList(List<T> arg) {
         if (arg == null) {
             return null;
         }

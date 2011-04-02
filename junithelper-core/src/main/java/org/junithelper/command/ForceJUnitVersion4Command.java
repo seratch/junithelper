@@ -37,8 +37,8 @@ public class ForceJUnitVersion4Command extends AbstractCommand {
     public static void main(String[] args) throws Exception {
         config = overrideConfigulation(config);
         config.junitVersion = JUnitVersion.version4;
-        String dirOrFile = (args != null && args.length > 0 && args[0] != null) ? args[0]
-                : config.directoryPathOfProductSourceCode;
+        String dirOrFile = (args != null && args.length > 0 && args[0] != null)
+                ? args[0] : config.directoryPathOfProductSourceCode;
         List<File> javaFiles = findTargets(config, dirOrFile);
         for (File javaFile : javaFiles) {
             Stdout.p("  Target: " + javaFile.getAbsolutePath());
@@ -47,18 +47,14 @@ public class ForceJUnitVersion4Command extends AbstractCommand {
         if (confirmToExecute() > 0) {
             return;
         }
-        TestCaseGenerator testCaseGenerator = new DefaultTestCaseGenerator(
-                config);
+        TestCaseGenerator testCaseGenerator = new DefaultTestCaseGenerator(config);
         FileReader fileReader = new CommonsIOFileReader();
         for (File javaFile : javaFiles) {
             File testFile = null;
             String currentTestCaseSourceCode = null;
             try {
-                testFile = new File(javaFile
-                        .getAbsolutePath()
-                        .replaceAll("\\\\", "/")
-                        .replaceFirst(
-                                getDirectoryPathOfProductSourceCode(config),
+                testFile = new File(javaFile.getAbsolutePath().replaceAll("\\\\", "/")
+                        .replaceFirst(getDirectoryPathOfProductSourceCode(config),
                                 getDirectoryPathOfTestSourceCode(config))
                         .replaceFirst("\\.java", "Test.java"));
                 currentTestCaseSourceCode = fileReader.readAsString(testFile);
@@ -67,11 +63,9 @@ public class ForceJUnitVersion4Command extends AbstractCommand {
             testCaseGenerator.initialize(fileReader.readAsString(javaFile));
             String testCodeString = null;
             if (currentTestCaseSourceCode != null) {
-                testCodeString = testCaseGenerator
-                        .getUnifiedVersionTestCaseSourceCode(
-                                testCaseGenerator
-                                        .getTestCaseSourceCodeWithLackingTestMethod(currentTestCaseSourceCode),
-                                JUnitVersion.version4);
+                testCodeString = testCaseGenerator.getUnifiedVersionTestCaseSourceCode(
+                        testCaseGenerator.getTestCaseSourceCodeWithLackingTestMethod(currentTestCaseSourceCode),
+                        JUnitVersion.version4);
             } else {
                 testCodeString = testCaseGenerator.getNewTestCaseSourceCode();
             }

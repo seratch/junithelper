@@ -27,9 +27,7 @@ public class MessageValue {
         if (lang == null || lang.equals("")) {
             lang = "en";
         }
-        InputStream is = this
-                .getClass()
-                .getClassLoader()
+        InputStream is = this.getClass().getClassLoader()
                 .getResourceAsStream("junithelper-core_" + lang + ".properties");
         try {
             props = new Properties();

@@ -35,8 +35,8 @@ public class MakeTestCommand extends AbstractCommand {
 
     public static void main(String[] args) throws Exception {
         config = overrideConfigulation(config);
-        String dirOrFile = (args != null && args.length > 0 && args[0] != null) ? args[0]
-                : config.directoryPathOfProductSourceCode;
+        String dirOrFile = (args != null && args.length > 0 && args[0] != null)
+                ? args[0] : config.directoryPathOfProductSourceCode;
         List<File> javaFiles = findTargets(config, dirOrFile);
         for (File javaFile : javaFiles) {
             Stdout.p("  Target: " + javaFile.getAbsolutePath());
@@ -46,17 +46,14 @@ public class MakeTestCommand extends AbstractCommand {
             return;
         }
         FileReader fileReader = new CommonsIOFileReader();
-        TestCaseGenerator testCaseGenerator = new DefaultTestCaseGenerator(
-                config);
+        TestCaseGenerator testCaseGenerator = new DefaultTestCaseGenerator(config);
         for (File javaFile : javaFiles) {
             File testFile = null;
             String currentTestCaseSourceCode = null;
             try {
-                testFile = new File(javaFile
-                        .getAbsolutePath()
+                testFile = new File(javaFile.getAbsolutePath()
                         .replaceAll("\\\\", "/")
-                        .replaceFirst(
-                                getDirectoryPathOfProductSourceCode(config),
+                        .replaceFirst(getDirectoryPathOfProductSourceCode(config),
                                 getDirectoryPathOfTestSourceCode(config))
                         .replaceFirst("\\.java", "Test.java"));
                 currentTestCaseSourceCode = fileReader.readAsString(testFile);
@@ -65,8 +62,8 @@ public class MakeTestCommand extends AbstractCommand {
             testCaseGenerator.initialize(fileReader.readAsString(javaFile));
             String testCodeString = null;
             if (currentTestCaseSourceCode != null) {
-                testCodeString = testCaseGenerator
-                        .getTestCaseSourceCodeWithLackingTestMethod(currentTestCaseSourceCode);
+                testCodeString = testCaseGenerator.getTestCaseSourceCodeWithLackingTestMethod(
+                        currentTestCaseSourceCode);
                 if (!testCodeString.equals(currentTestCaseSourceCode)) {
                     Stdout.p("  Modified: " + testFile.getAbsolutePath());
                     new CommonsIOFileWriter(testFile).writeText(testCodeString);

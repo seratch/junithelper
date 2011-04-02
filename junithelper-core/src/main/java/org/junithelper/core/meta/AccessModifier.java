@@ -17,8 +17,10 @@ package org.junithelper.core.meta;
 
 public enum AccessModifier {
 
-    Public("public"), Protected("protected"), PackageLocal(""), Private(
-            "private");
+    Public("public"),
+    Protected("protected"),
+    PackageLocal(""),
+    Private("private");
 
     private String name;
 

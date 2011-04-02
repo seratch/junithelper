@@ -30,14 +30,12 @@ public class CommonsIOFileReader implements FileReader {
 
     @Override
     public InputStream getResourceAsStream(String name) {
-        return CommonsIOFileReader.class.getClassLoader().getResourceAsStream(
-                name);
+        return CommonsIOFileReader.class.getClassLoader().getResourceAsStream(name);
     }
 
     @Override
     public String readAsString(File file) throws IOException {
-        String readResult = FileUtils.readFileToString(file,
-                getDetectedEncoding(file));
+        String readResult = FileUtils.readFileToString(file, getDetectedEncoding(file));
         return readResult;
     }
 
@@ -50,8 +48,9 @@ public class CommonsIOFileReader implements FileReader {
             UniversalDetector detector = new UniversalDetector(null);
             byte[] buf = new byte[4096];
             int nread;
-            while ((nread = is.read(buf)) > 0 && !detector.isDone())
+            while ((nread = is.read(buf)) > 0 && !detector.isDone()) {
                 detector.handleData(buf, 0, nread);
+            }
             detector.dataEnd();
             encoding = detector.getDetectedCharset();
         } catch (IOException e) {

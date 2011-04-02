@@ -37,37 +37,31 @@ public class ConfigulationLoader {
         for (Object key : keys) {
             String[] splitted = String.valueOf(key).split("\\.");
             if (splitted.length == 1) {
-                Field f = Configulation.class.getDeclaredField(String
-                        .valueOf(key));
+                Field f = Configulation.class.getDeclaredField(String.valueOf(key));
                 if (f.getType().isEnum()) {
                     try {
-                        Method m = f.getType().getDeclaredMethod("valueOf",
-                                String.class);
+                        Method m = f.getType().getDeclaredMethod("valueOf", String.class);
                         Object value = m.invoke(f.getType(), props.get(key));
                         f.set(config, value);
                     } catch (Exception e) {
                     }
                 } else {
                     if (f.getType() == boolean.class) {
-                        f.set(config,
-                                Boolean.valueOf(String.valueOf(props.get(key))));
+                        f.set(config, Boolean.valueOf(String.valueOf(props.get(key))));
                     } else {
                         f.set(config, props.get(key));
                     }
                 }
             } else if (splitted.length == 2) {
-                Field f = Configulation.class.getDeclaredField(String
-                        .valueOf(splitted[0]));
+                Field f = Configulation.class.getDeclaredField(String.valueOf(splitted[0]));
                 Field target = f.getType().getDeclaredField(splitted[1]);
                 if (target.getType() == boolean.class) {
-                    target.set(f.get(config),
-                            Boolean.valueOf(String.valueOf(props.get(key))));
+                    target.set(f.get(config), Boolean.valueOf(String.valueOf(props.get(key))));
                 } else {
                     target.set(f.get(config), props.get(key));
                 }
             } else {
-                throw new IllegalArgumentException("Invalid configulation - "
-                        + key);
+                throw new IllegalArgumentException("Invalid configulation - " + key);
             }
         }
         return config;

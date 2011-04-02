@@ -111,8 +111,7 @@ public class TrimInsideOfBraceFilter implements TrimFilter {
         return sb.toString();
     }
 
-    static int countPreviousContinuedBackslash(String str,
-                                               int currentNotBackslashCharIndex, int count) {
+    static int countPreviousContinuedBackslash(String str, int currentNotBackslashCharIndex, int count) {
         Character previous = null;
         if (currentNotBackslashCharIndex > 0) {
             int previousIndex = currentNotBackslashCharIndex - 1;

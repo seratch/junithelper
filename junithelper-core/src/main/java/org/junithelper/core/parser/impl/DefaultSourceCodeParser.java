@@ -61,12 +61,11 @@ public class DefaultSourceCodeParser implements SourceCodeParser {
         return methodMetaExtractor.extract(sourceCodeString);
     }
 
-    List<ConstructorMeta> getConstructors(ClassMeta classMeta,
-                                          String sourceCodeString) {
+    List<ConstructorMeta> getConstructors(ClassMeta classMeta, String sourceCodeString) {
         methodMetaExtractor.initialize(classMeta, sourceCodeString);
         constructorMetaExtractor.initialize(classMeta, sourceCodeString);
-        List<ConstructorMeta> constructorMetaList = constructorMetaExtractor
-                .extract(sourceCodeString);
+        List<ConstructorMeta> constructorMetaList
+                = constructorMetaExtractor.extract(sourceCodeString);
         if (constructorMetaList.size() == 0) {
             ConstructorMeta defaultConstructor = new ConstructorMeta();
             constructorMetaList.add(defaultConstructor);

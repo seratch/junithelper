@@ -25,8 +25,7 @@ public class TrimQuotationFilter implements TrimFilter {
         if (src == null) {
             return null;
         }
-        return src.replaceAll("\"", StringValue.Empty).replaceAll("'",
-                StringValue.Empty);
+        return src.replaceAll("\"", StringValue.Empty).replaceAll("'", StringValue.Empty);
     }
 
 }

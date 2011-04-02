@@ -26,7 +26,6 @@ public interface ConstructorGenerator {
 
     String getFirstInstantiationSourceCode(ClassMeta classMeta);
 
-    String getInstantiationSourceCode(ClassMeta classMeta,
-                                      ConstructorMeta constructorMeta);
+    String getInstantiationSourceCode(ClassMeta classMeta, ConstructorMeta constructorMeta);
 
 }

@@ -29,14 +29,12 @@ public class TrimCommentFilter implements TrimFilter {
         String[] lines = src.split(RegExp.LF);
         StringBuilder sb = new StringBuilder();
         for (String line : lines) {
-            line = new TrimInsideOfStringFilter().trimAll(line).replaceFirst(
-                    "//.*$", "");
+            line = new TrimInsideOfStringFilter().trimAll(line).replaceFirst("//.*$", "");
             sb.append(line);
         }
         String withoutLineComments = sb.toString();
         String withoutLineBreak = withoutLineComments.replaceAll("\r|\n", " ");
-        String withoutComments = withoutLineBreak.replaceAll("/\\*.*?\\*/",
-                StringValue.Empty);
+        String withoutComments = withoutLineBreak.replaceAll("/\\*.*?\\*/", StringValue.Empty);
         return withoutComments;
     }
 

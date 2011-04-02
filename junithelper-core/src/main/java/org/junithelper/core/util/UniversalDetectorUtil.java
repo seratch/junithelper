@@ -16,8 +16,9 @@ public class UniversalDetectorUtil {
         UniversalDetector detector = new UniversalDetector(null);
         byte[] buf = new byte[4096];
         int nread;
-        while ((nread = is.read(buf)) > 0 && !detector.isDone())
+        while ((nread = is.read(buf)) > 0 && !detector.isDone()) {
             detector.handleData(buf, 0, nread);
+        }
         detector.dataEnd();
         return detector.getDetectedCharset();
     }

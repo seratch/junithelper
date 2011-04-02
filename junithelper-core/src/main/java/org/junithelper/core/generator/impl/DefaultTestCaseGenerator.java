@@ -15,10 +15,7 @@
  */
 package org.junithelper.core.generator.impl;
 
-import org.junithelper.core.config.Configulation;
-import org.junithelper.core.config.JUnitVersion;
-import org.junithelper.core.config.MessageValue;
-import org.junithelper.core.config.MockObjectFramework;
+import org.junithelper.core.config.*;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
 import org.junithelper.core.filter.TrimFilterUtil;
@@ -75,8 +72,7 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
     }
 
     @Override
-    public List<TestMethodMeta> getLackingTestMethodMetaList(
-            String currentTestCaseSourceCode) {
+    public List<TestMethodMeta> getLackingTestMethodMetaList(String currentTestCaseSourceCode) {
 
         List<TestMethodMeta> dest = new ArrayList<TestMethodMeta>();
         String checkTargetSourceCode = TrimFilterUtil
@@ -141,16 +137,16 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
                         continue;
                     }
                     // testing target access modifier
-                    if ((methodMeta.accessModifier == AccessModifier.Public && config.target.isPublicMethodRequired)
-                            || (methodMeta.accessModifier == AccessModifier.Protected && config.target.isProtectedMethodRequired)
-                            || (methodMeta.accessModifier == AccessModifier.PackageLocal && config.target.isPackageLocalMethodRequired)) {
-                        dest.add(testMethodGenerator
-                                .getTestMethodMeta(methodMeta));
+                    if (isPublicMethodAndTestingRequired(methodMeta, config.target)
+                            || isProtectedMethodAndTestingRequired(methodMeta, config.target)
+                            || isPackageLocalMethodAndTestingRequired(methodMeta, config.target)) {
+                        dest.add(testMethodGenerator.getTestMethodMeta(methodMeta));
                         if (config.target.isExceptionPatternRequired) {
                             // testing exception patterns
                             for (ExceptionMeta exceptionMeta : methodMeta.throwsExceptions) {
-                                dest.add(testMethodGenerator.getTestMethodMeta(
-                                        methodMeta, exceptionMeta));
+                                TestMethodMeta newOne =
+                                        testMethodGenerator.getTestMethodMeta(methodMeta, exceptionMeta);
+                                dest.add(newOne);
                             }
                         }
                     }
@@ -164,6 +160,21 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
             }
         }
         return dest;
+    }
+
+    boolean isPublicMethodAndTestingRequired(MethodMeta methodMeta, TestingTarget target) {
+        return methodMeta.accessModifier == AccessModifier.Public
+                && target.isPublicMethodRequired;
+    }
+
+    boolean isProtectedMethodAndTestingRequired(MethodMeta methodMeta, TestingTarget target) {
+        return methodMeta.accessModifier == AccessModifier.Protected
+                && target.isProtectedMethodRequired;
+    }
+
+    boolean isPackageLocalMethodAndTestingRequired(MethodMeta methodMeta, TestingTarget target) {
+        return methodMeta.accessModifier == AccessModifier.PackageLocal
+                && target.isPackageLocalMethodRequired;
     }
 
     @Override
@@ -199,8 +210,7 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
         buf.append("Test ");
         if (config.junitVersion == JUnitVersion.version3) {
             buf.append("extends ");
-            String[] splittedArray = config.testCaseClassNameToExtend
-                    .split("\\.");
+            String[] splittedArray = config.testCaseClassNameToExtend.split("\\.");
             buf.append(splittedArray[splittedArray.length - 1]);
             buf.append(" ");
         }
@@ -228,8 +238,7 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
         }
         for (TestMethodMeta testMethodMeta : lackingTestMethodMetaList) {
             // method signature
-            buf.append(testMethodGenerator
-                    .getTestMethodSourceCode(testMethodMeta));
+            buf.append(testMethodGenerator.getTestMethodSourceCode(testMethodMeta));
             buf.append(StringValue.CarriageReturn);
             buf.append(StringValue.LineFeed);
         }
@@ -244,25 +253,22 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
     public String getUnifiedVersionTestCaseSourceCode(
             String currentTestCaseSourceCode, JUnitVersion version) {
         String dest = currentTestCaseSourceCode;
-        ClassMeta classMeta = new ClassMetaExtractor(config)
-                .extract(currentTestCaseSourceCode);
+        ClassMeta classMeta = new ClassMetaExtractor(config).extract(currentTestCaseSourceCode);
         Configulation config = ObjectUtil.deepCopy(this.config);
         if (version == JUnitVersion.version3) {
             dest = dest.replaceAll("@Test[\\s\r\n]*public void ",
                     "public void test" + config.testMethodName.basicDelimiter);
-            String[] splittedArray = config.testCaseClassNameToExtend
-                    .split("\\.");
+            String[] splittedArray = config.testCaseClassNameToExtend.split("\\.");
             String testCaseName = splittedArray[splittedArray.length - 1];
-            dest = dest.replaceFirst(classMeta.name + "\\s*\\{", classMeta.name
-                    + " extends " + testCaseName + " {");
+            dest = dest.replaceFirst(classMeta.name + "\\s*\\{",
+                    classMeta.name + " extends " + testCaseName + " {");
             config.junitVersion = JUnitVersion.version3;
             dest = addRequiredImportList(dest, config);
         } else if (version == JUnitVersion.version4) {
-            dest = dest.replaceAll("public void test"
-                    + config.testMethodName.basicDelimiter,
+            dest = dest.replaceAll("public void test" + config.testMethodName.basicDelimiter,
                     "@Test \r\n\tpublic void ");
-            dest = dest.replaceFirst(classMeta.name
-                    + "\\s+extends\\s+.+\\s*\\{", classMeta.name + " {");
+            dest = dest.replaceFirst(classMeta.name + "\\s+extends\\s+.+\\s*\\{",
+                    classMeta.name + " {");
             config.junitVersion = JUnitVersion.version4;
             dest = addRequiredImportList(dest, config);
         }
@@ -279,47 +285,37 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
         StringBuilder importedListBuf = new StringBuilder();
         for (String imported : targetClassMeta.importedList) {
             String newOne = "import " + imported + ";";
-            if (!oneline.matches(RegExp.Anything_ZeroOrMore_Min + newOne
-                    + RegExp.Anything_ZeroOrMore_Min)) {
+            if (!oneline.matches(
+                    RegExp.Anything_ZeroOrMore_Min + newOne + RegExp.Anything_ZeroOrMore_Min)) {
                 importedListBuf.append(newOne);
                 importedListBuf.append(StringValue.CarriageReturn);
                 importedListBuf.append(StringValue.LineFeed);
             }
         }
         // Inner classes of test target class
-        appendIfNotExists(importedListBuf, oneline, "import "
-                + targetClassMeta.packageName + "." + targetClassMeta.name
-                + ".*;");
+        appendIfNotExists(importedListBuf, oneline,
+                "import " + targetClassMeta.packageName + "." + targetClassMeta.name + ".*;");
         // JUnit
         if (config.junitVersion == JUnitVersion.version3) {
-            appendIfNotExists(importedListBuf, oneline, "import "
-                    + config.testCaseClassNameToExtend + ";");
+            appendIfNotExists(importedListBuf, oneline,
+                    "import " + config.testCaseClassNameToExtend + ";");
         } else if (config.junitVersion == JUnitVersion.version4) {
-            appendIfNotExists(importedListBuf, oneline,
-                    "import static org.junit.Assert.*;");
-            appendIfNotExists(importedListBuf, oneline,
-                    "import org.junit.Test;");
+            appendIfNotExists(importedListBuf, oneline, "import static org.junit.Assert.*;");
+            appendIfNotExists(importedListBuf, oneline, "import org.junit.Test;");
         }
         // Mock object framework
         if (config.mockObjectFramework == MockObjectFramework.EasyMock) {
-            appendIfNotExists(importedListBuf, oneline,
-                    "import org.easymock.classextension.EasyMock;");
-            appendIfNotExists(importedListBuf, oneline,
-                    "import org.easymock.classextension.IMocksControl;");
+            appendIfNotExists(importedListBuf, oneline, "import org.easymock.classextension.EasyMock;");
+            appendIfNotExists(importedListBuf, oneline, "import org.easymock.classextension.IMocksControl;");
         } else if (config.mockObjectFramework == MockObjectFramework.JMock2) {
-            appendIfNotExists(importedListBuf, oneline,
-                    "import org.jmock.Mockery;");
-            appendIfNotExists(importedListBuf, oneline,
-                    "import org.jmock.Expectations;");
-            appendIfNotExists(importedListBuf, oneline,
-                    "import org.jmock.lib.legacy.ClassImposteriser;");
+            appendIfNotExists(importedListBuf, oneline, "import org.jmock.Mockery;");
+            appendIfNotExists(importedListBuf, oneline, "import org.jmock.Expectations;");
+            appendIfNotExists(importedListBuf, oneline, "import org.jmock.lib.legacy.ClassImposteriser;");
         } else if (config.mockObjectFramework == MockObjectFramework.JMockit) {
             appendIfNotExists(importedListBuf, oneline, "import mockit.Mocked;");
-            appendIfNotExists(importedListBuf, oneline,
-                    "import mockit.Expectations;");
+            appendIfNotExists(importedListBuf, oneline, "import mockit.Expectations;");
         } else if (config.mockObjectFramework == MockObjectFramework.Mockito) {
-            appendIfNotExists(importedListBuf, oneline,
-                    "import static org.mockito.BDDMockito.*;");
+            appendIfNotExists(importedListBuf, oneline, "import static org.mockito.BDDMockito.*;");
         }
         if (importedListBuf.length() > 0) {
             Matcher matcher = RegExp.PatternObject.PackageDefArea_Group
@@ -347,8 +343,8 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
                 + StringValue.LineFeed, StringValue.Empty);
         String importLineRegExp = importLine.replaceAll("\\s+", "\\\\s+")
                 .replaceAll("\\.", "\\\\.").replaceAll("\\*", "\\\\*");
-        if (!oneline.matches(RegExp.Anything_ZeroOrMore_Min + importLineRegExp
-                + RegExp.Anything_ZeroOrMore_Min)) {
+        if (!oneline.matches(
+                RegExp.Anything_ZeroOrMore_Min + importLineRegExp + RegExp.Anything_ZeroOrMore_Min)) {
             buf.append(importLine);
             buf.append(StringValue.CarriageReturn);
             buf.append(StringValue.LineFeed);

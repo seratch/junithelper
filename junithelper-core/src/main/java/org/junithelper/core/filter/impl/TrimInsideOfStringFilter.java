@@ -39,15 +39,13 @@ public class TrimInsideOfStringFilter implements TrimFilter {
         return sb.toString();
     }
 
-    static int countPreviousContinuedBackslash(String str,
-                                               int currentNotBackslashCharIndex, int count) {
+    static int countPreviousContinuedBackslash(String str, int currentNotBackslashCharIndex, int count) {
         Character previous = null;
         if (currentNotBackslashCharIndex > 0) {
             int previousIndex = currentNotBackslashCharIndex - 1;
             previous = str.charAt(previousIndex);
             if (previous == '\\') {
-                return countPreviousContinuedBackslash(str, previousIndex,
-                        count + 1);
+                return countPreviousContinuedBackslash(str, previousIndex, count + 1);
             } else {
                 return count;
             }

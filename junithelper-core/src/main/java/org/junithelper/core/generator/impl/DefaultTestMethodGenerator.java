@@ -53,8 +53,7 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
     }
 
     @Override
-    public TestMethodMeta getTestMethodMeta(MethodMeta targetMethodMeta,
-                                            ExceptionMeta exception) {
+    public TestMethodMeta getTestMethodMeta(MethodMeta targetMethodMeta, ExceptionMeta exception) {
         if (targetClassMeta == null) {
             throw new IllegalStateException("Not initialized");
         }
@@ -71,8 +70,7 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
     }
 
     @Override
-    public String getTestMethodNamePrefix(TestMethodMeta testMethodMeta,
-                                          ExceptionMeta exception) {
+    public String getTestMethodNamePrefix(TestMethodMeta testMethodMeta, ExceptionMeta exception) {
         MethodMeta targetMethodMeta = testMethodMeta.methodMeta;
         // testing instantiation
         if (targetMethodMeta == null) {
@@ -153,8 +151,7 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
         buf.append(getTestMethodNamePrefix(testMethodMeta,
                 testMethodMeta.testingTargetException));
         boolean isThrowableRequired = false;
-        if (testMethodMeta.methodMeta != null
-                && testMethodMeta.methodMeta.throwsExceptions != null) {
+        if (testMethodMeta.methodMeta != null && testMethodMeta.methodMeta.throwsExceptions != null) {
             for (ExceptionMeta ex : testMethodMeta.methodMeta.throwsExceptions) {
                 if (ex.name.equals("Throwable")) {
                     isThrowableRequired = true;
@@ -183,8 +180,8 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 
         } else if (testMethodMeta.isInstantiationTest) {
             // testing instantiation
-            String instantiation = constructorGenerator
-                    .getFirstInstantiationSourceCode(testMethodMeta.classMeta);
+            String instantiation = constructorGenerator.getFirstInstantiationSourceCode(
+                    testMethodMeta.classMeta);
             buf.append(instantiation);
             appendTabs(buf, 2);
             buf.append("assertNotNull(target);");
@@ -211,8 +208,8 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
             }
             // instantiation if testing an instance method
             if (!testMethodMeta.methodMeta.isStatic) {
-                String instantiation = constructorGenerator
-                        .getFirstInstantiationSourceCode(testMethodMeta.classMeta);
+                String instantiation = constructorGenerator.getFirstInstantiationSourceCode(
+                        testMethodMeta.classMeta);
                 buf.append(instantiation);
             }
             // Mockito BDD
@@ -248,10 +245,10 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
                     appendTabs(buf, 2);
                     buf.append(testMethodMeta.methodMeta.returnType.name);
                     buf.append(" expected = ");
-                    if (PrimitiveTypeUtil
-                            .isPrimitive(testMethodMeta.methodMeta.returnType.name)) {
-                        buf.append(PrimitiveTypeUtil
-                                .getTypeDefaultValue(testMethodMeta.methodMeta.returnType.name));
+                    if (PrimitiveTypeUtil.isPrimitive(
+                            testMethodMeta.methodMeta.returnType.name)) {
+                        buf.append(PrimitiveTypeUtil.getTypeDefaultValue(
+                                testMethodMeta.methodMeta.returnType.name));
                     } else {
                         buf.append("null");
                     }
@@ -325,8 +322,7 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
                 if (config.mockObjectFramework == MockObjectFramework.JMock2) {
                     buf.append("final ");
                 }
-                ArgTypeMeta argTypeMeta = testMethodMeta.methodMeta.argTypes
-                        .get(i);
+                ArgTypeMeta argTypeMeta = testMethodMeta.methodMeta.argTypes.get(i);
                 String typeName = argTypeMeta.name;
                 String argName = testMethodMeta.methodMeta.argNames.get(i);
                 buf.append(typeName);
@@ -404,10 +400,8 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
         }
     }
 
-    void appendExecutingTargetMethod(StringBuilder buf,
-                                     TestMethodMeta testMethodMeta) {
-        String actor = (testMethodMeta.methodMeta.isStatic) ? testMethodMeta.classMeta.name
-                : "target";
+    void appendExecutingTargetMethod(StringBuilder buf, TestMethodMeta testMethodMeta) {
+        String actor = (testMethodMeta.methodMeta.isStatic) ? testMethodMeta.classMeta.name : "target";
         buf.append(actor);
         buf.append(".");
         buf.append(testMethodMeta.methodMeta.name);
@@ -450,16 +444,13 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
                         .isJMockitMockableType(typeName)) {
                     continue;
                 }
-                ArgTypeMeta argTypeMeta = testMethodMeta.methodMeta.argTypes
-                        .get(i);
+                ArgTypeMeta argTypeMeta = testMethodMeta.methodMeta.argTypes.get(i);
                 String argName = testMethodMeta.methodMeta.argNames.get(i);
                 String value = getArgValue(testMethodMeta, argTypeMeta, argName);
-                if (value.equals("this."
-                        + getTestMethodNamePrefix(testMethodMeta,
-                        testMethodMeta.testingTargetException) + "_"
-                        + argName)) {
-                    dest.add(argTypeMeta.name + " "
-                            + value.replace("this.", ""));
+                if (value.equals("this." +
+                        getTestMethodNamePrefix(testMethodMeta,
+                                testMethodMeta.testingTargetException) + "_" + argName)) {
+                    dest.add(argTypeMeta.name + " " + value.replace("this.", ""));
                 }
             }
         }
@@ -468,8 +459,7 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 
     String getArgValue(TestMethodMeta testMethodMeta, ArgTypeMeta argTypeMeta,
                        String argName) {
-        AvailableTypeDetector availableTypeDetector = new AvailableTypeDetector(
-                targetClassMeta);
+        AvailableTypeDetector availableTypeDetector = new AvailableTypeDetector(targetClassMeta);
         if (availableTypeDetector.isJavaLangPackageType(argTypeMeta.name)) {
             return "null";
         } else if (PrimitiveTypeUtil.isPrimitive(argTypeMeta.name)) {
@@ -477,8 +467,7 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
         } else if (argTypeMeta.name.matches(".+?\\[\\]$")) {
             return "new " + argTypeMeta.name + " {}";
         } else if (argTypeMeta.name.matches("List(<[^>]+>)?")
-                && availableTypeDetector.isAvailableType("java.util.List",
-                config)) {
+                && availableTypeDetector.isAvailableType("java.util.List", config)) {
             targetClassMeta.importedList.add("java.util.ArrayList");
             String genericsString = argTypeMeta.getGenericsAsString();
             if (genericsString.equals("<?>")) {
@@ -486,8 +475,7 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
             }
             return "new ArrayList" + genericsString + "()";
         } else if (argTypeMeta.name.matches("Map(<[^>]+>)?")
-                && availableTypeDetector.isAvailableType("java.util.Map",
-                config)) {
+                && availableTypeDetector.isAvailableType("java.util.Map", config)) {
             targetClassMeta.importedList.add("java.util.HashMap");
             String genericsString = argTypeMeta.getGenericsAsString();
             if (genericsString.matches("<.*\\?.*>")) {
@@ -496,26 +484,24 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
             return "new HashMap" + genericsString + "()";
         } else if (config.mockObjectFramework == MockObjectFramework.EasyMock) {
             return "mocks.createMock("
-                    + argTypeMeta.name.replaceAll(RegExp.Generics,
-                    StringValue.Empty) + ".class)";
+                    + argTypeMeta.name.replaceAll(RegExp.Generics, StringValue.Empty)
+                    + ".class)";
         } else if (config.mockObjectFramework == MockObjectFramework.JMock2) {
             return "context.mock("
-                    + argTypeMeta.name.replaceAll(RegExp.Generics,
-                    StringValue.Empty) + ".class)";
+                    + argTypeMeta.name.replaceAll(RegExp.Generics, StringValue.Empty)
+                    + ".class)";
         } else if (config.mockObjectFramework == MockObjectFramework.JMockit) {
-            if (new AvailableTypeDetector(targetClassMeta)
-                    .isJMockitMockableType(argTypeMeta.name)) {
+            if (new AvailableTypeDetector(targetClassMeta).isJMockitMockableType(argTypeMeta.name)) {
                 return "this."
-                        + getTestMethodNamePrefix(testMethodMeta,
-                        testMethodMeta.testingTargetException) + "_"
-                        + argName;
+                        + getTestMethodNamePrefix(testMethodMeta, testMethodMeta.testingTargetException)
+                        + "_" + argName;
             } else {
                 return "null";
             }
         } else if (config.mockObjectFramework == MockObjectFramework.Mockito) {
             return "mock("
-                    + argTypeMeta.name.replaceAll(RegExp.Generics,
-                    StringValue.Empty) + ".class)";
+                    + argTypeMeta.name.replaceAll(RegExp.Generics, StringValue.Empty)
+                    + ".class)";
         } else {
             return "null";
         }

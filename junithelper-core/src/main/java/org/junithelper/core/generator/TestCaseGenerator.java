@@ -30,15 +30,12 @@ public interface TestCaseGenerator {
 
     TestCaseMeta getNewTestCaseMeta();
 
-    List<TestMethodMeta> getLackingTestMethodMetaList(
-            String currentTestCaseSourceCode);
+    List<TestMethodMeta> getLackingTestMethodMetaList(String currentTestCaseSourceCode);
 
     String getNewTestCaseSourceCode();
 
-    String getTestCaseSourceCodeWithLackingTestMethod(
-            String currentTestCaseSourceCode);
+    String getTestCaseSourceCodeWithLackingTestMethod(String currentTestCaseSourceCode);
 
-    String getUnifiedVersionTestCaseSourceCode(
-            String currentTestCaseSourceCode, JUnitVersion version);
+    String getUnifiedVersionTestCaseSourceCode(String currentTestCaseSourceCode, JUnitVersion version);
 
 }

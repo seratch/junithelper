@@ -66,8 +66,7 @@ public class AvailableTypeDetector {
         String[] packageArr = typeName.split("\\.");
         String packageName = null;
         if (packageArr.length > 1) {
-            packageName = typeName.replaceFirst("\\.[^\\.]+$",
-                    StringValue.Empty);
+            packageName = typeName.replaceFirst("\\.[^\\.]+$", StringValue.Empty);
         }
         for (String imported : classMeta.importedList) {
             if (packageName != null && imported.equals(typeName)) {
@@ -85,9 +84,8 @@ public class AvailableTypeDetector {
                 String searchPath = config.directoryPathOfProductSourceCode
                         + "/" + packageName.replaceAll("\\.", "/");
                 try {
-                    List<File> files = new CommonsIOFileSearcher()
-                            .searchFilesRecursivelyByName(searchPath, typeName
-                                    + RegExp.FileExtension.JavaFile);
+                    List<File> files = new CommonsIOFileSearcher().searchFilesRecursivelyByName(
+                            searchPath, typeName + RegExp.FileExtension.JavaFile);
                     if (files != null && files.size() > 0) {
                         isTypeAvailable = true;
                     }
@@ -114,8 +112,7 @@ public class AvailableTypeDetector {
         } catch (Exception ignore) {
             // imported class name
             for (String importedPackage : classMeta.importedList) {
-                importedPackage = importedPackage.replaceAll("//",
-                        StringValue.Empty);
+                importedPackage = importedPackage.replaceAll("//", StringValue.Empty);
                 if (importedPackage.matches(".+?\\." + typeName + "$")) {
                     return true;
                 }
@@ -124,8 +121,7 @@ public class AvailableTypeDetector {
             if (typeName.matches(".+?\\..+")) {
                 try {
                     Class<?> clazz = Class.forName(typeName);
-                    return (Modifier.isFinal(clazz.getModifiers())) ? false
-                            : true;
+                    return !(Modifier.isFinal(clazz.getModifiers()));
                 } catch (Exception e) {
                     return false;
                 }

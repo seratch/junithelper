@@ -58,15 +58,13 @@ public class ArgExtractorHelper {
         }
         argsDefAreaString = tmp.toString();
 
-        String[] commaSplittedArray = argsDefAreaString
-                .split(StringValue.Comma);
+        String[] commaSplittedArray = argsDefAreaString.split(StringValue.Comma);
         int commaSplittedArrayLength = commaSplittedArray.length;
         List<String> args = new ArrayList<String>();
         StringBuilder buf = new StringBuilder();
         for (int i = 0; i < commaSplittedArrayLength; i++) {
             String eachArea = commaSplittedArray[i].trim();
-            eachArea = eachArea.replaceFirst("\\)\\s*.*\\s*\\{\\s*",
-                    StringValue.Empty);
+            eachArea = eachArea.replaceFirst("\\)\\s*.*\\s*\\{\\s*", StringValue.Empty);
             // ex. List<String>
             if (eachArea.matches(".+?<.+?>.+")) {
                 eachArea = trimGenericsAreaIfNestedGenericsExists(eachArea);
@@ -99,8 +97,8 @@ public class ArgExtractorHelper {
     }
 
     static String trimGenericsAreaIfNestedGenericsExists(String target) {
-        if (target.matches(RegExp.Anything_OneOrMore_Min + NESTED_GENERICS_MARK
-                + RegExp.Anything_OneOrMore_Min)) {
+        if (target.matches(
+                RegExp.Anything_OneOrMore_Min + NESTED_GENERICS_MARK + RegExp.Anything_OneOrMore_Min)) {
             return target.replaceAll(RegExp.Generics, StringValue.Empty);
         }
         return target;

@@ -35,8 +35,7 @@ import java.util.List;
 
 public abstract class AbstractCommand {
 
-    protected static Configulation overrideConfigulation(Configulation config)
-            throws Exception {
+    protected static Configulation overrideConfigulation(Configulation config) throws Exception {
         String configFile = System.getProperty("junithelper.configProperties");
         if (configFile != null) {
             config = new ConfigulationLoader().load(configFile);
@@ -78,27 +77,23 @@ public abstract class AbstractCommand {
         return 0;
     }
 
-    protected static List<File> findTargets(Configulation config,
-                                            String dirOrFile) throws Exception {
+    protected static List<File> findTargets(Configulation config, String dirOrFile) throws Exception {
         dirOrFile = dirOrFile.replaceAll("\\\\", "/");
         List<File> dest = new ArrayList<File>();
         ClassMetaExtractor extractor = new ClassMetaExtractor(config);
         if (dirOrFile.matches(".+\\.java$")) {
             File file = new File(dirOrFile);
             String encoding = UniversalDetectorUtil.getDetectedEncoding(file);
-            ClassMeta classMeta = extractor.extract(IOUtil.readAsString(
-                    new FileInputStream(file), encoding));
+            ClassMeta classMeta = extractor.extract(IOUtil.readAsString(new FileInputStream(file), encoding));
             if (!classMeta.isAbstract) {
                 dest.add(file);
             }
         } else {
             List<File> javaFiles = new ArrayList<File>();
             FileSearcher fileSearcher = new CommonsIOFileSearcher();
-            javaFiles = fileSearcher.searchFilesRecursivelyByName(dirOrFile,
-                    RegExp.FileExtension.JavaFile);
+            javaFiles = fileSearcher.searchFilesRecursivelyByName(dirOrFile, RegExp.FileExtension.JavaFile);
             for (File file : javaFiles) {
-                String encoding = UniversalDetectorUtil
-                        .getDetectedEncoding(file);
+                String encoding = UniversalDetectorUtil.getDetectedEncoding(file);
                 ClassMeta classMeta = extractor.extract(IOUtil.readAsString(
                         new FileInputStream(file), encoding));
                 if (!classMeta.name.matches(".*Test$") && !classMeta.isAbstract) {
@@ -109,18 +104,15 @@ public abstract class AbstractCommand {
         return dest;
     }
 
-    protected static String getDirectoryPathOfProductSourceCode(
-            Configulation config) {
-        return "/"
-                + config.directoryPathOfProductSourceCode
-                .replaceFirst("^/", "").replaceFirst("/$", "") + "/";
+    protected static String getDirectoryPathOfProductSourceCode(Configulation config) {
+        return "/" + config.directoryPathOfProductSourceCode.replaceFirst("^/", "").replaceFirst("/$", "")
+                + "/";
     }
 
     protected static String getDirectoryPathOfTestSourceCode(
             Configulation config) {
-        return "/"
-                + config.directoryPathOfTestSourceCode.replaceFirst("^/", "")
-                .replaceFirst("/$", "") + "/";
+        return "/" + config.directoryPathOfTestSourceCode.replaceFirst("^/", "").replaceFirst("/$", "")
+                + "/";
     }
 
 }

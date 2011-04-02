@@ -45,13 +45,12 @@ public class ClassMetaExtractor {
     public ClassMeta extract(String sourceCodeString) {
 
         ClassMeta meta = new ClassMeta();
-        String modifiedSourceCodeString = TrimFilterUtil
-                .doAllFilters(sourceCodeString);
+        String modifiedSourceCodeString = TrimFilterUtil.doAllFilters(sourceCodeString);
 
         // -----------------
         // package name
-        Matcher matcherGroupingPackageName = RegExp.PatternObject.Pacakge_Group
-                .matcher(modifiedSourceCodeString);
+        Matcher matcherGroupingPackageName
+                = RegExp.PatternObject.Pacakge_Group.matcher(modifiedSourceCodeString);
         if (matcherGroupingPackageName.find()) {
             meta.packageName = matcherGroupingPackageName.group(1);
         }
@@ -79,13 +78,11 @@ public class ClassMetaExtractor {
         }
         String outOfBraceWithoutGenerics = bufForOutOfBrace.toString();
         String[] splittedBySpace = outOfBraceWithoutGenerics.split("\\s+");
-        if (!outOfBrace.matches(".*\\s+class\\s+.*")
-                && !outOfBrace.matches(".*\\s+enum\\s+.*")) {
+        if (!outOfBrace.matches(".*\\s+class\\s+.*") && !outOfBrace.matches(".*\\s+enum\\s+.*")) {
             meta.isAbstract = true;
         } else {
             for (String each : splittedBySpace) {
-                if (each.equals("abstract") || each.equals("interface")
-                        || each.equals("@interface")) {
+                if (each.equals("abstract") || each.equals("interface") || each.equals("@interface")) {
                     meta.isAbstract = true;
                     break;
                 }
@@ -99,25 +96,22 @@ public class ClassMetaExtractor {
         meta.name = splittedBySpace[splittedBySpace.length - 1].replaceFirst(
                 RegExp.Generics, StringValue.Empty);
         for (int i = 0; i < splittedBySpace.length; i++) {
-            if (splittedBySpace[i].equals("extends")
-                    || splittedBySpace[i].equals("implements")) {
-                meta.name = splittedBySpace[i - 1].replaceFirst(
-                        RegExp.Generics, StringValue.Empty);
+            if (splittedBySpace[i].equals("extends") || splittedBySpace[i].equals("implements")) {
+                meta.name = splittedBySpace[i - 1].replaceFirst(RegExp.Generics, StringValue.Empty);
                 break;
             }
         }
         // -----------------
         // imported list
-        meta.importedList = importedListExtractor
-                .extract(modifiedSourceCodeString);
+        meta.importedList = importedListExtractor.extract(modifiedSourceCodeString);
         // -----------------
         // constructors
-        meta.constructors = constructorMetaExtractor.initialize(meta,
-                modifiedSourceCodeString).extract(modifiedSourceCodeString);
+        constructorMetaExtractor.initialize(meta, modifiedSourceCodeString);
+        meta.constructors = constructorMetaExtractor.extract(modifiedSourceCodeString);
         // -----------------
         // methods
-        meta.methods = methodMetaExtractor.initialize(meta,
-                modifiedSourceCodeString).extract(modifiedSourceCodeString);
+        methodMetaExtractor.initialize(meta, modifiedSourceCodeString);
+        meta.methods = methodMetaExtractor.extract(modifiedSourceCodeString);
 
         // check duplicated variable name
         if (meta.constructors.size() > 0) {
@@ -142,11 +136,10 @@ public class ClassMetaExtractor {
                             methodArgNames.add(methodArgName);
                         }
                     }
-                    method.argNames.set(
-                            i,
-                            renameIfDuplicatedToConstructorArgNames(
-                                    targetArgName, constructor.argNames,
-                                    methodArgNames));
+                    method.argNames.set(i, renameIfDuplicatedToConstructorArgNames(
+                            targetArgName,
+                            constructor.argNames,
+                            methodArgNames));
                 }
             }
         }
@@ -155,33 +148,35 @@ public class ClassMetaExtractor {
 
     }
 
-    String renameIfDuplicatedToConstructorArgNames(String argName,
-                                                   List<String> constructorArgs, List<String> methodArgs) {
+    String renameIfDuplicatedToConstructorArgNames(
+            String argName, List<String> constructorArgs, List<String> methodArgs) {
         if (argName == null) {
             return null;
         }
         if (isDuplicatedVariableName(argName)) {
-            return renameIfDuplicatedToConstructorArgNames(argName + "_",
-                    constructorArgs, methodArgs);
+            return renameIfDuplicatedToConstructorArgNames(
+                    argName + "_", constructorArgs, methodArgs);
         }
         for (String consArg : constructorArgs) {
             if (argName.equals(consArg)) {
-                return renameIfDuplicatedToConstructorArgNames(argName + "_",
-                        constructorArgs, methodArgs);
+                return renameIfDuplicatedToConstructorArgNames(
+                        argName + "_", constructorArgs, methodArgs);
             }
         }
         for (String methodArg : methodArgs) {
             if (argName.equals(methodArg)) {
-                return renameIfDuplicatedToConstructorArgNames(argName + "_",
-                        constructorArgs, methodArgs);
+                return renameIfDuplicatedToConstructorArgNames(
+                        argName + "_", constructorArgs, methodArgs);
             }
         }
         return argName;
     }
 
     boolean isDuplicatedVariableName(String name) {
-        return name.equals("target") || name.equals("actual")
-                || name.equals("expected") || name.equals("context")
+        return name.equals("target")
+                || name.equals("actual")
+                || name.equals("expected")
+                || name.equals("context")
                 || name.equals("mocks");
     }
 }

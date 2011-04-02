@@ -26,13 +26,11 @@ public interface TestMethodGenerator {
 
     TestMethodMeta getTestMethodMeta(MethodMeta targetMethodMeta);
 
-    TestMethodMeta getTestMethodMeta(MethodMeta targetMethodMeta,
-                                     ExceptionMeta exception);
+    TestMethodMeta getTestMethodMeta(MethodMeta targetMethodMeta, ExceptionMeta exception);
 
     String getTestMethodNamePrefix(TestMethodMeta testMethodMeta);
 
-    String getTestMethodNamePrefix(TestMethodMeta testMethodMeta,
-                                   ExceptionMeta exception);
+    String getTestMethodNamePrefix(TestMethodMeta testMethodMeta, ExceptionMeta exception);
 
     String getTestMethodSourceCode(TestMethodMeta testMethodMeta);
 

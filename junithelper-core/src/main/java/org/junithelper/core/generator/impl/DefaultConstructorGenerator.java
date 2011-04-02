@@ -43,8 +43,7 @@ public class DefaultConstructorGenerator implements ConstructorGenerator {
     }
 
     @Override
-    public String getInstantiationSourceCode(ClassMeta classMeta,
-                                             ConstructorMeta constructorMeta) {
+    public String getInstantiationSourceCode(ClassMeta classMeta, ConstructorMeta constructorMeta) {
         StringBuilder buf = new StringBuilder();
         if (constructorMeta == null) {
             buf.append(StringValue.Tab);

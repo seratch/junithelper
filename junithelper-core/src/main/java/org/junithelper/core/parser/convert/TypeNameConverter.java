@@ -37,24 +37,21 @@ public class TypeNameConverter {
     public String toAvailableInMethodName(String typeName) {
         typeName = typeName.replaceAll(RegExp.Generics, StringValue.Empty);
         typeName = typeName.replaceAll("final ", StringValue.Empty);
-        typeName = typeName.replaceAll("\\.\\.\\.", "Array").replaceAll(
-                "\\[\\]", "Array");
+        typeName = typeName.replaceAll("\\.\\.\\.", "Array").replaceAll("\\[\\]", "Array");
         // sample name classes imported or full package class defined
         // ex. java.util.Date, java.sql.Date
         typeName = typeName.replaceAll("\\.", StringValue.Empty);
-        typeName = typeName.trim().split(
-                RegExp.WhiteSpace.Consecutive_OneOrMore_Max)[0];
+        typeName = typeName.trim().split(RegExp.WhiteSpace.Consecutive_OneOrMore_Max)[0];
         return typeName;
     }
 
-    public String toCompilableType(String typeName, List<String> importedList,
-                                   String callerClassPackageName) {
-        return toCompilableType(typeName, null, importedList,
-                callerClassPackageName);
+    public String toCompilableType(
+            String typeName, List<String> importedList, String callerClassPackageName) {
+        return toCompilableType(typeName, null, importedList, callerClassPackageName);
     }
 
-    public String toCompilableType(String typeName, List<String> generics,
-                                   List<String> importedList, String callerClassPackageName) {
+    public String toCompilableType(
+            String typeName, List<String> generics, List<String> importedList, String callerClassPackageName) {
         if (typeName == null) {
             return typeName;
         }
@@ -75,8 +72,8 @@ public class TypeNameConverter {
             typeName = typeName.replaceAll("\\[\\]", "");
         }
         // remove generics
-        if (typeName.matches(RegExp.Anything_ZeroOrMore_Min + RegExp.Generics
-                + RegExp.Anything_ZeroOrMore_Min)) {
+        if (typeName.matches(
+                RegExp.Anything_ZeroOrMore_Min + RegExp.Generics + RegExp.Anything_ZeroOrMore_Min)) {
             typeName = typeName.replaceAll(RegExp.Generics, StringValue.Empty);
         }
         boolean isTypeAvailable = false;
@@ -97,25 +94,24 @@ public class TypeNameConverter {
                             .searchFilesRecursivelyByName(
                                     config.directoryPathOfProductSourceCode
                                             + "/"
-                                            + callerClassPackageName
-                                            .replaceAll("\\.", "/"),
+                                            + callerClassPackageName.replaceAll("\\.", "/"),
                                     typeName + RegExp.FileExtension.JavaFile);
                     if (files != null && files.size() > 0) {
                         isTypeAvailable = true;
                     }
                 }
-                if (!isTypeAvailable)
+                if (!isTypeAvailable) {
                     Class.forName(typeName);
+                }
             }
         } catch (Exception e) {
             // class not found
             for (String importedPackage : importedList) {
-                importedPackage = importedPackage.replaceAll("//",
-                        StringValue.Empty);
+                importedPackage = importedPackage.replaceAll("//", StringValue.Empty);
                 try {
                     String regexp = ".+?\\."
-                            + typeName.replaceAll("\\[", "\\\\[").replaceAll(
-                            "\\]", "\\\\]") + "$";
+                            + typeName.replaceAll("\\[", "\\\\[").replaceAll("\\]", "\\\\]")
+                            + "$";
                     if (importedPackage.matches(regexp)) {
                         isTypeAvailable = true;
                         break;
