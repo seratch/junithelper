@@ -59,46 +59,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="CommandLine.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/junithelper/command/CommandLine.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="34" column="112" selection-start="1264" selection-end="1264" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="pom.xml" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="23" column="32" selection-start="863" selection-end="863" vertical-scroll-proportion="0.368">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="mvn_install_juniversalchardet.sh" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mvn_install_juniversalchardet.sh">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="1" column="61" selection-start="71" selection-end="71" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="mvn_deploy_release.sh" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mvn_deploy_release.sh">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="mvn_deploy_juniversalchardet.sh" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mvn_deploy_juniversalchardet.sh">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="0" selection-start="212" selection-end="212" vertical-scroll-proportion="0.0">
+            <state line="54" column="124" selection-start="1990" selection-end="1990" vertical-scroll-proportion="0.84155846">
               <folding />
             </state>
           </provider>
@@ -475,14 +439,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/junithelper/command/CommandLine.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="34" column="112" selection-start="1264" selection-end="1264" vertical-scroll-proportion="0.0">
+        <state line="34" column="41" selection-start="1264" selection-end="1264" vertical-scroll-proportion="0.5922078">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mvn_install_juniversalchardet.sh">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="61" selection-start="71" selection-end="71" vertical-scroll-proportion="0.0">
+        <state line="1" column="61" selection-start="71" selection-end="71" vertical-scroll-proportion="0.015852047">
           <folding />
         </state>
       </provider>
@@ -496,14 +460,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/mvn_deploy_juniversalchardet.sh">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="0" selection-start="212" selection-end="212" vertical-scroll-proportion="0.0">
+        <state line="8" column="0" selection-start="212" selection-end="212" vertical-scroll-proportion="0.124675326">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="32" selection-start="863" selection-end="863" vertical-scroll-proportion="0.368">
+        <state line="54" column="124" selection-start="1990" selection-end="1990" vertical-scroll-proportion="0.84155846">
           <folding />
         </state>
       </provider>
