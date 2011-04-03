@@ -1,5 +1,8 @@
 package org.junithelper.mavenplugin;
 
+import org.junithelper.core.Version;
+import org.junithelper.core.util.Stdout;
+
 import static org.junit.Assert.*;
 
 import org.apache.maven.plugin.MojoExecutionException;
