@@ -11,6 +11,7 @@ public class Force3Mojo extends AbstractJUnitHelperMojo {
 
     @Override
     public void execute() throws MojoExecutionException {
+        printLogoAndVersion();
         String target = System.getProperty("target");
         try {
             ForceJUnitVersion3Command.config = loadConfig();

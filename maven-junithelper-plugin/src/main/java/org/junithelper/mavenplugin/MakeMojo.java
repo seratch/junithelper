@@ -26,6 +26,7 @@ public class MakeMojo extends AbstractJUnitHelperMojo {
 
     @Override
     public void execute() throws MojoExecutionException {
+        printLogoAndVersion();
         String target = System.getProperty("target");
         try {
             MakeTestCommand.config = loadConfig();

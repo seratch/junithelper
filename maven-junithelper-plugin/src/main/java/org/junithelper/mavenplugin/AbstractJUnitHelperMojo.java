@@ -1,9 +1,11 @@
 package org.junithelper.mavenplugin;
 
 import org.apache.maven.plugin.AbstractMojo;
+import org.junithelper.core.Version;
 import org.junithelper.core.config.Configulation;
 import org.junithelper.core.config.JUnitVersion;
 import org.junithelper.core.config.MockObjectFramework;
+import org.junithelper.core.util.Stdout;
 
 public abstract class AbstractJUnitHelperMojo extends AbstractMojo {
 
@@ -138,5 +140,14 @@ public abstract class AbstractJUnitHelperMojo extends AbstractMojo {
         return config;
     }
 
+
+    protected static void printLogoAndVersion() {
+        Stdout.p("  _                         ");
+        Stdout.p("   /   _  ._/_/_/_  /_  _  _");
+        Stdout.p("(_//_// // / / //_'//_//_'/ ");
+        Stdout.p("                   /        ");
+        Stdout.p("JUnit Helper version " + Version.get());
+        Stdout.p("");
+    }
 
 }
