@@ -3,6 +3,10 @@
 	http://junithelper.org/
 ------------------------------------------
 
+* Release Notes - 1.0.1
+
+** Internal improvement only.
+
 * Release Notes - 1.0.0
 
 ** Bug

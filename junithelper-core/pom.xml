@@ -26,6 +26,13 @@
         </repository>
     </repositories>
 
+    <pluginRepositories>
+        <pluginRepository>
+            <id>junithelper.org releases</id>
+            <url>http://junithelper.googlecode.com/svn/trunk/mvn-repo/releases</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <build>
         <resources>
             <resource>
@@ -75,6 +82,10 @@
                         <descriptor>src/main/assembly/executable.xml</descriptor>
                     </descriptors>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.junithelper</groupId>
+                <artifactId>maven-junithelper-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
