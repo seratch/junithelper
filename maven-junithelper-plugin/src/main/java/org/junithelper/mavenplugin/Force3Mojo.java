@@ -2,7 +2,6 @@ package org.junithelper.mavenplugin;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.junithelper.command.ForceJUnitVersion3Command;
-import org.junithelper.command.MakeTestCommand;
 
 /**
  * @goal force3
@@ -12,10 +11,10 @@ public class Force3Mojo extends AbstractJUnitHelperMojo {
 
     @Override
     public void execute() throws MojoExecutionException {
-
+        String target = System.getProperty("target");
         try {
             ForceJUnitVersion3Command.config = loadConfig();
-            ForceJUnitVersion3Command.main(new String[]{});
+            ForceJUnitVersion3Command.main(new String[]{target});
         } catch (Exception e) {
             throw new MojoExecutionException("junithelper force4 error!", e);
         }

@@ -11,10 +11,10 @@ public class Force4Mojo extends AbstractJUnitHelperMojo {
 
     @Override
     public void execute() throws MojoExecutionException {
-
+        String target = System.getProperty("target");
         try {
             ForceJUnitVersion4Command.config = loadConfig();
-            ForceJUnitVersion4Command.main(new String[]{});
+            ForceJUnitVersion4Command.main(new String[]{target});
         } catch (Exception e) {
             throw new MojoExecutionException("junithelper force4 error!", e);
         }

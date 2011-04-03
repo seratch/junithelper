@@ -24,13 +24,12 @@ import org.junithelper.command.MakeTestCommand;
  */
 public class MakeMojo extends AbstractJUnitHelperMojo {
 
-
     @Override
     public void execute() throws MojoExecutionException {
-
+        String target = System.getProperty("target");
         try {
             MakeTestCommand.config = loadConfig();
-            MakeTestCommand.main(new String[]{});
+            MakeTestCommand.main(new String[]{target});
         } catch (Exception e) {
             throw new MojoExecutionException("junithelper make error!", e);
         }
