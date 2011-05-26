@@ -8,6 +8,8 @@ import java.io.InputStream;
 
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
 
 public class UniversalDetectorUtilTest {
 
@@ -41,8 +43,7 @@ public class UniversalDetectorUtilTest {
 	}
 
 	@Test
-	public void getDetectedEncoding_A$InputStream_T$IOException()
-			throws Exception {
+	public void getDetectedEncoding_A$InputStream_T$IOException() throws Exception {
 		// given
 		InputStream is = mock(InputStream.class);
 		// e.g. : given(mocked.called()).willReturn(1);

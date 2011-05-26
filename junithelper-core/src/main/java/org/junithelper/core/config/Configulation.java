@@ -37,4 +37,6 @@ public class Configulation {
 
 	public MockObjectFramework mockObjectFramework = null;
 
+	public TestingPatternExplicitComment testingPatternExplicitComment = TestingPatternExplicitComment.None;
+
 }

@@ -15,10 +15,7 @@
  */
 package org.junithelper.core.generator.impl;
 
-import org.junithelper.core.config.Configulation;
-import org.junithelper.core.config.JUnitVersion;
-import org.junithelper.core.config.MessageValue;
-import org.junithelper.core.config.MockObjectFramework;
+import org.junithelper.core.config.*;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
 import org.junithelper.core.generator.ConstructorGenerator;
@@ -148,8 +145,7 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 			appendTabs(buf, 1);
 			buf.append("public void ");
 		}
-		buf.append(getTestMethodNamePrefix(testMethodMeta,
-				testMethodMeta.testingTargetException));
+		buf.append(getTestMethodNamePrefix(testMethodMeta, testMethodMeta.testingTargetException));
 		boolean isThrowableRequired = false;
 		if (testMethodMeta.methodMeta != null && testMethodMeta.methodMeta.throwsExceptions != null) {
 			for (ExceptionMeta ex : testMethodMeta.methodMeta.throwsExceptions) {
@@ -180,14 +176,16 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 
 		} else if (testMethodMeta.isInstantiationTest) {
 			// testing instantiation
-			String instantiation = constructorGenerator.getFirstInstantiationSourceCode(
-					testMethodMeta.classMeta);
+			String instantiation = constructorGenerator.getFirstInstantiationSourceCode(testMethodMeta.classMeta);
 			buf.append(instantiation);
 			appendTabs(buf, 2);
 			buf.append("assertNotNull(target);");
 			appendCRLF(buf);
 
 		} else if (config.isTemplateImplementationRequired) {
+
+			// Arrange or Given
+			appendTestingPatternExplicitComment(buf, "Arrange", 2);
 
 			// prepare for Mock object framework
 			if (config.mockObjectFramework == MockObjectFramework.JMock2) {
@@ -208,8 +206,7 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 			}
 			// instantiation if testing an instance method
 			if (!testMethodMeta.methodMeta.isStatic) {
-				String instantiation = constructorGenerator.getFirstInstantiationSourceCode(
-						testMethodMeta.classMeta);
+				String instantiation = constructorGenerator.getFirstInstantiationSourceCode(testMethodMeta.classMeta);
 				buf.append(instantiation);
 			}
 			// Mockito BDD
@@ -223,11 +220,12 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 				appendPreparingArgs(buf, testMethodMeta);
 				// mock/stub checking
 				appendMockChecking(buf, 2);
+				// Act or When
+				appendTestingPatternExplicitComment(buf, "Act", 2);
 				// Mockito BDD
 				appendBDDMockitoComment(buf, "when", 2);
 				// return value
-				if (testMethodMeta.methodMeta.returnType != null
-						&& testMethodMeta.methodMeta.returnType.name != null) {
+				if (testMethodMeta.methodMeta.returnType != null && testMethodMeta.methodMeta.returnType.name != null) {
 					appendTabs(buf, 2);
 					buf.append(testMethodMeta.methodMeta.returnType.name);
 					buf.append(" actual = ");
@@ -236,19 +234,18 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 				}
 				// execute target method
 				appendExecutingTargetMethod(buf, testMethodMeta);
+				// Assert or Then
+				appendTestingPatternExplicitComment(buf, "Assert", 2);
 				// Mockito BDD
 				appendBDDMockitoComment(buf, "then", 2);
 				appendMockVerifying(buf, 2);
 				// check return value
-				if (testMethodMeta.methodMeta.returnType != null
-						&& testMethodMeta.methodMeta.returnType.name != null) {
+				if (testMethodMeta.methodMeta.returnType != null && testMethodMeta.methodMeta.returnType.name != null) {
 					appendTabs(buf, 2);
 					buf.append(testMethodMeta.methodMeta.returnType.name);
 					buf.append(" expected = ");
-					if (PrimitiveTypeUtil.isPrimitive(
-							testMethodMeta.methodMeta.returnType.name)) {
-						buf.append(PrimitiveTypeUtil.getTypeDefaultValue(
-								testMethodMeta.methodMeta.returnType.name));
+					if (PrimitiveTypeUtil.isPrimitive(testMethodMeta.methodMeta.returnType.name)) {
+						buf.append(PrimitiveTypeUtil.getTypeDefaultValue(testMethodMeta.methodMeta.returnType.name));
 					} else {
 						buf.append("null");
 					}
@@ -272,6 +269,8 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 				appendTabs(buf, 2);
 				buf.append("try {");
 				appendCRLF(buf);
+				// Assert or Then
+				appendTestingPatternExplicitComment(buf, "Assert", 3);
 				// Mockito BDD
 				appendBDDMockitoComment(buf, "when", 3);
 				// execute target method
@@ -431,6 +430,25 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 		}
 	}
 
+	void appendTestingPatternExplicitComment(StringBuilder buf, String value, int depth) {
+		if (config.testingPatternExplicitComment != TestingPatternExplicitComment.None
+				&& config.mockObjectFramework != MockObjectFramework.Mockito) {
+			if (config.testingPatternExplicitComment == TestingPatternExplicitComment.GivenWhenThen) {
+				if (value.equals("Arrange")) {
+					value = "Given";
+				} else if (value.equals("Act")) {
+					value = "When";
+				} else if (value.equals("Assert")) {
+					value = "Then";
+				}
+			}
+			appendTabs(buf, depth);
+			buf.append("// ");
+			buf.append(value);
+			appendCRLF(buf);
+		}
+	}
+
 	List<String> getMockedFieldsForJMockit(TestMethodMeta testMethodMeta) {
 		List<String> dest = new ArrayList<String>();
 		if (testMethodMeta.methodMeta != null) {
@@ -440,16 +458,15 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 				if (PrimitiveTypeUtil.isPrimitive(typeName)) {
 					continue;
 				}
-				if (!new AvailableTypeDetector(targetClassMeta)
-						.isJMockitMockableType(typeName)) {
+				if (!new AvailableTypeDetector(targetClassMeta).isJMockitMockableType(typeName)) {
 					continue;
 				}
 				ArgTypeMeta argTypeMeta = testMethodMeta.methodMeta.argTypes.get(i);
 				String argName = testMethodMeta.methodMeta.argNames.get(i);
 				String value = getArgValue(testMethodMeta, argTypeMeta, argName);
-				if (value.equals("this." +
-						getTestMethodNamePrefix(testMethodMeta,
-								testMethodMeta.testingTargetException) + "_" + argName)) {
+				if (value.equals("this."
+						+ getTestMethodNamePrefix(testMethodMeta, testMethodMeta.testingTargetException) + "_"
+						+ argName)) {
 					dest.add(argTypeMeta.name + " " + value.replace("this.", ""));
 				}
 			}
@@ -457,8 +474,7 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 		return dest;
 	}
 
-	String getArgValue(TestMethodMeta testMethodMeta, ArgTypeMeta argTypeMeta,
-					   String argName) {
+	String getArgValue(TestMethodMeta testMethodMeta, ArgTypeMeta argTypeMeta, String argName) {
 		AvailableTypeDetector availableTypeDetector = new AvailableTypeDetector(targetClassMeta);
 		if (availableTypeDetector.isJavaLangPackageType(argTypeMeta.name)) {
 			return "null";
@@ -483,25 +499,18 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 			}
 			return "new HashMap" + genericsString + "()";
 		} else if (config.mockObjectFramework == MockObjectFramework.EasyMock) {
-			return "mocks.createMock("
-					+ argTypeMeta.name.replaceAll(RegExp.Generics, StringValue.Empty)
-					+ ".class)";
+			return "mocks.createMock(" + argTypeMeta.name.replaceAll(RegExp.Generics, StringValue.Empty) + ".class)";
 		} else if (config.mockObjectFramework == MockObjectFramework.JMock2) {
-			return "context.mock("
-					+ argTypeMeta.name.replaceAll(RegExp.Generics, StringValue.Empty)
-					+ ".class)";
+			return "context.mock(" + argTypeMeta.name.replaceAll(RegExp.Generics, StringValue.Empty) + ".class)";
 		} else if (config.mockObjectFramework == MockObjectFramework.JMockit) {
 			if (new AvailableTypeDetector(targetClassMeta).isJMockitMockableType(argTypeMeta.name)) {
-				return "this."
-						+ getTestMethodNamePrefix(testMethodMeta, testMethodMeta.testingTargetException)
-						+ "_" + argName;
+				return "this." + getTestMethodNamePrefix(testMethodMeta, testMethodMeta.testingTargetException) + "_"
+						+ argName;
 			} else {
 				return "null";
 			}
 		} else if (config.mockObjectFramework == MockObjectFramework.Mockito) {
-			return "mock("
-					+ argTypeMeta.name.replaceAll(RegExp.Generics, StringValue.Empty)
-					+ ".class)";
+			return "mock(" + argTypeMeta.name.replaceAll(RegExp.Generics, StringValue.Empty) + ".class)";
 		} else {
 			return "null";
 		}

@@ -1,23 +1,27 @@
 package org.junithelper.core.generator.impl;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+
+import java.util.List;
+
 import org.junit.Test;
 import org.junithelper.core.config.Configulation;
 import org.junithelper.core.config.MockObjectFramework;
+import org.junithelper.core.config.TestingPatternExplicitComment;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.ExceptionMeta;
 import org.junithelper.core.meta.MethodMeta;
 import org.junithelper.core.meta.TestMethodMeta;
 import org.junithelper.core.meta.extractor.ClassMetaExtractor;
 
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 public class DefaultTestMethodGeneratorTest {
 
 	Configulation config = new Configulation();
-	DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+	DefaultTestMethodGenerator generator = new DefaultTestMethodGenerator(config);
 	ClassMetaExtractor classMetaExtractor = new ClassMetaExtractor(config);
 
 	@Test
@@ -28,8 +32,7 @@ public class DefaultTestMethodGeneratorTest {
 	@Test
 	public void instantiation() throws Exception {
 		Configulation config = null;
-		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(
-				config);
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
 		assertNotNull(target);
 	}
 
@@ -37,10 +40,9 @@ public class DefaultTestMethodGeneratorTest {
 	public void initialize_A$ClassMeta() throws Exception {
 		// given
 		String sourceCodeString = "package hoge.foo; import java.util.List; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\") } }";
-		ClassMeta targetClassMeta = classMetaExtractor
-				.extract(sourceCodeString);
+		ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
 		// when
-		target.initialize(targetClassMeta);
+		generator.initialize(targetClassMeta);
 		// then
 	}
 
@@ -48,12 +50,11 @@ public class DefaultTestMethodGeneratorTest {
 	public void getTestMethodMeta_A$MethodMeta() throws Exception {
 		// given
 		String sourceCodeString = "package hoge.foo; import java.util.List; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\") } }";
-		ClassMeta targetClassMeta = classMetaExtractor
-				.extract(sourceCodeString);
+		ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
 		MethodMeta targetMethodMeta = targetClassMeta.methods.get(0);
-		target.initialize(targetClassMeta);
+		generator.initialize(targetClassMeta);
 		// when
-		TestMethodMeta actual = target.getTestMethodMeta(targetMethodMeta);
+		TestMethodMeta actual = generator.getTestMethodMeta(targetMethodMeta);
 		// then
 		assertEquals(false, actual.isTypeTest);
 		assertEquals(false, actual.isInstantiationTest);
@@ -66,16 +67,14 @@ public class DefaultTestMethodGeneratorTest {
 	public void getTestMethodMeta_A$MethodMeta$ExceptionMeta() throws Exception {
 		// given
 		String sourceCodeString = "package hoge.foo; import java.util.List; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\") } }";
-		ClassMeta targetClassMeta = classMetaExtractor
-				.extract(sourceCodeString);
+		ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
 		MethodMeta targetMethodMeta = targetClassMeta.methods.get(0);
 		ExceptionMeta exception = new ExceptionMeta();
 		exception.name = "Exception";
 		exception.nameInMethodName = "Exception";
-		target.initialize(targetClassMeta);
+		generator.initialize(targetClassMeta);
 		// when
-		TestMethodMeta actual = target.getTestMethodMeta(targetMethodMeta,
-				exception);
+		TestMethodMeta actual = generator.getTestMethodMeta(targetMethodMeta, exception);
 		// then
 		assertEquals(false, actual.isTypeTest);
 		assertEquals(false, actual.isInstantiationTest);
@@ -88,36 +87,30 @@ public class DefaultTestMethodGeneratorTest {
 	public void getTestMethodNamePrefix_A$TestMethodMeta() throws Exception {
 		// given
 		String sourceCodeString = "package hoge.foo; import java.util.List; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\") } }";
-		ClassMeta targetClassMeta = classMetaExtractor
-				.extract(sourceCodeString);
-		target.initialize(targetClassMeta);
+		ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
+		generator.initialize(targetClassMeta);
 		MethodMeta targetMethodMeta = targetClassMeta.methods.get(0);
-		TestMethodMeta testMethodMeta = target
-				.getTestMethodMeta(targetMethodMeta);
+		TestMethodMeta testMethodMeta = generator.getTestMethodMeta(targetMethodMeta);
 		// when
-		String actual = target.getTestMethodNamePrefix(testMethodMeta);
+		String actual = generator.getTestMethodNamePrefix(testMethodMeta);
 		// then
 		String expected = "doSomething_A$String$long";
 		assertEquals(expected, actual);
 	}
 
 	@Test
-	public void getTestMethodNamePrefix_A$TestMethodMeta$ExceptionMeta()
-			throws Exception {
+	public void getTestMethodNamePrefix_A$TestMethodMeta$ExceptionMeta() throws Exception {
 		// given
 		String sourceCodeString = "package hoge.foo; import java.util.List; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\") } }";
-		ClassMeta targetClassMeta = classMetaExtractor
-				.extract(sourceCodeString);
-		target.initialize(targetClassMeta);
+		ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
+		generator.initialize(targetClassMeta);
 		MethodMeta targetMethodMeta = targetClassMeta.methods.get(0);
-		TestMethodMeta testMethodMeta = target
-				.getTestMethodMeta(targetMethodMeta);
+		TestMethodMeta testMethodMeta = generator.getTestMethodMeta(targetMethodMeta);
 		ExceptionMeta exception = new ExceptionMeta();
 		exception.name = "Exception";
 		exception.nameInMethodName = "Exception";
 		// when
-		String actual = target.getTestMethodNamePrefix(testMethodMeta,
-				exception);
+		String actual = generator.getTestMethodNamePrefix(testMethodMeta, exception);
 		// then
 		String expected = "doSomething_A$String$long_T$Exception";
 		assertEquals(expected, actual);
@@ -127,16 +120,50 @@ public class DefaultTestMethodGeneratorTest {
 	public void getTestMethodSourceCode_A$TestMethodMeta() throws Exception {
 		// given
 		String sourceCodeString = "package hoge.foo; import java.util.List; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\") } }";
-		ClassMeta targetClassMeta = classMetaExtractor
-				.extract(sourceCodeString);
-		target.initialize(targetClassMeta);
+		ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
+		generator.initialize(targetClassMeta);
 		MethodMeta targetMethodMeta = targetClassMeta.methods.get(0);
-		TestMethodMeta testMethodMeta = target
-				.getTestMethodMeta(targetMethodMeta);
+		TestMethodMeta testMethodMeta = generator.getTestMethodMeta(targetMethodMeta);
 		// when
-		String actual = target.getTestMethodSourceCode(testMethodMeta);
+		String actual = generator.getTestMethodSourceCode(testMethodMeta);
 		// then
 		String expected = "	@Test\r\n	public void doSomething_A$String$long() throws Throwable {\r\n		// TODO auto-generated by JUnit Helper.\r\n		Sample target = new Sample();\r\n		String str = null;\r\n		long longValue = 0L;\r\n		int actual = target.doSomething(str, longValue);\r\n		int expected = 0;\r\n		assertEquals(expected, actual);\r\n	}\r\n";
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void getTestMethodSourceCode_A$TestMethodMeta_ArrangeActAssert() throws Exception {
+		// given
+		Configulation config = new Configulation();
+		config.testingPatternExplicitComment = TestingPatternExplicitComment.ArrangeActAssert;
+		DefaultTestMethodGenerator localGenerator = new DefaultTestMethodGenerator(config);
+		String sourceCodeString = "package hoge.foo; import java.util.List; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\") } }";
+		ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
+		localGenerator.initialize(targetClassMeta);
+		MethodMeta targetMethodMeta = targetClassMeta.methods.get(0);
+		TestMethodMeta testMethodMeta = localGenerator.getTestMethodMeta(targetMethodMeta);
+		// when
+		String actual = localGenerator.getTestMethodSourceCode(testMethodMeta);
+		// then
+		String expected = "	@Test\r\n	public void doSomething_A$String$long() throws Throwable {\r\n		// TODO auto-generated by JUnit Helper.\r\n		// Arrange\r\n		Sample target = new Sample();\r\n		String str = null;\r\n		long longValue = 0L;\r\n		// Act\r\n		int actual = target.doSomething(str, longValue);\r\n		// Assert\r\n		int expected = 0;\r\n		assertEquals(expected, actual);\r\n	}\r\n";
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void getTestMethodSourceCode_A$TestMethodMeta_GivenWhenThen() throws Exception {
+		// given
+		Configulation config = new Configulation();
+		config.testingPatternExplicitComment = TestingPatternExplicitComment.GivenWhenThen;
+		DefaultTestMethodGenerator localGenerator = new DefaultTestMethodGenerator(config);
+		String sourceCodeString = "package hoge.foo; import java.util.List; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\") } }";
+		ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
+		localGenerator.initialize(targetClassMeta);
+		MethodMeta targetMethodMeta = targetClassMeta.methods.get(0);
+		TestMethodMeta testMethodMeta = localGenerator.getTestMethodMeta(targetMethodMeta);
+		// when
+		String actual = localGenerator.getTestMethodSourceCode(testMethodMeta);
+		// then
+		String expected = "	@Test\r\n	public void doSomething_A$String$long() throws Throwable {\r\n		// TODO auto-generated by JUnit Helper.\r\n		// Given\r\n		Sample target = new Sample();\r\n		String str = null;\r\n		long longValue = 0L;\r\n		// When\r\n		int actual = target.doSomething(str, longValue);\r\n		// Then\r\n		int expected = 0;\r\n		assertEquals(expected, actual);\r\n	}\r\n";
 		assertEquals(expected, actual);
 	}
 
@@ -146,7 +173,7 @@ public class DefaultTestMethodGeneratorTest {
 		StringBuilder buf = new StringBuilder();
 		// e.g. : given(mocked.called()).willReturn(1);
 		// when
-		target.appendCRLF(buf);
+		generator.appendCRLF(buf);
 		// then
 		// e.g. : verify(mocked).called();
 		assertEquals("\r\n", buf.toString());
@@ -158,7 +185,7 @@ public class DefaultTestMethodGeneratorTest {
 		StringBuilder buf = new StringBuilder();
 		int times = 0;
 		// when
-		target.appendTabs(buf, times);
+		generator.appendTabs(buf, times);
 		// then
 		assertEquals("", buf.toString());
 	}
@@ -169,7 +196,7 @@ public class DefaultTestMethodGeneratorTest {
 		StringBuilder buf = new StringBuilder();
 		int times = 1;
 		// when
-		target.appendTabs(buf, times);
+		generator.appendTabs(buf, times);
 		// then
 		assertEquals("\t", buf.toString());
 	}
@@ -180,73 +207,64 @@ public class DefaultTestMethodGeneratorTest {
 		StringBuilder buf = new StringBuilder();
 		int times = 2;
 		// when
-		target.appendTabs(buf, times);
+		generator.appendTabs(buf, times);
 		// then
 		assertEquals("\t\t", buf.toString());
 	}
 
 	@Test
-	public void appendPreparingArgs_A$StringBuilder$TestMethodMeta()
-			throws Exception {
+	public void appendPreparingArgs_A$StringBuilder$TestMethodMeta() throws Exception {
 		// given
 		StringBuilder buf = new StringBuilder();
 		String sourceCodeString = "package hoge.foo; import java.util.List; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\") } }";
-		ClassMeta targetClassMeta = classMetaExtractor
-				.extract(sourceCodeString);
-		target.initialize(targetClassMeta);
+		ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
+		generator.initialize(targetClassMeta);
 		MethodMeta targetMethodMeta = targetClassMeta.methods.get(0);
-		TestMethodMeta testMethodMeta = target
-				.getTestMethodMeta(targetMethodMeta);
+		TestMethodMeta testMethodMeta = generator.getTestMethodMeta(targetMethodMeta);
 		// when
-		target.appendPreparingArgs(buf, testMethodMeta);
+		generator.appendPreparingArgs(buf, testMethodMeta);
 		// then
-		assertEquals("		String str = null;\r\n		long longValue = 0L;\r\n",
-				buf.toString());
+		assertEquals("		String str = null;\r\n		long longValue = 0L;\r\n", buf.toString());
 	}
 
 	@Test
-	public void appendMockChecking_A$StringBuilder$int_depth0()
-			throws Exception {
+	public void appendMockChecking_A$StringBuilder$int_depth0() throws Exception {
 		// given
 		StringBuilder buf = new StringBuilder();
 		int depth = 0;
 		// when
-		target.appendMockChecking(buf, depth);
+		generator.appendMockChecking(buf, depth);
 		// then
 		assertEquals("", buf.toString());
 	}
 
 	@Test
-	public void appendMockChecking_A$StringBuilder$int_depth1()
-			throws Exception {
+	public void appendMockChecking_A$StringBuilder$int_depth1() throws Exception {
 		// given
 		StringBuilder buf = new StringBuilder();
 		int depth = 1;
 		// when
-		target.appendMockChecking(buf, depth);
+		generator.appendMockChecking(buf, depth);
 		// then
 		assertEquals("", buf.toString());
 	}
 
 	@Test
-	public void appendMockChecking_A$StringBuilder$int_depth2()
-			throws Exception {
+	public void appendMockChecking_A$StringBuilder$int_depth2() throws Exception {
 		// given
 		StringBuilder buf = new StringBuilder();
 		int depth = 2;
 		// when
-		target.appendMockChecking(buf, depth);
+		generator.appendMockChecking(buf, depth);
 		// then
 		assertEquals("", buf.toString());
 	}
 
 	@Test
-	public void appendMockChecking_A$StringBuilder$int_EasyMock()
-			throws Exception {
+	public void appendMockChecking_A$StringBuilder$int_EasyMock() throws Exception {
 		Configulation config = new Configulation();
 		config.mockObjectFramework = MockObjectFramework.EasyMock;
-		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(
-				config);
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
 		// given
 		StringBuilder buf = new StringBuilder();
 		int depth = 2;
@@ -254,18 +272,15 @@ public class DefaultTestMethodGeneratorTest {
 		// when
 		target.appendMockChecking(buf, depth);
 		// then
-		assertEquals(
-				"\t\t// e.g. : EasyMock.expect(mocked.called()).andReturn(1);\r\n		mocks.replay();\r\n",
+		assertEquals("\t\t// e.g. : EasyMock.expect(mocked.called()).andReturn(1);\r\n		mocks.replay();\r\n",
 				buf.toString());
 	}
 
 	@Test
-	public void appendMockChecking_A$StringBuilder$int_JMock2()
-			throws Exception {
+	public void appendMockChecking_A$StringBuilder$int_JMock2() throws Exception {
 		Configulation config = new Configulation();
 		config.mockObjectFramework = MockObjectFramework.JMock2;
-		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(
-				config);
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
 		// given
 		StringBuilder buf = new StringBuilder();
 		int depth = 2;
@@ -279,12 +294,10 @@ public class DefaultTestMethodGeneratorTest {
 	}
 
 	@Test
-	public void appendMockChecking_A$StringBuilder$int_JMockit()
-			throws Exception {
+	public void appendMockChecking_A$StringBuilder$int_JMockit() throws Exception {
 		Configulation config = new Configulation();
 		config.mockObjectFramework = MockObjectFramework.JMockit;
-		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(
-				config);
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
 		// given
 		StringBuilder buf = new StringBuilder();
 		int depth = 2;
@@ -292,18 +305,15 @@ public class DefaultTestMethodGeneratorTest {
 		// when
 		target.appendMockChecking(buf, depth);
 		// then
-		assertEquals(
-				"\t\tnew Expectations(){{\r\n			// e.g. : mocked.get(anyString); returns(200);\r\n		}};\r\n",
+		assertEquals("\t\tnew Expectations(){{\r\n			// e.g. : mocked.get(anyString); returns(200);\r\n		}};\r\n",
 				buf.toString());
 	}
 
 	@Test
-	public void appendMockChecking_A$StringBuilder$int_Mockito()
-			throws Exception {
+	public void appendMockChecking_A$StringBuilder$int_Mockito() throws Exception {
 		Configulation config = new Configulation();
 		config.mockObjectFramework = MockObjectFramework.Mockito;
-		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(
-				config);
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
 		// given
 		StringBuilder buf = new StringBuilder();
 		int depth = 2;
@@ -311,99 +321,89 @@ public class DefaultTestMethodGeneratorTest {
 		// when
 		target.appendMockChecking(buf, depth);
 		// then
-		assertEquals("\t\t// e.g. : given(mocked.called()).willReturn(1);\r\n",
-				buf.toString());
+		assertEquals("\t\t// e.g. : given(mocked.called()).willReturn(1);\r\n", buf.toString());
 	}
 
 	@Test
-	public void appendMockVerifying_A$StringBuilder$int_depth0()
-			throws Exception {
+	public void appendMockVerifying_A$StringBuilder$int_depth0() throws Exception {
 		// given
 		StringBuilder buf = new StringBuilder();
 		int depth = 0;
 		// when
-		target.appendMockVerifying(buf, depth);
+		generator.appendMockVerifying(buf, depth);
 		// then
 		assertEquals("", buf.toString());
 	}
 
 	@Test
-	public void appendMockVerifying_A$StringBuilder$int_depth1()
-			throws Exception {
+	public void appendMockVerifying_A$StringBuilder$int_depth1() throws Exception {
 		// given
 		StringBuilder buf = new StringBuilder();
 		int depth = 1;
 		// when
-		target.appendMockVerifying(buf, depth);
+		generator.appendMockVerifying(buf, depth);
 		// then
 		assertEquals("", buf.toString());
 	}
 
 	@Test
-	public void appendMockVerifying_A$StringBuilder$int_depth2()
-			throws Exception {
+	public void appendMockVerifying_A$StringBuilder$int_depth2() throws Exception {
 		// given
 		StringBuilder buf = new StringBuilder();
 		int depth = 2;
 		// when
-		target.appendMockVerifying(buf, depth);
+		generator.appendMockVerifying(buf, depth);
 		// then
 		assertEquals("", buf.toString());
 	}
 
 	@Test
-	public void appendExecutingTargetMethod_A$StringBuilder$TestMethodMeta()
-			throws Exception {
+	public void appendExecutingTargetMethod_A$StringBuilder$TestMethodMeta() throws Exception {
 		// given
 		StringBuilder buf = new StringBuilder();
 		String sourceCodeString = "package hoge.foo; import java.util.List; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\") } }";
-		ClassMeta targetClassMeta = classMetaExtractor
-				.extract(sourceCodeString);
-		target.initialize(targetClassMeta);
+		ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
+		generator.initialize(targetClassMeta);
 		MethodMeta targetMethodMeta = targetClassMeta.methods.get(0);
-		TestMethodMeta testMethodMeta = target
-				.getTestMethodMeta(targetMethodMeta);
+		TestMethodMeta testMethodMeta = generator.getTestMethodMeta(targetMethodMeta);
 		// when
-		target.appendExecutingTargetMethod(buf, testMethodMeta);
+		generator.appendExecutingTargetMethod(buf, testMethodMeta);
 		// then
 		assertEquals("target.doSomething(str, longValue);\r\n", buf.toString());
 	}
 
 	@Test
-	public void appendBDDMockitoComment_A$StringBuilder$String$int_depth0()
-			throws Exception {
+	public void appendBDDMockitoComment_A$StringBuilder$String$int_depth0() throws Exception {
 		// given
 		StringBuilder buf = new StringBuilder();
 		String value = null;
 		int depth = 0;
 		// when
-		target.appendBDDMockitoComment(buf, value, depth);
+		generator.appendBDDMockitoComment(buf, value, depth);
 		// then
 		assertEquals("", buf.toString());
 	}
 
 	@Test
-	public void appendBDDMockitoComment_A$StringBuilder$String$int_depth1()
-			throws Exception {
+	public void appendBDDMockitoComment_A$StringBuilder$String$int_depth1() throws Exception {
 		// given
 		StringBuilder buf = new StringBuilder();
 		String value = null;
 		int depth = 1;
 		// when
-		target.appendBDDMockitoComment(buf, value, depth);
+		generator.appendBDDMockitoComment(buf, value, depth);
 		// then
 		assertEquals("", buf.toString());
 	}
 
 	@Test
-	public void appendBDDMockitoComment_A$StringBuilder$String$int_depth2()
-			throws Exception {
+	public void appendBDDMockitoComment_A$StringBuilder$String$int_depth2() throws Exception {
 		// given
 		StringBuilder buf = new StringBuilder();
 		String value = null;
 		int depth = 2;
 		// when
-		target.appendBDDMockitoComment(buf, value, depth);
+		generator.appendBDDMockitoComment(buf, value, depth);
 		// then
 		assertEquals("", buf.toString());
 	}
@@ -412,199 +412,191 @@ public class DefaultTestMethodGeneratorTest {
 	public void getMockedFieldsForJMockit_A$TestMethodMeta() throws Exception {
 		// given
 		config.mockObjectFramework = MockObjectFramework.JMockit;
-		target = new DefaultTestMethodGenerator(config);
+		generator = new DefaultTestMethodGenerator(config);
 		String sourceCodeString = "package hoge.foo; import java.util.List;import fuga.Bean; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue, Bean bean) throws Throwable { System.out.println(\"aaaa\") } }";
-		ClassMeta targetClassMeta = classMetaExtractor
-				.extract(sourceCodeString);
-		target.initialize(targetClassMeta);
+		ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
+		generator.initialize(targetClassMeta);
 		MethodMeta targetMethodMeta = targetClassMeta.methods.get(0);
-		TestMethodMeta testMethodMeta = target
-				.getTestMethodMeta(targetMethodMeta);
+		TestMethodMeta testMethodMeta = generator.getTestMethodMeta(targetMethodMeta);
 		// when
-		List<String> actual = target.getMockedFieldsForJMockit(testMethodMeta);
+		List<String> actual = generator.getMockedFieldsForJMockit(testMethodMeta);
 		// then
 		// e.g. : verify(mocked).called();
 		assertEquals(1, actual.size());
 	}
 
 	@Test
-	public void getArgValue_A$TestMethodMeta$ArgTypeMeta$String()
-			throws Exception {
+	public void getArgValue_A$TestMethodMeta$ArgTypeMeta$String() throws Exception {
 		// given
 		String sourceCodeString = "package hoge.foo; import java.util.List; import java.util.Map; public class Sample { public int doSomething(String str, long longValue, List<String> list, Map<String,Object> map, java.util.HashMap<String, String> hashMap, List<?> list2, Map<?,Object> map2) throws Throwable { System.out.println(\"aaaa\") } }";
-		ClassMeta targetClassMeta = classMetaExtractor
-				.extract(sourceCodeString);
-		target.initialize(targetClassMeta);
+		ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
+		generator.initialize(targetClassMeta);
 		MethodMeta targetMethodMeta = targetClassMeta.methods.get(0);
-		TestMethodMeta testMethodMeta = target
-				.getTestMethodMeta(targetMethodMeta);
+		TestMethodMeta testMethodMeta = generator.getTestMethodMeta(targetMethodMeta);
 		// when
 		// then
-		assertEquals("null", target.getArgValue(testMethodMeta,
-				targetMethodMeta.argTypes.get(0),
-				targetMethodMeta.argNames.get(0)));
-		assertEquals("0L", target.getArgValue(testMethodMeta,
-				targetMethodMeta.argTypes.get(1),
-				targetMethodMeta.argNames.get(1)));
-		assertEquals("new ArrayList<String>()", target.getArgValue(
-				testMethodMeta, targetMethodMeta.argTypes.get(2),
-				targetMethodMeta.argNames.get(2)));
-		assertEquals("new HashMap<String, Object>()", target.getArgValue(
-				testMethodMeta, targetMethodMeta.argTypes.get(3),
-				targetMethodMeta.argNames.get(3)));
-		assertEquals("null", target.getArgValue(testMethodMeta,
-				targetMethodMeta.argTypes.get(4),
-				targetMethodMeta.argNames.get(4)));
-		assertEquals("new ArrayList()", target.getArgValue(testMethodMeta,
-				targetMethodMeta.argTypes.get(5),
-				targetMethodMeta.argNames.get(5)));
-		assertEquals("new HashMap()", target.getArgValue(testMethodMeta,
-				targetMethodMeta.argTypes.get(6),
-				targetMethodMeta.argNames.get(6)));
+		assertEquals(
+				"null",
+				generator.getArgValue(testMethodMeta, targetMethodMeta.argTypes.get(0),
+						targetMethodMeta.argNames.get(0)));
+		assertEquals(
+				"0L",
+				generator.getArgValue(testMethodMeta, targetMethodMeta.argTypes.get(1),
+						targetMethodMeta.argNames.get(1)));
+		assertEquals(
+				"new ArrayList<String>()",
+				generator.getArgValue(testMethodMeta, targetMethodMeta.argTypes.get(2),
+						targetMethodMeta.argNames.get(2)));
+		assertEquals(
+				"new HashMap<String, Object>()",
+				generator.getArgValue(testMethodMeta, targetMethodMeta.argTypes.get(3),
+						targetMethodMeta.argNames.get(3)));
+		assertEquals(
+				"null",
+				generator.getArgValue(testMethodMeta, targetMethodMeta.argTypes.get(4),
+						targetMethodMeta.argNames.get(4)));
+		assertEquals(
+				"new ArrayList()",
+				generator.getArgValue(testMethodMeta, targetMethodMeta.argTypes.get(5),
+						targetMethodMeta.argNames.get(5)));
+		assertEquals(
+				"new HashMap()",
+				generator.getArgValue(testMethodMeta, targetMethodMeta.argTypes.get(6),
+						targetMethodMeta.argNames.get(6)));
 	}
 
 	@Test
-	public void getArgValue_A$TestMethodMeta$ArgTypeMeta$String_Mockito()
-			throws Exception {
+	public void getArgValue_A$TestMethodMeta$ArgTypeMeta$String_Mockito() throws Exception {
 		// given
 		Configulation config = new Configulation();
 		config.mockObjectFramework = MockObjectFramework.Mockito;
-		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(
-				config);
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
 		ClassMetaExtractor classMetaExtractor = new ClassMetaExtractor(config);
 		String sourceCodeString = "package hoge.foo; import java.util.List; import java.util.Map; public class Sample { public int doSomething(String str, long longValue, List<String> list, Map<String,Object> map, java.util.HashMap<String, String> hashMap) throws Throwable { System.out.println(\"aaaa\") } }";
-		ClassMeta targetClassMeta = classMetaExtractor
-				.extract(sourceCodeString);
+		ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
 		target.initialize(targetClassMeta);
 		MethodMeta targetMethodMeta = targetClassMeta.methods.get(0);
-		TestMethodMeta testMethodMeta = target
-				.getTestMethodMeta(targetMethodMeta);
+		TestMethodMeta testMethodMeta = target.getTestMethodMeta(targetMethodMeta);
 		// when
 		// then
-		assertEquals("null", target.getArgValue(testMethodMeta,
-				targetMethodMeta.argTypes.get(0),
-				targetMethodMeta.argNames.get(0)));
-		assertEquals("0L", target.getArgValue(testMethodMeta,
-				targetMethodMeta.argTypes.get(1),
-				targetMethodMeta.argNames.get(1)));
-		assertEquals("new ArrayList<String>()", target.getArgValue(
-				testMethodMeta, targetMethodMeta.argTypes.get(2),
-				targetMethodMeta.argNames.get(2)));
-		assertEquals("new HashMap<String, Object>()", target.getArgValue(
-				testMethodMeta, targetMethodMeta.argTypes.get(3),
-				targetMethodMeta.argNames.get(3)));
-		assertEquals("mock(java.util.HashMap.class)", target.getArgValue(
-				testMethodMeta, targetMethodMeta.argTypes.get(4),
-				targetMethodMeta.argNames.get(4)));
+		assertEquals("null",
+				target.getArgValue(testMethodMeta, targetMethodMeta.argTypes.get(0), targetMethodMeta.argNames.get(0)));
+		assertEquals("0L",
+				target.getArgValue(testMethodMeta, targetMethodMeta.argTypes.get(1), targetMethodMeta.argNames.get(1)));
+		assertEquals("new ArrayList<String>()",
+				target.getArgValue(testMethodMeta, targetMethodMeta.argTypes.get(2), targetMethodMeta.argNames.get(2)));
+		assertEquals("new HashMap<String, Object>()",
+				target.getArgValue(testMethodMeta, targetMethodMeta.argTypes.get(3), targetMethodMeta.argNames.get(3)));
+		assertEquals("mock(java.util.HashMap.class)",
+				target.getArgValue(testMethodMeta, targetMethodMeta.argTypes.get(4), targetMethodMeta.argNames.get(4)));
 	}
 
 	@Test
-	public void getArgValue_A$TestMethodMeta$ArgTypeMeta$String_EasyMock()
-			throws Exception {
+	public void getArgValue_A$TestMethodMeta$ArgTypeMeta$String_EasyMock() throws Exception {
 		// given
 		Configulation config = new Configulation();
 		config.mockObjectFramework = MockObjectFramework.EasyMock;
-		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(
-				config);
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
 		ClassMetaExtractor classMetaExtractor = new ClassMetaExtractor(config);
 		String sourceCodeString = "package hoge.foo; import java.util.List; import java.util.Map; public class Sample { public int doSomething(String str, long longValue, List<String> list, Map<String,Object> map, java.util.HashMap<String, String> hashMap) throws Throwable { System.out.println(\"aaaa\") } }";
-		ClassMeta targetClassMeta = classMetaExtractor
-				.extract(sourceCodeString);
+		ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
 		target.initialize(targetClassMeta);
 		MethodMeta targetMethodMeta = targetClassMeta.methods.get(0);
-		TestMethodMeta testMethodMeta = target
-				.getTestMethodMeta(targetMethodMeta);
+		TestMethodMeta testMethodMeta = target.getTestMethodMeta(targetMethodMeta);
 		// when
 		// then
-		assertEquals("null", target.getArgValue(testMethodMeta,
-				targetMethodMeta.argTypes.get(0),
-				targetMethodMeta.argNames.get(0)));
-		assertEquals("0L", target.getArgValue(testMethodMeta,
-				targetMethodMeta.argTypes.get(1),
-				targetMethodMeta.argNames.get(1)));
-		assertEquals("new ArrayList<String>()", target.getArgValue(
-				testMethodMeta, targetMethodMeta.argTypes.get(2),
-				targetMethodMeta.argNames.get(2)));
-		assertEquals("new HashMap<String, Object>()", target.getArgValue(
-				testMethodMeta, targetMethodMeta.argTypes.get(3),
-				targetMethodMeta.argNames.get(3)));
+		assertEquals("null",
+				target.getArgValue(testMethodMeta, targetMethodMeta.argTypes.get(0), targetMethodMeta.argNames.get(0)));
+		assertEquals("0L",
+				target.getArgValue(testMethodMeta, targetMethodMeta.argTypes.get(1), targetMethodMeta.argNames.get(1)));
+		assertEquals("new ArrayList<String>()",
+				target.getArgValue(testMethodMeta, targetMethodMeta.argTypes.get(2), targetMethodMeta.argNames.get(2)));
+		assertEquals("new HashMap<String, Object>()",
+				target.getArgValue(testMethodMeta, targetMethodMeta.argTypes.get(3), targetMethodMeta.argNames.get(3)));
 		assertEquals("mocks.createMock(java.util.HashMap.class)",
-				target.getArgValue(testMethodMeta,
-						targetMethodMeta.argTypes.get(4),
-						targetMethodMeta.argNames.get(4)));
+				target.getArgValue(testMethodMeta, targetMethodMeta.argTypes.get(4), targetMethodMeta.argNames.get(4)));
 	}
 
 	@Test
-	public void getArgValue_A$TestMethodMeta$ArgTypeMeta$String_JMock2()
-			throws Exception {
+	public void getArgValue_A$TestMethodMeta$ArgTypeMeta$String_JMock2() throws Exception {
 		// given
 		Configulation config = new Configulation();
 		config.mockObjectFramework = MockObjectFramework.JMock2;
-		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(
-				config);
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
 		ClassMetaExtractor classMetaExtractor = new ClassMetaExtractor(config);
 		String sourceCodeString = "package hoge.foo; import java.util.List; import java.util.Map; public class Sample { public int doSomething(String str, long longValue, List<String> list, Map<String,Object> map, java.util.HashMap<String, String> hashMap) throws Throwable { System.out.println(\"aaaa\") } }";
-		ClassMeta targetClassMeta = classMetaExtractor
-				.extract(sourceCodeString);
+		ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
 		target.initialize(targetClassMeta);
 		MethodMeta targetMethodMeta = targetClassMeta.methods.get(0);
-		TestMethodMeta testMethodMeta = target
-				.getTestMethodMeta(targetMethodMeta);
+		TestMethodMeta testMethodMeta = target.getTestMethodMeta(targetMethodMeta);
 		// when
 		// then
-		assertEquals("null", target.getArgValue(testMethodMeta,
-				targetMethodMeta.argTypes.get(0),
-				targetMethodMeta.argNames.get(0)));
-		assertEquals("0L", target.getArgValue(testMethodMeta,
-				targetMethodMeta.argTypes.get(1),
-				targetMethodMeta.argNames.get(1)));
-		assertEquals("new ArrayList<String>()", target.getArgValue(
-				testMethodMeta, targetMethodMeta.argTypes.get(2),
-				targetMethodMeta.argNames.get(2)));
-		assertEquals("new HashMap<String, Object>()", target.getArgValue(
-				testMethodMeta, targetMethodMeta.argTypes.get(3),
-				targetMethodMeta.argNames.get(3)));
+		assertEquals("null",
+				target.getArgValue(testMethodMeta, targetMethodMeta.argTypes.get(0), targetMethodMeta.argNames.get(0)));
+		assertEquals("0L",
+				target.getArgValue(testMethodMeta, targetMethodMeta.argTypes.get(1), targetMethodMeta.argNames.get(1)));
+		assertEquals("new ArrayList<String>()",
+				target.getArgValue(testMethodMeta, targetMethodMeta.argTypes.get(2), targetMethodMeta.argNames.get(2)));
+		assertEquals("new HashMap<String, Object>()",
+				target.getArgValue(testMethodMeta, targetMethodMeta.argTypes.get(3), targetMethodMeta.argNames.get(3)));
 		assertEquals("context.mock(java.util.HashMap.class)",
-				target.getArgValue(testMethodMeta,
-						targetMethodMeta.argTypes.get(4),
-						targetMethodMeta.argNames.get(4)));
+				target.getArgValue(testMethodMeta, targetMethodMeta.argTypes.get(4), targetMethodMeta.argNames.get(4)));
 	}
 
 	@Test
-	public void getArgValue_A$TestMethodMeta$ArgTypeMeta$String_JMockit()
-			throws Exception {
+	public void getArgValue_A$TestMethodMeta$ArgTypeMeta$String_JMockit() throws Exception {
 		// given
 		Configulation config = new Configulation();
 		config.mockObjectFramework = MockObjectFramework.JMockit;
-		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(
-				config);
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
 		ClassMetaExtractor classMetaExtractor = new ClassMetaExtractor(config);
 		String sourceCodeString = "package hoge.foo; import java.util.List; import java.util.Map; public class Sample { public int doSomething(String str, long longValue, List<String> list, Map<String,Object> map, java.util.HashMap<String, String> hashMap) throws Throwable { System.out.println(\"aaaa\") } }";
-		ClassMeta targetClassMeta = classMetaExtractor
-				.extract(sourceCodeString);
+		ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
 		target.initialize(targetClassMeta);
 		MethodMeta targetMethodMeta = targetClassMeta.methods.get(0);
-		TestMethodMeta testMethodMeta = target
-				.getTestMethodMeta(targetMethodMeta);
+		TestMethodMeta testMethodMeta = target.getTestMethodMeta(targetMethodMeta);
 		// when
 		// then
-		assertEquals("null", target.getArgValue(testMethodMeta,
-				targetMethodMeta.argTypes.get(0),
-				targetMethodMeta.argNames.get(0)));
-		assertEquals("0L", target.getArgValue(testMethodMeta,
-				targetMethodMeta.argTypes.get(1),
-				targetMethodMeta.argNames.get(1)));
-		assertEquals("new ArrayList<String>()", target.getArgValue(
-				testMethodMeta, targetMethodMeta.argTypes.get(2),
-				targetMethodMeta.argNames.get(2)));
-		assertEquals("new HashMap<String, Object>()", target.getArgValue(
-				testMethodMeta, targetMethodMeta.argTypes.get(3),
-				targetMethodMeta.argNames.get(3)));
-		assertEquals(
-				"this.doSomething_A$String$long$List$Map$javautilHashMap_hashMap",
-				target.getArgValue(testMethodMeta,
-						targetMethodMeta.argTypes.get(4),
-						targetMethodMeta.argNames.get(4)));
+		assertEquals("null",
+				target.getArgValue(testMethodMeta, targetMethodMeta.argTypes.get(0), targetMethodMeta.argNames.get(0)));
+		assertEquals("0L",
+				target.getArgValue(testMethodMeta, targetMethodMeta.argTypes.get(1), targetMethodMeta.argNames.get(1)));
+		assertEquals("new ArrayList<String>()",
+				target.getArgValue(testMethodMeta, targetMethodMeta.argTypes.get(2), targetMethodMeta.argNames.get(2)));
+		assertEquals("new HashMap<String, Object>()",
+				target.getArgValue(testMethodMeta, targetMethodMeta.argTypes.get(3), targetMethodMeta.argNames.get(3)));
+		assertEquals("this.doSomething_A$String$long$List$Map$javautilHashMap_hashMap",
+				target.getArgValue(testMethodMeta, targetMethodMeta.argTypes.get(4), targetMethodMeta.argNames.get(4)));
+	}
+
+	@Test
+	public void appendTestingPatternExplicitComment_A$StringBuilder$String$int_ArrangeActAssert() throws Exception {
+		// Arrange
+		Configulation config = new Configulation();
+		config.testingPatternExplicitComment = TestingPatternExplicitComment.ArrangeActAssert;
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		String value = "Act";
+		int depth = 0;
+		// Act
+		target.appendTestingPatternExplicitComment(buf, value, depth);
+		// Assert
+		assertThat(buf.toString(), is(equalTo("// Act\r\n")));
+	}
+
+	@Test
+	public void appendTestingPatternExplicitComment_A$StringBuilder$String$int_GivenWhenThen() throws Exception {
+		// Arrange
+		Configulation config = new Configulation();
+		config.testingPatternExplicitComment = TestingPatternExplicitComment.GivenWhenThen;
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		String value = "Act";
+		int depth = 0;
+		// Act
+		target.appendTestingPatternExplicitComment(buf, value, depth);
+		// Assert
+		assertThat(buf.toString(), is(equalTo("// When\r\n")));
 	}
 
 }
