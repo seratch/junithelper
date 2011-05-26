@@ -2,10 +2,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.junithelper</groupId>
-    <artifactId>junithelper-core</artifactId>
-    <version>1.0.1</version>
-    <packaging>jar</packaging>
+  <groupId>org.junithelper</groupId>
+  <artifactId>junithelper-core</artifactId>
+  <version>1.0.2</version>
+  <packaging>jar</packaging>
 
     <name>junithelper-core</name>
     <url>http://junithelper.org</url>
