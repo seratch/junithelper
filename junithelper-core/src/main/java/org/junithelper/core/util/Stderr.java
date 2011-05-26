@@ -17,15 +17,15 @@ package org.junithelper.core.util;
 
 public class Stderr {
 
-    private Stderr() {
-    }
+	private Stderr() {
+	}
 
-    public static final void printf(String format, Object... values) {
-        System.err.printf(format, values);
-    }
+	public static final void printf(String format, Object... values) {
+		System.err.printf(format, values);
+	}
 
-    public static final void p(String str) {
-        System.err.println(str);
-    }
+	public static final void p(String str) {
+		System.err.println(str);
+	}
 
 }

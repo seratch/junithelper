@@ -17,46 +17,46 @@ package org.junithelper.core.constant;
 
 public final class StringValue {
 
-    public static final String Empty = "";
+	public static final String Empty = "";
 
-    public static final String Space = " ";
+	public static final String Space = " ";
 
-    public static final String Tab = "\t";
+	public static final String Tab = "\t";
 
-    public static final String Comma = ",";
+	public static final String Comma = ",";
 
-    public static final String Dot = ".";
+	public static final String Dot = ".";
 
-    public static final String Asterisk = "*";
+	public static final String Asterisk = "*";
 
-    public static final String Semicolon = ";";
+	public static final String Semicolon = ";";
 
-    public static final String CarriageReturn = "\r";
+	public static final String CarriageReturn = "\r";
 
-    public static final String LineFeed = "\n";
+	public static final String LineFeed = "\n";
 
-    public static final class DirectorySeparator {
+	public static final class DirectorySeparator {
 
-        public static final String General = "/";
+		public static final String General = "/";
 
-        public static final String WindowsOS = "\\\\";
+		public static final String WindowsOS = "\\\\";
 
-    }
+	}
 
-    public static final class FileExtension {
+	public static final class FileExtension {
 
-        public static final String JavaFile = ".java";
+		public static final String JavaFile = ".java";
 
-        public static final String PropertiesFile = ".properties";
+		public static final String PropertiesFile = ".properties";
 
-    }
+	}
 
-    public static final class JUnit {
+	public static final class JUnit {
 
-        public static final String TestClassNameSuffix = "Test";
+		public static final String TestClassNameSuffix = "Test";
 
-        public static final String TestMethodNamePrefixForJUnitVersion3 = "test";
+		public static final String TestMethodNamePrefixForJUnitVersion3 = "test";
 
-    }
+	}
 
 }

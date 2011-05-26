@@ -24,18 +24,18 @@ import java.util.List;
 
 public interface TestCaseGenerator {
 
-    TestCaseGenerator initialize(String targetSourceCodeString);
+	TestCaseGenerator initialize(String targetSourceCodeString);
 
-    TestCaseGenerator initialize(ClassMeta targetClassMeta);
+	TestCaseGenerator initialize(ClassMeta targetClassMeta);
 
-    TestCaseMeta getNewTestCaseMeta();
+	TestCaseMeta getNewTestCaseMeta();
 
-    List<TestMethodMeta> getLackingTestMethodMetaList(String currentTestCaseSourceCode);
+	List<TestMethodMeta> getLackingTestMethodMetaList(String currentTestCaseSourceCode);
 
-    String getNewTestCaseSourceCode();
+	String getNewTestCaseSourceCode();
 
-    String getTestCaseSourceCodeWithLackingTestMethod(String currentTestCaseSourceCode);
+	String getTestCaseSourceCodeWithLackingTestMethod(String currentTestCaseSourceCode);
 
-    String getUnifiedVersionTestCaseSourceCode(String currentTestCaseSourceCode, JUnitVersion version);
+	String getUnifiedVersionTestCaseSourceCode(String currentTestCaseSourceCode, JUnitVersion version);
 
 }

@@ -17,14 +17,14 @@ package org.junithelper.core.config;
 
 public class TestingTarget {
 
-    public boolean isPublicMethodRequired = true;
+	public boolean isPublicMethodRequired = true;
 
-    public boolean isProtectedMethodRequired = true;
+	public boolean isProtectedMethodRequired = true;
 
-    public boolean isPackageLocalMethodRequired = true;
+	public boolean isPackageLocalMethodRequired = true;
 
-    public boolean isExceptionPatternRequired = false;
+	public boolean isExceptionPatternRequired = false;
 
-    public boolean isAccessorExcluded = true;
+	public boolean isAccessorExcluded = true;
 
 }

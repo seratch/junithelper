@@ -28,52 +28,52 @@ import java.util.List;
 
 public class MakeTestCommand extends AbstractCommand {
 
-    private MakeTestCommand() {
-    }
+	private MakeTestCommand() {
+	}
 
-    public static Configulation config = new Configulation();
+	public static Configulation config = new Configulation();
 
-    public static void main(String[] args) throws Exception {
-        config = overrideConfigulation(config);
-        String dirOrFile = (args != null && args.length > 0 && args[0] != null)
-                ? args[0] : config.directoryPathOfProductSourceCode;
-        List<File> javaFiles = findTargets(config, dirOrFile);
-        for (File javaFile : javaFiles) {
-            Stdout.p("  Target: " + javaFile.getAbsolutePath());
-        }
-        // confirm input from stdin
-        if (confirmToExecute() > 0) {
-            return;
-        }
-        FileReader fileReader = new CommonsIOFileReader();
-        TestCaseGenerator testCaseGenerator = new DefaultTestCaseGenerator(config);
-        for (File javaFile : javaFiles) {
-            File testFile = null;
-            String currentTestCaseSourceCode = null;
-            try {
-                testFile = new File(javaFile.getAbsolutePath()
-                        .replaceAll("\\\\", "/")
-                        .replaceFirst(getDirectoryPathOfProductSourceCode(config),
-                                getDirectoryPathOfTestSourceCode(config))
-                        .replaceFirst("\\.java", "Test.java"));
-                currentTestCaseSourceCode = fileReader.readAsString(testFile);
-            } catch (Exception e) {
-            }
-            testCaseGenerator.initialize(fileReader.readAsString(javaFile));
-            String testCodeString = null;
-            if (currentTestCaseSourceCode != null) {
-                testCodeString = testCaseGenerator.getTestCaseSourceCodeWithLackingTestMethod(
-                        currentTestCaseSourceCode);
-                if (!testCodeString.equals(currentTestCaseSourceCode)) {
-                    Stdout.p("  Modified: " + testFile.getAbsolutePath());
-                    new CommonsIOFileWriter(testFile).writeText(testCodeString);
-                }
-            } else {
-                testCodeString = testCaseGenerator.getNewTestCaseSourceCode();
-                Stdout.p("  Created: " + testFile.getAbsolutePath());
-                new CommonsIOFileWriter(testFile).writeText(testCodeString);
-            }
-        }
-    }
+	public static void main(String[] args) throws Exception {
+		config = overrideConfigulation(config);
+		String dirOrFile = (args != null && args.length > 0 && args[0] != null)
+				? args[0] : config.directoryPathOfProductSourceCode;
+		List<File> javaFiles = findTargets(config, dirOrFile);
+		for (File javaFile : javaFiles) {
+			Stdout.p("  Target: " + javaFile.getAbsolutePath());
+		}
+		// confirm input from stdin
+		if (confirmToExecute() > 0) {
+			return;
+		}
+		FileReader fileReader = new CommonsIOFileReader();
+		TestCaseGenerator testCaseGenerator = new DefaultTestCaseGenerator(config);
+		for (File javaFile : javaFiles) {
+			File testFile = null;
+			String currentTestCaseSourceCode = null;
+			try {
+				testFile = new File(javaFile.getAbsolutePath()
+						.replaceAll("\\\\", "/")
+						.replaceFirst(getDirectoryPathOfProductSourceCode(config),
+								getDirectoryPathOfTestSourceCode(config))
+						.replaceFirst("\\.java", "Test.java"));
+				currentTestCaseSourceCode = fileReader.readAsString(testFile);
+			} catch (Exception e) {
+			}
+			testCaseGenerator.initialize(fileReader.readAsString(javaFile));
+			String testCodeString = null;
+			if (currentTestCaseSourceCode != null) {
+				testCodeString = testCaseGenerator.getTestCaseSourceCodeWithLackingTestMethod(
+						currentTestCaseSourceCode);
+				if (!testCodeString.equals(currentTestCaseSourceCode)) {
+					Stdout.p("  Modified: " + testFile.getAbsolutePath());
+					new CommonsIOFileWriter(testFile).writeText(testCodeString);
+				}
+			} else {
+				testCodeString = testCaseGenerator.getNewTestCaseSourceCode();
+				Stdout.p("  Created: " + testFile.getAbsolutePath());
+				new CommonsIOFileWriter(testFile).writeText(testCodeString);
+			}
+		}
+	}
 
 }

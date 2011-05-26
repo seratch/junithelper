@@ -28,18 +28,18 @@ import java.util.List;
 
 public class CommonsIOFileSearcher implements FileSearcher {
 
-    @Override
-    public List<File> searchFilesRecursivelyByName(String baseAbsoluteDir, String regexp) {
-        File dir = new File(baseAbsoluteDir);
-        IOFileFilter fileFilter = new RegexFileFilter(
-                RegExp.Anything_ZeroOrMore_Min + regexp + RegExp.Anything_ZeroOrMore_Min);
-        IOFileFilter dirFilter = new RegexFileFilter("[^(/\\.)]*");
-        Collection<File> files = FileUtils.listFiles(dir, fileFilter, dirFilter);
-        List<File> dest = new ArrayList<File>();
-        for (File file : files) {
-            dest.add(file);
-        }
-        return dest;
-    }
+	@Override
+	public List<File> searchFilesRecursivelyByName(String baseAbsoluteDir, String regexp) {
+		File dir = new File(baseAbsoluteDir);
+		IOFileFilter fileFilter = new RegexFileFilter(
+				RegExp.Anything_ZeroOrMore_Min + regexp + RegExp.Anything_ZeroOrMore_Min);
+		IOFileFilter dirFilter = new RegexFileFilter("[^(/\\.)]*");
+		Collection<File> files = FileUtils.listFiles(dir, fileFilter, dirFilter);
+		List<File> dest = new ArrayList<File>();
+		for (File file : files) {
+			dest.add(file);
+		}
+		return dest;
+	}
 
 }

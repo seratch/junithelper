@@ -2,19 +2,19 @@ package org.junithelper.core.meta;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 public class ExceptionMetaTest {
 
-    @Test
-    public void type() throws Exception {
-        assertNotNull(ExceptionMeta.class);
-    }
+	@Test
+	public void type() throws Exception {
+		assertNotNull(ExceptionMeta.class);
+	}
 
-    @Test
-    public void instantiation() throws Exception {
-        ExceptionMeta target = new ExceptionMeta();
-        assertNotNull(target);
-    }
+	@Test
+	public void instantiation() throws Exception {
+		ExceptionMeta target = new ExceptionMeta();
+		assertNotNull(target);
+	}
 
 }

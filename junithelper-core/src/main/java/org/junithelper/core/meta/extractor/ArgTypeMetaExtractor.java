@@ -29,102 +29,102 @@ import java.util.regex.Pattern;
 
 public class ArgTypeMetaExtractor {
 
-    private Configulation config;
-    private ClassMeta classMeta;
-    private List<ArgTypeMeta> extractedMetaList = new ArrayList<ArgTypeMeta>();
-    private List<String> extractedNameList = new ArrayList<String>();
+	private Configulation config;
+	private ClassMeta classMeta;
+	private List<ArgTypeMeta> extractedMetaList = new ArrayList<ArgTypeMeta>();
+	private List<String> extractedNameList = new ArrayList<String>();
 
-    public ArgTypeMetaExtractor(Configulation config) {
-        this.config = config;
-    }
+	public ArgTypeMetaExtractor(Configulation config) {
+		this.config = config;
+	}
 
-    public ArgTypeMetaExtractor initialize(String sourceCodeString) {
-        return initialize(null, sourceCodeString);
-    }
+	public ArgTypeMetaExtractor initialize(String sourceCodeString) {
+		return initialize(null, sourceCodeString);
+	}
 
-    public ArgTypeMetaExtractor initialize(ClassMeta classMeta) {
-        this.classMeta = classMeta;
-        return this;
-    }
+	public ArgTypeMetaExtractor initialize(ClassMeta classMeta) {
+		this.classMeta = classMeta;
+		return this;
+	}
 
-    public ArgTypeMetaExtractor initialize(ClassMeta classMeta, String sourceCodeString) {
-        if (classMeta == null) {
-            this.classMeta = new ClassMetaExtractor(config).extract(sourceCodeString);
-        } else {
-            this.classMeta = classMeta;
-        }
-        return this;
-    }
+	public ArgTypeMetaExtractor initialize(ClassMeta classMeta, String sourceCodeString) {
+		if (classMeta == null) {
+			this.classMeta = new ClassMetaExtractor(config).extract(sourceCodeString);
+		} else {
+			this.classMeta = classMeta;
+		}
+		return this;
+	}
 
-    public List<ArgTypeMeta> getExtractedMetaList() {
-        return extractedMetaList;
-    }
+	public List<ArgTypeMeta> getExtractedMetaList() {
+		return extractedMetaList;
+	}
 
-    public List<String> getExtractedNameList() {
-        return extractedNameList;
-    }
+	public List<String> getExtractedNameList() {
+		return extractedNameList;
+	}
 
-    public void doExtract(String argsAreaString) {
-        if (classMeta == null) {
-            throw new IllegalStateException("class meta object required");
-        }
-        TypeNameConverter typeNameConverter = new TypeNameConverter(config);
-        // -----------------
-        // args
-        String[] argArr = ArgExtractorHelper.getArgListFromArgsDefAreaString(
-                argsAreaString).toArray(new String[0]);
-        int argArrLen = argArr.length;
-        for (int i = 0; i < argArrLen; i++) {
-            ArgTypeMeta argTypeMeta = new ArgTypeMeta();
-            String argTypeFull = argArr[i];
-            // -----------------
-            // generics of arg
-            Matcher toGenericsMatcherForArg = Pattern.compile(RegExp.Generics_Group).matcher(argTypeFull);
-            while (toGenericsMatcherForArg.find()) {
-                String[] generics = toGenericsMatcherForArg.group()
-                        .replaceAll("<", StringValue.Empty)
-                        .replaceAll(">", StringValue.Empty)
-                        .split(StringValue.Comma);
-                // convert to java.lang.Object if self class is included
-                for (String generic : generics) {
-                    generic = typeNameConverter.toCompilableType(
-                            generic, classMeta.importedList, classMeta.packageName);
-                    argTypeMeta.generics.add(generic);
-                }
-            }
-            // -----------------
-            // arg type
-            String argTypeName = argTypeFull
-                    .replaceAll("final ", StringValue.Empty)
-                    .replaceAll(RegExp.Generics, StringValue.Empty)
-                    .split("\\s+")[0].trim();
-            if (argTypeName != null && !"".equals(argTypeName)) {
-                argTypeMeta.name = typeNameConverter.toCompilableType(
-                        argTypeName, argTypeMeta.generics, classMeta.importedList, classMeta.packageName);
-                argTypeMeta.nameInMethodName = typeNameConverter.toAvailableInMethodName(argTypeMeta.name);
-                extractedMetaList.add(argTypeMeta);
-            }
-            // -----------------
-            // arg name string
-            Matcher argNameMatcher = RegExp.PatternObject.MethodArg_Group.matcher(argTypeFull);
-            if (argNameMatcher.find()) {
-                String argName = argNameMatcher.group(1);
-                if (argName.matches(".+\\[\\s*\\]")) {
-                    // ex. String strArr[] = null;
-                    String arrayPart = "";
-                    Matcher mat = Pattern.compile("\\[\\s*\\]").matcher(argName);
-                    while (mat.find()) {
-                        arrayPart += "[]";
-                    }
-                    argName = argName.replaceAll("\\[\\s*\\]", StringValue.Empty);
-                    argTypeMeta.name = argTypeMeta.name + arrayPart;
-                    argTypeMeta.nameInMethodName = typeNameConverter.toAvailableInMethodName(argTypeMeta.name);
-                }
-                extractedNameList.add(argName);
-            } else if (extractedMetaList.size() > 0) {
-                extractedNameList.add("arg" + i);
-            }
-        }
-    }
+	public void doExtract(String argsAreaString) {
+		if (classMeta == null) {
+			throw new IllegalStateException("class meta object required");
+		}
+		TypeNameConverter typeNameConverter = new TypeNameConverter(config);
+		// -----------------
+		// args
+		String[] argArr = ArgExtractorHelper.getArgListFromArgsDefAreaString(
+				argsAreaString).toArray(new String[0]);
+		int argArrLen = argArr.length;
+		for (int i = 0; i < argArrLen; i++) {
+			ArgTypeMeta argTypeMeta = new ArgTypeMeta();
+			String argTypeFull = argArr[i];
+			// -----------------
+			// generics of arg
+			Matcher toGenericsMatcherForArg = Pattern.compile(RegExp.Generics_Group).matcher(argTypeFull);
+			while (toGenericsMatcherForArg.find()) {
+				String[] generics = toGenericsMatcherForArg.group()
+						.replaceAll("<", StringValue.Empty)
+						.replaceAll(">", StringValue.Empty)
+						.split(StringValue.Comma);
+				// convert to java.lang.Object if self class is included
+				for (String generic : generics) {
+					generic = typeNameConverter.toCompilableType(
+							generic, classMeta.importedList, classMeta.packageName);
+					argTypeMeta.generics.add(generic);
+				}
+			}
+			// -----------------
+			// arg type
+			String argTypeName = argTypeFull
+					.replaceAll("final ", StringValue.Empty)
+					.replaceAll(RegExp.Generics, StringValue.Empty)
+					.split("\\s+")[0].trim();
+			if (argTypeName != null && !"".equals(argTypeName)) {
+				argTypeMeta.name = typeNameConverter.toCompilableType(
+						argTypeName, argTypeMeta.generics, classMeta.importedList, classMeta.packageName);
+				argTypeMeta.nameInMethodName = typeNameConverter.toAvailableInMethodName(argTypeMeta.name);
+				extractedMetaList.add(argTypeMeta);
+			}
+			// -----------------
+			// arg name string
+			Matcher argNameMatcher = RegExp.PatternObject.MethodArg_Group.matcher(argTypeFull);
+			if (argNameMatcher.find()) {
+				String argName = argNameMatcher.group(1);
+				if (argName.matches(".+\\[\\s*\\]")) {
+					// ex. String strArr[] = null;
+					String arrayPart = "";
+					Matcher mat = Pattern.compile("\\[\\s*\\]").matcher(argName);
+					while (mat.find()) {
+						arrayPart += "[]";
+					}
+					argName = argName.replaceAll("\\[\\s*\\]", StringValue.Empty);
+					argTypeMeta.name = argTypeMeta.name + arrayPart;
+					argTypeMeta.nameInMethodName = typeNameConverter.toAvailableInMethodName(argTypeMeta.name);
+				}
+				extractedNameList.add(argName);
+			} else if (extractedMetaList.size() > 0) {
+				extractedNameList.add("arg" + i);
+			}
+		}
+	}
 
 }

@@ -29,49 +29,49 @@ import java.util.List;
 
 public class ForceJUnitVersion4Command extends AbstractCommand {
 
-    private ForceJUnitVersion4Command() {
-    }
+	private ForceJUnitVersion4Command() {
+	}
 
-    public static Configulation config = new Configulation();
+	public static Configulation config = new Configulation();
 
-    public static void main(String[] args) throws Exception {
-        config = overrideConfigulation(config);
-        config.junitVersion = JUnitVersion.version4;
-        String dirOrFile = (args != null && args.length > 0 && args[0] != null)
-                ? args[0] : config.directoryPathOfProductSourceCode;
-        List<File> javaFiles = findTargets(config, dirOrFile);
-        for (File javaFile : javaFiles) {
-            Stdout.p("  Target: " + javaFile.getAbsolutePath());
-        }
-        // confirm input from stdin
-        if (confirmToExecute() > 0) {
-            return;
-        }
-        TestCaseGenerator testCaseGenerator = new DefaultTestCaseGenerator(config);
-        FileReader fileReader = new CommonsIOFileReader();
-        for (File javaFile : javaFiles) {
-            File testFile = null;
-            String currentTestCaseSourceCode = null;
-            try {
-                testFile = new File(javaFile.getAbsolutePath().replaceAll("\\\\", "/")
-                        .replaceFirst(getDirectoryPathOfProductSourceCode(config),
-                                getDirectoryPathOfTestSourceCode(config))
-                        .replaceFirst("\\.java", "Test.java"));
-                currentTestCaseSourceCode = fileReader.readAsString(testFile);
-            } catch (Exception e) {
-            }
-            testCaseGenerator.initialize(fileReader.readAsString(javaFile));
-            String testCodeString = null;
-            if (currentTestCaseSourceCode != null) {
-                testCodeString = testCaseGenerator.getUnifiedVersionTestCaseSourceCode(
-                        testCaseGenerator.getTestCaseSourceCodeWithLackingTestMethod(currentTestCaseSourceCode),
-                        JUnitVersion.version4);
-            } else {
-                testCodeString = testCaseGenerator.getNewTestCaseSourceCode();
-            }
-            new CommonsIOFileWriter(testFile).writeText(testCodeString);
-            Stdout.p("  Forced JUnit 4.x: " + testFile.getAbsolutePath());
-        }
-    }
+	public static void main(String[] args) throws Exception {
+		config = overrideConfigulation(config);
+		config.junitVersion = JUnitVersion.version4;
+		String dirOrFile = (args != null && args.length > 0 && args[0] != null)
+				? args[0] : config.directoryPathOfProductSourceCode;
+		List<File> javaFiles = findTargets(config, dirOrFile);
+		for (File javaFile : javaFiles) {
+			Stdout.p("  Target: " + javaFile.getAbsolutePath());
+		}
+		// confirm input from stdin
+		if (confirmToExecute() > 0) {
+			return;
+		}
+		TestCaseGenerator testCaseGenerator = new DefaultTestCaseGenerator(config);
+		FileReader fileReader = new CommonsIOFileReader();
+		for (File javaFile : javaFiles) {
+			File testFile = null;
+			String currentTestCaseSourceCode = null;
+			try {
+				testFile = new File(javaFile.getAbsolutePath().replaceAll("\\\\", "/")
+						.replaceFirst(getDirectoryPathOfProductSourceCode(config),
+								getDirectoryPathOfTestSourceCode(config))
+						.replaceFirst("\\.java", "Test.java"));
+				currentTestCaseSourceCode = fileReader.readAsString(testFile);
+			} catch (Exception e) {
+			}
+			testCaseGenerator.initialize(fileReader.readAsString(javaFile));
+			String testCodeString = null;
+			if (currentTestCaseSourceCode != null) {
+				testCodeString = testCaseGenerator.getUnifiedVersionTestCaseSourceCode(
+						testCaseGenerator.getTestCaseSourceCodeWithLackingTestMethod(currentTestCaseSourceCode),
+						JUnitVersion.version4);
+			} else {
+				testCodeString = testCaseGenerator.getNewTestCaseSourceCode();
+			}
+			new CommonsIOFileWriter(testFile).writeText(testCodeString);
+			Stdout.p("  Forced JUnit 4.x: " + testFile.getAbsolutePath());
+		}
+	}
 
 }

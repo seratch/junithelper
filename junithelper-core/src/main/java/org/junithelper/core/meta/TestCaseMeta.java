@@ -20,8 +20,8 @@ import java.util.List;
 
 public class TestCaseMeta {
 
-    public ClassMeta target;
+	public ClassMeta target;
 
-    public List<TestMethodMeta> tests = new ArrayList<TestMethodMeta>();
+	public List<TestMethodMeta> tests = new ArrayList<TestMethodMeta>();
 
 }

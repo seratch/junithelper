@@ -21,21 +21,21 @@ import org.junithelper.core.filter.TrimFilter;
 
 public class TrimCommentFilter implements TrimFilter {
 
-    @Override
-    public String trimAll(String src) {
-        if (src == null) {
-            return null;
-        }
-        String[] lines = src.split(RegExp.LF);
-        StringBuilder sb = new StringBuilder();
-        for (String line : lines) {
-            line = new TrimInsideOfStringFilter().trimAll(line).replaceFirst("//.*$", "");
-            sb.append(line);
-        }
-        String withoutLineComments = sb.toString();
-        String withoutLineBreak = withoutLineComments.replaceAll("\r|\n", " ");
-        String withoutComments = withoutLineBreak.replaceAll("/\\*.*?\\*/", StringValue.Empty);
-        return withoutComments;
-    }
+	@Override
+	public String trimAll(String src) {
+		if (src == null) {
+			return null;
+		}
+		String[] lines = src.split(RegExp.LF);
+		StringBuilder sb = new StringBuilder();
+		for (String line : lines) {
+			line = new TrimInsideOfStringFilter().trimAll(line).replaceFirst("//.*$", "");
+			sb.append(line);
+		}
+		String withoutLineComments = sb.toString();
+		String withoutLineBreak = withoutLineComments.replaceAll("\r|\n", " ");
+		String withoutComments = withoutLineBreak.replaceAll("/\\*.*?\\*/", StringValue.Empty);
+		return withoutComments;
+	}
 
 }

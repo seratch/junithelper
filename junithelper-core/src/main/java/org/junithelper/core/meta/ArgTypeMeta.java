@@ -20,31 +20,31 @@ import java.util.List;
 
 public class ArgTypeMeta {
 
-    public String name;
+	public String name;
 
-    public String nameInMethodName;
+	public String nameInMethodName;
 
-    public List<String> generics = new ArrayList<String>();
+	public List<String> generics = new ArrayList<String>();
 
-    public String getGenericsAsString() {
-        StringBuilder buf = new StringBuilder();
-        if (generics.size() > 0) {
-            buf.append("<");
-            buf.append(generics.get(0));
-            if (generics.size() > 1) {
-                for (int i = 1; i < generics.size(); i++) {
-                    buf.append(", ");
-                    buf.append(generics.get(i));
-                }
-            }
-            buf.append(">");
-        }
-        return buf.toString();
-    }
+	public String getGenericsAsString() {
+		StringBuilder buf = new StringBuilder();
+		if (generics.size() > 0) {
+			buf.append("<");
+			buf.append(generics.get(0));
+			if (generics.size() > 1) {
+				for (int i = 1; i < generics.size(); i++) {
+					buf.append(", ");
+					buf.append(generics.get(i));
+				}
+			}
+			buf.append(">");
+		}
+		return buf.toString();
+	}
 
-    @Override
-    public String toString() {
-        throw new IllegalStateException("BUG call");
-    }
+	@Override
+	public String toString() {
+		throw new IllegalStateException("BUG call");
+	}
 
 }

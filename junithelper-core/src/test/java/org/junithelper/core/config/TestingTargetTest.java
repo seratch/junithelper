@@ -2,19 +2,19 @@ package org.junithelper.core.config;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 public class TestingTargetTest {
 
-    @Test
-    public void type() throws Exception {
-        assertNotNull(TestingTarget.class);
-    }
+	@Test
+	public void type() throws Exception {
+		assertNotNull(TestingTarget.class);
+	}
 
-    @Test
-    public void instantiation() throws Exception {
-        TestingTarget target = new TestingTarget();
-        assertNotNull(target);
-    }
+	@Test
+	public void instantiation() throws Exception {
+		TestingTarget target = new TestingTarget();
+		assertNotNull(target);
+	}
 
 }

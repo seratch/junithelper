@@ -32,45 +32,45 @@ import java.util.List;
 
 public class DefaultSourceCodeParser implements SourceCodeParser {
 
-    private ClassMetaExtractor classMetaExtractor;
-    private MethodMetaExtractor methodMetaExtractor;
-    private ConstructorMetaExtractor constructorMetaExtractor;
+	private ClassMetaExtractor classMetaExtractor;
+	private MethodMetaExtractor methodMetaExtractor;
+	private ConstructorMetaExtractor constructorMetaExtractor;
 
-    public DefaultSourceCodeParser(Configulation config) {
-        classMetaExtractor = new ClassMetaExtractor(config);
-        methodMetaExtractor = new MethodMetaExtractor(config);
-        constructorMetaExtractor = new ConstructorMetaExtractor(config);
-    }
+	public DefaultSourceCodeParser(Configulation config) {
+		classMetaExtractor = new ClassMetaExtractor(config);
+		methodMetaExtractor = new MethodMetaExtractor(config);
+		constructorMetaExtractor = new ConstructorMetaExtractor(config);
+	}
 
-    @Override
-    public ClassMeta parse(InputStream is, String encoding) throws IOException {
-        return parse(IOUtil.readAsString(is, encoding));
-    }
+	@Override
+	public ClassMeta parse(InputStream is, String encoding) throws IOException {
+		return parse(IOUtil.readAsString(is, encoding));
+	}
 
-    @Override
-    public ClassMeta parse(String sourceCodeString) {
-        sourceCodeString = TrimFilterUtil.doAllFilters(sourceCodeString);
-        ClassMeta classMeta = classMetaExtractor.extract(sourceCodeString);
-        classMeta.constructors = getConstructors(classMeta, sourceCodeString);
-        classMeta.methods = getMethods(classMeta, sourceCodeString);
-        return classMeta;
-    }
+	@Override
+	public ClassMeta parse(String sourceCodeString) {
+		sourceCodeString = TrimFilterUtil.doAllFilters(sourceCodeString);
+		ClassMeta classMeta = classMetaExtractor.extract(sourceCodeString);
+		classMeta.constructors = getConstructors(classMeta, sourceCodeString);
+		classMeta.methods = getMethods(classMeta, sourceCodeString);
+		return classMeta;
+	}
 
-    List<MethodMeta> getMethods(ClassMeta classMeta, String sourceCodeString) {
-        methodMetaExtractor.initialize(classMeta, sourceCodeString);
-        return methodMetaExtractor.extract(sourceCodeString);
-    }
+	List<MethodMeta> getMethods(ClassMeta classMeta, String sourceCodeString) {
+		methodMetaExtractor.initialize(classMeta, sourceCodeString);
+		return methodMetaExtractor.extract(sourceCodeString);
+	}
 
-    List<ConstructorMeta> getConstructors(ClassMeta classMeta, String sourceCodeString) {
-        methodMetaExtractor.initialize(classMeta, sourceCodeString);
-        constructorMetaExtractor.initialize(classMeta, sourceCodeString);
-        List<ConstructorMeta> constructorMetaList
-                = constructorMetaExtractor.extract(sourceCodeString);
-        if (constructorMetaList.size() == 0) {
-            ConstructorMeta defaultConstructor = new ConstructorMeta();
-            constructorMetaList.add(defaultConstructor);
-        }
-        return constructorMetaList;
-    }
+	List<ConstructorMeta> getConstructors(ClassMeta classMeta, String sourceCodeString) {
+		methodMetaExtractor.initialize(classMeta, sourceCodeString);
+		constructorMetaExtractor.initialize(classMeta, sourceCodeString);
+		List<ConstructorMeta> constructorMetaList
+				= constructorMetaExtractor.extract(sourceCodeString);
+		if (constructorMetaList.size() == 0) {
+			ConstructorMeta defaultConstructor = new ConstructorMeta();
+			constructorMetaList.add(defaultConstructor);
+		}
+		return constructorMetaList;
+	}
 
 }

@@ -17,6 +17,6 @@ package org.junithelper.core.filter;
 
 public interface TrimFilter {
 
-    String trimAll(String src);
+	String trimAll(String src);
 
 }

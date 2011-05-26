@@ -22,10 +22,10 @@ import java.util.List;
 
 public interface ConstructorGenerator {
 
-    List<String> getAllInstantiationSourceCodeList(ClassMeta classMeta);
+	List<String> getAllInstantiationSourceCodeList(ClassMeta classMeta);
 
-    String getFirstInstantiationSourceCode(ClassMeta classMeta);
+	String getFirstInstantiationSourceCode(ClassMeta classMeta);
 
-    String getInstantiationSourceCode(ClassMeta classMeta, ConstructorMeta constructorMeta);
+	String getInstantiationSourceCode(ClassMeta classMeta, ConstructorMeta constructorMeta);
 
 }

@@ -17,22 +17,22 @@ package org.junithelper.core.config;
 
 public class TestMethodName {
 
-    public boolean isArgsRequired = true;
+	public boolean isArgsRequired = true;
 
-    public boolean isReturnRequired = false;
+	public boolean isReturnRequired = false;
 
-    public String basicDelimiter = "_";
+	public String basicDelimiter = "_";
 
-    public String argsAreaPrefix = "A";
+	public String argsAreaPrefix = "A";
 
-    public String argsAreaDelimiter = "$";
+	public String argsAreaDelimiter = "$";
 
-    public String returnAreaPrefix = "R";
+	public String returnAreaPrefix = "R";
 
-    public String returnAreaDelimiter = "$";
+	public String returnAreaDelimiter = "$";
 
-    public String exceptionAreaPrefix = "T";
+	public String exceptionAreaPrefix = "T";
 
-    public String exceptionAreaDelimiter = "$";
+	public String exceptionAreaDelimiter = "$";
 
 }

@@ -24,37 +24,37 @@ import java.io.IOException;
 
 public class CommonsIOFileWriter implements FileWriter {
 
-    private File file;
-    private String encoding = new Configulation().outputFileEncoding;
+	private File file;
+	private String encoding = new Configulation().outputFileEncoding;
 
-    public CommonsIOFileWriter(File file) {
-        setWriteTarget(file);
-    }
+	public CommonsIOFileWriter(File file) {
+		setWriteTarget(file);
+	}
 
-    @Override
-    public FileWriter setEncoding(String encoding) {
-        this.encoding = encoding;
-        return this;
-    }
+	@Override
+	public FileWriter setEncoding(String encoding) {
+		this.encoding = encoding;
+		return this;
+	}
 
-    @Override
-    public FileWriter setWriteTarget(File file) {
-        this.file = file;
-        return this;
-    }
+	@Override
+	public FileWriter setWriteTarget(File file) {
+		this.file = file;
+		return this;
+	}
 
-    @Override
-    public void writeText(String text) throws IOException {
-        if (encoding != null) {
-            FileUtils.writeStringToFile(file, text, encoding);
-        } else {
-            FileUtils.writeStringToFile(file, text);
-        }
-    }
+	@Override
+	public void writeText(String text) throws IOException {
+		if (encoding != null) {
+			FileUtils.writeStringToFile(file, text, encoding);
+		} else {
+			FileUtils.writeStringToFile(file, text);
+		}
+	}
 
-    @Override
-    public void writeText(String text, String encoding) throws IOException {
-        FileUtils.writeStringToFile(file, text, encoding);
-    }
+	@Override
+	public void writeText(String text, String encoding) throws IOException {
+		FileUtils.writeStringToFile(file, text, encoding);
+	}
 
 }

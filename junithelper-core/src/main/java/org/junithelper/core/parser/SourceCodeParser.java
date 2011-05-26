@@ -22,8 +22,8 @@ import java.io.InputStream;
 
 public interface SourceCodeParser {
 
-    ClassMeta parse(InputStream is, String encoding) throws IOException;
+	ClassMeta parse(InputStream is, String encoding) throws IOException;
 
-    ClassMeta parse(String sourceCodeString);
+	ClassMeta parse(String sourceCodeString);
 
 }
