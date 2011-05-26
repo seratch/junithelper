@@ -102,6 +102,16 @@ public class Preference {
 
 		public static final String usingMockJMockit = "Preference.TestMethodGen.usingMockJMockit";
 
+		public static final String usingTestingPatternComments = "Preference.TestMethodGen.usingTestingPatternComments";
+
+		public static final String descriptionForTestingPatternComments = "Preference.TestMethodGen.descriptionForTestingPatternComments";
+
+		public static final String commentsNone = "Preference.TestMethodGen.commentsNone";
+
+		public static final String commentsArrangeActAssert = "Preference.TestMethodGen.commentsArrangeActAssert";
+
+		public static final String commentsGivenWhenThen = "Preference.TestMethodGen.commentsGivenWhenThen";
+
 	}
 
 }

@@ -31,18 +31,15 @@ public class PreferencePageInitializer extends AbstractPreferenceInitializer {
 		// Language
 		store.setDefault(Preference.lang, Preference.Lang.English);
 
-		store.setDefault(Preference.Common.outputFileEncoding,
-				new Configulation().outputFileEncoding);
+		store.setDefault(Preference.Common.outputFileEncoding, new Configulation().outputFileEncoding);
 
 		// common
 		store.setDefault(Preference.Common.srcMainPath, "src/main/java");
 		store.setDefault(Preference.Common.srcTestPath, "src/test/java");
 
 		// generating extended test class
-		store.setDefault(Preference.TestClassGen.junitVersion,
-				Preference.TestClassGen.junitVersion3);
-		store.setDefault(Preference.TestClassGen.classToExtend,
-				"junit.framework.TestCase");
+		store.setDefault(Preference.TestClassGen.junitVersion, Preference.TestClassGen.junitVersion3);
+		store.setDefault(Preference.TestClassGen.classToExtend, "junit.framework.TestCase");
 
 		// generating test methods
 		store.setDefault(Preference.TestMethodGen.includePublic, true);
@@ -64,10 +61,9 @@ public class PreferencePageInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(Preference.TestMethodGen.exceptionPrefix, "T");
 		store.setDefault(Preference.TestMethodGen.exceptionDelimiter, "$");
 
-		store.setDefault(Preference.TestMethodGen.enabledTestMethodSampleImpl,
-				true);
-		store.setDefault(Preference.TestMethodGen.usingMock,
-				Preference.TestMethodGen.usingMockNone);
+		store.setDefault(Preference.TestMethodGen.enabledTestMethodSampleImpl, true);
+		store.setDefault(Preference.TestMethodGen.usingMock, Preference.TestMethodGen.usingMockNone);
+		store.setDefault(Preference.TestMethodGen.usingTestingPatternComments, Preference.TestMethodGen.commentsNone);
 
 	}
 

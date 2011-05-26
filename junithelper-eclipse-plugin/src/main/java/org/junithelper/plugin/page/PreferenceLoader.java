@@ -19,6 +19,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.junithelper.core.config.Configulation;
 import org.junithelper.core.config.JUnitVersion;
 import org.junithelper.core.config.MockObjectFramework;
+import org.junithelper.core.config.TestingPatternExplicitComment;
 import org.junithelper.plugin.Activator;
 import org.junithelper.plugin.constant.Preference;
 
@@ -45,6 +46,9 @@ public class PreferenceLoader {
 	public boolean isMockMockito;
 	public boolean isMockJMockit;
 
+	public boolean isArrangeActAssertCommentsRequired;
+	public boolean isGivenWhenThenCommentsRequired;
+
 	public boolean isPublicRequired;
 	public boolean isProtectedRequired;
 	public boolean isPackageLocalRequired;
@@ -62,14 +66,12 @@ public class PreferenceLoader {
 	private Configulation config = new Configulation();
 
 	public Configulation getConfig() {
-		config.language = Activator.getDefault().getPreferenceStore()
-				.getString(Preference.lang);
+		config.language = Activator.getDefault().getPreferenceStore().getString(Preference.lang);
 		config.outputFileEncoding = outputFileEncoding;
 		config.directoryPathOfProductSourceCode = directoryPathOfProductSourceCode;
 		config.directoryPathOfTestSourceCode = directoryPathOfTestSourceCode;
 		config.isTemplateImplementationRequired = isTemplateImplementationRequired;
-		config.junitVersion = isJUnitVersion3 ? JUnitVersion.version3
-				: JUnitVersion.version4;
+		config.junitVersion = isJUnitVersion3 ? JUnitVersion.version3 : JUnitVersion.version4;
 		if (isMockEasyMock) {
 			config.mockObjectFramework = MockObjectFramework.EasyMock;
 		}
@@ -97,6 +99,12 @@ public class PreferenceLoader {
 		config.testMethodName.isReturnRequired = isTestMethodNameReturnRequired;
 		config.testMethodName.returnAreaDelimiter = testMethodReturnDelimiter;
 		config.testMethodName.returnAreaPrefix = testMethodReturnPrefix;
+		if (isArrangeActAssertCommentsRequired) {
+			config.testingPatternExplicitComment = TestingPatternExplicitComment.ArrangeActAssert;
+		}
+		if (isGivenWhenThenCommentsRequired) {
+			config.testingPatternExplicitComment = TestingPatternExplicitComment.GivenWhenThen;
+		}
 		return config;
 	}
 
@@ -112,35 +120,24 @@ public class PreferenceLoader {
 		}
 
 		// source code directory
-		directoryPathOfProductSourceCode = store
-				.getString(Preference.Common.srcMainPath);
-		directoryPathOfTestSourceCode = store
-				.getString(Preference.Common.srcTestPath);
-		outputFileEncoding = store
-				.getString(Preference.Common.outputFileEncoding);
+		directoryPathOfProductSourceCode = store.getString(Preference.Common.srcMainPath);
+		directoryPathOfTestSourceCode = store.getString(Preference.Common.srcTestPath);
+		outputFileEncoding = store.getString(Preference.Common.outputFileEncoding);
 
-		isTestMethodNameArgsRequired = store
-				.getBoolean(Preference.TestMethodGen.enabledArgs);
-		isTestMethodNameReturnRequired = store
-				.getBoolean(Preference.TestMethodGen.enabledReturn);
-		isExceptionPatternRequired = store
-				.getBoolean(Preference.TestMethodGen.enabledException);
+		isTestMethodNameArgsRequired = store.getBoolean(Preference.TestMethodGen.enabledArgs);
+		isTestMethodNameReturnRequired = store.getBoolean(Preference.TestMethodGen.enabledReturn);
+		isExceptionPatternRequired = store.getBoolean(Preference.TestMethodGen.enabledException);
 
 		// test method template implementation gen
-		isTemplateImplementationRequired = store
-				.getBoolean(Preference.TestMethodGen.enabledTestMethodSampleImpl);
+		isTemplateImplementationRequired = store.getBoolean(Preference.TestMethodGen.enabledTestMethodSampleImpl);
 
 		// access modifier
-		isPublicRequired = store
-				.getBoolean(Preference.TestMethodGen.includePublic);
-		isProtectedRequired = store
-				.getBoolean(Preference.TestMethodGen.includeProtected);
-		isPackageLocalRequired = store
-				.getBoolean(Preference.TestMethodGen.includePackageLocal);
+		isPublicRequired = store.getBoolean(Preference.TestMethodGen.includePublic);
+		isProtectedRequired = store.getBoolean(Preference.TestMethodGen.includeProtected);
+		isPackageLocalRequired = store.getBoolean(Preference.TestMethodGen.includePackageLocal);
 
 		// accessors
-		isAccessorExcluded = store
-				.getBoolean(Preference.TestMethodGen.excludesAccessors);
+		isAccessorExcluded = store.getBoolean(Preference.TestMethodGen.excludesAccessors);
 
 		// mock object frameworks
 		isMockJMock2 = isUsingJMock2(store);
@@ -148,36 +145,27 @@ public class PreferenceLoader {
 		isMockMockito = isUsingMockito(store);
 		isMockJMockit = isUsingJMockit(store);
 
+		// testing pattern comments
+		isArrangeActAssertCommentsRequired = isCommentsArrangeActAssert(store);
+		isGivenWhenThenCommentsRequired = isCommentsGivenWhenThen(store);
+
 		// junit version
 		String version = store.getString(Preference.TestClassGen.junitVersion);
 		isJUnitVersion3 = version.equals(Preference.TestClassGen.junitVersion3);
 		isJUnitVersion4 = version.equals(Preference.TestClassGen.junitVersion4);
 
 		// test method signature
-		testMethodDelimiter = store
-				.getString(Preference.TestMethodGen.delimiter);
-		testMethodArgsPrefix = store
-				.getString(Preference.TestMethodGen.argsPrefix);
-		testMethodArgsDelimiter = store
-				.getString(Preference.TestMethodGen.argsDelimiter);
-		testMethodReturnPrefix = store
-				.getString(Preference.TestMethodGen.returnPrefix);
-		testMethodReturnDelimiter = store
-				.getString(Preference.TestMethodGen.returnDelimiter);
-		testMethodExceptionPrefix = store
-				.getString(Preference.TestMethodGen.exceptionPrefix);
-		testMethodExceptionDelimiter = store
-				.getString(Preference.TestMethodGen.exceptionDelimiter);
+		testMethodDelimiter = store.getString(Preference.TestMethodGen.delimiter);
+		testMethodArgsPrefix = store.getString(Preference.TestMethodGen.argsPrefix);
+		testMethodArgsDelimiter = store.getString(Preference.TestMethodGen.argsDelimiter);
+		testMethodReturnPrefix = store.getString(Preference.TestMethodGen.returnPrefix);
+		testMethodReturnDelimiter = store.getString(Preference.TestMethodGen.returnDelimiter);
+		testMethodExceptionPrefix = store.getString(Preference.TestMethodGen.exceptionPrefix);
+		testMethodExceptionDelimiter = store.getString(Preference.TestMethodGen.exceptionDelimiter);
 
 		// class to extend
 		classToExtend = store.getString(Preference.TestClassGen.classToExtend);
 
-	}
-
-	static final boolean isUsingNone(IPreferenceStore store) {
-		String setting = store.getString(Preference.TestMethodGen.usingMock);
-		return setting == null
-				|| Preference.TestMethodGen.usingMockNone.equals(setting);
 	}
 
 	static final boolean isUsingEasyMock(IPreferenceStore store) {
@@ -198,6 +186,16 @@ public class PreferenceLoader {
 	static final boolean isUsingJMockit(IPreferenceStore store) {
 		String setting = store.getString(Preference.TestMethodGen.usingMock);
 		return Preference.TestMethodGen.usingMockJMockit.equals(setting);
+	}
+
+	static final boolean isCommentsArrangeActAssert(IPreferenceStore store) {
+		String setting = store.getString(Preference.TestMethodGen.usingTestingPatternComments);
+		return Preference.TestMethodGen.commentsArrangeActAssert.equals(setting);
+	}
+
+	static final boolean isCommentsGivenWhenThen(IPreferenceStore store) {
+		String setting = store.getString(Preference.TestMethodGen.usingTestingPatternComments);
+		return Preference.TestMethodGen.commentsGivenWhenThen.equals(setting);
 	}
 
 }

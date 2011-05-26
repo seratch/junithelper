@@ -3,6 +3,14 @@
 	http://junithelper.org/
 ------------------------------------------
 
+* Release Notes - 1.0.2
+
+** Enabled to add testing pattern comments(Arrange-Act-Assert/Given-When-Then) explicitly.
+
+* Release Notes - 1.0.1
+
+** Internal improvement only.
+
 * Release Notes - 1.0.0
 
 ** Bug
