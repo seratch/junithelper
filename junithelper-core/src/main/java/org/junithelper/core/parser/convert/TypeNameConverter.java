@@ -15,16 +15,15 @@
  */
 package org.junithelper.core.parser.convert;
 
+import java.io.File;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.junithelper.core.config.Configulation;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
 import org.junithelper.core.file.impl.CommonsIOFileSearcher;
 import org.junithelper.core.util.PrimitiveTypeUtil;
-
-import java.io.File;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class TypeNameConverter {
 
@@ -45,13 +44,12 @@ public class TypeNameConverter {
 		return typeName;
 	}
 
-	public String toCompilableType(
-			String typeName, List<String> importedList, String callerClassPackageName) {
+	public String toCompilableType(String typeName, List<String> importedList, String callerClassPackageName) {
 		return toCompilableType(typeName, null, importedList, callerClassPackageName);
 	}
 
-	public String toCompilableType(
-			String typeName, List<String> generics, List<String> importedList, String callerClassPackageName) {
+	public String toCompilableType(String typeName, List<String> generics, List<String> importedList,
+			String callerClassPackageName) {
 		if (typeName == null) {
 			return typeName;
 		}
@@ -72,8 +70,7 @@ public class TypeNameConverter {
 			typeName = typeName.replaceAll("\\[\\]", "");
 		}
 		// remove generics
-		if (typeName.matches(
-				RegExp.Anything_ZeroOrMore_Min + RegExp.Generics + RegExp.Anything_ZeroOrMore_Min)) {
+		if (typeName.matches(RegExp.Anything_ZeroOrMore_Min + RegExp.Generics + RegExp.Anything_ZeroOrMore_Min)) {
 			typeName = typeName.replaceAll(RegExp.Generics, StringValue.Empty);
 		}
 		boolean isTypeAvailable = false;
@@ -82,20 +79,17 @@ public class TypeNameConverter {
 			if (PrimitiveTypeUtil.isPrimitive(typeName)) {
 				isTypeAvailable = true;
 				if (!destTypeName.matches(".+?\\[\\]$"))
-					destTypeName = PrimitiveTypeUtil
-							.getTypeDefaultValue(typeName);
+					destTypeName = PrimitiveTypeUtil.getTypeDefaultValue(typeName);
 			} else {
 				try {
 					Class.forName("java.lang." + typeName);
 					isTypeAvailable = true;
 				} catch (Exception ignore) {
 					// check same package class
-					List<File> files = new CommonsIOFileSearcher()
-							.searchFilesRecursivelyByName(
-									config.directoryPathOfProductSourceCode
-											+ "/"
-											+ callerClassPackageName.replaceAll("\\.", "/"),
-									typeName + RegExp.FileExtension.JavaFile);
+					List<File> files = new CommonsIOFileSearcher().searchFilesRecursivelyByName(
+							config.directoryPathOfProductSourceCode + "/"
+									+ callerClassPackageName.replaceAll("\\.", "/"), typeName
+									+ RegExp.FileExtension.JavaFile);
 					if (files != null && files.size() > 0) {
 						isTypeAvailable = true;
 					}
@@ -107,14 +101,20 @@ public class TypeNameConverter {
 		} catch (Exception e) {
 			// class not found
 			for (String importedPackage : importedList) {
-				importedPackage = importedPackage.replaceAll("//", StringValue.Empty);
+				importedPackage = importedPackage.replaceAll("//", StringValue.Empty).trim();
 				try {
-					String regexp = ".+?\\."
-							+ typeName.replaceAll("\\[", "\\\\[").replaceAll("\\]", "\\\\]")
-							+ "$";
+					String regexp = ".+?\\." + typeName.replaceAll("\\[", "\\\\[").replaceAll("\\]", "\\\\]") + "$";
 					if (importedPackage.matches(regexp)) {
 						isTypeAvailable = true;
 						break;
+					}
+					// wildcard import
+					if (!importedPackage.contains("static ") && importedPackage.endsWith("*")) {
+						try {
+							Class.forName(importedPackage.replace("*", "") + typeName);
+							isTypeAvailable = true;
+						} catch (Exception ignore) {
+						}
 					}
 				} catch (Exception e2) {
 					e2.printStackTrace();
