@@ -2,11 +2,11 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JUnit Helper Eclipse Plugin
 Bundle-SymbolicName: org.junithelper.plugin;singleton:=true
-Bundle-Version: 1.0.2
+Bundle-Version: 1.0.3
 Bundle-ClassPath: .,
  lib/juniversalchardet-1.0.3.jar,
  lib/commons-io-2.0.jar,
- lib/junithelper-core-1.0.2.jar
+ lib/junithelper-core-1.0.3.jar
 Bundle-Activator: org.junithelper.plugin.Activator
 Bundle-Vendor: junithelper.org
 Require-Bundle: org.eclipse.ui,
