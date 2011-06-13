@@ -3,6 +3,14 @@
 	http://junithelper.org/
 ------------------------------------------
 
+* Release Notes - 1.0.3
+
+** Bug
+	* Issue 56:	Bug: Arg types are unrecognized when using wildcard import
+
+** Feature Request
+	* Issue 57:	Unit 4.x should use assertThat() style.
+
 * Release Notes - 1.0.2
 
 ** Enabled to add testing pattern comments(Arrange-Act-Assert/Given-When-Then) explicitly.
