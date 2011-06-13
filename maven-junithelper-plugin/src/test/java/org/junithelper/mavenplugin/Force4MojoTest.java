@@ -1,5 +1,7 @@
 package org.junithelper.mavenplugin;
 
+import static org.hamcrest.CoreMatchers.*;
+
 import static org.junit.Assert.*;
 
 import org.apache.maven.plugin.MojoExecutionException;
