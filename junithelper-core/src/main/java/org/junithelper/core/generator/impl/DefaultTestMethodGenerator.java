@@ -15,17 +15,24 @@
  */
 package org.junithelper.core.generator.impl;
 
-import org.junithelper.core.config.*;
+import java.util.ArrayList;
+import java.util.List;
+import org.junithelper.core.config.Configulation;
+import org.junithelper.core.config.JUnitVersion;
+import org.junithelper.core.config.MessageValue;
+import org.junithelper.core.config.MockObjectFramework;
+import org.junithelper.core.config.TestingPatternExplicitComment;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
 import org.junithelper.core.generator.ConstructorGenerator;
 import org.junithelper.core.generator.TestMethodGenerator;
-import org.junithelper.core.meta.*;
+import org.junithelper.core.meta.ArgTypeMeta;
+import org.junithelper.core.meta.ClassMeta;
+import org.junithelper.core.meta.ExceptionMeta;
+import org.junithelper.core.meta.MethodMeta;
+import org.junithelper.core.meta.TestMethodMeta;
 import org.junithelper.core.parser.detect.AvailableTypeDetector;
 import org.junithelper.core.util.PrimitiveTypeUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class DefaultTestMethodGenerator implements TestMethodGenerator {
 
@@ -169,9 +176,15 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 		if (testMethodMeta.isTypeTest) {
 			// testing type safe
 			appendTabs(buf, 2);
-			buf.append("assertNotNull(");
-			buf.append(testMethodMeta.classMeta.name);
-			buf.append(".class);");
+			if (config.junitVersion == JUnitVersion.version3) {
+				buf.append("assertNotNull(");
+				buf.append(testMethodMeta.classMeta.name);
+				buf.append(".class);");
+			} else {
+				buf.append("assertThat(");
+				buf.append(testMethodMeta.classMeta.name);
+				buf.append(".class, notNullValue());");
+			}
 			appendCRLF(buf);
 
 		} else if (testMethodMeta.isInstantiationTest) {
@@ -179,7 +192,11 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 			String instantiation = constructorGenerator.getFirstInstantiationSourceCode(testMethodMeta.classMeta);
 			buf.append(instantiation);
 			appendTabs(buf, 2);
-			buf.append("assertNotNull(target);");
+			if (config.junitVersion == JUnitVersion.version3) {
+				buf.append("assertNotNull(target);");
+			} else {
+				buf.append("assertThat(target, notNullValue());");
+			}
 			appendCRLF(buf);
 
 		} else if (config.isTemplateImplementationRequired) {
@@ -253,7 +270,11 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 					appendCRLF(buf);
 					// assertion
 					appendTabs(buf, 2);
-					buf.append("assertEquals(expected, actual)");
+					if (config.junitVersion == JUnitVersion.version3) {
+						buf.append("assertEquals(expected, actual)");
+					} else {
+						buf.append("assertThat(actual, is(equalTo(expected)))");
+					}
 					buf.append(StringValue.Semicolon);
 					appendCRLF(buf);
 				}

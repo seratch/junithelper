@@ -15,17 +15,12 @@
  */
 package org.junithelper.core.util;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.List;
 import org.junithelper.core.config.Configulation;
 import org.junithelper.core.constant.StringValue;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class IOUtil {
 
@@ -35,10 +30,12 @@ public final class IOUtil {
 	}
 
 	public static InputStream getResourceAsStream(String name) {
-		return new IOUtil().getClass().getClassLoader().getResourceAsStream(name);
+		return new IOUtil().getClass().getClassLoader()
+				.getResourceAsStream(name);
 	}
 
-	public static final String readAsString(InputStream is, String encoding) throws IOException {
+	public static final String readAsString(InputStream is, String encoding)
+			throws IOException {
 		BufferedReader br = null;
 		try {
 			if (encoding == null) {
@@ -58,7 +55,8 @@ public final class IOUtil {
 		}
 	}
 
-	public static final List<String> readAsLineList(InputStream is) throws IOException {
+	public static final List<String> readAsLineList(InputStream is)
+			throws IOException {
 		List<String> dest = new ArrayList<String>();
 		BufferedReader br = null;
 		try {

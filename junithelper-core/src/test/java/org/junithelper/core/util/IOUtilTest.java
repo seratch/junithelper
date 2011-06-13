@@ -1,11 +1,17 @@
 package org.junithelper.core.util;
 
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.Arrays;
+import java.util.List;
 import org.junit.Test;
-
-import java.io.*;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class IOUtilTest {
 
@@ -65,6 +71,14 @@ public class IOUtilTest {
 	public void close_A$OutputStreamWriter() throws Exception {
 		OutputStreamWriter osw = null;
 		IOUtil.close(osw);
+	}
+
+	@Test
+	public void readAsLineList_A$InputStream() throws Exception {
+		InputStream is = new ByteArrayInputStream(new byte[] {});
+		List<String> actual = IOUtil.readAsLineList(is);
+		List<String> expected = Arrays.asList(new String[] {});
+		assertThat(actual, is(equalTo(expected)));
 	}
 
 }
