@@ -13,7 +13,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
-import org.junithelper.core.config.Configulation;
+import org.junithelper.core.config.Configuration;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
 import org.junithelper.plugin.Activator;
@@ -27,7 +27,7 @@ public abstract class AbstractAction extends Action {
 
 	public IPreferenceStore store = null;
 
-	protected Configulation getConfigulation(IPreferenceStore store) {
+	protected Configuration getConfiguration(IPreferenceStore store) {
 		return new PreferenceLoader(store).getConfig();
 	}
 
@@ -38,62 +38,51 @@ public abstract class AbstractAction extends Action {
 	// -------------------
 	// String value
 	protected String getTestClassNameFromClassName(String className) {
-		return className + StringValue.JUnit.TestClassNameSuffix
-				+ StringValue.FileExtension.JavaFile;
+		return className + StringValue.JUnit.TestClassNameSuffix + StringValue.FileExtension.JavaFile;
 	}
 
 	protected String getDetectedEncodingFrom(IFile file, String defaultEncoding) {
 		return EclipseIFileUtil.getDetectedEncodingFrom(file, defaultEncoding);
 	}
 
-	protected String getClassNameFromResourcePathForTargetClassFile(
-			String resourcePathForTargetClassFile) {
-		String[] splittedArray = resourcePathForTargetClassFile
-				.split(StringValue.DirectorySeparator.General);
+	protected String getClassNameFromResourcePathForTargetClassFile(String resourcePathForTargetClassFile) {
+		String[] splittedArray = resourcePathForTargetClassFile.split(StringValue.DirectorySeparator.General);
 		return splittedArray[splittedArray.length - 1].split("\\.")[0];
 	}
 
 	protected String getProjectName(StructuredSelection structuredSelection) {
 		String pathFromProjectRoot = getPathFromProjectRoot(structuredSelection);
-		String[] dirArrFromProjectRoot = pathFromProjectRoot
-				.split(StringValue.DirectorySeparator.General);
+		String[] dirArrFromProjectRoot = pathFromProjectRoot.split(StringValue.DirectorySeparator.General);
 		return dirArrFromProjectRoot[1];
 	}
 
 	// -------------------
 	// Path
 
-	protected String getPathFromProjectRoot(
-			StructuredSelection structuredSelection) {
-		return ResourcePathUtil
-				.getPathStartsFromProjectRoot(structuredSelection);
+	protected String getPathFromProjectRoot(StructuredSelection structuredSelection) {
+		return ResourcePathUtil.getPathStartsFromProjectRoot(structuredSelection);
 	}
 
 	protected String getWorkspaceRootAbsolutePath(IWorkspaceRoot workspaceRoot) {
 		return workspaceRoot.getLocation().toString();
 	}
 
-	protected String getResourcePathForTargetClassFile(
-			StructuredSelection structuredSelection) {
+	protected String getResourcePathForTargetClassFile(StructuredSelection structuredSelection) {
 		// path started from project root
 		String pathFromProjectRoot = getPathFromProjectRoot(structuredSelection);
 		// path started from project root
 		// ex. /{projectName}/src/main/java/hoge/foo/var/TestTarget.java
-		String[] dirArrFromProjectRoot = pathFromProjectRoot
-				.split(StringValue.DirectorySeparator.General);
+		String[] dirArrFromProjectRoot = pathFromProjectRoot.split(StringValue.DirectorySeparator.General);
 		// test case file create filesystem path
 		String resourcePathForTargetClassFile = StringValue.Empty;
 		int len = dirArrFromProjectRoot.length;
 		for (int i = 2; i < len; i++) {
-			resourcePathForTargetClassFile += dirArrFromProjectRoot[i]
-					+ StringValue.DirectorySeparator.General;
+			resourcePathForTargetClassFile += dirArrFromProjectRoot[i] + StringValue.DirectorySeparator.General;
 		}
 		resourcePathForTargetClassFile = resourcePathForTargetClassFile
 				.replaceAll(RegExp.CRLF, StringValue.Empty)
 				.replaceFirst("\\.java.+", ".java")
-				.replace(
-						StringValue.JUnit.TestClassNameSuffix
-								+ StringValue.FileExtension.JavaFile,
+				.replace(StringValue.JUnit.TestClassNameSuffix + StringValue.FileExtension.JavaFile,
 						StringValue.FileExtension.JavaFile);
 		return resourcePathForTargetClassFile;
 	}
@@ -113,8 +102,7 @@ public abstract class AbstractAction extends Action {
 	}
 
 	protected IWorkbenchPage getIWorkbenchPage() {
-		return PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-				.getActivePage();
+		return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 	}
 
 	protected IProject getIProject(String projectName) {
@@ -125,10 +113,8 @@ public abstract class AbstractAction extends Action {
 		return project.getFile(resourcePath);
 	}
 
-	protected IEditorPart getIEditorPart(IWorkbenchPage page, IFile file)
-			throws Exception {
-		String editorId = EclipseIFileUtil.getIEditorDescriptorFrom(file)
-				.getId();
+	protected IEditorPart getIEditorPart(IWorkbenchPage page, IFile file) throws Exception {
+		String editorId = EclipseIFileUtil.getIEditorDescriptorFrom(file).getId();
 		return IDE.openEditor(page, file, editorId);
 	}
 
@@ -147,8 +133,7 @@ public abstract class AbstractAction extends Action {
 	// open dialog
 
 	protected void openWarningForRequired(PropertiesLoader props) {
-		MessageDialog.openWarning(new Shell(), props.get(Dialog.Common.title),
-				props.get(Dialog.Common.required));
+		MessageDialog.openWarning(new Shell(), props.get(Dialog.Common.title), props.get(Dialog.Common.required));
 	}
 
 	protected void openWarningForResourceRefreshError(PropertiesLoader props) {
@@ -157,23 +142,19 @@ public abstract class AbstractAction extends Action {
 	}
 
 	protected void openWarningForSelectOneOnly(PropertiesLoader props) {
-		MessageDialog.openWarning(new Shell(), props.get(Dialog.Common.title),
-				props.get(Dialog.Common.selectOneOnly));
+		MessageDialog.openWarning(new Shell(), props.get(Dialog.Common.title), props.get(Dialog.Common.selectOneOnly));
 	}
 
 	protected void openWarningForSelectJavaFile(PropertiesLoader props) {
-		MessageDialog.openWarning(new Shell(), props.get(Dialog.Common.title),
-				props.get(Dialog.Common.selectJavaFile));
+		MessageDialog.openWarning(new Shell(), props.get(Dialog.Common.title), props.get(Dialog.Common.selectJavaFile));
 	}
 
 	protected void openWarning(PropertiesLoader props, String message) {
-		MessageDialog.openWarning(new Shell(), props.get(Dialog.Common.title),
-				message);
+		MessageDialog.openWarning(new Shell(), props.get(Dialog.Common.title), message);
 	}
 
 	protected boolean openConfirm(PropertiesLoader props, String message) {
-		return MessageDialog.openConfirm(new Shell(),
-				props.get(Dialog.Common.title), message);
+		return MessageDialog.openConfirm(new Shell(), props.get(Dialog.Common.title), message);
 	}
 
 }

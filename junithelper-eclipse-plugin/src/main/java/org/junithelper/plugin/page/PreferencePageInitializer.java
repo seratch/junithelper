@@ -17,7 +17,7 @@ package org.junithelper.plugin.page;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.junithelper.core.config.Configulation;
+import org.junithelper.core.config.Configuration;
 import org.junithelper.plugin.Activator;
 import org.junithelper.plugin.constant.Preference;
 
@@ -31,7 +31,7 @@ public class PreferencePageInitializer extends AbstractPreferenceInitializer {
 		// Language
 		store.setDefault(Preference.lang, Preference.Lang.English);
 
-		store.setDefault(Preference.Common.outputFileEncoding, new Configulation().outputFileEncoding);
+		store.setDefault(Preference.Common.outputFileEncoding, new Configuration().outputFileEncoding);
 
 		// common
 		store.setDefault(Preference.Common.srcMainPath, "src/main/java");

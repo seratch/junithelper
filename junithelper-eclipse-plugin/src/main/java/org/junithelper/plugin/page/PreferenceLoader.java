@@ -16,7 +16,7 @@
 package org.junithelper.plugin.page;
 
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.junithelper.core.config.Configulation;
+import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.JUnitVersion;
 import org.junithelper.core.config.MockObjectFramework;
 import org.junithelper.core.config.TestingPatternExplicitComment;
@@ -63,9 +63,9 @@ public class PreferenceLoader {
 
 	public String classToExtend;
 
-	private Configulation config = new Configulation();
+	private Configuration config = new Configuration();
 
-	public Configulation getConfig() {
+	public Configuration getConfig() {
 		config.language = Activator.getDefault().getPreferenceStore().getString(Preference.lang);
 		config.outputFileEncoding = outputFileEncoding;
 		config.directoryPathOfProductSourceCode = directoryPathOfProductSourceCode;

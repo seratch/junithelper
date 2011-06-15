@@ -5,7 +5,7 @@
 
 	<groupId>org.junithelper</groupId>
 	<artifactId>junithelper-plugin</artifactId>
-	<version>1.0.3</version>
+	<version>1.0.4</version>
 
 	<name>${project.artifactId}</name>
 	<description>JUnit Helper Eclipse Plugin</description>
@@ -62,7 +62,7 @@
 			<artifactId>junithelper-core</artifactId>
 			<version>1.0.2</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/lib/junithelper-core-1.0.3.jar</systemPath>
+			<systemPath>${basedir}/lib/junithelper-core-1.0.4.jar</systemPath>
 		</dependency>
 
 		<!-- juniversalchardet -->

@@ -21,7 +21,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -32,7 +31,7 @@ import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
-import org.junithelper.core.config.Configulation;
+import org.junithelper.core.config.Configuration;
 import org.junithelper.core.constant.StringValue;
 import org.junithelper.core.generator.TestCaseGenerator;
 import org.junithelper.core.generator.impl.DefaultTestCaseGenerator;
@@ -46,8 +45,7 @@ import org.junithelper.plugin.io.PropertiesLoader;
 import org.junithelper.plugin.util.EclipseIFileUtil;
 import org.junithelper.plugin.util.ResourceRefreshUtil;
 
-public class CreateNewTestCaseAction extends AbstractAction implements
-		IActionDelegate, IEditorActionDelegate {
+public class CreateNewTestCaseAction extends AbstractAction implements IActionDelegate, IEditorActionDelegate {
 
 	ISelection selection;
 
@@ -66,7 +64,7 @@ public class CreateNewTestCaseAction extends AbstractAction implements
 	public void run(IAction action) {
 
 		store = getIPreferenceStore();
-		Configulation config = getConfigulation(store);
+		Configuration config = getConfiguration(store);
 		PropertiesLoader props = getPropertiesLoader(config.language);
 
 		StructuredSelection structuredSelection = null;
@@ -102,60 +100,44 @@ public class CreateNewTestCaseAction extends AbstractAction implements
 			projectName = getProjectName(structuredSelection);
 			resourcePathForTargetClassFile = getResourcePathForTargetClassFile(structuredSelection);
 			String projectRootAbsolutePath = getWorkspaceRootAbsolutePath(getIWorkspaceRoot())
-					+ StringValue.DirectorySeparator.General
-					+ projectName
-					+ StringValue.DirectorySeparator.General;
+					+ StringValue.DirectorySeparator.General + projectName + StringValue.DirectorySeparator.General;
 
-			resourcePathForTestClassFile = resourcePathForTargetClassFile
-					.replaceFirst(config.directoryPathOfProductSourceCode,
-							config.directoryPathOfTestSourceCode).replace(
-							StringValue.FileExtension.JavaFile,
-							StringValue.JUnit.TestClassNameSuffix
-									+ StringValue.FileExtension.JavaFile);
+			resourcePathForTestClassFile = resourcePathForTargetClassFile.replaceFirst(
+					config.directoryPathOfProductSourceCode, config.directoryPathOfTestSourceCode).replace(
+					StringValue.FileExtension.JavaFile,
+					StringValue.JUnit.TestClassNameSuffix + StringValue.FileExtension.JavaFile);
 			testCaseCreateFilePath = projectRootAbsolutePath
-					+ getResourcePathForTargetClassFile(structuredSelection)
-							.replace(config.directoryPathOfProductSourceCode,
-									config.directoryPathOfTestSourceCode)
-							.replace(
-									StringValue.FileExtension.JavaFile,
-									StringValue.JUnit.TestClassNameSuffix
-											+ StringValue.FileExtension.JavaFile);
+					+ getResourcePathForTargetClassFile(structuredSelection).replace(
+							config.directoryPathOfProductSourceCode, config.directoryPathOfTestSourceCode).replace(
+							StringValue.FileExtension.JavaFile,
+							StringValue.JUnit.TestClassNameSuffix + StringValue.FileExtension.JavaFile);
 			testCaseFileName = (getClassNameFromResourcePathForTargetClassFile(resourcePathForTargetClassFile) + StringValue.FileExtension.JavaFile)
-					.replace(StringValue.FileExtension.JavaFile,
-							StringValue.JUnit.TestClassNameSuffix
-									+ StringValue.FileExtension.JavaFile);
+					.replace(StringValue.FileExtension.JavaFile, StringValue.JUnit.TestClassNameSuffix
+							+ StringValue.FileExtension.JavaFile);
 
 			// -------------------------
 			// mkdir -p /abc/def/
-			String testCaseCreateDirPath = testCaseCreateFilePath.replaceFirst(
-					"/[^/\\.]+\\.java$", "/");
+			String testCaseCreateDirPath = testCaseCreateFilePath.replaceFirst("/[^/\\.]+\\.java$", "/");
 			File testDir = new File(testCaseCreateDirPath);
-			String[] dirArr = testCaseCreateDirPath
-					.split(StringValue.DirectorySeparator.General);
+			String[] dirArr = testCaseCreateDirPath.split(StringValue.DirectorySeparator.General);
 			String tmpDirPath = StringValue.Empty;
 			String tmpResourceDirPath = StringValue.Empty;
 			for (String each : dirArr) {
 				tmpDirPath += StringValue.DirectorySeparator.General + each;
 				File tmpDir = new File(tmpDirPath);
 				// skip until project root dir
-				if (tmpDir.getPath().length() <= projectRootAbsolutePath
-						.length()) {
+				if (tmpDir.getPath().length() <= projectRootAbsolutePath.length()) {
 					continue;
 				}
-				tmpResourceDirPath += StringValue.DirectorySeparator.General
-						+ each;
+				tmpResourceDirPath += StringValue.DirectorySeparator.General + each;
 				if (!tmpDir.exists()) {
 					if (!tmpDir.mkdir()) {
-						System.err.println("create directory error : "
-								+ tmpDir.getPath());
+						System.err.println("create directory error : " + tmpDir.getPath());
 					}
-					String parentPathOfCreatedDir = projectName
-							+ StringValue.DirectorySeparator.General
+					String parentPathOfCreatedDir = projectName + StringValue.DirectorySeparator.General
 							+ tmpResourceDirPath + "/..";
-					if (!ResourceRefreshUtil.refreshLocal(null,
-							parentPathOfCreatedDir)) {
-						System.err.println("Resource refresh error!"
-								+ parentPathOfCreatedDir);
+					if (!ResourceRefreshUtil.refreshLocal(null, parentPathOfCreatedDir)) {
+						System.err.println("Resource refresh error!" + parentPathOfCreatedDir);
 					}
 				}
 			}
@@ -165,8 +147,7 @@ public class CreateNewTestCaseAction extends AbstractAction implements
 
 			// -------------------------
 			// resource sync
-			String pathOfTestCaseDir = projectName
-					+ StringValue.DirectorySeparator.General
+			String pathOfTestCaseDir = projectName + StringValue.DirectorySeparator.General
 					+ resourcePathForTestClassFile + "/..";
 			if (!ResourceRefreshUtil.refreshLocal(null, pathOfTestCaseDir)) {
 				openWarningForResourceRefreshError(props);
@@ -174,43 +155,34 @@ public class CreateNewTestCaseAction extends AbstractAction implements
 			}
 
 			try {
-				File outputIOFile = new File(testCaseCreateDirPath
-						+ StringValue.DirectorySeparator.General
+				File outputIOFile = new File(testCaseCreateDirPath + StringValue.DirectorySeparator.General
 						+ testCaseFileName);
 				// ---------------
 				// confirm if test case file already exists
-				String msg = props.get(Dialog.Common.alreadyExist) + " ("
-						+ testCaseFileName + ")" + StringValue.LineFeed
-						+ props.get(Dialog.Common.confirmToProceed);
+				String msg = props.get(Dialog.Common.alreadyExist) + " (" + testCaseFileName + ")"
+						+ StringValue.LineFeed + props.get(Dialog.Common.confirmToProceed);
 				if (outputIOFile.exists() && !openConfirm(props, msg)) {
 					return;
 				}
 				// ---------------
 				// get target class file
 				IResource targetClassResource = getIWorkspaceRoot().findMember(
-						"/" + projectName + "/"
-								+ resourcePathForTargetClassFile);
+						"/" + projectName + "/" + resourcePathForTargetClassFile);
 				IFile targetClassFile = (IFile) targetClassResource;
 				// ---------------
 				// generate test case source code string
-				TestCaseGenerator generator = new DefaultTestCaseGenerator(
-						config);
-				String encoding = UniversalDetectorUtil
-						.getDetectedEncoding(EclipseIFileUtil
-								.getInputStreamFrom(targetClassFile));
-				String sourceCodeString = IOUtil.readAsString(
-						EclipseIFileUtil.getInputStreamFrom(targetClassFile),
+				TestCaseGenerator generator = new DefaultTestCaseGenerator(config);
+				String encoding = UniversalDetectorUtil.getDetectedEncoding(EclipseIFileUtil
+						.getInputStreamFrom(targetClassFile));
+				String sourceCodeString = IOUtil.readAsString(EclipseIFileUtil.getInputStreamFrom(targetClassFile),
 						encoding);
-				generator.initialize(new ClassMetaExtractor(config)
-						.extract(sourceCodeString));
+				generator.initialize(new ClassMetaExtractor(config).extract(sourceCodeString));
 				// ---------------
 				// write test case
-				outputStream = new FileOutputStream(testCaseCreateDirPath
-						+ StringValue.DirectorySeparator.General
+				outputStream = new FileOutputStream(testCaseCreateDirPath + StringValue.DirectorySeparator.General
 						+ testCaseFileName);
-				writer = new OutputStreamWriter(outputStream,
-						getDetectedEncodingFrom(targetClassFile,
-								config.outputFileEncoding));
+				writer = new OutputStreamWriter(outputStream, getDetectedEncodingFrom(targetClassFile,
+						config.outputFileEncoding));
 				writer.write(generator.getNewTestCaseSourceCode());
 
 			} catch (InvalidPreferenceException ipe) {
@@ -233,8 +205,7 @@ public class CreateNewTestCaseAction extends AbstractAction implements
 
 		// ---------------
 		// resource refresh
-		if (!ResourceRefreshUtil.refreshLocal(null, projectName
-				+ StringValue.DirectorySeparator.General
+		if (!ResourceRefreshUtil.refreshLocal(null, projectName + StringValue.DirectorySeparator.General
 				+ resourcePathForTestClassFile + "/..")) {
 			openWarningForResourceRefreshError(props);
 			System.err.println("Resource refresh error!");
@@ -248,8 +219,7 @@ public class CreateNewTestCaseAction extends AbstractAction implements
 		while (true) {
 			try {
 				IProject project = getIProject(projectName);
-				IFile testCaseFile = getIFile(project,
-						resourcePathForTestClassFile);
+				IFile testCaseFile = getIFile(project, resourcePathForTestClassFile);
 				IWorkbenchPage page = getIWorkbenchPage();
 				editorPart = getIEditorPart(page, testCaseFile);
 				if (editorPart == null) {

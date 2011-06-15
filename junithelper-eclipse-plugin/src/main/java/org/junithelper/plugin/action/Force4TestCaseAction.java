@@ -22,7 +22,7 @@ import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.junithelper.command.ForceJUnitVersion4Command;
-import org.junithelper.core.config.Configulation;
+import org.junithelper.core.config.Configuration;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
 import org.junithelper.core.util.ThreadUtil;
@@ -31,8 +31,7 @@ import org.junithelper.plugin.constant.Preference;
 import org.junithelper.plugin.io.PropertiesLoader;
 import org.junithelper.plugin.util.ResourceRefreshUtil;
 
-public class Force4TestCaseAction extends AbstractAction implements
-		IActionDelegate, IEditorActionDelegate {
+public class Force4TestCaseAction extends AbstractAction implements IActionDelegate, IEditorActionDelegate {
 
 	ISelection selection = null;
 
@@ -46,9 +45,8 @@ public class Force4TestCaseAction extends AbstractAction implements
 	public void run(IAction action) {
 
 		store = getIPreferenceStore();
-		Configulation config = getConfigulation(store);
-		PropertiesLoader props = getPropertiesLoader(store
-				.getString(Preference.lang));
+		Configuration config = getConfiguration(store);
+		PropertiesLoader props = getPropertiesLoader(store.getString(Preference.lang));
 
 		StructuredSelection structuredSelection = null;
 
@@ -70,26 +68,18 @@ public class Force4TestCaseAction extends AbstractAction implements
 
 			// ----------------------------------------
 			// get project path, resource path
-			String resourcePathForTargetClassFile = getResourcePathForTargetClassFile(
-					structuredSelection).replaceFirst(
-					config.directoryPathOfTestSourceCode,
-					config.directoryPathOfProductSourceCode);
-			String resourcePathForTestCaseFile = resourcePathForTargetClassFile
-					.replaceFirst(config.directoryPathOfProductSourceCode,
-							config.directoryPathOfTestSourceCode).replaceFirst(
-							"[^(Test)]\\.java$",
-							StringValue.JUnit.TestClassNameSuffix
-									+ StringValue.FileExtension.JavaFile);
+			String resourcePathForTargetClassFile = getResourcePathForTargetClassFile(structuredSelection)
+					.replaceFirst(config.directoryPathOfTestSourceCode, config.directoryPathOfProductSourceCode);
+			String resourcePathForTestCaseFile = resourcePathForTargetClassFile.replaceFirst(
+					config.directoryPathOfProductSourceCode, config.directoryPathOfTestSourceCode).replaceFirst(
+					"[^(Test)]\\.java$", StringValue.JUnit.TestClassNameSuffix + StringValue.FileExtension.JavaFile);
 			String projectName = getProjectName(structuredSelection);
 			String projectRootAbsolutePath = getWorkspaceRootAbsolutePath(getIWorkspaceRoot())
-					+ StringValue.DirectorySeparator.General
-					+ projectName
-					+ StringValue.DirectorySeparator.General;
+					+ StringValue.DirectorySeparator.General + projectName + StringValue.DirectorySeparator.General;
 
 			// ----------------------------------------
 			// check selection
-			if (!resourcePathForTestCaseFile.matches(".*"
-					+ RegExp.FileExtension.JavaFile)) {
+			if (!resourcePathForTestCaseFile.matches(".*" + RegExp.FileExtension.JavaFile)) {
 				openWarningForSelectJavaFile(props);
 				return;
 			}
@@ -98,10 +88,7 @@ public class Force4TestCaseAction extends AbstractAction implements
 			// confirm to execute
 			String targetClassName = getClassNameFromResourcePathForTargetClassFile(resourcePathForTargetClassFile);
 			String testCaseFilename = getTestClassNameFromClassName(targetClassName);
-			String msg = props
-					.get(Dialog.Common.confirmToChangeToJUnitVersion4)
-					+ " ("
-					+ testCaseFilename + ")";
+			String msg = props.get(Dialog.Common.confirmToChangeToJUnitVersion4) + " (" + testCaseFilename + ")";
 			if (testCaseFilename == null || !openConfirm(props, msg)) {
 				return;
 			}
@@ -109,9 +96,7 @@ public class Force4TestCaseAction extends AbstractAction implements
 			// ----------------------------------------
 			// force version 4.x
 			System.setProperty("junithelper.skipConfirming", "true");
-			ForceJUnitVersion4Command
-					.main(new String[] { projectRootAbsolutePath
-							+ resourcePathForTargetClassFile });
+			ForceJUnitVersion4Command.main(new String[] { projectRootAbsolutePath + resourcePathForTargetClassFile });
 
 			// ----------------------------------------
 			// open test case
@@ -121,8 +106,7 @@ public class Force4TestCaseAction extends AbstractAction implements
 				try {
 					// ----------------------------------------
 					// resource refresh
-					if (!ResourceRefreshUtil.refreshLocal(null, projectName
-							+ StringValue.DirectorySeparator.General
+					if (!ResourceRefreshUtil.refreshLocal(null, projectName + StringValue.DirectorySeparator.General
 							+ resourcePathForTestCaseFile + "/..")) {
 						openWarningForResourceRefreshError(props);
 						System.err.println("Resource refresh error!");
