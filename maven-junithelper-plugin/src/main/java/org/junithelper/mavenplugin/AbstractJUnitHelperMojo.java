@@ -62,6 +62,10 @@ public abstract class AbstractJUnitHelperMojo extends AbstractMojo {
      * @parameter expression="${target.isPublicMethodRequired}"
      */
     protected boolean target_isPublicMethodRequired = true;
+    /**
+     * @parameter expression="${target.regexpCsvForExclusion}"
+     */
+    protected String target_regexpCsvForExclusion = "";
 
     /**
      * @parameter expression="${testMethodName.isArgsRequired}"
@@ -129,6 +133,7 @@ public abstract class AbstractJUnitHelperMojo extends AbstractMojo {
         config.target.isPackageLocalMethodRequired = target_isPackageLocalMethodRequired;
         config.target.isProtectedMethodRequired = target_isProtectedMethodRequired;
         config.target.isPublicMethodRequired = target_isPublicMethodRequired;
+        config.target.regexpCsvForExclusion = target_regexpCsvForExclusion;
         config.testMethodName.isArgsRequired = testMethodName_isArgsRequired;
         config.testMethodName.isReturnRequired = testMethodName_isReturnRequired;
         config.testMethodName.basicDelimiter = testMethodName_basicDelimiter;
