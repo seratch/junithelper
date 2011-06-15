@@ -43,65 +43,65 @@ public abstract class AbstractJUnitHelperMojo extends AbstractMojo {
     protected boolean isTemplateImplementationRequired = true;
 
     /**
-     * @parameter expression="${target.isAccessorExcluded}"
+     * @parameter
      */
     protected boolean target_isAccessorExcluded = true;
     /**
-     * @parameter expression="${target.isExceptionPatternRequired}"
+     * @parameter
      */
     protected boolean target_isExceptionPatternRequired = false;
     /**
-     * @parameter expression="${target.isPackageLocalMethodRequired}"
+     * @parameter
      */
     protected boolean target_isPackageLocalMethodRequired = true;
     /**
-     * @parameter expression="${target.isProtectedMethodRequired}"
+     * @parameter
      */
     protected boolean target_isProtectedMethodRequired = true;
     /**
-     * @parameter expression="${target.isPublicMethodRequired}"
+     * @parameter
      */
     protected boolean target_isPublicMethodRequired = true;
     /**
-     * @parameter expression="${target.regexpCsvForExclusion}"
+     * @parameter
      */
     protected String target_regexpCsvForExclusion = "";
 
     /**
-     * @parameter expression="${testMethodName.isArgsRequired}"
+     * @parameter
      */
     protected boolean testMethodName_isArgsRequired = true;
     /**
-     * @parameter expression="${testMethodName.isReturnRequired}"
+     * @parameter
      */
     protected boolean testMethodName_isReturnRequired = false;
 
     /**
-     * @parameter expression="${testMethodName.basicDelimiter}"
+     * @parameter
      */
     protected String testMethodName_basicDelimiter = "_";
     /**
-     * @parameter expression="${testMethodName.argsAreaPrefix}"
+     * @parameter
      */
     protected String testMethodName_argsAreaPrefix = "A";
     /**
-     * @parameter expression="${testMethodName.argsAreaDelimiter}"
+     * @parameter
      */
     protected String testMethodName_argsAreaDelimiter = "$";
     /**
-     * @parameter expression="${testMethodName.returnAreaPrefix}"
+     * @parameter
      */
     protected String testMethodName_returnAreaPrefix = "R";
     /**
-     * @parameter expression="${testMethodName.returnAreaDelimiter}"
+     * @parameter
      */
     protected String testMethodName_returnAreaDelimiter = "$";
     /**
-     * @parameter expression="${testMethodName.exceptionAreaPrefix}"
+     * @parameter
      */
     protected String testMethodName_exceptionAreaPrefix = "T";
     /**
-     * @parameter expression="${testMethodName.exceptionAreaDelimiter}"
+     * @parameter
      */
     protected String testMethodName_exceptionAreaDelimiter = "$";
 
