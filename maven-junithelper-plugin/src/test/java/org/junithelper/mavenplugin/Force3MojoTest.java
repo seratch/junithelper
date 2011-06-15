@@ -2,7 +2,7 @@ package org.junithelper.mavenplugin;
 
 import static org.hamcrest.CoreMatchers.*;
 
-import junit.framework.TestCase;
+
 
 import org.junithelper.mavenplugin.Force3Mojo.*;
 import static org.junit.Assert.*;

@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.junithelper.command.MakeTestCommand;
 import org.junithelper.mavenplugin.MakeMojo.*;
-import junit.framework.TestCase;
+
 
 import org.junit.Test;
 

@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.junithelper.command.ForceJUnitVersion4Command;
 import org.junithelper.mavenplugin.Force4Mojo.*;
-import junit.framework.TestCase;
+
 
 import org.junit.Test;
 
