@@ -2,7 +2,7 @@ package org.junithelper.core.generator.impl;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junithelper.core.config.Configulation;
+import org.junithelper.core.config.Configuration;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.ConstructorMeta;
 import org.junithelper.core.meta.extractor.ClassMetaExtractor;
@@ -14,7 +14,7 @@ import static org.junit.Assert.assertNotNull;
 
 public class DefaultConstructorGeneratorTest {
 
-	Configulation config = new Configulation();
+	Configuration config = new Configuration();
 	ClassMetaExtractor classMetaExtractor = new ClassMetaExtractor(config);
 	ClassMeta targetClassMeta;
 	DefaultConstructorGenerator target;

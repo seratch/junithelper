@@ -1,7 +1,7 @@
 package org.junithelper.core.meta.extractor;
 
 import org.junit.Test;
-import org.junithelper.core.config.Configulation;
+import org.junithelper.core.config.Configuration;
 import org.junithelper.core.meta.AccessModifier;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.util.IOUtil;
@@ -21,14 +21,14 @@ public class ClassMetaExtractorTest {
 
 	@Test
 	public void instantiation() throws Exception {
-		Configulation config = null;
+		Configuration config = null;
 		ClassMetaExtractor target = new ClassMetaExtractor(config);
 		assertNotNull(target);
 	}
 
 	@Test
 	public void extract_A$String() throws Exception {
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		ClassMetaExtractor target = new ClassMetaExtractor(config);
 		String sourceCodeString = "package hoge.foo; @SuppressWarnings(value = { \"issue 28\" })public class Sample { public Sample() {}\r\n public void doSomething(String str) { System.out.println(\"aaaa\") } }";
 		ClassMeta actual = target.extract(sourceCodeString);
@@ -38,7 +38,7 @@ public class ClassMetaExtractorTest {
 
 	@Test
 	public void extract_A$String_classNameWithGenerics1() throws Exception {
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		ClassMetaExtractor target = new ClassMetaExtractor(config);
 		String sourceCodeString = "package hoge.foo; @SuppressWarnings(value = { \"issue 28\" })public class Sample<T> { public Sample() {}\r\n public void doSomething(String str) { System.out.println(\"aaaa\") } }";
 		ClassMeta actual = target.extract(sourceCodeString);
@@ -48,7 +48,7 @@ public class ClassMetaExtractorTest {
 
 	@Test
 	public void extract_A$String_classNameWithGenerics2() throws Exception {
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		ClassMetaExtractor target = new ClassMetaExtractor(config);
 		String sourceCodeString = "package hoge.foo; @SuppressWarnings(value = { \"issue 28\" })public class Sample<M, A> { public Sample() {}\r\n public void doSomething(String str) { System.out.println(\"aaaa\") } }";
 		ClassMeta actual = target.extract(sourceCodeString);
@@ -58,7 +58,7 @@ public class ClassMetaExtractorTest {
 
 	@Test
 	public void extract_A$String_classNameWithGenerics3() throws Exception {
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		ClassMetaExtractor target = new ClassMetaExtractor(config);
 		String sourceCodeString = "package hoge.foo; @SuppressWarnings(value = { \"issue 28\" })public class Sample<M extends Object> { public Sample() {}\r\n public void doSomething(String str) { System.out.println(\"aaaa\") } }";
 		ClassMeta actual = target.extract(sourceCodeString);
@@ -69,7 +69,7 @@ public class ClassMetaExtractorTest {
 	@Test
 	public void extract_A$String_classNameWithGenerics4_nested()
 			throws Exception {
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		ClassMetaExtractor target = new ClassMetaExtractor(config);
 		String sourceCodeString = "package hoge.foo; @SuppressWarnings(value = { \"issue 28\" })public class Sample<M<A, B> extends Something> { public Sample() {}\r\n public void doSomething(String str) { System.out.println(\"aaaa\") } }";
 		ClassMeta actual = target.extract(sourceCodeString);
@@ -79,7 +79,7 @@ public class ClassMetaExtractorTest {
 
 	@Test
 	public void extract_A$String_Slim3_AbstractModelRef() throws Exception {
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		ClassMetaExtractor target = new ClassMetaExtractor(config);
 		String sourceCodeString = IOUtil.readAsString(IOUtil
 				.getResourceAsStream("parser/impl/Slim3_AbstractModelRef.txt"),
@@ -92,7 +92,7 @@ public class ClassMetaExtractorTest {
 
 	@Test
 	public void extract_A$String_Slim3_HtmlUtil() throws Exception {
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		ClassMetaExtractor target = new ClassMetaExtractor(config);
 		String sourceCodeString = IOUtil.readAsString(
 				IOUtil.getResourceAsStream("parser/impl/Slim3_HtmlUtil.txt"),
@@ -108,7 +108,7 @@ public class ClassMetaExtractorTest {
 
 	@Test
 	public void extract_A$String_Slim3_GlobalTransaction() throws Exception {
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		config.target.isExceptionPatternRequired = false;
 		ClassMetaExtractor target = new ClassMetaExtractor(config);
 		String sourceCodeString = IOUtil
@@ -125,7 +125,7 @@ public class ClassMetaExtractorTest {
 
 	@Test
 	public void extract_A$String_Enum_ContentType() throws Exception {
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		ClassMetaExtractor target = new ClassMetaExtractor(config);
 		String sourceCodeString = IOUtil.readAsString(
 				IOUtil.getResourceAsStream("parser/impl/Enum_ContentType.txt"),
@@ -141,7 +141,7 @@ public class ClassMetaExtractorTest {
 	@Test
 	public void renameIfDuplicatedToConstructorArgNames_A$String$List$List_target()
 			throws Exception {
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		ClassMetaExtractor target = new ClassMetaExtractor(config);
 		String argName = "target";
 		List<String> constructorArgs = new ArrayList<String>();
@@ -155,7 +155,7 @@ public class ClassMetaExtractorTest {
 	@Test
 	public void renameIfDuplicatedToConstructorArgNames_A$String$List$List_notDuplicated()
 			throws Exception {
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		ClassMetaExtractor target = new ClassMetaExtractor(config);
 		String argName = "name";
 		List<String> constructorArgs = new ArrayList<String>();
@@ -170,7 +170,7 @@ public class ClassMetaExtractorTest {
 	@Test
 	public void renameIfDuplicatedToConstructorArgNames_A$String$List$List_duplicated()
 			throws Exception {
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		ClassMetaExtractor target = new ClassMetaExtractor(config);
 		String argName = "name";
 		List<String> constructorArgs = new ArrayList<String>();
@@ -185,7 +185,7 @@ public class ClassMetaExtractorTest {
 	@Test
 	public void renameIfDuplicatedToConstructorArgNames_A$String$List$List_duplicated2()
 			throws Exception {
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		ClassMetaExtractor target = new ClassMetaExtractor(config);
 		String argName = "name";
 		List<String> constructorArgs = new ArrayList<String>();
@@ -200,7 +200,7 @@ public class ClassMetaExtractorTest {
 
 	@Test
 	public void isDuplicatedVariableName_A$String_true() throws Exception {
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		ClassMetaExtractor target = new ClassMetaExtractor(config);
 		String[] args = new String[]{"target", "actual", "expected",
 				"context", "mocks"};
@@ -213,7 +213,7 @@ public class ClassMetaExtractorTest {
 
 	@Test
 	public void isDuplicatedVariableName_A$String_false() throws Exception {
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		ClassMetaExtractor target = new ClassMetaExtractor(config);
 		String[] args = new String[]{"target_", "name", "hoge",};
 		for (String name : args) {

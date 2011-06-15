@@ -1,7 +1,7 @@
 package org.junithelper.core.meta.extractor;
 
 import org.junit.Test;
-import org.junithelper.core.config.Configulation;
+import org.junithelper.core.config.Configuration;
 import org.junithelper.core.meta.ClassMeta;
 
 import static org.junit.Assert.assertEquals;
@@ -17,14 +17,14 @@ public class ArgTypeMetaExtractorTest {
 
 	@Test
 	public void instantiation() throws Exception {
-		Configulation config = null;
+		Configuration config = null;
 		ArgTypeMetaExtractor target = new ArgTypeMetaExtractor(config);
 		assertNotNull(target);
 	}
 
 	@Test
 	public void initialize_A$String() throws Exception {
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		ArgTypeMetaExtractor target = new ArgTypeMetaExtractor(config);
 		String sourceCodeString = "package hoge.foo; public class Sample { public Sample() {}\r\n public void doSomething(String str) { System.out.println(\"aaaa\") } }";
 		target.initialize(sourceCodeString);
@@ -32,7 +32,7 @@ public class ArgTypeMetaExtractorTest {
 
 	@Test
 	public void initialize_A$ClassMeta$String() throws Exception {
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		ArgTypeMetaExtractor target = new ArgTypeMetaExtractor(config);
 		String sourceCodeString = "package hoge.foo; public class Sample { public Sample() {}\r\n public void doSomething(String str) { System.out.println(\"aaaa\") } }";
 		ClassMeta classMeta = new ClassMetaExtractor(config)
@@ -42,7 +42,7 @@ public class ArgTypeMetaExtractorTest {
 
 	@Test
 	public void doExtract_A$String() throws Exception {
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		ArgTypeMetaExtractor target = new ArgTypeMetaExtractor(config);
 		String sourceCodeString = "package hoge.foo; public class Sample { public Sample() {}\r\n public void doSomething(String str) { System.out.println(\"aaaa\") } }";
 		target.initialize(sourceCodeString);
@@ -56,7 +56,7 @@ public class ArgTypeMetaExtractorTest {
 
 	@Test
 	public void initialize_A$ClassMeta() throws Exception {
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		ArgTypeMetaExtractor target = new ArgTypeMetaExtractor(config);
 		// given
 		ClassMeta classMeta = mock(ClassMeta.class);

@@ -16,7 +16,7 @@
 package org.junithelper.core.file.impl;
 
 import org.apache.commons.io.FileUtils;
-import org.junithelper.core.config.Configulation;
+import org.junithelper.core.config.Configuration;
 import org.junithelper.core.file.FileWriter;
 
 import java.io.File;
@@ -25,7 +25,7 @@ import java.io.IOException;
 public class CommonsIOFileWriter implements FileWriter {
 
 	private File file;
-	private String encoding = new Configulation().outputFileEncoding;
+	private String encoding = new Configuration().outputFileEncoding;
 
 	public CommonsIOFileWriter(File file) {
 		setWriteTarget(file);

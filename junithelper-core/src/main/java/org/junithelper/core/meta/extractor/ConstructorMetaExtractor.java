@@ -15,7 +15,7 @@
  */
 package org.junithelper.core.meta.extractor;
 
-import org.junithelper.core.config.Configulation;
+import org.junithelper.core.config.Configuration;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
 import org.junithelper.core.meta.AccessModifier;
@@ -34,12 +34,12 @@ public class ConstructorMetaExtractor {
 
 	private AccessModifierDetector accessModifierDetector = new AccessModifierDetector();
 
-	private Configulation config;
+	private Configuration config;
 	private ClassMeta classMeta;
 	@SuppressWarnings("unused")
 	private String sourceCodeString;
 
-	public ConstructorMetaExtractor(Configulation config) {
+	public ConstructorMetaExtractor(Configuration config) {
 		this.config = config;
 	}
 

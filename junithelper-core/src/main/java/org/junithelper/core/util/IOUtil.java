@@ -24,12 +24,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
-import org.junithelper.core.config.Configulation;
+import org.junithelper.core.config.Configuration;
 import org.junithelper.core.constant.StringValue;
 
 public final class IOUtil {
 
-	private static final String DEFAULT_OUTPUT_FILE_ENCODING = new Configulation().outputFileEncoding;
+	private static final String DEFAULT_OUTPUT_FILE_ENCODING = new Configuration().outputFileEncoding;
 
 	private IOUtil() {
 	}

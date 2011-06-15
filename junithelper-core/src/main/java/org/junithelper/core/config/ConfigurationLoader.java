@@ -23,21 +23,21 @@ import java.lang.reflect.Method;
 import java.util.Properties;
 import java.util.Set;
 
-public class ConfigulationLoader {
+public class ConfigurationLoader {
 
-	public Configulation load(String filepath) throws Exception {
+	public Configuration load(String filepath) throws Exception {
 		return load(new FileInputStream(new File(filepath)));
 	}
 
-	public Configulation load(InputStream is) throws Exception {
+	public Configuration load(InputStream is) throws Exception {
 		Properties props = new Properties();
 		props.load(is);
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		Set<Object> keys = props.keySet();
 		for (Object key : keys) {
 			String[] splitted = String.valueOf(key).split("\\.");
 			if (splitted.length == 1) {
-				Field f = Configulation.class.getDeclaredField(String.valueOf(key));
+				Field f = Configuration.class.getDeclaredField(String.valueOf(key));
 				if (f.getType().isEnum()) {
 					try {
 						Method m = f.getType().getDeclaredMethod("valueOf", String.class);
@@ -53,7 +53,7 @@ public class ConfigulationLoader {
 					}
 				}
 			} else if (splitted.length == 2) {
-				Field f = Configulation.class.getDeclaredField(String.valueOf(splitted[0]));
+				Field f = Configuration.class.getDeclaredField(String.valueOf(splitted[0]));
 				Field target = f.getType().getDeclaredField(splitted[1]);
 				if (target.getType() == boolean.class) {
 					target.set(f.get(config), Boolean.valueOf(String.valueOf(props.get(key))));
@@ -61,7 +61,7 @@ public class ConfigulationLoader {
 					target.set(f.get(config), props.get(key));
 				}
 			} else {
-				throw new IllegalArgumentException("Invalid configulation - " + key);
+				throw new IllegalArgumentException("Invalid configuration - " + key);
 			}
 		}
 		return config;

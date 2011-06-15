@@ -1,9 +1,7 @@
 package org.junithelper.core.filter.impl;
 
+import static org.junit.Assert.*;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class TrimAnnotationFilterTest {
 
@@ -39,9 +37,9 @@ public class TrimAnnotationFilterTest {
 	@Test
 	public void trimAll_A$String_methodAnnotation() throws Exception {
 		TrimAnnotationFilter target = new TrimAnnotationFilter();
-		String src = "private TestMethodGenerator testMethodGenerator = new DefaultTestMethodGenerator();\r\n\t@Override\r\n\tpublic void initialize(Configulation config, String targetSourceCodeString) {";
+		String src = "private TestMethodGenerator testMethodGenerator = new DefaultTestMethodGenerator();\r\n\t@Override\r\n\tpublic void initialize(Configuration config, String targetSourceCodeString) {";
 		String actual = target.trimAll(src);
-		String expected = "private TestMethodGenerator testMethodGenerator = new DefaultTestMethodGenerator();\r\n\t \r\n\tpublic void initialize(Configulation config, String targetSourceCodeString) {";
+		String expected = "private TestMethodGenerator testMethodGenerator = new DefaultTestMethodGenerator();\r\n\t \r\n\tpublic void initialize(Configuration config, String targetSourceCodeString) {";
 		assertEquals(expected, actual);
 	}
 

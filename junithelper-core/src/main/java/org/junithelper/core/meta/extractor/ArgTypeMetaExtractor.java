@@ -15,7 +15,7 @@
  */
 package org.junithelper.core.meta.extractor;
 
-import org.junithelper.core.config.Configulation;
+import org.junithelper.core.config.Configuration;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
 import org.junithelper.core.meta.ArgTypeMeta;
@@ -29,12 +29,12 @@ import java.util.regex.Pattern;
 
 public class ArgTypeMetaExtractor {
 
-	private Configulation config;
+	private Configuration config;
 	private ClassMeta classMeta;
 	private List<ArgTypeMeta> extractedMetaList = new ArrayList<ArgTypeMeta>();
 	private List<String> extractedNameList = new ArrayList<String>();
 
-	public ArgTypeMetaExtractor(Configulation config) {
+	public ArgTypeMetaExtractor(Configuration config) {
 		this.config = config;
 	}
 

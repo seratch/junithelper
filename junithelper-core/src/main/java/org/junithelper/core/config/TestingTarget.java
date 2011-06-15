@@ -27,4 +27,10 @@ public class TestingTarget {
 
 	public boolean isAccessorExcluded = true;
 
+	public String regexpCsvForExclusion = "";
+
+	public String[] getRegexpArrayForExclusion() {
+		return regexpCsvForExclusion.split(",");
+	}
+
 }

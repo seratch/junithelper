@@ -1,7 +1,7 @@
 package org.junithelper.core.meta.extractor;
 
 import org.junit.Test;
-import org.junithelper.core.config.Configulation;
+import org.junithelper.core.config.Configuration;
 import org.junithelper.core.meta.AccessModifier;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.MethodMeta;
@@ -21,12 +21,12 @@ public class MethodMetaExtractorTest {
 
 	@Test
 	public void instantiation() throws Exception {
-		Configulation config = null;
+		Configuration config = null;
 		MethodMetaExtractor target = new MethodMetaExtractor(config);
 		assertNotNull(target);
 	}
 
-	Configulation config = new Configulation();
+	Configuration config = new Configuration();
 	MethodMetaExtractor target = new MethodMetaExtractor(config);
 	ClassMetaExtractor classMetaExtractor = new ClassMetaExtractor(config);
 

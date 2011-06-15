@@ -15,7 +15,7 @@
  */
 package org.junithelper.command;
 
-import org.junithelper.core.config.Configulation;
+import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.JUnitVersion;
 import org.junithelper.core.file.FileReader;
 import org.junithelper.core.file.impl.CommonsIOFileReader;
@@ -32,10 +32,10 @@ public class ForceJUnitVersion4Command extends AbstractCommand {
 	private ForceJUnitVersion4Command() {
 	}
 
-	public static Configulation config = new Configulation();
+	public static Configuration config = new Configuration();
 
 	public static void main(String[] args) throws Exception {
-		config = overrideConfigulation(config);
+		config = overrideConfiguration(config);
 		config.junitVersion = JUnitVersion.version4;
 		String dirOrFile = (args != null && args.length > 0 && args[0] != null)
 				? args[0] : config.directoryPathOfProductSourceCode;

@@ -15,8 +15,8 @@
  */
 package org.junithelper.command;
 
-import org.junithelper.core.config.Configulation;
-import org.junithelper.core.config.ConfigulationLoader;
+import org.junithelper.core.config.Configuration;
+import org.junithelper.core.config.ConfigurationLoader;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.file.FileSearcher;
 import org.junithelper.core.file.impl.CommonsIOFileSearcher;
@@ -35,10 +35,10 @@ import java.util.List;
 
 public abstract class AbstractCommand {
 
-	protected static Configulation overrideConfigulation(Configulation config) throws Exception {
+	protected static Configuration overrideConfiguration(Configuration config) throws Exception {
 		String configFile = System.getProperty("junithelper.configProperties");
 		if (configFile != null) {
-			config = new ConfigulationLoader().load(configFile);
+			config = new ConfigurationLoader().load(configFile);
 		}
 		return config;
 	}
@@ -77,7 +77,7 @@ public abstract class AbstractCommand {
 		return 0;
 	}
 
-	protected static List<File> findTargets(Configulation config, String dirOrFile) throws Exception {
+	protected static List<File> findTargets(Configuration config, String dirOrFile) throws Exception {
 		dirOrFile = dirOrFile.replaceAll("\\\\", "/");
 		List<File> dest = new ArrayList<File>();
 		ClassMetaExtractor extractor = new ClassMetaExtractor(config);
@@ -104,13 +104,13 @@ public abstract class AbstractCommand {
 		return dest;
 	}
 
-	protected static String getDirectoryPathOfProductSourceCode(Configulation config) {
+	protected static String getDirectoryPathOfProductSourceCode(Configuration config) {
 		return "/" + config.directoryPathOfProductSourceCode.replaceFirst("^/", "").replaceFirst("/$", "")
 				+ "/";
 	}
 
 	protected static String getDirectoryPathOfTestSourceCode(
-			Configulation config) {
+			Configuration config) {
 		return "/" + config.directoryPathOfTestSourceCode.replaceFirst("^/", "").replaceFirst("/$", "")
 				+ "/";
 	}

@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.junithelper.core.config.Configulation;
+import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.JUnitVersion;
 import org.junithelper.core.config.MessageValue;
 import org.junithelper.core.config.MockObjectFramework;
@@ -42,12 +42,12 @@ import org.junithelper.core.util.Stderr;
 
 public class DefaultTestCaseGenerator implements TestCaseGenerator {
 
-	private Configulation config;
+	private Configuration config;
 	private ClassMeta targetClassMeta;
 	private MessageValue messageValue = new MessageValue();
 	private TestMethodGenerator testMethodGenerator;
 
-	public DefaultTestCaseGenerator(Configulation config) {
+	public DefaultTestCaseGenerator(Configuration config) {
 		this.config = config;
 		testMethodGenerator = new DefaultTestMethodGenerator(config);
 	}
@@ -248,7 +248,7 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 	public String getUnifiedVersionTestCaseSourceCode(String currentTestCaseSourceCode, JUnitVersion version) {
 		String dest = currentTestCaseSourceCode;
 		ClassMeta classMeta = new ClassMetaExtractor(config).extract(currentTestCaseSourceCode);
-		Configulation config = ObjectUtil.deepCopy(this.config);
+		Configuration config = ObjectUtil.deepCopy(this.config);
 		if (version == JUnitVersion.version3) {
 			dest = dest.replaceAll("@Test[\\s\r\n]*public void ", "public void test"
 					+ config.testMethodName.basicDelimiter);
@@ -290,7 +290,7 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 		return addRequiredImportList(src, config);
 	}
 
-	String addRequiredImportList(String src, Configulation config) {
+	String addRequiredImportList(String src, Configuration config) {
 		String dest = src;
 		String oneline = TrimFilterUtil.doAllFilters(src);
 		StringBuilder importedListBuf = new StringBuilder();

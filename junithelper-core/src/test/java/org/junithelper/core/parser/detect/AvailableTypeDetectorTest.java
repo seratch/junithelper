@@ -1,11 +1,9 @@
 package org.junithelper.core.parser.detect;
 
+import static org.junit.Assert.*;
 import org.junit.Test;
-import org.junithelper.core.config.Configulation;
+import org.junithelper.core.config.Configuration;
 import org.junithelper.core.meta.ClassMeta;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class AvailableTypeDetectorTest {
 
@@ -139,12 +137,12 @@ public class AvailableTypeDetectorTest {
 	}
 
 	@Test
-	public void isAvailableType_A$String$Configulation_true() throws Exception {
+	public void isAvailableType_A$String$Configuration_true() throws Exception {
 		ClassMeta classMeta = new ClassMeta();
 		AvailableTypeDetector target = new AvailableTypeDetector(classMeta);
 		// given
 		String typeName = "String";
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		// when
 		boolean actual = target.isAvailableType(typeName, config);
 		// then
@@ -153,12 +151,12 @@ public class AvailableTypeDetectorTest {
 	}
 
 	@Test
-	public void isAvailableType_A$String$Configulation_false() throws Exception {
+	public void isAvailableType_A$String$Configuration_false() throws Exception {
 		ClassMeta classMeta = new ClassMeta();
 		AvailableTypeDetector target = new AvailableTypeDetector(classMeta);
 		// given
 		String typeName = "org.juithelper.core.Version";
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		// when
 		boolean actual = target.isAvailableType(typeName, config);
 		// then

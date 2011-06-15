@@ -1,7 +1,7 @@
 package org.junithelper.core.parser.impl;
 
 import org.junit.Test;
-import org.junithelper.core.config.Configulation;
+import org.junithelper.core.config.Configuration;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.ConstructorMeta;
 import org.junithelper.core.meta.MethodMeta;
@@ -23,12 +23,12 @@ public class DefaultSourceCodeParserTest {
 
 	@Test
 	public void instantiation() throws Exception {
-		Configulation config = null;
+		Configuration config = null;
 		DefaultSourceCodeParser target = new DefaultSourceCodeParser(config);
 		assertNotNull(target);
 	}
 
-	Configulation config = new Configulation();
+	Configuration config = new Configuration();
 	DefaultSourceCodeParser target = new DefaultSourceCodeParser(config);
 
 	@Test

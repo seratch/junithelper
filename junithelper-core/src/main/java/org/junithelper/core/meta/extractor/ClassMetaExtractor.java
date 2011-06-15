@@ -15,7 +15,7 @@
  */
 package org.junithelper.core.meta.extractor;
 
-import org.junithelper.core.config.Configulation;
+import org.junithelper.core.config.Configuration;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
 import org.junithelper.core.filter.TrimFilterUtil;
@@ -30,12 +30,12 @@ import java.util.regex.Matcher;
 public class ClassMetaExtractor {
 
 	@SuppressWarnings("unused")
-	private Configulation config;
+	private Configuration config;
 	private ConstructorMetaExtractor constructorMetaExtractor;
 	private MethodMetaExtractor methodMetaExtractor;
 	private ImportedListExtractor importedListExtractor;
 
-	public ClassMetaExtractor(Configulation config) {
+	public ClassMetaExtractor(Configuration config) {
 		this.config = config;
 		constructorMetaExtractor = new ConstructorMetaExtractor(config);
 		methodMetaExtractor = new MethodMetaExtractor(config);

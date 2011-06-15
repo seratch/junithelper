@@ -1,7 +1,7 @@
 package org.junithelper.core.meta.extractor;
 
 import org.junit.Test;
-import org.junithelper.core.config.Configulation;
+import org.junithelper.core.config.Configuration;
 import org.junithelper.core.meta.AccessModifier;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.ConstructorMeta;
@@ -22,14 +22,14 @@ public class ConstructorMetaExtractorTest {
 
 	@Test
 	public void instantiation() throws Exception {
-		Configulation config = null;
+		Configuration config = null;
 		ConstructorMetaExtractor target = new ConstructorMetaExtractor(config);
 		assertNotNull(target);
 	}
 
 	@Test
 	public void initialize_A$String() throws Exception {
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		ConstructorMetaExtractor target = new ConstructorMetaExtractor(config);
 		// given
 		String sourceCodeString = "package hoge; public class Sample { public void doSomething(String str) {} }";
@@ -44,7 +44,7 @@ public class ConstructorMetaExtractorTest {
 
 	@Test
 	public void initialize_A$ClassMeta$String() throws Exception {
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		ConstructorMetaExtractor target = new ConstructorMetaExtractor(config);
 		// given
 		ClassMeta classMeta = mock(ClassMeta.class);
@@ -61,7 +61,7 @@ public class ConstructorMetaExtractorTest {
 
 	@Test
 	public void extract_A$String() throws Exception {
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		ConstructorMetaExtractor target = new ConstructorMetaExtractor(config);
 		// given
 		String sourceCodeString = "package hoge; public class Sample { public void doSomething(String str) {} }";
@@ -76,7 +76,7 @@ public class ConstructorMetaExtractorTest {
 
 	@Test
 	public void extract_A$String_issue47() throws Exception {
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		ConstructorMetaExtractor target = new ConstructorMetaExtractor(config);
 		// given
 		String sourceCodeString = "import java.util.Map; public class HttpResponse {\r\n    private byte content[];\r\n    private int statusCode; \r\n    private Map headers;\r\n    public HttpResponse(byte content[], int statusCode, Map headers) {\r\n        this.content = content;\r\n        this.statusCode = statusCode;\r\n        this.headers = headers;\r\n    }\r\n\r\n";
@@ -97,7 +97,7 @@ public class ConstructorMetaExtractorTest {
 
 	@Test
 	public void extract_A$String_Slim3_HtmlUtil() throws Exception {
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		ConstructorMetaExtractor target = new ConstructorMetaExtractor(config);
 		// given
 		String sourceCodeString = IOUtil.readAsString(
@@ -115,7 +115,7 @@ public class ConstructorMetaExtractorTest {
 
 	@Test
 	public void getAccessModifier_A$String() throws Exception {
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		ConstructorMetaExtractor target = new ConstructorMetaExtractor(config);
 		// given
 		String methodSignatureArea = "} public static void main(String[] args) {";
@@ -131,7 +131,7 @@ public class ConstructorMetaExtractorTest {
 	@Test
 	public void trimAccessModifierFromMethodSignatureArea_A$String()
 			throws Exception {
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		ConstructorMetaExtractor target = new ConstructorMetaExtractor(config);
 		// given
 		String methodSignatureArea = "} public static void main(String[] args) {";

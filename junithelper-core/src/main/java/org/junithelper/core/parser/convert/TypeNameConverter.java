@@ -19,7 +19,7 @@ import java.io.File;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.junithelper.core.config.Configulation;
+import org.junithelper.core.config.Configuration;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
 import org.junithelper.core.file.impl.CommonsIOFileSearcher;
@@ -27,9 +27,9 @@ import org.junithelper.core.util.PrimitiveTypeUtil;
 
 public class TypeNameConverter {
 
-	private Configulation config;
+	private Configuration config;
 
-	public TypeNameConverter(Configulation config) {
+	public TypeNameConverter(Configuration config) {
 		this.config = config;
 	}
 

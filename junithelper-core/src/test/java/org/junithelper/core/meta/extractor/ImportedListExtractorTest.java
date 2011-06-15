@@ -1,7 +1,7 @@
 package org.junithelper.core.meta.extractor;
 
 import org.junit.Test;
-import org.junithelper.core.config.Configulation;
+import org.junithelper.core.config.Configuration;
 
 import java.util.List;
 
@@ -17,14 +17,14 @@ public class ImportedListExtractorTest {
 
 	@Test
 	public void instantiation() throws Exception {
-		Configulation config = null;
+		Configuration config = null;
 		ImportedListExtractor target = new ImportedListExtractor(config);
 		assertNotNull(target);
 	}
 
 	@Test
 	public void extract_A$String() throws Exception {
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		ImportedListExtractor target = new ImportedListExtractor(config);
 		// given
 		String sourceCodeString = "package foo.var; import java.util.List; import java.io.InputStream; public class Sample { }";

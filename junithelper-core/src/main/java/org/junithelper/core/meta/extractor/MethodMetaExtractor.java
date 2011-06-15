@@ -15,7 +15,7 @@
  */
 package org.junithelper.core.meta.extractor;
 
-import org.junithelper.core.config.Configulation;
+import org.junithelper.core.config.Configuration;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
 import org.junithelper.core.filter.TrimFilterUtil;
@@ -33,11 +33,11 @@ import java.util.regex.Pattern;
 
 public class MethodMetaExtractor {
 
-	private Configulation config;
+	private Configuration config;
 	private AccessModifierDetector accessModifierDetector = new AccessModifierDetector();
 	private ClassMeta classMeta;
 
-	public MethodMetaExtractor(Configulation config) {
+	public MethodMetaExtractor(Configuration config) {
 		this.config = config;
 	}
 

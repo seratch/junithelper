@@ -4,7 +4,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import java.util.List;
 import org.junit.Test;
-import org.junithelper.core.config.Configulation;
+import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.JUnitVersion;
 import org.junithelper.core.config.MockObjectFramework;
 import org.junithelper.core.config.TestingPatternExplicitComment;
@@ -16,7 +16,7 @@ import org.junithelper.core.meta.extractor.ClassMetaExtractor;
 
 public class DefaultTestMethodGeneratorTest {
 
-	Configulation config = new Configulation();
+	Configuration config = new Configuration();
 	DefaultTestMethodGenerator generator = new DefaultTestMethodGenerator(config);
 	ClassMetaExtractor classMetaExtractor = new ClassMetaExtractor(config);
 
@@ -27,7 +27,7 @@ public class DefaultTestMethodGeneratorTest {
 
 	@Test
 	public void instantiation() throws Exception {
-		Configulation config = null;
+		Configuration config = null;
 		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
 		assertNotNull(target);
 	}
@@ -130,7 +130,7 @@ public class DefaultTestMethodGeneratorTest {
 	@Test
 	public void getTestMethodSourceCode_A$TestMethodMeta_ArrangeActAssert_JUnit3() throws Exception {
 		// given
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		config.junitVersion = JUnitVersion.version3;
 		config.testingPatternExplicitComment = TestingPatternExplicitComment.ArrangeActAssert;
 		DefaultTestMethodGenerator localGenerator = new DefaultTestMethodGenerator(config);
@@ -149,7 +149,7 @@ public class DefaultTestMethodGeneratorTest {
 	@Test
 	public void getTestMethodSourceCode_A$TestMethodMeta_GivenWhenThen_JUnit3() throws Exception {
 		// given
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		config.junitVersion = JUnitVersion.version3;
 		config.testingPatternExplicitComment = TestingPatternExplicitComment.GivenWhenThen;
 		DefaultTestMethodGenerator localGenerator = new DefaultTestMethodGenerator(config);
@@ -168,7 +168,7 @@ public class DefaultTestMethodGeneratorTest {
 	@Test
 	public void getTestMethodSourceCode_A$TestMethodMeta_JUnit3() throws Exception {
 		// given
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		config.junitVersion = JUnitVersion.version3;
 		config.testingPatternExplicitComment = TestingPatternExplicitComment.GivenWhenThen;
 		DefaultTestMethodGenerator localGenerator = new DefaultTestMethodGenerator(config);
@@ -187,7 +187,7 @@ public class DefaultTestMethodGeneratorTest {
 	@Test
 	public void getTestMethodSourceCode_A$TestMethodMeta_ArrangeActAssert_JUnit4() throws Exception {
 		// given
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		config.testingPatternExplicitComment = TestingPatternExplicitComment.ArrangeActAssert;
 		DefaultTestMethodGenerator localGenerator = new DefaultTestMethodGenerator(config);
 		String sourceCodeString = "package hoge.foo; import java.util.List; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\") } }";
@@ -205,7 +205,7 @@ public class DefaultTestMethodGeneratorTest {
 	@Test
 	public void getTestMethodSourceCode_A$TestMethodMeta_GivenWhenThen_JUnit4() throws Exception {
 		// given
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		config.testingPatternExplicitComment = TestingPatternExplicitComment.GivenWhenThen;
 		DefaultTestMethodGenerator localGenerator = new DefaultTestMethodGenerator(config);
 		String sourceCodeString = "package hoge.foo; import java.util.List; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\") } }";
@@ -315,7 +315,7 @@ public class DefaultTestMethodGeneratorTest {
 
 	@Test
 	public void appendMockChecking_A$StringBuilder$int_EasyMock() throws Exception {
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		config.mockObjectFramework = MockObjectFramework.EasyMock;
 		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
 		// given
@@ -331,7 +331,7 @@ public class DefaultTestMethodGeneratorTest {
 
 	@Test
 	public void appendMockChecking_A$StringBuilder$int_JMock2() throws Exception {
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		config.mockObjectFramework = MockObjectFramework.JMock2;
 		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
 		// given
@@ -348,7 +348,7 @@ public class DefaultTestMethodGeneratorTest {
 
 	@Test
 	public void appendMockChecking_A$StringBuilder$int_JMockit() throws Exception {
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		config.mockObjectFramework = MockObjectFramework.JMockit;
 		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
 		// given
@@ -364,7 +364,7 @@ public class DefaultTestMethodGeneratorTest {
 
 	@Test
 	public void appendMockChecking_A$StringBuilder$int_Mockito() throws Exception {
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		config.mockObjectFramework = MockObjectFramework.Mockito;
 		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
 		// given
@@ -521,7 +521,7 @@ public class DefaultTestMethodGeneratorTest {
 	@Test
 	public void getArgValue_A$TestMethodMeta$ArgTypeMeta$String_Mockito() throws Exception {
 		// given
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		config.mockObjectFramework = MockObjectFramework.Mockito;
 		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
 		ClassMetaExtractor classMetaExtractor = new ClassMetaExtractor(config);
@@ -547,7 +547,7 @@ public class DefaultTestMethodGeneratorTest {
 	@Test
 	public void getArgValue_A$TestMethodMeta$ArgTypeMeta$String_EasyMock() throws Exception {
 		// given
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		config.mockObjectFramework = MockObjectFramework.EasyMock;
 		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
 		ClassMetaExtractor classMetaExtractor = new ClassMetaExtractor(config);
@@ -573,7 +573,7 @@ public class DefaultTestMethodGeneratorTest {
 	@Test
 	public void getArgValue_A$TestMethodMeta$ArgTypeMeta$String_JMock2() throws Exception {
 		// given
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		config.mockObjectFramework = MockObjectFramework.JMock2;
 		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
 		ClassMetaExtractor classMetaExtractor = new ClassMetaExtractor(config);
@@ -599,7 +599,7 @@ public class DefaultTestMethodGeneratorTest {
 	@Test
 	public void getArgValue_A$TestMethodMeta$ArgTypeMeta$String_JMockit() throws Exception {
 		// given
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		config.mockObjectFramework = MockObjectFramework.JMockit;
 		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
 		ClassMetaExtractor classMetaExtractor = new ClassMetaExtractor(config);
@@ -625,7 +625,7 @@ public class DefaultTestMethodGeneratorTest {
 	@Test
 	public void appendTestingPatternExplicitComment_A$StringBuilder$String$int_ArrangeActAssert() throws Exception {
 		// Arrange
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		config.testingPatternExplicitComment = TestingPatternExplicitComment.ArrangeActAssert;
 		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
 		StringBuilder buf = new StringBuilder();
@@ -640,7 +640,7 @@ public class DefaultTestMethodGeneratorTest {
 	@Test
 	public void appendTestingPatternExplicitComment_A$StringBuilder$String$int_GivenWhenThen() throws Exception {
 		// Arrange
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		config.testingPatternExplicitComment = TestingPatternExplicitComment.GivenWhenThen;
 		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
 		StringBuilder buf = new StringBuilder();

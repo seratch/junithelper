@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
-import org.junithelper.core.config.Configulation;
+import org.junithelper.core.config.Configuration;
 
 public class TypeNameConverterTest {
 
@@ -15,12 +15,12 @@ public class TypeNameConverterTest {
 
 	@Test
 	public void instantiation() throws Exception {
-		Configulation config = null;
+		Configuration config = null;
 		TypeNameConverter target = new TypeNameConverter(config);
 		assertNotNull(target);
 	}
 
-	Configulation config = new Configulation();
+	Configuration config = new Configuration();
 	TypeNameConverter target = new TypeNameConverter(config);
 
 	@Test
@@ -54,7 +54,7 @@ public class TypeNameConverterTest {
 
 	@Test
 	public void toCompilableType_A$String$List$String() throws Exception {
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		TypeNameConverter target = new TypeNameConverter(config);
 		// given
 		String packageName = null;
@@ -70,7 +70,7 @@ public class TypeNameConverterTest {
 
 	@Test
 	public void toCompilableType_A$String$List$String_WildcardImport() throws Exception {
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		TypeNameConverter target = new TypeNameConverter(config);
 		// given
 		String packageName = null;
@@ -86,7 +86,7 @@ public class TypeNameConverterTest {
 
 	@Test
 	public void toCompilableType_A$String$List$List$String() throws Exception {
-		Configulation config = null;
+		Configuration config = null;
 		TypeNameConverter target = new TypeNameConverter(config);
 		// given
 		String packageName = null;

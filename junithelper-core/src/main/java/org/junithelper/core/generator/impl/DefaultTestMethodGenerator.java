@@ -17,7 +17,7 @@ package org.junithelper.core.generator.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.junithelper.core.config.Configulation;
+import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.JUnitVersion;
 import org.junithelper.core.config.MessageValue;
 import org.junithelper.core.config.MockObjectFramework;
@@ -36,12 +36,12 @@ import org.junithelper.core.util.PrimitiveTypeUtil;
 
 public class DefaultTestMethodGenerator implements TestMethodGenerator {
 
-	private Configulation config;
+	private Configuration config;
 	private ClassMeta targetClassMeta;
 	private MessageValue messageValue = new MessageValue();
 	private ConstructorGenerator constructorGenerator = new DefaultConstructorGenerator();
 
-	public DefaultTestMethodGenerator(Configulation config) {
+	public DefaultTestMethodGenerator(Configuration config) {
 		this.config = config;
 	}
 

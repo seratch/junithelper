@@ -4,7 +4,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import java.util.List;
 import org.junit.Test;
-import org.junithelper.core.config.Configulation;
+import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.JUnitVersion;
 import org.junithelper.core.config.TestingTarget;
 import org.junithelper.core.meta.AccessModifier;
@@ -20,7 +20,7 @@ import org.junithelper.core.util.UniversalDetectorUtil;
 
 public class DefaultTestCaseGeneratorTest {
 
-	Configulation config = new Configulation();
+	Configuration config = new Configuration();
 	DefaultTestCaseGenerator target = new DefaultTestCaseGenerator(config);
 	ClassMetaExtractor classMetaExtractor = new ClassMetaExtractor(config);
 
@@ -31,7 +31,7 @@ public class DefaultTestCaseGeneratorTest {
 
 	@Test
 	public void instantiation() throws Exception {
-		Configulation config = null;
+		Configuration config = null;
 		DefaultTestCaseGenerator target = new DefaultTestCaseGenerator(config);
 		assertNotNull(target);
 	}
@@ -218,7 +218,7 @@ public class DefaultTestCaseGeneratorTest {
 
 	@Test
 	public void getNewTestCaseSourceCode_A$_JUnit3() throws Exception {
-		Configulation config = new Configulation();
+		Configuration config = new Configuration();
 		config.junitVersion = JUnitVersion.version3;
 		DefaultTestCaseGenerator target = new DefaultTestCaseGenerator(config);
 		String sourceCodeString = "package hoge.foo; import java.util.List;\r\nimport java.util.Map; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\"); } public void doSomething(List<Map<String, String>> nested, Map<String,Map<String,String>> nested2) { } }";
@@ -306,7 +306,7 @@ public class DefaultTestCaseGeneratorTest {
 	}
 
 	@Test
-	public void addRequiredImportList_A$String$Configulation() throws Exception {
+	public void addRequiredImportList_A$String$Configuration() throws Exception {
 		String sourceCodeString = "package hoge.foo;\r\nimport java.util.List;\r\npublic class Sample {\r\n\r\n\tpublic Sample() {}\r\n\r\n\tpublic int doSomething(String str, long longValue) throws Throwable {\r\n\t\tSystem.out.println(\"aaaa\");\r\n\t}\r\n}";
 		ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
 		target.initialize(targetClassMeta);

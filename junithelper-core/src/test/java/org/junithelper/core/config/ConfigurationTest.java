@@ -4,16 +4,16 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
 
-public class ConfigulationTest {
+public class ConfigurationTest {
 
 	@Test
 	public void type() throws Exception {
-		assertNotNull(Configulation.class);
+		assertNotNull(Configuration.class);
 	}
 
 	@Test
 	public void instantiation() throws Exception {
-		Configulation target = new Configulation();
+		Configuration target = new Configuration();
 		assertNotNull(target);
 	}
 

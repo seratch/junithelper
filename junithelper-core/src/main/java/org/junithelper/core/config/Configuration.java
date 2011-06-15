@@ -15,7 +15,7 @@
  */
 package org.junithelper.core.config;
 
-public class Configulation {
+public class Configuration {
 
 	public String language = "en";
 

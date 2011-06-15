@@ -15,7 +15,7 @@
  */
 package org.junithelper.core.parser.detect;
 
-import org.junithelper.core.config.Configulation;
+import org.junithelper.core.config.Configuration;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
 import org.junithelper.core.file.impl.CommonsIOFileSearcher;
@@ -58,7 +58,7 @@ public class AvailableTypeDetector {
 		return false;
 	}
 
-	public boolean isAvailableType(String typeName, Configulation config) {
+	public boolean isAvailableType(String typeName, Configuration config) {
 		if (typeName == null) {
 			return false;
 		}

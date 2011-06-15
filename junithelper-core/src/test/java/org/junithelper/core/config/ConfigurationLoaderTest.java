@@ -8,33 +8,33 @@ import java.io.InputStream;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
-public class ConfigulationLoaderTest {
+public class ConfigurationLoaderTest {
 
 	@Test
 	public void type() throws Exception {
-		assertNotNull(ConfigulationLoader.class);
+		assertNotNull(ConfigurationLoader.class);
 	}
 
 	@Test
 	public void instantiation() throws Exception {
-		ConfigulationLoader target = new ConfigulationLoader();
+		ConfigurationLoader target = new ConfigurationLoader();
 		assertNotNull(target);
 	}
 
 	@Test
 	public void load_A$String() throws Exception {
-		ConfigulationLoader target = new ConfigulationLoader();
+		ConfigurationLoader target = new ConfigurationLoader();
 		// given
 		String filepath = "release/junithelper-config.properties";
 		// when
-		Configulation actual = target.load(filepath);
+		Configuration actual = target.load(filepath);
 		// then
 		assertNotNull(actual);
 	}
 
 	@Test
 	public void load_A$String_T$Exception() throws Exception {
-		ConfigulationLoader target = new ConfigulationLoader();
+		ConfigurationLoader target = new ConfigurationLoader();
 		// given
 		String filepath = null;
 		try {
@@ -48,19 +48,19 @@ public class ConfigulationLoaderTest {
 
 	@Test
 	public void load_A$InputStream() throws Exception {
-		ConfigulationLoader target = new ConfigulationLoader();
+		ConfigurationLoader target = new ConfigurationLoader();
 		// given
 		InputStream is = IOUtil
 				.getResourceAsStream("junithelper-config.properties");
 		// when
-		Configulation actual = target.load(is);
+		Configuration actual = target.load(is);
 		// then
 		assertNotNull(actual);
 	}
 
 	@Test
 	public void load_A$InputStream_T$Exception() throws Exception {
-		ConfigulationLoader target = new ConfigulationLoader();
+		ConfigurationLoader target = new ConfigurationLoader();
 		// given
 		InputStream is = null;
 		// e.g. : given(mocked.called()).willReturn(1);

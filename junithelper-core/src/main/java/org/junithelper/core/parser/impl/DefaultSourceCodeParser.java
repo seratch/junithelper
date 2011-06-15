@@ -15,7 +15,7 @@
  */
 package org.junithelper.core.parser.impl;
 
-import org.junithelper.core.config.Configulation;
+import org.junithelper.core.config.Configuration;
 import org.junithelper.core.filter.TrimFilterUtil;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.ConstructorMeta;
@@ -36,7 +36,7 @@ public class DefaultSourceCodeParser implements SourceCodeParser {
 	private MethodMetaExtractor methodMetaExtractor;
 	private ConstructorMetaExtractor constructorMetaExtractor;
 
-	public DefaultSourceCodeParser(Configulation config) {
+	public DefaultSourceCodeParser(Configuration config) {
 		classMetaExtractor = new ClassMetaExtractor(config);
 		methodMetaExtractor = new MethodMetaExtractor(config);
 		constructorMetaExtractor = new ConstructorMetaExtractor(config);
