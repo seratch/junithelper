@@ -2,9 +2,10 @@ package org.junithelper.mavenplugin;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.junithelper.core.Version;
-import org.junithelper.core.config.Configulation;
+import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.JUnitVersion;
 import org.junithelper.core.config.MockObjectFramework;
+import org.junithelper.core.config.TestingPatternExplicitComment;
 import org.junithelper.core.util.Stdout;
 
 public abstract class AbstractJUnitHelperMojo extends AbstractMojo {
@@ -105,8 +106,13 @@ public abstract class AbstractJUnitHelperMojo extends AbstractMojo {
      */
     protected String mockObjectFramework = "";
 
-    protected Configulation loadConfig() {
-        Configulation config = new Configulation();
+    /**
+     * @parameter
+     */
+    protected String testingPatternExplicitComment = "";
+
+    protected Configuration loadConfig() {
+        Configuration config = new Configuration();
         config.language = language;
         config.outputFileEncoding = outputFileEncoding;
         config.directoryPathOfProductSourceCode = directoryPathOfProductSourceCode;
@@ -136,6 +142,11 @@ public abstract class AbstractJUnitHelperMojo extends AbstractMojo {
             config.mockObjectFramework = MockObjectFramework.valueOf(mockObjectFramework);
         } catch (Exception e) {
             config.mockObjectFramework = null;
+        }
+        try {
+            config.testingPatternExplicitComment = TestingPatternExplicitComment.valueOf(testingPatternExplicitComment);
+        } catch (Exception e) {
+            config.testingPatternExplicitComment = null;
         }
         return config;
     }
