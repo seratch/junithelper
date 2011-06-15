@@ -87,7 +87,7 @@ public class MakeTestCommand extends AbstractCommand {
 		String canonicalClassName = javaFile.getAbsolutePath().replaceAll("\\\\", "/").replace("/", ".").trim();
 		String[] regexpListForExclusion = config.target.getRegexpArrayForExclusion();
 		for (String regexp : regexpListForExclusion) {
-			if (canonicalClassName.matches(".+" + regexp + ".java$")) {
+			if (regexp != null && regexp.trim().length() > 0 && canonicalClassName.matches(".+" + regexp + ".java$")) {
 				return true;
 			}
 		}
