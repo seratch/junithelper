@@ -258,7 +258,7 @@ public class DefaultTestCaseGeneratorTest {
 	}
 
 	@Test
-	public void getUnifiedVersionTestCaseSourceCode_A$String$JUnitVersion() throws Exception {
+	public void getUnifiedVersionTestCaseSourceCode_A$String$JUnitVersion_toJUnit3() throws Exception {
 		String currentTestCaseSourceCode = "package hoge;\r\nimport org.junit.Test;\r\n\r\npublic class SampleTest {\r\n\r\n\t@Test\r\n\tpublic void hogehoge() throws Excpetion {\r\n\t}\r\n\r\n }";
 		String sourceCodeString = "package hoge.foo; import java.util.List; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\") } }";
 		ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
@@ -266,6 +266,31 @@ public class DefaultTestCaseGeneratorTest {
 		JUnitVersion version = JUnitVersion.version3;
 		String actual = target.getUnifiedVersionTestCaseSourceCode(currentTestCaseSourceCode, version);
 		String expected = "package hoge;\r\n\r\nimport java.util.List;\r\nimport hoge.foo.Sample.*;\r\nimport junit.framework.TestCase;\r\nimport org.junit.Test;\r\n\r\npublic class SampleTest extends TestCase {\r\n\r\n\tpublic void test_hogehoge() throws Excpetion {\r\n\t}\r\n\r\n }";
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void getUnifiedVersionTestCaseSourceCode_A$String$JUnitVersion_toJUnit4() throws Exception {
+		String currentTestCaseSourceCode = "package hoge;\r\n\r\npublic class SampleTest extends junit.framework.TestCase {\r\n\r\n\tpublic void test_hogehoge() throws Excpetion {\r\n\t}\r\n\r\n }";
+		String sourceCodeString = "package hoge.foo; import java.util.List; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\") } }";
+		ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
+		target.initialize(targetClassMeta);
+		JUnitVersion version = JUnitVersion.version4;
+		String actual = target.getUnifiedVersionTestCaseSourceCode(currentTestCaseSourceCode, version);
+		String expected = "package hoge;\r\n\r\nimport java.util.List;\r\nimport hoge.foo.Sample.*;\r\nimport static org.hamcrest.CoreMatchers.*;\r\nimport static org.junit.Assert.*;\r\nimport org.junit.Test;\r\n\r\npublic class SampleTest {\r\n\r\n\t@Test \r\n\tpublic void hogehoge() throws Excpetion {\r\n\t}\r\n\r\n }";
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void getUnifiedVersionTestCaseSourceCode_A$String$JUnitVersion_toJUnit4_SuperClassWhenImportedTestCase()
+			throws Exception {
+		String currentTestCaseSourceCode = "package hoge;\r\n\r\nimport junit.framework.TestCase;\r\n\r\npublic class SampleTest extends TestCase {\r\n\r\n\tpublic void test_hogehoge() throws Excpetion {\r\n\t}\r\n\r\n }";
+		String sourceCodeString = "package hoge.foo; import java.util.List; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\") } }";
+		ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
+		target.initialize(targetClassMeta);
+		JUnitVersion version = JUnitVersion.version4;
+		String actual = target.getUnifiedVersionTestCaseSourceCode(currentTestCaseSourceCode, version);
+		String expected = "package hoge;\r\n\r\nimport java.util.List;\r\nimport hoge.foo.Sample.*;\r\nimport static org.hamcrest.CoreMatchers.*;\r\nimport static org.junit.Assert.*;\r\nimport org.junit.Test;\r\n\r\n\r\n\r\npublic class SampleTest {\r\n\r\n\t@Test \r\n\tpublic void hogehoge() throws Excpetion {\r\n\t}\r\n\r\n }";
 		assertEquals(expected, actual);
 	}
 

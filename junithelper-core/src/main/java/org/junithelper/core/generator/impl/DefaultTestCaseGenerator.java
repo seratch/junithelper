@@ -18,6 +18,7 @@ package org.junithelper.core.generator.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.junithelper.core.config.Configulation;
 import org.junithelper.core.config.JUnitVersion;
 import org.junithelper.core.config.MessageValue;
@@ -259,7 +260,26 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 		} else if (version == JUnitVersion.version4) {
 			dest = dest.replaceAll("public void test" + config.testMethodName.basicDelimiter,
 					"@Test \r\n\tpublic void ");
-			dest = dest.replaceFirst(classMeta.name + "\\s+extends\\s+.+\\s*\\{", classMeta.name + " {");
+			// When it is changed to JUnit 4.x style,
+			// "junit.framework.TestCase" inheritance should be removed.
+			String REGEXP_FOR_SUPER_CLASS = ".+\\s+extends\\s+([^{]+)\\s*\\{.+";
+			String REGEXP_FOR_IMPORT_TEST_CASE = ".+import\\s+junit.framework.TestCase;.+";
+			String TEST_CASE_CLASS_WITH_PACAKGE = "junit.framework.TestCase";
+			String TEST_CASE_CLASS = "TestCase";
+			String destWithoutCRLF = dest.replaceAll("\r", "").replaceAll("\n", "");
+			if (destWithoutCRLF.matches(REGEXP_FOR_SUPER_CLASS)) {
+				Matcher matcher = Pattern.compile(REGEXP_FOR_SUPER_CLASS).matcher(destWithoutCRLF);
+				if (matcher.matches()) {
+					String matched = matcher.group(1);
+					if (matched.trim().equals(TEST_CASE_CLASS_WITH_PACAKGE)) {
+						dest = dest.replaceFirst(classMeta.name + "\\s+extends\\s+.+\\s*\\{", classMeta.name + " {");
+					} else if (matched.trim().equals(TEST_CASE_CLASS)
+							&& destWithoutCRLF.matches(REGEXP_FOR_IMPORT_TEST_CASE)) {
+						dest = dest.replaceFirst(classMeta.name + "\\s+extends\\s+.+\\s*\\{", classMeta.name + " {")
+								.replaceAll("import\\s+junit.framework.TestCase;", "");
+					}
+				}
+			}
 			config.junitVersion = JUnitVersion.version4;
 			dest = addRequiredImportList(dest, config);
 		}
