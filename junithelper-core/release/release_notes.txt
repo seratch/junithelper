@@ -3,6 +3,12 @@
 	http://junithelper.org/
 ------------------------------------------
 
+* Release Notes - 1.0.4
+
+** Feature Request
+	* Issue 58:	Need to enable dropping specified pacakges or classes from test target
+	* Issue 59:	"force4 command" removes super class even if it isn't a "junit.framework.TestCase"
+
 * Release Notes - 1.0.3
 
 ** Bug
