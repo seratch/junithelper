@@ -1,5 +1,6 @@
 package org.junithelper.plugin.action;
 
+import java.io.File;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -7,6 +8,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
@@ -14,6 +16,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.junithelper.core.config.Configuration;
+import org.junithelper.core.config.ConfigurationLoader;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
 import org.junithelper.plugin.Activator;
@@ -27,8 +30,32 @@ public abstract class AbstractAction extends Action {
 
 	public IPreferenceStore store = null;
 
-	protected Configuration getConfiguration(IPreferenceStore store) {
+	protected Configuration getConfiguration(IPreferenceStore store, ISelection selection) {
+
+		// read from "junithelper-config.properties" if it exsits
+		// at project root dir
+		StructuredSelection structuredSelection = null;
+		if (selection instanceof StructuredSelection) {
+			// viewer
+			structuredSelection = (StructuredSelection) selection;
+		}
+		if (!isNotSelected(structuredSelection) && !isSelectedSeveral(structuredSelection)) {
+			String projectName = getProjectName(structuredSelection);
+			String projectRootPath = getWorkspaceRootAbsolutePath(getIWorkspaceRoot())
+					+ StringValue.DirectorySeparator.General + projectName + StringValue.DirectorySeparator.General;
+			String filepath = projectRootPath + "junithelper-config.properties";
+			File configProperites = new File(filepath);
+			if (configProperites.exists()) {
+				try {
+					return new ConfigurationLoader().load(filepath);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		// load from Eclipse Preference
 		return new PreferenceLoader(store).getConfig();
+
 	}
 
 	protected PropertiesLoader getPropertiesLoader(String language) {

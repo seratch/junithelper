@@ -45,7 +45,7 @@ public class Force3TestCaseAction extends AbstractAction implements IActionDeleg
 	public void run(IAction action) {
 
 		store = getIPreferenceStore();
-		Configuration config = getConfiguration(store);
+		Configuration config = getConfiguration(store, selection);
 		PropertiesLoader props = getPropertiesLoader(store.getString(Preference.lang));
 
 		StructuredSelection structuredSelection = null;

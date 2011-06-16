@@ -64,7 +64,7 @@ public class CreateNewTestCaseAction extends AbstractAction implements IActionDe
 	public void run(IAction action) {
 
 		store = getIPreferenceStore();
-		Configuration config = getConfiguration(store);
+		Configuration config = getConfiguration(store, selection);
 		PropertiesLoader props = getPropertiesLoader(config.language);
 
 		StructuredSelection structuredSelection = null;
