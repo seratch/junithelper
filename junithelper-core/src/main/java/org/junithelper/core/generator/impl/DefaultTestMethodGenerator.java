@@ -26,9 +26,9 @@ import org.junithelper.core.config.MessageValue;
 import org.junithelper.core.config.MockObjectFramework;
 import org.junithelper.core.config.TestingPatternExplicitComment;
 import org.junithelper.core.config.extension.ExtArgPattern;
+import org.junithelper.core.config.extension.ExtInstantiation;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
-import org.junithelper.core.generator.ConstructorGenerator;
 import org.junithelper.core.generator.TestMethodGenerator;
 import org.junithelper.core.meta.ArgTypeMeta;
 import org.junithelper.core.meta.ClassMeta;
@@ -43,7 +43,6 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 	private Configuration config;
 	private ClassMeta targetClassMeta;
 	private MessageValue messageValue = new MessageValue();
-	private ConstructorGenerator constructorGenerator = new DefaultConstructorGenerator();
 
 	public DefaultTestMethodGenerator(Configuration config) {
 		this.config = config;
@@ -204,7 +203,7 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 			// --------------------------
 			// testing instantiation
 
-			String instantiation = constructorGenerator.getFirstInstantiationSourceCode(testMethodMeta.classMeta);
+			String instantiation = getInstantiationSourceCode(config, testMethodMeta);
 			buf.append(instantiation);
 			appendTabs(buf, 2);
 			if (config.junitVersion == JUnitVersion.version3) {
@@ -240,7 +239,7 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 			}
 			// instantiation if testing an instance method
 			if (!testMethodMeta.methodMeta.isStatic) {
-				String instantiation = constructorGenerator.getFirstInstantiationSourceCode(testMethodMeta.classMeta);
+				String instantiation = getInstantiationSourceCode(config, testMethodMeta);
 				buf.append(instantiation);
 			}
 			// Mockito BDD
@@ -370,16 +369,52 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 		if (argsLen > 0) {
 			for (int i = 0; i < argsLen; i++) {
 
+				ArgTypeMeta argTypeMeta = testMethodMeta.methodMeta.argTypes.get(i);
+				String typeName = argTypeMeta.name;
+				String argName = testMethodMeta.methodMeta.argNames.get(i);
+
 				ExtArgPattern extArgPattern = testMethodMeta.extArgPattern;
+
+				ExtInstantiation extInstantiation = null;
+				if (config.extConfiguration.extInstantiations != null) {
+					for (ExtInstantiation ins : config.extConfiguration.extInstantiations) {
+						if (isCanonicalClassNameUsed(ins.canonicalClassName, argTypeMeta.name, testMethodMeta.classMeta)) {
+							extInstantiation = ins;
+							// add import list
+							for (String newImport : ins.importList) {
+								testMethodMeta.classMeta.importedList.add(newImport);
+							}
+							break;
+						}
+					}
+				}
+
+				// --------------------------
 				// extension : pre-assign
 				if (extArgPattern != null && extArgPattern.preAssignCode != null
 						&& extArgPattern.preAssignCode.trim().length() > 0) {
+					// arg patterns
 					String[] lines = extArgPattern.preAssignCode.split(StringValue.Semicolon);
 					for (String line : lines) {
-						appendTabs(buf, 2);
-						buf.append(line);
-						buf.append(StringValue.Semicolon);
-						appendCRLF(buf);
+						if (line != null && line.trim().length() > 0) {
+							appendTabs(buf, 2);
+							buf.append(line);
+							buf.append(StringValue.Semicolon);
+							appendCRLF(buf);
+						}
+					}
+				} else if (extInstantiation != null) {
+					// instantiation
+					if (extInstantiation.preAssignCode != null && extInstantiation.preAssignCode.trim().length() > 0) {
+						String[] lines = extInstantiation.preAssignCode.split(StringValue.Semicolon);
+						for (String line : lines) {
+							if (line != null && line.trim().length() > 0) {
+								appendTabs(buf, 2);
+								buf.append(line);
+								buf.append(StringValue.Semicolon);
+								appendCRLF(buf);
+							}
+						}
 					}
 				}
 
@@ -387,35 +422,51 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 				if (config.mockObjectFramework == MockObjectFramework.JMock2) {
 					buf.append("final ");
 				}
-				ArgTypeMeta argTypeMeta = testMethodMeta.methodMeta.argTypes.get(i);
-				String typeName = argTypeMeta.name;
-				String argName = testMethodMeta.methodMeta.argNames.get(i);
 				buf.append(typeName);
 				buf.append(" ");
 				buf.append(argName);
 				buf.append(" = ");
-				// extension : assign
 				if (extArgPattern != null && extArgPattern.assignCode != null) {
 					buf.append(extArgPattern.assignCode.trim());
+					// --------------------------
+					// extension : assign
 					if (!extArgPattern.assignCode.endsWith(StringValue.Semicolon)) {
 						buf.append(StringValue.Semicolon);
 					}
 				} else {
+					// simply instantiation or extension instantiation
 					buf.append(getArgValue(testMethodMeta, argTypeMeta, argName));
 					buf.append(StringValue.Semicolon);
 				}
 				appendCRLF(buf);
 
+				// --------------------------
 				// extension : post-assign
 				if (extArgPattern != null && extArgPattern.postAssignCode != null
 						&& extArgPattern.postAssignCode.trim().length() > 0) {
+					// arg patterns
 					String[] lines = extArgPattern.postAssignCode.replaceAll("\\{arg\\}", argName).split(
 							StringValue.Semicolon);
 					for (String line : lines) {
-						appendTabs(buf, 2);
-						buf.append(line);
-						buf.append(StringValue.Semicolon);
-						appendCRLF(buf);
+						if (line != null && line.trim().length() > 0) {
+							appendTabs(buf, 2);
+							buf.append(line);
+							buf.append(StringValue.Semicolon);
+							appendCRLF(buf);
+						}
+					}
+				} else if (extInstantiation != null) {
+					// instantiation
+					if (extInstantiation.postAssignCode != null && extInstantiation.postAssignCode.trim().length() > 0) {
+						String[] lines = extInstantiation.postAssignCode.split(StringValue.Semicolon);
+						for (String line : lines) {
+							if (line != null && line.trim().length() > 0) {
+								appendTabs(buf, 2);
+								buf.append(line);
+								buf.append(StringValue.Semicolon);
+								appendCRLF(buf);
+							}
+						}
 					}
 				}
 			}
@@ -562,6 +613,15 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 	}
 
 	String getArgValue(TestMethodMeta testMethodMeta, ArgTypeMeta argTypeMeta, String argName) {
+
+		// extension instantiation
+		if (config.extConfiguration.extInstantiations != null) {
+			for (ExtInstantiation ins : config.extConfiguration.extInstantiations) {
+				if (isCanonicalClassNameUsed(ins.canonicalClassName, argTypeMeta.name, testMethodMeta.classMeta)) {
+					return ins.assignCode;
+				}
+			}
+		}
 		AvailableTypeDetector availableTypeDetector = new AvailableTypeDetector(targetClassMeta);
 		if (availableTypeDetector.isJavaLangPackageType(argTypeMeta.name)) {
 			return "null";

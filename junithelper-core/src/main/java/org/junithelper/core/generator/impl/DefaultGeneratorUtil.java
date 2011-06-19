@@ -1,11 +1,14 @@
 package org.junithelper.core.generator.impl;
 
+import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.TestingTarget;
+import org.junithelper.core.config.extension.ExtInstantiation;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
 import org.junithelper.core.meta.AccessModifier;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.MethodMeta;
+import org.junithelper.core.meta.TestMethodMeta;
 
 final class DefaultGeneratorUtil {
 
@@ -22,6 +25,55 @@ final class DefaultGeneratorUtil {
 
 	static boolean isPackageLocalMethodAndTestingRequired(MethodMeta methodMeta, TestingTarget target) {
 		return methodMeta.accessModifier == AccessModifier.PackageLocal && target.isPackageLocalMethodRequired;
+	}
+
+	static String getInstantiationSourceCode(Configuration config, TestMethodMeta testMethodMeta) {
+		if (config.extConfiguration.extInstantiations != null) {
+			for (ExtInstantiation ins : config.extConfiguration.extInstantiations) {
+				if (isCanonicalClassNameUsed(ins.canonicalClassName, testMethodMeta.classMeta.name,
+						testMethodMeta.classMeta)) {
+					// add import list
+					for (String newImport : ins.importList) {
+						testMethodMeta.classMeta.importedList.add(newImport);
+					}
+					// instantiation code
+					// e.g. Sample target = new Sample();
+					StringBuilder buf = new StringBuilder();
+					if (ins.preAssignCode != null && ins.preAssignCode.trim().length() > 0) {
+						buf.append(StringValue.Tab);
+						buf.append(StringValue.Tab);
+						String[] lines = ins.preAssignCode.split(StringValue.Semicolon);
+						for (String line : lines) {
+							buf.append(line);
+							buf.append(StringValue.Semicolon);
+						}
+						buf.append(StringValue.CarriageReturn);
+						buf.append(StringValue.LineFeed);
+					}
+					buf.append(StringValue.Tab);
+					buf.append(StringValue.Tab);
+					buf.append(testMethodMeta.classMeta.name);
+					buf.append(" target = ");
+					buf.append(ins.assignCode);
+					buf.append(StringValue.CarriageReturn);
+					buf.append(StringValue.LineFeed);
+					if (ins.postAssignCode != null && ins.postAssignCode.trim().length() > 0) {
+						buf.append(StringValue.Tab);
+						buf.append(StringValue.Tab);
+						String[] lines = ins.postAssignCode.split(StringValue.Semicolon);
+						for (String line : lines) {
+							buf.append(line);
+							buf.append(StringValue.Semicolon);
+						}
+						buf.append(StringValue.CarriageReturn);
+						buf.append(StringValue.LineFeed);
+					}
+					return buf.toString();
+				}
+			}
+		}
+		// TODO better implementation
+		return new DefaultConstructorGenerator().getFirstInstantiationSourceCode(testMethodMeta.classMeta);
 	}
 
 	static void appendIfNotExists(StringBuilder buf, String src, String importLine) {

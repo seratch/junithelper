@@ -293,6 +293,11 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 					targetClassMeta.importedList.add(newImport);
 				}
 			}
+			if (testMethodMeta.extReturn != null) {
+				for (String newImport : testMethodMeta.extReturn.importList) {
+					targetClassMeta.importedList.add(newImport);
+				}
+			}
 		}
 		dest = dest.replaceFirst("}[^}]*$", "");
 		String lackingSourceCode = buf.toString();
@@ -348,7 +353,15 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 		String dest = sourceCode;
 		String oneline = TrimFilterUtil.doAllFilters(sourceCode);
 		StringBuilder importedListBuf = new StringBuilder();
+
+		// to uniq collection
+		List<String> uniqImportedList = new ArrayList<String>();
 		for (String imported : targetClassMeta.importedList) {
+			if (!uniqImportedList.contains(imported.trim())) {
+				uniqImportedList.add(imported.trim());
+			}
+		}
+		for (String imported : uniqImportedList) {
 			String newOne = "import " + imported + ";";
 			if (!oneline.matches(RegExp.Anything_ZeroOrMore_Min + newOne + RegExp.Anything_ZeroOrMore_Min)) {
 				importedListBuf.append(newOne);

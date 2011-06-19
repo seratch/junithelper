@@ -15,15 +15,15 @@
  */
 package org.junithelper.core.generator.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junithelper.core.constant.StringValue;
 import org.junithelper.core.generator.ConstructorGenerator;
 import org.junithelper.core.meta.AccessModifier;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.ConstructorMeta;
 import org.junithelper.core.util.PrimitiveTypeUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class DefaultConstructorGenerator implements ConstructorGenerator {
 
@@ -38,12 +38,12 @@ public class DefaultConstructorGenerator implements ConstructorGenerator {
 
 	@Override
 	public String getFirstInstantiationSourceCode(ClassMeta classMeta) {
-		return getInstantiationSourceCode(classMeta,
-				getFirstConstructor(classMeta));
+		return getInstantiationSourceCode(classMeta, getFirstConstructor(classMeta));
 	}
 
 	@Override
 	public String getInstantiationSourceCode(ClassMeta classMeta, ConstructorMeta constructorMeta) {
+		// TODO better implementation
 		StringBuilder buf = new StringBuilder();
 		if (constructorMeta == null) {
 			buf.append(StringValue.Tab);
@@ -97,8 +97,7 @@ public class DefaultConstructorGenerator implements ConstructorGenerator {
 	}
 
 	ConstructorMeta getFirstConstructor(ClassMeta classMeta) {
-		if (classMeta.constructors == null
-				|| classMeta.constructors.size() == 0) {
+		if (classMeta.constructors == null || classMeta.constructors.size() == 0) {
 			return null;
 		}
 		for (ConstructorMeta constructor : classMeta.constructors) {
