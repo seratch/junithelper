@@ -15,7 +15,11 @@
  */
 package org.junithelper.core.config;
 
+import org.junithelper.core.config.extension.ExtConfiguration;
+
 public class Configuration {
+
+	public ExtConfiguration extConfiguration = new ExtConfiguration();
 
 	public String language = "en";
 
