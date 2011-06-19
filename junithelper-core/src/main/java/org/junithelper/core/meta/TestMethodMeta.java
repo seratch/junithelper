@@ -15,6 +15,8 @@
  */
 package org.junithelper.core.meta;
 
+import org.junithelper.core.config.extension.ExtArgPattern;
+
 public class TestMethodMeta {
 
 	public boolean isTypeTest;
@@ -24,6 +26,8 @@ public class TestMethodMeta {
 	public ClassMeta classMeta;
 
 	public MethodMeta methodMeta;
+
+	public ExtArgPattern extArgPattern;
 
 	public ExceptionMeta testingTargetException;
 

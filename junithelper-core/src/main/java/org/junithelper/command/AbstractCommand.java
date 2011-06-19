@@ -15,8 +15,16 @@
  */
 package org.junithelper.command;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.ConfigurationLoader;
+import org.junithelper.core.config.extension.ExtConfigurationLoader;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.file.FileSearcher;
 import org.junithelper.core.file.impl.CommonsIOFileSearcher;
@@ -26,19 +34,18 @@ import org.junithelper.core.util.IOUtil;
 import org.junithelper.core.util.Stdout;
 import org.junithelper.core.util.UniversalDetectorUtil;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-
 public abstract class AbstractCommand {
 
 	protected static Configuration overrideConfiguration(Configuration config) throws Exception {
 		String configFile = System.getProperty("junithelper.configProperties");
 		if (configFile != null) {
 			config = new ConfigurationLoader().load(configFile);
+		}
+		String exgConfigFile = System.getProperty("junithelper.generatorExtXML");
+		if (exgConfigFile != null) {
+			config.extConfiguration = new ExtConfigurationLoader().load(exgConfigFile);
+		} else if (new File(ExtConfigurationLoader.EXT_CONFIGURATION_XML).exists()) {
+			config.extConfiguration = new ExtConfigurationLoader().load(ExtConfigurationLoader.EXT_CONFIGURATION_XML);
 		}
 		return config;
 	}
@@ -94,8 +101,7 @@ public abstract class AbstractCommand {
 			javaFiles = fileSearcher.searchFilesRecursivelyByName(dirOrFile, RegExp.FileExtension.JavaFile);
 			for (File file : javaFiles) {
 				String encoding = UniversalDetectorUtil.getDetectedEncoding(file);
-				ClassMeta classMeta = extractor.extract(IOUtil.readAsString(
-						new FileInputStream(file), encoding));
+				ClassMeta classMeta = extractor.extract(IOUtil.readAsString(new FileInputStream(file), encoding));
 				if (!classMeta.name.matches(".*Test$") && !classMeta.isAbstract) {
 					dest.add(file);
 				}
@@ -105,14 +111,11 @@ public abstract class AbstractCommand {
 	}
 
 	protected static String getDirectoryPathOfProductSourceCode(Configuration config) {
-		return "/" + config.directoryPathOfProductSourceCode.replaceFirst("^/", "").replaceFirst("/$", "")
-				+ "/";
+		return "/" + config.directoryPathOfProductSourceCode.replaceFirst("^/", "").replaceFirst("/$", "") + "/";
 	}
 
-	protected static String getDirectoryPathOfTestSourceCode(
-			Configuration config) {
-		return "/" + config.directoryPathOfTestSourceCode.replaceFirst("^/", "").replaceFirst("/$", "")
-				+ "/";
+	protected static String getDirectoryPathOfTestSourceCode(Configuration config) {
+		return "/" + config.directoryPathOfTestSourceCode.replaceFirst("^/", "").replaceFirst("/$", "") + "/";
 	}
 
 }

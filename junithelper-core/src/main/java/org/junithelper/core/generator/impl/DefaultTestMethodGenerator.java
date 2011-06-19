@@ -17,11 +17,13 @@ package org.junithelper.core.generator.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.JUnitVersion;
 import org.junithelper.core.config.MessageValue;
 import org.junithelper.core.config.MockObjectFramework;
 import org.junithelper.core.config.TestingPatternExplicitComment;
+import org.junithelper.core.config.extension.ExtArgPattern;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
 import org.junithelper.core.generator.ConstructorGenerator;
@@ -114,6 +116,13 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 			buf.append(config.testMethodName.exceptionAreaDelimiter);
 			buf.append(exception.nameInMethodName);
 		}
+		// generator-ext
+		if (testMethodMeta.extArgPattern != null) {
+			buf.append(config.testMethodName.basicDelimiter);
+			buf.append(testMethodMeta.extArgPattern.extArg.getCanonicalClassNameInMethodName());
+			buf.append("Is");
+			buf.append(testMethodMeta.extArgPattern.getNameWhichFirstCharIsUpper());
+		}
 		return buf.toString();
 	}
 
@@ -152,6 +161,7 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 			appendTabs(buf, 1);
 			buf.append("public void ");
 		}
+		// test method signature
 		buf.append(getTestMethodNamePrefix(testMethodMeta, testMethodMeta.testingTargetException));
 		boolean isThrowableRequired = false;
 		if (testMethodMeta.methodMeta != null && testMethodMeta.methodMeta.throwsExceptions != null) {
@@ -338,6 +348,20 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 		int argsLen = testMethodMeta.methodMeta.argTypes.size();
 		if (argsLen > 0) {
 			for (int i = 0; i < argsLen; i++) {
+
+				ExtArgPattern extArgPattern = testMethodMeta.extArgPattern;
+				// extension : pre-assign
+				if (extArgPattern != null && extArgPattern.preAssignCode != null
+						&& extArgPattern.preAssignCode.trim().length() > 0) {
+					String[] lines = extArgPattern.preAssignCode.split(StringValue.Semicolon);
+					for (String line : lines) {
+						appendTabs(buf, 2);
+						buf.append(line);
+						buf.append(StringValue.Semicolon);
+						appendCRLF(buf);
+					}
+				}
+
 				appendTabs(buf, 2);
 				if (config.mockObjectFramework == MockObjectFramework.JMock2) {
 					buf.append("final ");
@@ -349,9 +373,30 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 				buf.append(" ");
 				buf.append(argName);
 				buf.append(" = ");
-				buf.append(getArgValue(testMethodMeta, argTypeMeta, argName));
-				buf.append(StringValue.Semicolon);
+				// extension : assign
+				if (extArgPattern != null && extArgPattern.assignCode != null) {
+					buf.append(extArgPattern.assignCode.trim());
+					if (!extArgPattern.assignCode.endsWith(StringValue.Semicolon)) {
+						buf.append(StringValue.Semicolon);
+					}
+				} else {
+					buf.append(getArgValue(testMethodMeta, argTypeMeta, argName));
+					buf.append(StringValue.Semicolon);
+				}
 				appendCRLF(buf);
+
+				// extension : post-assign
+				if (extArgPattern != null && extArgPattern.postAssignCode != null
+						&& extArgPattern.postAssignCode.trim().length() > 0) {
+					String[] lines = extArgPattern.postAssignCode.replaceAll("\\{arg\\}", argName).split(
+							StringValue.Semicolon);
+					for (String line : lines) {
+						appendTabs(buf, 2);
+						buf.append(line);
+						buf.append(StringValue.Semicolon);
+						appendCRLF(buf);
+					}
+				}
 			}
 		}
 	}

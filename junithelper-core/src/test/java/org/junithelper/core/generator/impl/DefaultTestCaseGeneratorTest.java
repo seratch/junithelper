@@ -2,11 +2,16 @@ package org.junithelper.core.generator.impl;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
+
 import java.util.List;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.JUnitVersion;
 import org.junithelper.core.config.TestingTarget;
+import org.junithelper.core.config.extension.ExtArg;
+import org.junithelper.core.config.extension.ExtArgPattern;
 import org.junithelper.core.meta.AccessModifier;
 import org.junithelper.core.meta.ArgTypeMeta;
 import org.junithelper.core.meta.ClassMeta;
@@ -20,9 +25,16 @@ import org.junithelper.core.util.UniversalDetectorUtil;
 
 public class DefaultTestCaseGeneratorTest {
 
-	Configuration config = new Configuration();
-	DefaultTestCaseGenerator target = new DefaultTestCaseGenerator(config);
-	ClassMetaExtractor classMetaExtractor = new ClassMetaExtractor(config);
+	Configuration config;
+	DefaultTestCaseGenerator target;
+	ClassMetaExtractor classMetaExtractor;
+
+	@Before
+	public void setUp() {
+		config = new Configuration();
+		target = new DefaultTestCaseGenerator(config);
+		classMetaExtractor = new ClassMetaExtractor(config);
+	}
 
 	@Test
 	public void type() throws Exception {
@@ -174,6 +186,28 @@ public class DefaultTestCaseGeneratorTest {
 				IOUtil.getResourceAsStream("parser/impl/TrimFilterManagerTest.txt"), encoding);
 		List<TestMethodMeta> actual = target.getLackingTestMethodMetaList(currentTestCaseSourceCode);
 		assertEquals("", 0, actual.size());
+	}
+
+	@Test
+	public void getLackingTestMethodMetaList_A$String_Ext() throws Exception {
+		// ext config
+		ExtArg string = new ExtArg("java.lang.String");
+		ExtArgPattern stringPattern1 = new ExtArgPattern(string, "Null");
+		string.patterns.add(stringPattern1);
+		ExtArgPattern stringPattern2 = new ExtArgPattern(string, "Hoge");
+		stringPattern2.assignCode = "\"hoge\"";
+		string.patterns.add(stringPattern2);
+		config.extConfiguration.extArgs.add(string);
+
+		String sourceCodeString = "package hoge.foo; import java.util.List; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\") } public void overload(String str) { } public void overload(String str, Object obj) { } }";
+		ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
+		target.initialize(targetClassMeta);
+		String currentTestCaseSourceCode = "package hoge.foo; public class SampleTest extends TestCase { public void test_overload_A$String$Object() throws Exception { } }";
+		List<TestMethodMeta> actual = target.getLackingTestMethodMetaList(currentTestCaseSourceCode);
+		assertEquals(10, actual.size());
+		assertEquals(true, actual.get(0).isTypeTest);
+		assertEquals(true, actual.get(1).isInstantiationTest);
+		assertEquals("doSomething", actual.get(2).methodMeta.name);
 	}
 
 	@Test

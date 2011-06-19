@@ -42,7 +42,7 @@ public class ExtConfigurationParserHandler extends DefaultHandler {
 
 	@Override
 	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException {
-		if (name.equals("generator-ext")) {
+		if (name.equals("junithelper-extension")) {
 			config = new ExtConfiguration();
 		} else if (name.equals("arg")) {
 			if (attributes.getValue("class") != null) {

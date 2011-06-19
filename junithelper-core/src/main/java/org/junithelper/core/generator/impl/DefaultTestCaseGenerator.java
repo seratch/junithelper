@@ -19,17 +19,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.JUnitVersion;
 import org.junithelper.core.config.MessageValue;
 import org.junithelper.core.config.MockObjectFramework;
 import org.junithelper.core.config.TestingTarget;
+import org.junithelper.core.config.extension.ExtArg;
+import org.junithelper.core.config.extension.ExtArgPattern;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
 import org.junithelper.core.filter.TrimFilterUtil;
 import org.junithelper.core.generator.TestCaseGenerator;
 import org.junithelper.core.generator.TestMethodGenerator;
 import org.junithelper.core.meta.AccessModifier;
+import org.junithelper.core.meta.ArgTypeMeta;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.ConstructorMeta;
 import org.junithelper.core.meta.ExceptionMeta;
@@ -118,36 +122,99 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 			TestMethodMeta testMethodMeta = new TestMethodMeta();
 			testMethodMeta.methodMeta = methodMeta;
 			String testMethodNamePrefix = testMethodGenerator.getTestMethodNamePrefix(testMethodMeta);
-			// the test method is not already exist
-			String regExpForDiscriminateOverloadMethods = "";
-			if (!config.testMethodName.isReturnRequired) {
-				String argDelimiter = Matcher.quoteReplacement(config.testMethodName.argsAreaDelimiter);
-				regExpForDiscriminateOverloadMethods = "[^" + argDelimiter + "]";
-			}
-			String regExpForCheckAlreadyExists = RegExp.Anything_ZeroOrMore_Min + testMethodNamePrefix
-					+ regExpForDiscriminateOverloadMethods + RegExp.Anything_ZeroOrMore_Min;
-			regExpForCheckAlreadyExists = Matcher.quoteReplacement(regExpForCheckAlreadyExists);
+
 			try {
-				if (!checkTargetSourceCode.matches(regExpForCheckAlreadyExists)) {
-					// exclude accessors
-					if (config.target.isAccessorExcluded && methodMeta.isAccessor) {
-						continue;
+				// exclude accessors
+				if (config.target.isAccessorExcluded && methodMeta.isAccessor) {
+					continue;
+				}
+				// testing target access modifier
+				if (!isPublicMethodAndTestingRequired(methodMeta, config.target)
+						&& !isProtectedMethodAndTestingRequired(methodMeta, config.target)
+						&& !isPackageLocalMethodAndTestingRequired(methodMeta, config.target)) {
+					continue;
+				}
+				// at least one test method for the target
+				// the test method is not already exist
+				StringBuilder IS_ALREADY_EXISTS = new StringBuilder();
+				IS_ALREADY_EXISTS.append(RegExp.Anything_ZeroOrMore_Min);
+				IS_ALREADY_EXISTS.append(testMethodNamePrefix);
+				if (!config.testMethodName.isReturnRequired) {
+					String argDelimiter = Matcher.quoteReplacement(config.testMethodName.argsAreaDelimiter);
+					IS_ALREADY_EXISTS.append("[^");
+					IS_ALREADY_EXISTS.append(argDelimiter);
+					IS_ALREADY_EXISTS.append("]");
+				}
+				IS_ALREADY_EXISTS.append(RegExp.Anything_ZeroOrMore_Min);
+				if (!checkTargetSourceCode.matches(Matcher.quoteReplacement(IS_ALREADY_EXISTS.toString()))) {
+					// testing normal pattern
+					dest.add(testMethodGenerator.getTestMethodMeta(methodMeta));
+					// testing exception patterns
+					if (config.target.isExceptionPatternRequired) {
+						for (ExceptionMeta exceptionMeta : methodMeta.throwsExceptions) {
+							TestMethodMeta newOne = testMethodGenerator.getTestMethodMeta(methodMeta, exceptionMeta);
+							dest.add(newOne);
+						}
 					}
-					// testing target access modifier
-					if (isPublicMethodAndTestingRequired(methodMeta, config.target)
-							|| isProtectedMethodAndTestingRequired(methodMeta, config.target)
-							|| isPackageLocalMethodAndTestingRequired(methodMeta, config.target)) {
-						dest.add(testMethodGenerator.getTestMethodMeta(methodMeta));
-						if (config.target.isExceptionPatternRequired) {
-							// testing exception patterns
-							for (ExceptionMeta exceptionMeta : methodMeta.throwsExceptions) {
-								TestMethodMeta newOne = testMethodGenerator
-										.getTestMethodMeta(methodMeta, exceptionMeta);
-								dest.add(newOne);
+				}
+				// if using extension, check existence of the patterns
+				List<ExtArg> extArgs = config.extConfiguration.extArgs;
+				for (ExtArg extArg : extArgs) {
+					// import and className
+					for (ArgTypeMeta argType : methodMeta.argTypes) {
+						boolean areArgAndExtArgMatched = false;
+						if (argType.name.equals(extArg.canonicalClassName)
+								|| argType.name.equals(extArg.canonicalClassName.replace("java.lang.", ""))) {
+							// canonical class name
+							// e.g.
+							// "com.example.ArgBean"
+							areArgAndExtArgMatched = true;
+						} else {
+							// imported type
+							// e.g.
+							// (same package)
+							// import com.example.*;
+							// import com.example.ArgBean;
+							// "ArgBean"
+							String[] extSplitted = extArg.canonicalClassName.split("\\.");
+							String extClassName = extSplitted[extSplitted.length - 1];
+							if (argType.name.equals(extClassName)) {
+								String extInSamplePackage = targetClassMeta.packageName + "." + extClassName;
+								if (extInSamplePackage.equals(extArg.canonicalClassName)) {
+									areArgAndExtArgMatched = true;
+								} else {
+									for (String imported : targetClassMeta.importedList) {
+										String target = extArg.canonicalClassName.replaceFirst(extClassName, "");
+										if (imported.matches(extArg.canonicalClassName)
+												|| imported.matches(target + ".+")) {
+											areArgAndExtArgMatched = true;
+											break;
+										}
+									}
+								}
+							}
+						}
+						if (areArgAndExtArgMatched) {
+							for (ExtArgPattern pattern : extArg.patterns) {
+								// extension pattern is not matched
+								// e.g.
+								// .*?doSomething_A$String_StringIsNull.*?
+								String IS_ALREADY_EXISTS_FOR_PATTERN = RegExp.Anything_ZeroOrMore_Min
+										+ testMethodNamePrefix + config.testMethodName.basicDelimiter
+										+ extArg.getCanonicalClassNameInMethodName() + "Is"
+										+ pattern.getNameWhichFirstCharIsUpper() + RegExp.Anything_ZeroOrMore_Min;
+								IS_ALREADY_EXISTS_FOR_PATTERN = Matcher.quoteReplacement(IS_ALREADY_EXISTS_FOR_PATTERN);
+								if (!checkTargetSourceCode.matches(IS_ALREADY_EXISTS_FOR_PATTERN)) {
+									// testing target access modifier
+									TestMethodMeta meta = testMethodGenerator.getTestMethodMeta(methodMeta, null);
+									meta.extArgPattern = pattern;
+									dest.add(meta);
+								}
 							}
 						}
 					}
 				}
+
 			} catch (Exception e) {
 				String errorMessage = "  I'm sorry, \"" + methodMeta.name + "\" is skipped because of internal error("
 						+ e.getClass().getName() + "," + e.getLocalizedMessage() + ").";
@@ -187,6 +254,18 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 			buf.append(";");
 			buf.append(StringValue.CarriageReturn);
 			buf.append(StringValue.LineFeed);
+		}
+		// extension import
+		for (ExtArg extArg : config.extConfiguration.extArgs) {
+			for (String extArgImport : extArg.importList) {
+				if (!buf.toString().contains("import " + extArgImport + ";")) {
+					buf.append("import ");
+					buf.append(extArgImport);
+					buf.append(";");
+					buf.append(StringValue.CarriageReturn);
+					buf.append(StringValue.LineFeed);
+				}
+			}
 		}
 		// JUnit 3.x or specified super class
 		if (config.junitVersion == JUnitVersion.version3
