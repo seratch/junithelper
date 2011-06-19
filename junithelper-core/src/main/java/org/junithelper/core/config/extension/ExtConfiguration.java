@@ -18,7 +18,18 @@ package org.junithelper.core.config.extension;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junithelper.core.config.Configuration;
+
 public class ExtConfiguration {
+
+	public ExtConfiguration() {
+	}
+
+	public ExtConfiguration(Configuration config) {
+		this.config = config;
+	}
+
+	public Configuration config;
 
 	public List<ExtInstantiation> extInstantiations = new ArrayList<ExtInstantiation>();
 

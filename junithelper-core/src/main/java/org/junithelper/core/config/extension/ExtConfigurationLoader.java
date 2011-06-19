@@ -24,8 +24,6 @@ import javax.xml.parsers.SAXParserFactory;
 
 public class ExtConfigurationLoader {
 
-	public static final String EXT_CONFIGURATION_XML = "junithelper-extension.xml";
-
 	public ExtConfiguration load(String filepath) throws Exception {
 		return load(new FileInputStream(new File(filepath)));
 	}

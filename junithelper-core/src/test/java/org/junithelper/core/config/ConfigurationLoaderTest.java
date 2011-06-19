@@ -1,12 +1,12 @@
 package org.junithelper.core.config;
 
-import org.junit.Test;
-import org.junithelper.core.util.IOUtil;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 
 import java.io.InputStream;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import org.junit.Test;
+import org.junithelper.core.util.IOUtil;
 
 public class ConfigurationLoaderTest {
 
@@ -30,6 +30,7 @@ public class ConfigurationLoaderTest {
 		Configuration actual = target.load(filepath);
 		// then
 		assertNotNull(actual);
+		assertThat(actual.isExtensionEnabled, is(equalTo(false)));
 	}
 
 	@Test
@@ -50,8 +51,7 @@ public class ConfigurationLoaderTest {
 	public void load_A$InputStream() throws Exception {
 		ConfigurationLoader target = new ConfigurationLoader();
 		// given
-		InputStream is = IOUtil
-				.getResourceAsStream("junithelper-config.properties");
+		InputStream is = IOUtil.getResourceAsStream("junithelper-config.properties");
 		// when
 		Configuration actual = target.load(is);
 		// then

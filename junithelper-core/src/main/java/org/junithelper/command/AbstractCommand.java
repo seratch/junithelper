@@ -41,11 +41,8 @@ public abstract class AbstractCommand {
 		if (configFile != null) {
 			config = new ConfigurationLoader().load(configFile);
 		}
-		String exgConfigFile = System.getProperty("junithelper.generatorExtXML");
-		if (exgConfigFile != null) {
-			config.extConfiguration = new ExtConfigurationLoader().load(exgConfigFile);
-		} else if (new File(ExtConfigurationLoader.EXT_CONFIGURATION_XML).exists()) {
-			config.extConfiguration = new ExtConfigurationLoader().load(ExtConfigurationLoader.EXT_CONFIGURATION_XML);
+		if (new File(config.extensionConfigXML).exists()) {
+			config.extConfiguration = new ExtConfigurationLoader().load(config.extensionConfigXML);
 		}
 		return config;
 	}

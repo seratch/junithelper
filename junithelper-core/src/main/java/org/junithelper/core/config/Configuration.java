@@ -19,7 +19,11 @@ import org.junithelper.core.config.extension.ExtConfiguration;
 
 public class Configuration {
 
-	public ExtConfiguration extConfiguration = new ExtConfiguration();
+	public boolean isExtensionEnabled = false;
+
+	public String extensionConfigXML = "junithelper-extension.xml";
+
+	public ExtConfiguration extConfiguration = new ExtConfiguration(this);
 
 	public String language = "en";
 
