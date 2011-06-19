@@ -26,7 +26,6 @@ import org.junithelper.core.config.MessageValue;
 import org.junithelper.core.config.MockObjectFramework;
 import org.junithelper.core.config.TestingPatternExplicitComment;
 import org.junithelper.core.config.extension.ExtArgPattern;
-import org.junithelper.core.config.extension.ExtReturn;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
 import org.junithelper.core.generator.ConstructorGenerator;
@@ -119,7 +118,7 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 			buf.append(config.testMethodName.exceptionAreaDelimiter);
 			buf.append(exception.nameInMethodName);
 		}
-		// generator-ext
+		// extension arg patterns
 		if (testMethodMeta.extArgPattern != null) {
 			buf.append(config.testMethodName.basicDelimiter);
 			buf.append(testMethodMeta.extArgPattern.extArg.getCanonicalClassNameInMethodName());
@@ -164,7 +163,6 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 			appendTabs(buf, 1);
 			buf.append("public void ");
 		}
-		// test method signature
 		buf.append(getTestMethodNamePrefix(testMethodMeta, testMethodMeta.testingTargetException));
 		boolean isThrowableRequired = false;
 		if (testMethodMeta.methodMeta != null && testMethodMeta.methodMeta.throwsExceptions != null) {
@@ -187,7 +185,9 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 		appendCRLF(buf);
 
 		if (testMethodMeta.isTypeTest) {
+			// --------------------------
 			// testing type safe
+
 			appendTabs(buf, 2);
 			if (config.junitVersion == JUnitVersion.version3) {
 				buf.append("assertNotNull(");
@@ -201,7 +201,9 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 			appendCRLF(buf);
 
 		} else if (testMethodMeta.isInstantiationTest) {
+			// --------------------------
 			// testing instantiation
+
 			String instantiation = constructorGenerator.getFirstInstantiationSourceCode(testMethodMeta.classMeta);
 			buf.append(instantiation);
 			appendTabs(buf, 2);
@@ -213,6 +215,8 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 			appendCRLF(buf);
 
 		} else if (config.isTemplateImplementationRequired) {
+			// --------------------------
+			// testing template
 
 			// Arrange or Given
 			appendTestingPatternExplicitComment(buf, "Arrange", 2);
@@ -271,27 +275,20 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 				appendMockVerifying(buf, 2);
 				// check return value
 				if (testMethodMeta.methodMeta.returnType != null && testMethodMeta.methodMeta.returnType.name != null) {
-					// customized by extension
-					boolean isExtReturnUsed = false;
-					List<ExtReturn> extReturns = config.extConfiguration.extReturns;
-					if (extReturns != null && extReturns.size() > 0) {
-						for (ExtReturn extReturn : extReturns) {
-							// The return type matches ext return type
-							if (isCanonicalClassNameUsed(extReturn.canonicalClassName,
-									testMethodMeta.methodMeta.returnType.name, targetClassMeta)) {
-								for (String assertion : extReturn.asserts) {
-									appendTabs(buf, 2);
-									buf.append(assertion);
-									if (!assertion.endsWith(StringValue.Semicolon)) {
-										buf.append(StringValue.Semicolon);
-									}
-									appendCRLF(buf);
+					if (testMethodMeta.extReturn != null) {
+						// The return type matches ext return type
+						if (isCanonicalClassNameUsed(testMethodMeta.extReturn.canonicalClassName,
+								testMethodMeta.methodMeta.returnType.name, targetClassMeta)) {
+							for (String assertion : testMethodMeta.extReturn.asserts) {
+								appendTabs(buf, 2);
+								buf.append(assertion);
+								if (!assertion.endsWith(StringValue.Semicolon)) {
+									buf.append(StringValue.Semicolon);
 								}
-								isExtReturnUsed = true;
+								appendCRLF(buf);
 							}
 						}
-					}
-					if (!isExtReturnUsed) {
+					} else {
 						appendTabs(buf, 2);
 						buf.append(testMethodMeta.methodMeta.returnType.name);
 						buf.append(" expected = ");

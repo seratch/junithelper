@@ -16,6 +16,7 @@
 package org.junithelper.core.meta;
 
 import org.junithelper.core.config.extension.ExtArgPattern;
+import org.junithelper.core.config.extension.ExtReturn;
 
 public class TestMethodMeta {
 
@@ -28,6 +29,8 @@ public class TestMethodMeta {
 	public MethodMeta methodMeta;
 
 	public ExtArgPattern extArgPattern;
+
+	public ExtReturn extReturn;
 
 	public ExceptionMeta testingTargetException;
 

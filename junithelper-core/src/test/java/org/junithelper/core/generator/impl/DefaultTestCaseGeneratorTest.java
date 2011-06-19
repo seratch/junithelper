@@ -249,6 +249,19 @@ public class DefaultTestCaseGeneratorTest {
 	}
 
 	@Test
+	public void getLackingTestMethodMetaList_A$String_Overload() throws Exception {
+		String sourceCodeString = "public class Sample { public void doSomething(String str) throws Throwable {} public void doSomething() throws Throwable {} }";
+		ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
+		target.initialize(targetClassMeta);
+		String currentTestCaseSourceCode = "package hoge.foo; public class SampleTest extends TestCase { public void test_doSomething_A$String() throws Exception { } }";
+		List<TestMethodMeta> actual = target.getLackingTestMethodMetaList(currentTestCaseSourceCode);
+		assertEquals(3, actual.size());
+		assertEquals(true, actual.get(0).isTypeTest);
+		assertEquals(true, actual.get(1).isInstantiationTest);
+		assertEquals("doSomething", actual.get(2).methodMeta.name);
+	}
+
+	@Test
 	public void getNewTestCaseSourceCode_A$_JUnit3() throws Exception {
 		Configuration config = new Configuration();
 		config.junitVersion = JUnitVersion.version3;

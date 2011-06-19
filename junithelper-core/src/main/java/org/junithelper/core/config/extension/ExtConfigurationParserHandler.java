@@ -23,6 +23,8 @@ public class ExtConfigurationParserHandler extends DefaultHandler {
 
 	private ExtConfiguration config;
 
+	private ExtInstantiation currentInstantiation;
+
 	private ExtArg currentArg;
 
 	private ExtArgPattern currentArgPattern;
@@ -44,6 +46,12 @@ public class ExtConfigurationParserHandler extends DefaultHandler {
 	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException {
 		if (name.equals("junithelper-extension")) {
 			config = new ExtConfiguration();
+		} else if (name.equals("instantiation")) {
+			if (attributes.getValue("class") != null) {
+				String className = attributes.getValue("class");
+				currentInstantiation = new ExtInstantiation(className);
+				return;
+			}
 		} else if (name.equals("arg")) {
 			if (attributes.getValue("class") != null) {
 				String className = attributes.getValue("class");
@@ -67,7 +75,10 @@ public class ExtConfigurationParserHandler extends DefaultHandler {
 
 	@Override
 	public void endElement(String uri, String localName, String name) throws SAXException {
-		if (name.equals("arg")) {
+		if (name.equals("instantiation")) {
+			config.extInstantiations.add(currentInstantiation);
+			currentInstantiation = null;
+		} else if (name.equals("arg")) {
 			config.extArgs.add(currentArg);
 			currentArg = null;
 		} else if (name.equals("pattern")) {
@@ -77,13 +88,31 @@ public class ExtConfigurationParserHandler extends DefaultHandler {
 			config.extReturns.add(currentReturn);
 			currentReturn = null;
 		} else if (name.equals("import")) {
-			currentArg.importList.add(tempValue);
+			if (currentInstantiation != null) {
+				currentInstantiation.importList.add(tempValue);
+			} else if (currentArg != null) {
+				currentArg.importList.add(tempValue);
+			} else if (currentReturn != null) {
+				currentReturn.importList.add(tempValue);
+			}
 		} else if (name.equals("pre-assign")) {
-			currentArgPattern.preAssignCode = tempValue;
+			if (currentInstantiation != null) {
+				currentInstantiation.preAssignCode = tempValue;
+			} else if (currentArg != null) {
+				currentArgPattern.preAssignCode = tempValue;
+			}
 		} else if (name.equals("assign")) {
-			currentArgPattern.assignCode = tempValue;
+			if (currentInstantiation != null) {
+				currentInstantiation.assignCode = tempValue;
+			} else if (currentArg != null) {
+				currentArgPattern.assignCode = tempValue;
+			}
 		} else if (name.equals("post-assign")) {
-			currentArgPattern.postAssignCode = tempValue;
+			if (currentInstantiation != null) {
+				currentInstantiation.postAssignCode = tempValue;
+			} else if (currentArg != null) {
+				currentArgPattern.postAssignCode = tempValue;
+			}
 		} else if (name.equals("assert")) {
 			currentReturn.asserts.add(tempValue);
 		}
