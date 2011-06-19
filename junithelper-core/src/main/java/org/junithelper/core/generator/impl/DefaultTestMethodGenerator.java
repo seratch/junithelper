@@ -15,6 +15,8 @@
  */
 package org.junithelper.core.generator.impl;
 
+import static org.junithelper.core.generator.impl.DefaultGeneratorUtil.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +26,7 @@ import org.junithelper.core.config.MessageValue;
 import org.junithelper.core.config.MockObjectFramework;
 import org.junithelper.core.config.TestingPatternExplicitComment;
 import org.junithelper.core.config.extension.ExtArgPattern;
+import org.junithelper.core.config.extension.ExtReturn;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
 import org.junithelper.core.generator.ConstructorGenerator;
@@ -268,25 +271,46 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 				appendMockVerifying(buf, 2);
 				// check return value
 				if (testMethodMeta.methodMeta.returnType != null && testMethodMeta.methodMeta.returnType.name != null) {
-					appendTabs(buf, 2);
-					buf.append(testMethodMeta.methodMeta.returnType.name);
-					buf.append(" expected = ");
-					if (PrimitiveTypeUtil.isPrimitive(testMethodMeta.methodMeta.returnType.name)) {
-						buf.append(PrimitiveTypeUtil.getTypeDefaultValue(testMethodMeta.methodMeta.returnType.name));
-					} else {
-						buf.append("null");
+					// customized by extension
+					boolean isExtReturnUsed = false;
+					List<ExtReturn> extReturns = config.extConfiguration.extReturns;
+					if (extReturns != null && extReturns.size() > 0) {
+						for (ExtReturn extReturn : extReturns) {
+							// The return type matches ext return type
+							if (isCanonicalClassNameUsed(extReturn.canonicalClassName,
+									testMethodMeta.methodMeta.returnType.name, targetClassMeta)) {
+								for (String assertion : extReturn.asserts) {
+									appendTabs(buf, 2);
+									buf.append(assertion);
+									if (!assertion.endsWith(StringValue.Semicolon)) {
+										buf.append(StringValue.Semicolon);
+									}
+									appendCRLF(buf);
+								}
+								isExtReturnUsed = true;
+							}
+						}
 					}
-					buf.append(StringValue.Semicolon);
-					appendCRLF(buf);
-					// assertion
-					appendTabs(buf, 2);
-					if (config.junitVersion == JUnitVersion.version3) {
-						buf.append("assertEquals(expected, actual)");
-					} else {
-						buf.append("assertThat(actual, is(equalTo(expected)))");
+					if (!isExtReturnUsed) {
+						appendTabs(buf, 2);
+						buf.append(testMethodMeta.methodMeta.returnType.name);
+						buf.append(" expected = ");
+						if (PrimitiveTypeUtil.isPrimitive(testMethodMeta.methodMeta.returnType.name)) {
+							buf.append(PrimitiveTypeUtil.getTypeDefaultValue(testMethodMeta.methodMeta.returnType.name));
+						} else {
+							buf.append("null");
+						}
+						buf.append(StringValue.Semicolon);
+						appendCRLF(buf);
+						appendTabs(buf, 2);
+						if (config.junitVersion == JUnitVersion.version3) {
+							buf.append("assertEquals(expected, actual)");
+						} else {
+							buf.append("assertThat(actual, is(equalTo(expected)))");
+						}
+						buf.append(StringValue.Semicolon);
+						appendCRLF(buf);
 					}
-					buf.append(StringValue.Semicolon);
-					appendCRLF(buf);
 				}
 			} else {
 				// --------------------------------

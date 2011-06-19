@@ -15,6 +15,8 @@
  */
 package org.junithelper.core.generator.impl;
 
+import static org.junithelper.core.generator.impl.DefaultGeneratorUtil.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -24,7 +26,6 @@ import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.JUnitVersion;
 import org.junithelper.core.config.MessageValue;
 import org.junithelper.core.config.MockObjectFramework;
-import org.junithelper.core.config.TestingTarget;
 import org.junithelper.core.config.extension.ExtArg;
 import org.junithelper.core.config.extension.ExtArgPattern;
 import org.junithelper.core.constant.RegExp;
@@ -162,39 +163,7 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 				for (ExtArg extArg : extArgs) {
 					// import and className
 					for (ArgTypeMeta argType : methodMeta.argTypes) {
-						boolean areArgAndExtArgMatched = false;
-						if (argType.name.equals(extArg.canonicalClassName)
-								|| argType.name.equals(extArg.canonicalClassName.replace("java.lang.", ""))) {
-							// canonical class name
-							// e.g.
-							// "com.example.ArgBean"
-							areArgAndExtArgMatched = true;
-						} else {
-							// imported type
-							// e.g.
-							// (same package)
-							// import com.example.*;
-							// import com.example.ArgBean;
-							// "ArgBean"
-							String[] extSplitted = extArg.canonicalClassName.split("\\.");
-							String extClassName = extSplitted[extSplitted.length - 1];
-							if (argType.name.equals(extClassName)) {
-								String extInSamplePackage = targetClassMeta.packageName + "." + extClassName;
-								if (extInSamplePackage.equals(extArg.canonicalClassName)) {
-									areArgAndExtArgMatched = true;
-								} else {
-									for (String imported : targetClassMeta.importedList) {
-										String target = extArg.canonicalClassName.replaceFirst(extClassName, "");
-										if (imported.matches(extArg.canonicalClassName)
-												|| imported.matches(target + ".+")) {
-											areArgAndExtArgMatched = true;
-											break;
-										}
-									}
-								}
-							}
-						}
-						if (areArgAndExtArgMatched) {
+						if (isCanonicalClassNameUsed(extArg.canonicalClassName, argType.name, targetClassMeta)) {
 							for (ExtArgPattern pattern : extArg.patterns) {
 								// extension pattern is not matched
 								// e.g.
@@ -222,18 +191,6 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 			}
 		}
 		return dest;
-	}
-
-	boolean isPublicMethodAndTestingRequired(MethodMeta methodMeta, TestingTarget target) {
-		return methodMeta.accessModifier == AccessModifier.Public && target.isPublicMethodRequired;
-	}
-
-	boolean isProtectedMethodAndTestingRequired(MethodMeta methodMeta, TestingTarget target) {
-		return methodMeta.accessModifier == AccessModifier.Protected && target.isProtectedMethodRequired;
-	}
-
-	boolean isPackageLocalMethodAndTestingRequired(MethodMeta methodMeta, TestingTarget target) {
-		return methodMeta.accessModifier == AccessModifier.PackageLocal && target.isPackageLocalMethodRequired;
 	}
 
 	@Override
@@ -319,7 +276,7 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 		dest = dest.replaceFirst("}[^}]*$", "");
 		String lackingSourceCode = buf.toString();
 		dest += lackingSourceCode + "}\r\n";
-		dest = addRequiredImportList(dest);
+		dest = appendRequiredImportListToSourceCode(dest, targetClassMeta, config);
 		return dest;
 	}
 
@@ -335,7 +292,7 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 			String testCaseName = splittedArray[splittedArray.length - 1];
 			dest = dest.replaceFirst(classMeta.name + "\\s*\\{", classMeta.name + " extends " + testCaseName + " {");
 			config.junitVersion = JUnitVersion.version3;
-			dest = addRequiredImportList(dest, config);
+			dest = appendRequiredImportListToSourceCode(dest, targetClassMeta, config);
 		} else if (version == JUnitVersion.version4) {
 			dest = dest.replaceAll("public void test" + config.testMethodName.basicDelimiter,
 					"@Test \r\n\tpublic void ");
@@ -360,18 +317,15 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 				}
 			}
 			config.junitVersion = JUnitVersion.version4;
-			dest = addRequiredImportList(dest, config);
+			dest = appendRequiredImportListToSourceCode(dest, targetClassMeta, config);
 		}
 		return dest;
 	}
 
-	String addRequiredImportList(String src) {
-		return addRequiredImportList(src, config);
-	}
-
-	String addRequiredImportList(String src, Configuration config) {
-		String dest = src;
-		String oneline = TrimFilterUtil.doAllFilters(src);
+	static String appendRequiredImportListToSourceCode(String sourceCode, ClassMeta targetClassMeta,
+			Configuration config) {
+		String dest = sourceCode;
+		String oneline = TrimFilterUtil.doAllFilters(sourceCode);
 		StringBuilder importedListBuf = new StringBuilder();
 		for (String imported : targetClassMeta.importedList) {
 			String newOne = "import " + imported + ";";
@@ -407,7 +361,7 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 			appendIfNotExists(importedListBuf, oneline, "import static org.mockito.BDDMockito.*;");
 		}
 		if (importedListBuf.length() > 0) {
-			Matcher matcher = RegExp.PatternObject.PackageDefArea_Group.matcher(src.replaceAll(RegExp.CRLF,
+			Matcher matcher = RegExp.PatternObject.PackageDefArea_Group.matcher(sourceCode.replaceAll(RegExp.CRLF,
 					StringValue.Space));
 			if (matcher.find()) {
 				String packageDef = matcher.group(1);
@@ -420,19 +374,6 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 			}
 		}
 		return dest;
-
-	}
-
-	void appendIfNotExists(StringBuilder buf, String src, String importLine) {
-		String oneline = src.replaceAll(RegExp.CRLF, StringValue.Space);
-		importLine = importLine.replace(StringValue.CarriageReturn + StringValue.LineFeed, StringValue.Empty);
-		String importLineRegExp = importLine.replaceAll("\\s+", "\\\\s+").replaceAll("\\.", "\\\\.")
-				.replaceAll("\\*", "\\\\*");
-		if (!oneline.matches(RegExp.Anything_ZeroOrMore_Min + importLineRegExp + RegExp.Anything_ZeroOrMore_Min)) {
-			buf.append(importLine);
-			buf.append(StringValue.CarriageReturn);
-			buf.append(StringValue.LineFeed);
-		}
 	}
 
 }

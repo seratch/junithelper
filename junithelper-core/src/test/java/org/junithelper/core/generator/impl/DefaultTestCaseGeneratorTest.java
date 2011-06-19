@@ -9,13 +9,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.JUnitVersion;
-import org.junithelper.core.config.TestingTarget;
 import org.junithelper.core.config.extension.ExtArg;
 import org.junithelper.core.config.extension.ExtArgPattern;
 import org.junithelper.core.meta.AccessModifier;
 import org.junithelper.core.meta.ArgTypeMeta;
 import org.junithelper.core.meta.ClassMeta;
-import org.junithelper.core.meta.MethodMeta;
 import org.junithelper.core.meta.ReturnTypeMeta;
 import org.junithelper.core.meta.TestCaseMeta;
 import org.junithelper.core.meta.TestMethodMeta;
@@ -326,89 +324,6 @@ public class DefaultTestCaseGeneratorTest {
 		String actual = target.getUnifiedVersionTestCaseSourceCode(currentTestCaseSourceCode, version);
 		String expected = "package hoge;\r\n\r\nimport java.util.List;\r\nimport hoge.foo.Sample.*;\r\nimport static org.hamcrest.CoreMatchers.*;\r\nimport static org.junit.Assert.*;\r\nimport org.junit.Test;\r\n\r\n\r\n\r\npublic class SampleTest {\r\n\r\n\t@Test \r\n\tpublic void hogehoge() throws Excpetion {\r\n\t}\r\n\r\n }";
 		assertEquals(expected, actual);
-	}
-
-	@Test
-	public void addRequiredImportList_A$String() throws Exception {
-		String sourceCodeString = "package hoge.foo;\r\nimport java.util.List;\r\npublic class Sample {\r\n\r\n\tpublic Sample() {}\r\n\r\n\tpublic int doSomething(String str, long longValue) throws Throwable {\r\n\t\tSystem.out.println(\"aaaa\");\r\n\t}\r\n}";
-		ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
-		target.initialize(targetClassMeta);
-		String src = "package hoge;\r\n\r\n\r\npublic class SampleTest extends TestCase {\r\n\r\n}";
-		String actual = target.addRequiredImportList(src);
-		String expected = "package hoge;\r\n\r\nimport java.util.List;\r\nimport hoge.foo.Sample.*;\r\nimport static org.hamcrest.CoreMatchers.*;\r\nimport static org.junit.Assert.*;\r\nimport org.junit.Test;\r\n\r\n\r\npublic class SampleTest extends TestCase {\r\n\r\n}";
-		assertEquals(expected, actual);
-	}
-
-	@Test
-	public void addRequiredImportList_A$String$Configuration() throws Exception {
-		String sourceCodeString = "package hoge.foo;\r\nimport java.util.List;\r\npublic class Sample {\r\n\r\n\tpublic Sample() {}\r\n\r\n\tpublic int doSomething(String str, long longValue) throws Throwable {\r\n\t\tSystem.out.println(\"aaaa\");\r\n\t}\r\n}";
-		ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
-		target.initialize(targetClassMeta);
-		String src = "package hoge;\r\n\r\n\r\npublic class SampleTest extends TestCase {\r\n\r\n}";
-		String actual = target.addRequiredImportList(src, config);
-		String expected = "package hoge;\r\n\r\nimport java.util.List;\r\nimport hoge.foo.Sample.*;\r\nimport static org.hamcrest.CoreMatchers.*;\r\nimport static org.junit.Assert.*;\r\nimport org.junit.Test;\r\n\r\n\r\npublic class SampleTest extends TestCase {\r\n\r\n}";
-		assertEquals(expected, actual);
-	}
-
-	@Test
-	public void appendIfNotExists_A$StringBuilder$String$String_alradyExists() throws Exception {
-		StringBuilder buf = new StringBuilder();
-		String src = "package hoge.foo;\r\nimport junit.framework.TestCase;\r\n\r\npublic class Sample {\r\n\r\n}";
-		String importLine = "import junit.framework.TestCase;";
-		target.appendIfNotExists(buf, src, importLine);
-		assertEquals("", buf.toString());
-	}
-
-	@Test
-	public void appendIfNotExists_A$StringBuilder$String$String_notExists() throws Exception {
-		StringBuilder buf = new StringBuilder();
-		String src = "package hoge.foo;\r\nimport junit.framework.TestCase;\r\n\r\npublic class Sample {\r\n\r\n}";
-		String importLine = "import org.junit.Test;";
-		target.appendIfNotExists(buf, src, importLine);
-		target.appendIfNotExists(buf, src, importLine);
-		assertEquals("import org.junit.Test;\r\nimport org.junit.Test;\r\n", buf.toString());
-	}
-
-	@Test
-	public void appendIfNotExists_A$StringBuilder$String$String_staticImportAsssert() throws Exception {
-		StringBuilder buf = new StringBuilder();
-		String src = "package hoge.foo;\r\nimport static org.junit.Assert.assertNotNull;\r\nimport junit.framework.TestCase;\r\n\r\npublic class Sample {\r\n\r\n}";
-		String importLine = "import static org.junit.Assert.*;";
-		target.appendIfNotExists(buf, src, importLine);
-		assertEquals("import static org.junit.Assert.*;\r\n", buf.toString());
-	}
-
-	@Test
-	public void isPublicMethodAndTestingRequired_A$MethodMeta$TestingTarget() throws Exception {
-		MethodMeta methodMeta = new MethodMeta();
-		methodMeta.accessModifier = AccessModifier.Public;
-		TestingTarget target_ = new TestingTarget();
-		target_.isPublicMethodRequired = true;
-		boolean actual = target.isPublicMethodAndTestingRequired(methodMeta, target_);
-		boolean expected = true;
-		assertThat(actual, is(equalTo(expected)));
-	}
-
-	@Test
-	public void isProtectedMethodAndTestingRequired_A$MethodMeta$TestingTarget() throws Exception {
-		MethodMeta methodMeta = new MethodMeta();
-		methodMeta.accessModifier = AccessModifier.Protected;
-		TestingTarget target_ = new TestingTarget();
-		target_.isPublicMethodRequired = true;
-		boolean actual = target.isProtectedMethodAndTestingRequired(methodMeta, target_);
-		boolean expected = true;
-		assertThat(actual, is(equalTo(expected)));
-	}
-
-	@Test
-	public void isPackageLocalMethodAndTestingRequired_A$MethodMeta$TestingTarget() throws Exception {
-		MethodMeta methodMeta = new MethodMeta();
-		methodMeta.accessModifier = AccessModifier.PackageLocal;
-		TestingTarget target_ = new TestingTarget();
-		target_.isPublicMethodRequired = true;
-		boolean actual = target.isPackageLocalMethodAndTestingRequired(methodMeta, target_);
-		boolean expected = true;
-		assertThat(actual, is(equalTo(expected)));
 	}
 
 }
