@@ -16,12 +16,10 @@
 package org.junithelper.core.generator.impl;
 
 import static org.junithelper.core.generator.impl.DefaultGeneratorUtil.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.JUnitVersion;
 import org.junithelper.core.config.MessageValue;
@@ -94,10 +92,10 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 		// is testing type safe required
 		if (!checkTargetSourceCode.matches(RegExp.Anything_ZeroOrMore_Min + "public\\s+void\\s+[^\\s]*type\\("
 				+ RegExp.Anything_ZeroOrMore_Min)) {
-			TestMethodMeta testMethod = new TestMethodMeta();
-			testMethod.classMeta = targetClassMeta;
-			testMethod.isTypeTest = true;
-			dest.add(testMethod);
+			TestMethodMeta meta = new TestMethodMeta();
+			meta.classMeta = targetClassMeta;
+			meta.isTypeTest = true;
+			addTestMethodMetaToListIfNotExists(dest, meta);
 		}
 		// is testing instantiation required
 		if (!targetClassMeta.isEnum && targetClassMeta.constructors.size() > 0) {
@@ -112,10 +110,10 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 			if (notPrivateConstructor != null) {
 				if (!checkTargetSourceCode.matches(RegExp.Anything_ZeroOrMore_Min
 						+ "public\\s+void\\s+[^\\s]*instantiation\\(" + RegExp.Anything_ZeroOrMore_Min)) {
-					TestMethodMeta testMethod = new TestMethodMeta();
-					testMethod.classMeta = targetClassMeta;
-					testMethod.isInstantiationTest = true;
-					dest.add(testMethod);
+					TestMethodMeta meta = new TestMethodMeta();
+					meta.classMeta = targetClassMeta;
+					meta.isInstantiationTest = true;
+					addTestMethodMetaToListIfNotExists(dest, meta);
 				}
 			}
 		}
@@ -153,14 +151,14 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 					TestMethodMeta meta = testMethodGenerator.getTestMethodMeta(methodMeta);
 					// extension assertions
 					meta = appendIfExtensionAssertionsExist(meta, config);
-					dest.add(meta);
+					addTestMethodMetaToListIfNotExists(dest, meta);
 					// testing exception patterns
 					if (config.target.isExceptionPatternRequired) {
 						for (ExceptionMeta exceptionMeta : methodMeta.throwsExceptions) {
 							TestMethodMeta metaEx = testMethodGenerator.getTestMethodMeta(methodMeta, exceptionMeta);
 							// extension assertions
 							metaEx = appendIfExtensionAssertionsExist(metaEx, config);
-							dest.add(metaEx);
+							addTestMethodMetaToListIfNotExists(dest, metaEx);
 						}
 					}
 				}
@@ -186,7 +184,7 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 									meta.extArgPattern = pattern;
 									// extension assertions
 									meta = appendIfExtensionAssertionsExist(meta, config);
-									dest.add(meta);
+									addTestMethodMetaToListIfNotExists(dest, meta);
 								}
 							}
 						}
@@ -200,6 +198,31 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 			}
 		}
 		return dest;
+	}
+
+	static void addTestMethodMetaToListIfNotExists(List<TestMethodMeta> dest, TestMethodMeta meta) {
+		for (TestMethodMeta each : dest) {
+			if (each.methodMeta != null && meta.methodMeta != null && each.methodMeta.name.equals(meta.methodMeta.name)) {
+				if (each.testingTargetException != null && meta.testingTargetException != null
+						&& each.testingTargetException.name.equals(meta.testingTargetException.name)) {
+					return;
+				}
+				if (each.extArgPattern != null
+						&& meta.extArgPattern != null
+						&& each.extArgPattern.getNameWhichFirstCharIsUpper().equals(
+								meta.extArgPattern.getNameWhichFirstCharIsUpper())) {
+					return;
+				}
+			} else {
+				if (each.isTypeTest == true && meta.isTypeTest == true) {
+					return;
+				}
+				if (each.isInstantiationTest == true && meta.isInstantiationTest == true) {
+					return;
+				}
+			}
+		}
+		dest.add(meta);
 	}
 
 	static TestMethodMeta appendIfExtensionAssertionsExist(TestMethodMeta testMethodMeta, Configuration config) {

@@ -1,69 +1,72 @@
 <junithelper-extension>
- <instantiation class="java.lang.String">
-   <assign>"sdfdsfs"</assign>
- </instantiation>
- <instantiation class="org.junithelper.example.Sample">
-   <assign>Sample.getInstance();</assign>
- </instantiation>
- <instantiation class="java.util.Calendar">
-   <import>com.example.CalendarUtil</import>
-   <assign>Calendar.getInstance();</assign>
- </instantiation>
- <arg class="java.util.Calendar" >
-   <import>java.util.Calendar</import>
-   <import>java.util.List</import>
-   <import>static org.junit.Assert.*</import>
-   <pattern name="Null">
-     <pre-assgin></pre-assgin>
-     <assign>null</assign>
-     <post-assign></post-assign>
-   </pattern>
-   <pattern name="Now">
-     <pre-assgin></pre-assgin>
-     <assign>Calendar.getInstance();</assign>
-     <post-assign></post-assign>
-   </pattern>
-   <pattern name="Yesterday">
-     <pre-assgin></pre-assgin>
-     <assign>Calendar.getInstance();</assign>
-     <post-assign>{arg}.add(Calendar.DATE, -1);</post-assign>
-   </pattern>
- </arg>
- <arg class="org.junithelper.example.Param" >
-   <pattern name="taro">
-   	<assign>new Param()</assign>
-   	<post-assign>{arg}.name = "Taro"</post-assign>
-   </pattern>
- </arg>
- <arg class="int" >
-   <pattern name="minus1"><assign>-1</assign></pattern>
-   <pattern name="0"><assign>0</assign></pattern>
-   <pattern name="1"><assign>1</assign></pattern>
-   <pattern name="2"><assign>2</assign></pattern>
- </arg>
- <arg class="java.lang.String" >
-   <pattern name="Null">
-     <assign>null</assign>
-   </pattern>
-   <pattern name="hoge">
-     <pre-assign>System.out.println("hoge");</pre-assign>
-     <assign>"hoge";</assign>
-     <post-assign>System.out.println("foo");</post-assign>
-   </pattern>
-   <pattern name="hoge2">
-     <pre-assign>System.out.println("hoge")</pre-assign>
-     <assign>"hoge"</assign>
-     <post-assign>System.out.println("foo")</post-assign>
-   </pattern>
- </arg>
- <return class="hoge.ResultBean">
-   <assert>assertEquals(0, actual.resultCode);</assert>
-   <assert>assertEquals(0, actual.errors.size());</assert>
- </return>
- <return class="java.lang.String">
-   <import>com.example.Util</import>
-   <assert>assertEquals("", actual);</assert>
-   <assert>assertEquals("2", actual);</assert>
-   <assert>assertEquals("33", actual);</assert>
- </return>
+
+  <instantiation class="java.util.Calendar">
+    <assign>Calendar.getInstance()</assign>
+  </instantiation>
+
+  <arg class="java.util.Calendar" >
+    <pattern name="null"><assign>null</assign></pattern>
+    <pattern name="now"><assign>Calendar.getInstance()</assign></pattern>
+    <pattern name="yesterday">
+      <assign>Calendar.getInstance();</assign>
+      <post-assign>{arg}.add(Calendar.DATE, -1);</post-assign>
+    </pattern>
+  </arg>
+
+  <arg class="int" >
+    <pattern name="minus1"><assign>-1</assign></pattern>
+    <pattern name="0"><assign>0</assign></pattern>
+    <pattern name="1"><assign>1</assign></pattern>
+    <pattern name="2"><assign>2</assign></pattern>
+  </arg>
+  <arg class="long" >
+    <pattern name="minus1L"><assign>-1L</assign></pattern>
+    <pattern name="0L"><assign>0L</assign></pattern>
+    <pattern name="1L"><assign>1L</assign></pattern>
+    <pattern name="2L"><assign>2L</assign></pattern>
+  </arg>
+  <arg class="double" >
+    <pattern name="minus1_0D"><assign>-1.0D</assign></pattern>
+    <pattern name="0_0D"><assign>0.0D</assign></pattern>
+    <pattern name="0_5D"><assign>0.5D</assign></pattern>
+    <pattern name="1_0D"><assign>1.0D</assign></pattern>
+  </arg>
+  <arg class="boolean" >
+    <pattern name="true"><assign>true</assign></pattern>
+    <pattern name="false"><assign>false</assign></pattern>
+  </arg>
+  
+  <arg class="java.lang.Integer" >
+    <pattern name="null"><assign>null</assign></pattern>
+    <pattern name="minus1"><assign>-1</assign></pattern>
+    <pattern name="0"><assign>0</assign></pattern>
+    <pattern name="1"><assign>1</assign></pattern>
+    <pattern name="2"><assign>2</assign></pattern>
+  </arg>
+  <arg class="java.lang.Long" >
+    <pattern name="null"><assign>null</assign></pattern>
+    <pattern name="minus1L"><assign>-1L</assign></pattern>
+    <pattern name="0L"><assign>0L</assign></pattern>
+    <pattern name="1L"><assign>1L</assign></pattern>
+    <pattern name="2L"><assign>2L</assign></pattern>
+  </arg>
+  <arg class="java.lang.Double" >
+    <pattern name="null"><assign>null</assign></pattern>
+    <pattern name="minus1_0D"><assign>-1.0D</assign></pattern>
+    <pattern name="0_0D"><assign>0.0D</assign></pattern>
+    <pattern name="0_5D"><assign>0.5D</assign></pattern>
+    <pattern name="1_0D"><assign>1.0D</assign></pattern>
+  </arg>
+  <arg class="java.lang.Boolean" >
+    <pattern name="null"><assign>null</assign></pattern>
+    <pattern name="true"><assign>true</assign></pattern>
+    <pattern name="false"><assign>false</assign></pattern>
+  </arg>
+
+  <!-- 
+  <return class="java.util.Calendar">
+    <assert>assertEquals(null, actual);</assert>
+  </return>
+   -->
+
 </junithelper-extension>

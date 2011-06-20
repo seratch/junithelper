@@ -16,10 +16,8 @@
 package org.junithelper.core.generator.impl;
 
 import static org.junithelper.core.generator.impl.DefaultGeneratorUtil.*;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.JUnitVersion;
 import org.junithelper.core.config.MessageValue;
@@ -375,6 +373,13 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 
 				ExtArgPattern extArgPattern = testMethodMeta.extArgPattern;
 
+				boolean isExtArgPatternTarget = false;
+				if (extArgPattern != null
+						&& isCanonicalClassNameUsed(extArgPattern.extArg.canonicalClassName, argTypeMeta.name,
+								testMethodMeta.classMeta)) {
+					isExtArgPatternTarget = true;
+				}
+
 				ExtInstantiation extInstantiation = null;
 				if (config.extConfiguration.extInstantiations != null) {
 					for (ExtInstantiation ins : config.extConfiguration.extInstantiations) {
@@ -391,8 +396,7 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 
 				// --------------------------
 				// extension : pre-assign
-				if (extArgPattern != null && extArgPattern.preAssignCode != null
-						&& extArgPattern.preAssignCode.trim().length() > 0) {
+				if (isExtArgPatternTarget && extArgPattern.preAssignCode != null) {
 					// arg patterns
 					String[] lines = extArgPattern.preAssignCode.split(StringValue.Semicolon);
 					for (String line : lines) {
@@ -426,7 +430,7 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 				buf.append(" ");
 				buf.append(argName);
 				buf.append(" = ");
-				if (extArgPattern != null && extArgPattern.assignCode != null) {
+				if (isExtArgPatternTarget) {
 					buf.append(extArgPattern.assignCode.trim());
 					// --------------------------
 					// extension : assign
@@ -442,8 +446,7 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 
 				// --------------------------
 				// extension : post-assign
-				if (extArgPattern != null && extArgPattern.postAssignCode != null
-						&& extArgPattern.postAssignCode.trim().length() > 0) {
+				if (isExtArgPatternTarget && extArgPattern.postAssignCode != null) {
 					// arg patterns
 					String[] lines = extArgPattern.postAssignCode.replaceAll("\\{arg\\}", argName).split(
 							StringValue.Semicolon);

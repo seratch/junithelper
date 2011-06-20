@@ -2,7 +2,6 @@ package org.junithelper.core.generator.impl;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
-
 import org.junit.Test;
 import org.junithelper.core.config.TestingTarget;
 import org.junithelper.core.meta.AccessModifier;
