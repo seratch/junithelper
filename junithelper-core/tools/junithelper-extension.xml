@@ -3,6 +3,11 @@
   <instantiation class="java.util.Calendar">
     <assign>Calendar.getInstance()</assign>
   </instantiation>
+  <instantiation class="java.io.InputStream">
+    <import>java.io.ByteArrayInputStream2</import>
+    <import>java.io.ByteArrayInputStream</import>
+    <assign>new ByteArrayInputStream(new byte[] {})</assign>
+  </instantiation>
 
   <arg class="java.util.Calendar" >
     <pattern name="null"><assign>null</assign></pattern>
@@ -14,16 +19,20 @@
   </arg>
 
   <arg class="int" >
+    <pattern name="MinValue"><assign>Integer.MIN_VALUE</assign></pattern>
     <pattern name="minus1"><assign>-1</assign></pattern>
     <pattern name="0"><assign>0</assign></pattern>
     <pattern name="1"><assign>1</assign></pattern>
     <pattern name="2"><assign>2</assign></pattern>
+    <pattern name="MaxValue"><assign>Integer.MAX_VALUE</assign></pattern>
   </arg>
   <arg class="long" >
+    <pattern name="MinValue"><assign>Long.MIN_VALUE</assign></pattern>
     <pattern name="minus1L"><assign>-1L</assign></pattern>
     <pattern name="0L"><assign>0L</assign></pattern>
     <pattern name="1L"><assign>1L</assign></pattern>
     <pattern name="2L"><assign>2L</assign></pattern>
+    <pattern name="MaxValue"><assign>Long.MAX_VALUE</assign></pattern>
   </arg>
   <arg class="double" >
     <pattern name="minus1_0D"><assign>-1.0D</assign></pattern>
@@ -37,18 +46,22 @@
   </arg>
   
   <arg class="java.lang.Integer" >
+    <pattern name="MinValue"><assign>Integer.MIN_VALUE</assign></pattern>
     <pattern name="null"><assign>null</assign></pattern>
     <pattern name="minus1"><assign>-1</assign></pattern>
     <pattern name="0"><assign>0</assign></pattern>
     <pattern name="1"><assign>1</assign></pattern>
     <pattern name="2"><assign>2</assign></pattern>
+    <pattern name="MaxValue"><assign>Integer.MAX_VALUE</assign></pattern>
   </arg>
   <arg class="java.lang.Long" >
+    <pattern name="MinValue"><assign>Long.MIN_VALUE</assign></pattern>
     <pattern name="null"><assign>null</assign></pattern>
     <pattern name="minus1L"><assign>-1L</assign></pattern>
     <pattern name="0L"><assign>0L</assign></pattern>
     <pattern name="1L"><assign>1L</assign></pattern>
     <pattern name="2L"><assign>2L</assign></pattern>
+    <pattern name="MaxValue"><assign>Long.MAX_VALUE</assign></pattern>
   </arg>
   <arg class="java.lang.Double" >
     <pattern name="null"><assign>null</assign></pattern>

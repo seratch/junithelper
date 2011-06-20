@@ -1,6 +1,9 @@
 package org.junithelper.core.util;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class ThreadUtilTest {
@@ -46,6 +49,23 @@ public class ThreadUtilTest {
 	@Test
 	public void sleep_A$long_longIs2L() throws Exception {
 		long millisec = 2L;
+		ThreadUtil.sleep(millisec);
+	}
+
+	@Test
+	public void sleep_A$long_longIsMinValue() throws Exception {
+		try {
+			long millisec = Long.MIN_VALUE;
+			ThreadUtil.sleep(millisec);
+			fail();
+		} catch (IllegalArgumentException e) {
+		}
+	}
+
+	@Test
+	@Ignore
+	public void sleep_A$long_longIsMaxValue() throws Exception {
+		long millisec = Long.MAX_VALUE;
 		ThreadUtil.sleep(millisec);
 	}
 

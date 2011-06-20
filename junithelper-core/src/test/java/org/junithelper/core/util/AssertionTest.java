@@ -1,7 +1,9 @@
 package org.junithelper.core.util;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
+
 import org.junit.Test;
 import org.junithelper.core.exception.JUnitHelperCoreException;
 
@@ -732,6 +734,134 @@ public class AssertionTest {
 		double upperLimit = 0.0;
 		String name = "";
 		Assertion.mustBeLessThanOrEqual(arg, upperLimit, name);
+	}
+
+	@Test
+	public void mustBeGreaterThan_A$int$int$String_intIsMinValue() throws Exception {
+		int arg = Integer.MIN_VALUE + 1;
+		int lowerLimit = Integer.MIN_VALUE;
+		String name = null;
+		Assertion.mustBeGreaterThan(arg, lowerLimit, name);
+	}
+
+	@Test
+	public void mustBeGreaterThanOrEqual_A$int$int$String_intIsMinValue() throws Exception {
+		int arg = Integer.MIN_VALUE;
+		int lowerLimit = Integer.MIN_VALUE;
+		String name = null;
+		Assertion.mustBeGreaterThanOrEqual(arg, lowerLimit, name);
+	}
+
+	@Test
+	public void mustBeGreaterThanOrEqual_A$int$int$String_intIsMaxValue() throws Exception {
+		int arg = Integer.MAX_VALUE;
+		int lowerLimit = Integer.MAX_VALUE;
+		String name = null;
+		Assertion.mustBeGreaterThanOrEqual(arg, lowerLimit, name);
+	}
+
+	@Test
+	public void mustBeLessThan_A$int$int$String_intIsMinValue() throws Exception {
+		int arg = Integer.MIN_VALUE;
+		int upperLimit = Integer.MIN_VALUE + 1;
+		String name = null;
+		Assertion.mustBeLessThan(arg, upperLimit, name);
+	}
+
+	@Test
+	public void mustBeLessThan_A$int$int$String_intIsMaxValue() throws Exception {
+		int arg = Integer.MAX_VALUE - 1;
+		int upperLimit = Integer.MAX_VALUE;
+		String name = null;
+		Assertion.mustBeLessThan(arg, upperLimit, name);
+	}
+
+	@Test
+	public void mustBeLessThanOrEqual_A$int$int$String_intIsMinValue() throws Exception {
+		int arg = Integer.MIN_VALUE;
+		int upperLimit = Integer.MIN_VALUE;
+		String name = null;
+		Assertion.mustBeLessThanOrEqual(arg, upperLimit, name);
+	}
+
+	@Test
+	public void mustBeLessThanOrEqual_A$int$int$String_intIsMaxValue() throws Exception {
+		int arg = Integer.MAX_VALUE;
+		int upperLimit = Integer.MAX_VALUE;
+		String name = null;
+		Assertion.mustBeLessThanOrEqual(arg, upperLimit, name);
+	}
+
+	@Test
+	public void mustBeGreaterThan_A$int$int$String_intIsMaxValue() throws Exception {
+		int arg = Integer.MAX_VALUE;
+		int lowerLimit = Integer.MAX_VALUE - 1;
+		String name = null;
+		Assertion.mustBeGreaterThan(arg, lowerLimit, name);
+	}
+
+	@Test
+	public void mustBeGreaterThan_A$long$long$String_longIsMinValue() throws Exception {
+		long arg = Long.MIN_VALUE + 1;
+		long lowerLimit = Long.MIN_VALUE;
+		String name = null;
+		Assertion.mustBeGreaterThan(arg, lowerLimit, name);
+	}
+
+	@Test
+	public void mustBeGreaterThanOrEqual_A$long$long$String_longIsMinValue() throws Exception {
+		long arg = Long.MIN_VALUE;
+		long lowerLimit = Long.MIN_VALUE;
+		String name = null;
+		Assertion.mustBeGreaterThanOrEqual(arg, lowerLimit, name);
+	}
+
+	@Test
+	public void mustBeGreaterThanOrEqual_A$long$long$String_longIsMaxValue() throws Exception {
+		long arg = Long.MAX_VALUE;
+		long lowerLimit = Long.MAX_VALUE;
+		String name = null;
+		Assertion.mustBeGreaterThanOrEqual(arg, lowerLimit, name);
+	}
+
+	@Test
+	public void mustBeLessThan_A$long$long$String_longIsMinValue() throws Exception {
+		long arg = Long.MIN_VALUE;
+		long upperLimit = Long.MIN_VALUE + 1;
+		String name = null;
+		Assertion.mustBeLessThan(arg, upperLimit, name);
+	}
+
+	@Test
+	public void mustBeLessThan_A$long$long$String_longIsMaxValue() throws Exception {
+		long arg = Long.MAX_VALUE - 1;
+		long upperLimit = Long.MAX_VALUE;
+		String name = null;
+		Assertion.mustBeLessThan(arg, upperLimit, name);
+	}
+
+	@Test
+	public void mustBeLessThanOrEqual_A$long$long$String_longIsMinValue() throws Exception {
+		long arg = Long.MIN_VALUE;
+		long upperLimit = Long.MIN_VALUE;
+		String name = null;
+		Assertion.mustBeLessThanOrEqual(arg, upperLimit, name);
+	}
+
+	@Test
+	public void mustBeLessThanOrEqual_A$long$long$String_longIsMaxValue() throws Exception {
+		long arg = Long.MAX_VALUE;
+		long upperLimit = Long.MAX_VALUE;
+		String name = null;
+		Assertion.mustBeLessThanOrEqual(arg, upperLimit, name);
+	}
+
+	@Test
+	public void mustBeGreaterThan_A$long$long$String_longIsMaxValue() throws Exception {
+		long arg = Long.MAX_VALUE;
+		long lowerLimit = Long.MAX_VALUE - 1;
+		String name = null;
+		Assertion.mustBeGreaterThan(arg, lowerLimit, name);
 	}
 
 }

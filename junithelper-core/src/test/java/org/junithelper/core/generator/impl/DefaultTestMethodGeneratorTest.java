@@ -1,8 +1,14 @@
 package org.junithelper.core.generator.impl;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
+
 import java.util.List;
+
 import org.junit.Test;
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.JUnitVersion;
@@ -898,6 +904,98 @@ public class DefaultTestMethodGeneratorTest {
 		String actual = target.getArgValue(testMethodMeta, argTypeMeta, argName);
 		String expected = "0";
 		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void appendTabs_A$StringBuilder$int_intIsMinValue() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = null;
+		int times = Integer.MIN_VALUE;
+		try {
+			target.appendTabs(buf, times);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void appendTabs_A$StringBuilder$int_intIsMaxValue() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = null;
+		int times = Integer.MAX_VALUE;
+		try {
+			target.appendTabs(buf, times);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void appendMockChecking_A$StringBuilder$int_intIsMinValue() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		int depth = Integer.MIN_VALUE;
+		target.appendMockChecking(buf, depth);
+	}
+
+	@Test
+	public void appendMockChecking_A$StringBuilder$int_intIsMaxValue() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		int depth = Integer.MAX_VALUE;
+		target.appendMockChecking(buf, depth);
+	}
+
+	@Test
+	public void appendMockVerifying_A$StringBuilder$int_intIsMinValue() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		int depth = Integer.MIN_VALUE;
+		target.appendMockVerifying(buf, depth);
+	}
+
+	@Test
+	public void appendMockVerifying_A$StringBuilder$int_intIsMaxValue() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		int depth = Integer.MAX_VALUE;
+		target.appendMockVerifying(buf, depth);
+	}
+
+	@Test
+	public void appendBDDMockitoComment_A$StringBuilder$String$int_intIsMinValue() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		String value = "when";
+		int depth = Integer.MIN_VALUE;
+		target.appendBDDMockitoComment(buf, value, depth);
+	}
+
+	@Test
+	public void appendBDDMockitoComment_A$StringBuilder$String$int_intIsMaxValue() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		String value = "when";
+		int depth = Integer.MAX_VALUE;
+		target.appendBDDMockitoComment(buf, value, depth);
+	}
+
+	@Test
+	public void appendTestingPatternExplicitComment_A$StringBuilder$String$int_intIsMinValue() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		String value = "when";
+		int depth = Integer.MIN_VALUE;
+		target.appendTestingPatternExplicitComment(buf, value, depth);
+	}
+
+	@Test
+	public void appendTestingPatternExplicitComment_A$StringBuilder$String$int_intIsMaxValue() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		String value = "when";
+		int depth = Integer.MAX_VALUE;
+		target.appendTestingPatternExplicitComment(buf, value, depth);
 	}
 
 }

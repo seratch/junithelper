@@ -1,7 +1,11 @@
 package org.junithelper.core.config.extension;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
+
 import org.junit.Test;
 import org.junithelper.core.exception.JUnitHelperCoreException;
 import org.mockito.Mockito;
@@ -148,6 +152,32 @@ public class ExtConfigurationParserHandlerTest {
 			target.endElement(uri, localName, name);
 			fail();
 		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void characters_A$charArray$int$int_intIsMinValue() throws Exception {
+		ExtConfigurationParserHandler target = new ExtConfigurationParserHandler();
+		char[] ch = new char[] { 'a', 'b', 'c' };
+		int start = Integer.MIN_VALUE;
+		int length = Integer.MIN_VALUE;
+		try {
+			target.characters(ch, start, length);
+			fail();
+		} catch (StringIndexOutOfBoundsException e) {
+		}
+	}
+
+	@Test
+	public void characters_A$charArray$int$int_intIsMaxValue() throws Exception {
+		ExtConfigurationParserHandler target = new ExtConfigurationParserHandler();
+		char[] ch = new char[] { 'a', 'b', 'c' };
+		int start = Integer.MAX_VALUE;
+		int length = Integer.MAX_VALUE;
+		try {
+			target.characters(ch, start, length);
+			fail();
+		} catch (StringIndexOutOfBoundsException e) {
 		}
 	}
 

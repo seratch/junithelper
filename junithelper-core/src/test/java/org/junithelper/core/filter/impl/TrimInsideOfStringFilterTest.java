@@ -1,7 +1,12 @@
 package org.junithelper.core.filter.impl;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
+
 import org.junit.Test;
 import org.junithelper.core.exception.JUnitHelperCoreException;
 
@@ -133,6 +138,30 @@ public class TrimInsideOfStringFilterTest {
 		int actual = TrimInsideOfStringFilter.countPreviousContinuedBackslash(str, currentNotBackslashCharIndex, count);
 		int expected = 0;
 		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void countPreviousContinuedBackslash_A$String$int$int_intIsMinValue() throws Exception {
+		String str = "";
+		int currentNotBackslashCharIndex = Integer.MIN_VALUE;
+		int count = Integer.MIN_VALUE;
+		try {
+			TrimInsideOfStringFilter.countPreviousContinuedBackslash(str, currentNotBackslashCharIndex, count);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void countPreviousContinuedBackslash_A$String$int$int_intIsMaxValue() throws Exception {
+		String str = "";
+		int currentNotBackslashCharIndex = Integer.MAX_VALUE;
+		int count = Integer.MAX_VALUE;
+		try {
+			TrimInsideOfStringFilter.countPreviousContinuedBackslash(str, currentNotBackslashCharIndex, count);
+			fail();
+		} catch (StringIndexOutOfBoundsException e) {
+		}
 	}
 
 }
