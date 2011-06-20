@@ -278,12 +278,15 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 						if (isCanonicalClassNameUsed(testMethodMeta.extReturn.canonicalClassName,
 								testMethodMeta.methodMeta.returnType.name, targetClassMeta)) {
 							for (String assertion : testMethodMeta.extReturn.asserts) {
-								appendTabs(buf, 2);
-								buf.append(assertion);
-								if (!assertion.endsWith(StringValue.Semicolon)) {
-									buf.append(StringValue.Semicolon);
+								String[] lines = assertion.split(StringValue.Semicolon);
+								for (String line : lines) {
+									if (line != null && line.trim().length() > 0) {
+										appendTabs(buf, 2);
+										buf.append(line.trim());
+										buf.append(StringValue.Semicolon);
+										appendCRLF(buf);
+									}
 								}
-								appendCRLF(buf);
 							}
 						}
 					} else {
