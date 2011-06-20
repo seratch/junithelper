@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.TestingTarget;
+import org.junithelper.core.exception.JUnitHelperCoreException;
 import org.junithelper.core.meta.AccessModifier;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.MethodMeta;
@@ -139,7 +140,7 @@ public class DefaultGeneratorUtilTest {
 		try {
 			DefaultGeneratorUtil.getInstantiationSourceCode(config, testMethodMeta);
 			fail();
-		} catch (IllegalArgumentException e) {
+		} catch (JUnitHelperCoreException e) {
 		}
 	}
 
@@ -159,7 +160,7 @@ public class DefaultGeneratorUtilTest {
 		try {
 			DefaultGeneratorUtil.appendIfNotExists(buf, src, importLine);
 			fail();
-		} catch (IllegalArgumentException e) {
+		} catch (JUnitHelperCoreException e) {
 		}
 	}
 
@@ -179,7 +180,7 @@ public class DefaultGeneratorUtilTest {
 		try {
 			DefaultGeneratorUtil.isCanonicalClassNameUsed(expectedCanonicalClassName, usedClassName, targetClassMeta);
 			fail();
-		} catch (IllegalArgumentException e) {
+		} catch (JUnitHelperCoreException e) {
 		}
 	}
 

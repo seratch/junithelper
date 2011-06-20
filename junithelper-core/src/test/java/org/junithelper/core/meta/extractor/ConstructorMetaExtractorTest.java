@@ -1,5 +1,6 @@
 package org.junithelper.core.meta.extractor;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import java.util.List;
@@ -11,6 +12,8 @@ import org.junithelper.core.meta.ConstructorMeta;
 import org.junithelper.core.util.IOUtil;
 
 public class ConstructorMetaExtractorTest {
+
+	Configuration config = new Configuration();
 
 	@Test
 	public void type() throws Exception {
@@ -136,6 +139,72 @@ public class ConstructorMetaExtractorTest {
 		// e.g. : verify(mocked).called();
 		String expected = " static void main(String[] args) {";
 		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void initialize_A$String_StringIsNull() throws Exception {
+		ConstructorMetaExtractor target = new ConstructorMetaExtractor(config);
+		String sourceCodeString = "public class Sample {}";
+		ConstructorMetaExtractor actual = target.initialize(sourceCodeString);
+		assertThat(actual, notNullValue());
+	}
+
+	@Test
+	public void initialize_A$String_StringIsEmpty() throws Exception {
+		ConstructorMetaExtractor target = new ConstructorMetaExtractor(config);
+		String sourceCodeString = "";
+		ConstructorMetaExtractor actual = target.initialize(sourceCodeString);
+		assertThat(actual, notNullValue());
+	}
+
+	@Test
+	public void extract_A$String_StringIsNull() throws Exception {
+		ConstructorMetaExtractor target = new ConstructorMetaExtractor(config);
+		String sourceCodeString = "public class Sample {}";
+		List<ConstructorMeta> actual = target.extract(sourceCodeString);
+		assertThat(actual, notNullValue());
+	}
+
+	@Test
+	public void extract_A$String_StringIsEmpty() throws Exception {
+		ConstructorMetaExtractor target = new ConstructorMetaExtractor(config);
+		String sourceCodeString = "";
+		List<ConstructorMeta> actual = target.extract(sourceCodeString);
+		assertThat(actual, notNullValue());
+	}
+
+	@Test
+	public void getAccessModifier_A$String_StringIsNull() throws Exception {
+		ConstructorMetaExtractor target = new ConstructorMetaExtractor(config);
+		String methodSignatureArea = null;
+		AccessModifier actual = target.getAccessModifier(methodSignatureArea);
+		assertThat(actual, notNullValue());
+	}
+
+	@Test
+	public void getAccessModifier_A$String_StringIsEmpty() throws Exception {
+		ConstructorMetaExtractor target = new ConstructorMetaExtractor(config);
+		String methodSignatureArea = "";
+		AccessModifier actual = target.getAccessModifier(methodSignatureArea);
+		assertThat(actual, notNullValue());
+	}
+
+	@Test
+	public void trimAccessModifierFromMethodSignatureArea_A$String_StringIsNull() throws Exception {
+		ConstructorMetaExtractor target = new ConstructorMetaExtractor(config);
+		String methodSignatureArea = "public void doSomething()";
+		String actual = target.trimAccessModifierFromMethodSignatureArea(methodSignatureArea);
+		String expected = " void doSomething()";
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void trimAccessModifierFromMethodSignatureArea_A$String_StringIsEmpty() throws Exception {
+		ConstructorMetaExtractor target = new ConstructorMetaExtractor(config);
+		String methodSignatureArea = "";
+		String actual = target.trimAccessModifierFromMethodSignatureArea(methodSignatureArea);
+		String expected = "";
+		assertThat(actual, is(equalTo(expected)));
 	}
 
 }

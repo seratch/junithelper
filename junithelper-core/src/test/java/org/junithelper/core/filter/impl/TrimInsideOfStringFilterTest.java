@@ -3,6 +3,7 @@ package org.junithelper.core.filter.impl;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.junithelper.core.exception.JUnitHelperCoreException;
 
 public class TrimInsideOfStringFilterTest {
 
@@ -80,7 +81,7 @@ public class TrimInsideOfStringFilterTest {
 		try {
 			TrimInsideOfStringFilter.countPreviousContinuedBackslash(str, currentNotBackslashCharIndex, count);
 			fail();
-		} catch (IllegalArgumentException e) {
+		} catch (JUnitHelperCoreException e) {
 		}
 	}
 

@@ -2,6 +2,7 @@ package org.junithelper.core.util;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.junithelper.core.exception.JUnitHelperCoreException;
 
 public class StdoutTest {
 
@@ -27,6 +28,40 @@ public class StdoutTest {
 		// when
 		Stdout.printf(format, values);
 		// then
+	}
+
+	@Test
+	public void printf_A$String$ObjectArray_StringIsNull() throws Exception {
+		String format = null;
+		Object[] values = new Object[] {};
+		try {
+			Stdout.printf(format, values);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void printf_A$String$ObjectArray_StringIsEmpty() throws Exception {
+		String format = "";
+		Object[] values = new Object[] {};
+		try {
+			Stdout.printf(format, values);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void p_A$String_StringIsNull() throws Exception {
+		String str = null;
+		Stdout.p(str);
+	}
+
+	@Test
+	public void p_A$String_StringIsEmpty() throws Exception {
+		String str = "";
+		Stdout.p(str);
 	}
 
 }

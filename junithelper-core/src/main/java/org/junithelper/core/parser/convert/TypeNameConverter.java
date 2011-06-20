@@ -23,6 +23,7 @@ import org.junithelper.core.config.Configuration;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
 import org.junithelper.core.file.impl.CommonsIOFileSearcher;
+import org.junithelper.core.util.Assertion;
 import org.junithelper.core.util.PrimitiveTypeUtil;
 
 public class TypeNameConverter {
@@ -34,6 +35,7 @@ public class TypeNameConverter {
 	}
 
 	public String toAvailableInMethodName(String typeName) {
+		Assertion.mustNotBeEmpty(typeName, "typeName");
 		typeName = typeName.replaceAll(RegExp.Generics, StringValue.Empty);
 		typeName = typeName.replaceAll("final ", StringValue.Empty);
 		typeName = typeName.replaceAll("\\.\\.\\.", "Array").replaceAll("\\[\\]", "Array");

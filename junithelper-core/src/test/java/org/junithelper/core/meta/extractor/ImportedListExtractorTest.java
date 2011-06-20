@@ -1,9 +1,11 @@
 package org.junithelper.core.meta.extractor;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import java.util.List;
 import org.junit.Test;
 import org.junithelper.core.config.Configuration;
+import org.junithelper.core.exception.JUnitHelperCoreException;
 
 public class ImportedListExtractorTest {
 
@@ -29,6 +31,27 @@ public class ImportedListExtractorTest {
 		List<String> actual = target.extract(sourceCodeString);
 		// then
 		assertEquals(2, actual.size());
+	}
+
+	@Test
+	public void extract_A$String_StringIsNull() throws Exception {
+		Configuration config = new Configuration();
+		ImportedListExtractor target = new ImportedListExtractor(config);
+		String sourceCodeString = null;
+		try {
+			target.extract(sourceCodeString);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void extract_A$String_StringIsEmpty() throws Exception {
+		Configuration config = new Configuration();
+		ImportedListExtractor target = new ImportedListExtractor(config);
+		String sourceCodeString = "";
+		List<String> actual = target.extract(sourceCodeString);
+		assertThat(actual, notNullValue());
 	}
 
 }

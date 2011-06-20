@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import org.junit.Test;
+import org.junithelper.core.exception.JUnitHelperCoreException;
 import org.junithelper.core.util.IOUtil;
 
 public class ExtConfigurationLoaderTest {
@@ -55,7 +56,7 @@ public class ExtConfigurationLoaderTest {
 		try {
 			target.load(filepath);
 			fail("filepath is null, but it does not throw exception.");
-		} catch (IllegalArgumentException e) {
+		} catch (JUnitHelperCoreException e) {
 		}
 	}
 

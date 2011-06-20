@@ -3,6 +3,7 @@ package org.junithelper.core.config.extension;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.junithelper.core.exception.JUnitHelperCoreException;
 import org.mockito.Mockito;
 import org.xml.sax.Attributes;
 
@@ -96,7 +97,7 @@ public class ExtConfigurationParserHandlerTest {
 		try {
 			target.startElement(uri, localName, name, attributes);
 			fail();
-		} catch (IllegalArgumentException e) {
+		} catch (JUnitHelperCoreException e) {
 		}
 	}
 
@@ -110,7 +111,7 @@ public class ExtConfigurationParserHandlerTest {
 		try {
 			target.startElement(uri, localName, name, attributes);
 			fail();
-		} catch (IllegalArgumentException e) {
+		} catch (JUnitHelperCoreException e) {
 		}
 	}
 
@@ -133,7 +134,7 @@ public class ExtConfigurationParserHandlerTest {
 		try {
 			target.endElement(uri, localName, name);
 			fail();
-		} catch (IllegalArgumentException e) {
+		} catch (JUnitHelperCoreException e) {
 		}
 	}
 
@@ -146,7 +147,7 @@ public class ExtConfigurationParserHandlerTest {
 		try {
 			target.endElement(uri, localName, name);
 			fail();
-		} catch (IllegalArgumentException e) {
+		} catch (JUnitHelperCoreException e) {
 		}
 	}
 

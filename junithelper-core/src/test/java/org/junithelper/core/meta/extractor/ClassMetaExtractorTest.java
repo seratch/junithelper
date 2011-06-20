@@ -1,15 +1,19 @@
 package org.junithelper.core.meta.extractor;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
 import org.junithelper.core.config.Configuration;
+import org.junithelper.core.exception.JUnitHelperCoreException;
 import org.junithelper.core.meta.AccessModifier;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.util.IOUtil;
 
 public class ClassMetaExtractorTest {
+
+	Configuration config = new Configuration();
 
 	@Test
 	public void type() throws Exception {
@@ -25,7 +29,6 @@ public class ClassMetaExtractorTest {
 
 	@Test
 	public void extract_A$String() throws Exception {
-		Configuration config = new Configuration();
 		ClassMetaExtractor target = new ClassMetaExtractor(config);
 		String sourceCodeString = "package hoge.foo; @SuppressWarnings(value = { \"issue 28\" })public class Sample { public Sample() {}\r\n public void doSomething(String str) { System.out.println(\"aaaa\") } }";
 		ClassMeta actual = target.extract(sourceCodeString);
@@ -35,7 +38,6 @@ public class ClassMetaExtractorTest {
 
 	@Test
 	public void extract_A$String_classNameWithGenerics1() throws Exception {
-		Configuration config = new Configuration();
 		ClassMetaExtractor target = new ClassMetaExtractor(config);
 		String sourceCodeString = "package hoge.foo; @SuppressWarnings(value = { \"issue 28\" })public class Sample<T> { public Sample() {}\r\n public void doSomething(String str) { System.out.println(\"aaaa\") } }";
 		ClassMeta actual = target.extract(sourceCodeString);
@@ -45,7 +47,6 @@ public class ClassMetaExtractorTest {
 
 	@Test
 	public void extract_A$String_classNameWithGenerics2() throws Exception {
-		Configuration config = new Configuration();
 		ClassMetaExtractor target = new ClassMetaExtractor(config);
 		String sourceCodeString = "package hoge.foo; @SuppressWarnings(value = { \"issue 28\" })public class Sample<M, A> { public Sample() {}\r\n public void doSomething(String str) { System.out.println(\"aaaa\") } }";
 		ClassMeta actual = target.extract(sourceCodeString);
@@ -55,7 +56,6 @@ public class ClassMetaExtractorTest {
 
 	@Test
 	public void extract_A$String_classNameWithGenerics3() throws Exception {
-		Configuration config = new Configuration();
 		ClassMetaExtractor target = new ClassMetaExtractor(config);
 		String sourceCodeString = "package hoge.foo; @SuppressWarnings(value = { \"issue 28\" })public class Sample<M extends Object> { public Sample() {}\r\n public void doSomething(String str) { System.out.println(\"aaaa\") } }";
 		ClassMeta actual = target.extract(sourceCodeString);
@@ -65,7 +65,6 @@ public class ClassMetaExtractorTest {
 
 	@Test
 	public void extract_A$String_classNameWithGenerics4_nested() throws Exception {
-		Configuration config = new Configuration();
 		ClassMetaExtractor target = new ClassMetaExtractor(config);
 		String sourceCodeString = "package hoge.foo; @SuppressWarnings(value = { \"issue 28\" })public class Sample<M<A, B> extends Something> { public Sample() {}\r\n public void doSomething(String str) { System.out.println(\"aaaa\") } }";
 		ClassMeta actual = target.extract(sourceCodeString);
@@ -75,7 +74,6 @@ public class ClassMetaExtractorTest {
 
 	@Test
 	public void extract_A$String_Slim3_AbstractModelRef() throws Exception {
-		Configuration config = new Configuration();
 		ClassMetaExtractor target = new ClassMetaExtractor(config);
 		String sourceCodeString = IOUtil.readAsString(
 				IOUtil.getResourceAsStream("parser/impl/Slim3_AbstractModelRef.txt"), "UTF-8");
@@ -87,7 +85,6 @@ public class ClassMetaExtractorTest {
 
 	@Test
 	public void extract_A$String_Slim3_HtmlUtil() throws Exception {
-		Configuration config = new Configuration();
 		ClassMetaExtractor target = new ClassMetaExtractor(config);
 		String sourceCodeString = IOUtil.readAsString(IOUtil.getResourceAsStream("parser/impl/Slim3_HtmlUtil.txt"),
 				"UTF-8");
@@ -101,7 +98,6 @@ public class ClassMetaExtractorTest {
 
 	@Test
 	public void extract_A$String_Slim3_GlobalTransaction() throws Exception {
-		Configuration config = new Configuration();
 		config.target.isExceptionPatternRequired = false;
 		ClassMetaExtractor target = new ClassMetaExtractor(config);
 		String sourceCodeString = IOUtil.readAsString(
@@ -116,7 +112,6 @@ public class ClassMetaExtractorTest {
 
 	@Test
 	public void extract_A$String_Enum_ContentType() throws Exception {
-		Configuration config = new Configuration();
 		ClassMetaExtractor target = new ClassMetaExtractor(config);
 		String sourceCodeString = IOUtil.readAsString(IOUtil.getResourceAsStream("parser/impl/Enum_ContentType.txt"),
 				"UTF-8");
@@ -130,7 +125,6 @@ public class ClassMetaExtractorTest {
 
 	@Test
 	public void renameIfDuplicatedToConstructorArgNames_A$String$List$List_target() throws Exception {
-		Configuration config = new Configuration();
 		ClassMetaExtractor target = new ClassMetaExtractor(config);
 		String argName = "target";
 		List<String> constructorArgs = new ArrayList<String>();
@@ -142,7 +136,6 @@ public class ClassMetaExtractorTest {
 
 	@Test
 	public void renameIfDuplicatedToConstructorArgNames_A$String$List$List_notDuplicated() throws Exception {
-		Configuration config = new Configuration();
 		ClassMetaExtractor target = new ClassMetaExtractor(config);
 		String argName = "name";
 		List<String> constructorArgs = new ArrayList<String>();
@@ -155,7 +148,6 @@ public class ClassMetaExtractorTest {
 
 	@Test
 	public void renameIfDuplicatedToConstructorArgNames_A$String$List$List_duplicated() throws Exception {
-		Configuration config = new Configuration();
 		ClassMetaExtractor target = new ClassMetaExtractor(config);
 		String argName = "name";
 		List<String> constructorArgs = new ArrayList<String>();
@@ -168,7 +160,6 @@ public class ClassMetaExtractorTest {
 
 	@Test
 	public void renameIfDuplicatedToConstructorArgNames_A$String$List$List_duplicated2() throws Exception {
-		Configuration config = new Configuration();
 		ClassMetaExtractor target = new ClassMetaExtractor(config);
 		String argName = "name";
 		List<String> constructorArgs = new ArrayList<String>();
@@ -182,7 +173,6 @@ public class ClassMetaExtractorTest {
 
 	@Test
 	public void isDuplicatedVariableName_A$String_true() throws Exception {
-		Configuration config = new Configuration();
 		ClassMetaExtractor target = new ClassMetaExtractor(config);
 		String[] args = new String[] { "target", "actual", "expected", "context", "mocks" };
 		for (String name : args) {
@@ -194,7 +184,6 @@ public class ClassMetaExtractorTest {
 
 	@Test
 	public void isDuplicatedVariableName_A$String_false() throws Exception {
-		Configuration config = new Configuration();
 		ClassMetaExtractor target = new ClassMetaExtractor(config);
 		String[] args = new String[] { "target_", "name", "hoge", };
 		for (String name : args) {
@@ -202,6 +191,67 @@ public class ClassMetaExtractorTest {
 			boolean expected = false;
 			assertEquals(expected, actual);
 		}
+	}
+
+	@Test
+	public void extract_A$String_StringIsNull() throws Exception {
+		ClassMetaExtractor target = new ClassMetaExtractor(config);
+		String sourceCodeString = null;
+		try {
+			target.extract(sourceCodeString);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void extract_A$String_StringIsEmpty() throws Exception {
+		ClassMetaExtractor target = new ClassMetaExtractor(config);
+		String sourceCodeString = "";
+		ClassMeta actual = target.extract(sourceCodeString);
+		assertThat(actual, notNullValue());
+	}
+
+	@Test
+	public void renameIfDuplicatedToConstructorArgNames_A$String$List$List_StringIsNull() throws Exception {
+		ClassMetaExtractor target = new ClassMetaExtractor(config);
+		String argName = null;
+		List<String> constructorArgs = new ArrayList<String>();
+		List<String> methodArgs = new ArrayList<String>();
+		String actual = target.renameIfDuplicatedToConstructorArgNames(argName, constructorArgs, methodArgs);
+		String expected = null;
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void renameIfDuplicatedToConstructorArgNames_A$String$List$List_StringIsEmpty() throws Exception {
+		ClassMetaExtractor target = new ClassMetaExtractor(config);
+		String argName = "";
+		List<String> constructorArgs = new ArrayList<String>();
+		List<String> methodArgs = new ArrayList<String>();
+		String actual = target.renameIfDuplicatedToConstructorArgNames(argName, constructorArgs, methodArgs);
+		String expected = "";
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void isDuplicatedVariableName_A$String_StringIsNull() throws Exception {
+		ClassMetaExtractor target = new ClassMetaExtractor(config);
+		String name = null;
+		try {
+			target.isDuplicatedVariableName(name);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void isDuplicatedVariableName_A$String_StringIsEmpty() throws Exception {
+		ClassMetaExtractor target = new ClassMetaExtractor(config);
+		String name = "";
+		boolean actual = target.isDuplicatedVariableName(name);
+		boolean expected = false;
+		assertThat(actual, is(equalTo(expected)));
 	}
 
 }

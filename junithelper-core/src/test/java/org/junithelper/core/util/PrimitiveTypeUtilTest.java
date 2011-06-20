@@ -2,6 +2,7 @@ package org.junithelper.core.util;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.junithelper.core.exception.JUnitHelperCoreException;
 
 public class PrimitiveTypeUtilTest {
 
@@ -49,6 +50,46 @@ public class PrimitiveTypeUtilTest {
 		for (int i = 0; i < args.length; i++) {
 			boolean actual = PrimitiveTypeUtil.isPrimitive(args[i]);
 			assertEquals(expected[i], actual);
+		}
+	}
+
+	@Test
+	public void isPrimitive_A$String_StringIsNull() throws Exception {
+		String typeName = null;
+		try {
+			PrimitiveTypeUtil.isPrimitive(typeName);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void isPrimitive_A$String_StringIsEmpty() throws Exception {
+		String typeName = "";
+		try {
+			PrimitiveTypeUtil.isPrimitive(typeName);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void getTypeDefaultValue_A$String_StringIsNull() throws Exception {
+		String typeName = null;
+		try {
+			PrimitiveTypeUtil.getTypeDefaultValue(typeName);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void getTypeDefaultValue_A$String_StringIsEmpty() throws Exception {
+		String typeName = "";
+		try {
+			PrimitiveTypeUtil.getTypeDefaultValue(typeName);
+			fail();
+		} catch (JUnitHelperCoreException e) {
 		}
 	}
 

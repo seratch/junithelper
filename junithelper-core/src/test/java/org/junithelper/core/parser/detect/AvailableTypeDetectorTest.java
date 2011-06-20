@@ -1,8 +1,10 @@
 package org.junithelper.core.parser.detect;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junithelper.core.config.Configuration;
+import org.junithelper.core.exception.JUnitHelperCoreException;
 import org.junithelper.core.meta.ClassMeta;
 
 public class AvailableTypeDetectorTest {
@@ -189,6 +191,112 @@ public class AvailableTypeDetectorTest {
 		// then
 		boolean expected = false;
 		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void isPrimitive_A$String_StringIsNull() throws Exception {
+		ClassMeta classMeta = null;
+		AvailableTypeDetector target = new AvailableTypeDetector(classMeta);
+		String typeName = null;
+		boolean actual = target.isPrimitive(typeName);
+		boolean expected = false;
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void isPrimitive_A$String_StringIsEmpty() throws Exception {
+		ClassMeta classMeta = null;
+		AvailableTypeDetector target = new AvailableTypeDetector(classMeta);
+		String typeName = "";
+		try {
+			target.isPrimitive(typeName);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void isArray_A$String_StringIsNull() throws Exception {
+		ClassMeta classMeta = null;
+		AvailableTypeDetector target = new AvailableTypeDetector(classMeta);
+		String typeName = null;
+		boolean actual = target.isArray(typeName);
+		boolean expected = false;
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void isArray_A$String_StringIsEmpty() throws Exception {
+		ClassMeta classMeta = null;
+		AvailableTypeDetector target = new AvailableTypeDetector(classMeta);
+		String typeName = "";
+		boolean actual = target.isArray(typeName);
+		boolean expected = false;
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void isJavaLangPackageType_A$String_StringIsNull() throws Exception {
+		ClassMeta classMeta = null;
+		AvailableTypeDetector target = new AvailableTypeDetector(classMeta);
+		String typeName = null;
+		boolean actual = target.isJavaLangPackageType(typeName);
+		boolean expected = false;
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void isJavaLangPackageType_A$String_StringIsEmpty() throws Exception {
+		ClassMeta classMeta = null;
+		AvailableTypeDetector target = new AvailableTypeDetector(classMeta);
+		String typeName = "";
+		boolean actual = target.isJavaLangPackageType(typeName);
+		boolean expected = false;
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void isAvailableType_A$String$Configuration_StringIsNull() throws Exception {
+		ClassMeta classMeta = null;
+		AvailableTypeDetector target = new AvailableTypeDetector(classMeta);
+		String typeName = null;
+		Configuration config = null;
+		boolean actual = target.isAvailableType(typeName, config);
+		boolean expected = false;
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void isAvailableType_A$String$Configuration_StringIsEmpty() throws Exception {
+		ClassMeta classMeta = new ClassMeta();
+		AvailableTypeDetector target = new AvailableTypeDetector(classMeta);
+		String typeName = "";
+		Configuration config = null;
+		boolean actual = target.isAvailableType(typeName, config);
+		boolean expected = false;
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void isJMockitMockableType_A$String_StringIsNull() throws Exception {
+		ClassMeta classMeta = null;
+		AvailableTypeDetector target = new AvailableTypeDetector(classMeta);
+		String typeName = null;
+		boolean actual = target.isJMockitMockableType(typeName);
+		boolean expected = false;
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void isJMockitMockableType_A$String_StringIsEmpty() throws Exception {
+		ClassMeta classMeta = null;
+		AvailableTypeDetector target = new AvailableTypeDetector(classMeta);
+		String typeName = "";
+		try {
+			target.isJMockitMockableType(typeName);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
 	}
 
 }

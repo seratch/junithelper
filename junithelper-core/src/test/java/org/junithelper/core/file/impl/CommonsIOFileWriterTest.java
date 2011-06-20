@@ -78,31 +78,22 @@ public class CommonsIOFileWriterTest {
 	public void writeText_A$String$String() throws Exception {
 		File file = new File("src/test/resources/tmp.txt");
 		CommonsIOFileWriter target = new CommonsIOFileWriter(file);
-		// given
 		String text = null;
-		String encoding = null;
-		// e.g. : given(mocked.called()).willReturn(1);
-		// when
+		String encoding = "UTF-8";
 		target.writeText(text, encoding);
-		// then
-		// e.g. : verify(mocked).called();
 	}
 
 	@Test
-	public void writeText_A$String$String_T$IOException() throws Exception {
+	public void writeText_A$String$String_NotWritable() throws Exception {
 		File file = new File("src/test/resources/tmp.txt");
 		CommonsIOFileWriter target = new CommonsIOFileWriter(file);
-		// given
 		String text = null;
-		String encoding = null;
-		// e.g. : given(mocked.called()).willReturn(1);
+		String encoding = "UTF-8";
 		try {
 			file.setWritable(false);
-			// when
 			target.writeText(text, encoding);
 			fail("Expected exception was not thrown!");
 		} catch (IOException e) {
-			// then
 		}
 		file.setWritable(true);
 	}
@@ -131,6 +122,26 @@ public class CommonsIOFileWriterTest {
 		CommonsIOFileWriter target = new CommonsIOFileWriter(file);
 		String text = "foo";
 		target.writeText(text);
+		file.setWritable(true);
+	}
+
+	@Test
+	public void writeText_A$String$String_StringIsNull() throws Exception {
+		File file = new File("src/test/resources/tmp.txt");
+		CommonsIOFileWriter target = new CommonsIOFileWriter(file);
+		String text = null;
+		String encoding = null;
+		target.writeText(text, encoding);
+		file.setWritable(true);
+	}
+
+	@Test
+	public void writeText_A$String$String_StringIsEmpty() throws Exception {
+		File file = new File("src/test/resources/tmp.txt");
+		CommonsIOFileWriter target = new CommonsIOFileWriter(file);
+		String text = "";
+		String encoding = "";
+		target.writeText(text, encoding);
 		file.setWritable(true);
 	}
 

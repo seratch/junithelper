@@ -15,6 +15,10 @@
  */
 package org.junithelper.core.meta.extractor;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
@@ -25,11 +29,7 @@ import org.junithelper.core.meta.ExceptionMeta;
 import org.junithelper.core.meta.MethodMeta;
 import org.junithelper.core.parser.convert.TypeNameConverter;
 import org.junithelper.core.parser.detect.AccessModifierDetector;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.junithelper.core.util.Assertion;
 
 public class MethodMetaExtractor {
 
@@ -61,6 +61,8 @@ public class MethodMetaExtractor {
 
 	public List<MethodMeta> extract(String sourceCodeString) {
 
+		Assertion.mustNotBeNull(sourceCodeString, "sourceCodeString");
+
 		List<MethodMeta> dest = new ArrayList<MethodMeta>();
 
 		TypeNameConverter typeNameConverter = new TypeNameConverter(config);
@@ -72,30 +74,24 @@ public class MethodMetaExtractor {
 		Matcher mat = RegExp.PatternObject.MethodSignatureArea.matcher(sourceCodeString);
 		while (mat.find()) {
 			MethodMeta meta = new MethodMeta();
-			String methodSignatureArea = mat.group(0)
-					.replaceAll(StringValue.CarriageReturn, StringValue.Empty)
+			String methodSignatureArea = mat.group(0).replaceAll(StringValue.CarriageReturn, StringValue.Empty)
 					.replaceAll(StringValue.LineFeed, StringValue.Space);
 
 			// -----------------
 			// skip constructors
 			if (methodSignatureArea.matches(RegExp.Anything_ZeroOrMore_Min
-					+ RegExp.WhiteSpace.Consecutive_OneOrMore_Max
-					+ classMeta.name + "\\(" + RegExp.Anything_ZeroOrMore_Min
-					+ "\\)" + RegExp.Anything_ZeroOrMore_Min)) {
+					+ RegExp.WhiteSpace.Consecutive_OneOrMore_Max + classMeta.name + "\\("
+					+ RegExp.Anything_ZeroOrMore_Min + "\\)" + RegExp.Anything_ZeroOrMore_Min)) {
 				continue;
 			}
 
 			// -----------------
 			// skip not method signature
-			String trimmedMethodSignatureArea = methodSignatureArea
-					.replaceAll("\\s*,\\s*", ",")
-					.replaceAll("\\s*<\\s*", "<")
-					.replaceAll("\\s*>", ">");
-			String methodSignatureAreaWithoutAccessModifier
-					= trimAccessModifierFromMethodSignatureArea(trimmedMethodSignatureArea);
-			Matcher matcherGrouping =
-					RegExp.PatternObject.MethodSignatureWithoutAccessModifier_Group.matcher(
-							StringValue.Space + methodSignatureAreaWithoutAccessModifier);
+			String trimmedMethodSignatureArea = methodSignatureArea.replaceAll("\\s*,\\s*", ",")
+					.replaceAll("\\s*<\\s*", "<").replaceAll("\\s*>", ">");
+			String methodSignatureAreaWithoutAccessModifier = trimAccessModifierFromMethodSignatureArea(trimmedMethodSignatureArea);
+			Matcher matcherGrouping = RegExp.PatternObject.MethodSignatureWithoutAccessModifier_Group
+					.matcher(StringValue.Space + methodSignatureAreaWithoutAccessModifier);
 			if (!matcherGrouping.find()) {
 				continue;
 			}
@@ -104,8 +100,7 @@ public class MethodMetaExtractor {
 			// is static method
 			if (methodSignatureArea.matches(RegExp.Anything_ZeroOrMore_Min
 					+ RegExp.WhiteSpace.Consecutive_OneOrMore_Max + "static"
-					+ RegExp.WhiteSpace.Consecutive_OneOrMore_Max
-					+ RegExp.Anything_ZeroOrMore_Min)) {
+					+ RegExp.WhiteSpace.Consecutive_OneOrMore_Max + RegExp.Anything_ZeroOrMore_Min)) {
 				meta.isStatic = true;
 			}
 			// -----------------
@@ -122,20 +117,18 @@ public class MethodMetaExtractor {
 			returnTypeFull = trimGenericsIfNested(returnTypeFull);
 			Matcher toGenericsMatcherForReturn = Pattern.compile(RegExp.Generics_Group).matcher(returnTypeFull);
 			while (toGenericsMatcherForReturn.find()) {
-				String[] generics = toGenericsMatcherForReturn.group()
-						.replaceAll("<", StringValue.Empty)
-						.replaceAll(">", StringValue.Empty)
-						.split(StringValue.Comma);
+				String[] generics = toGenericsMatcherForReturn.group().replaceAll("<", StringValue.Empty)
+						.replaceAll(">", StringValue.Empty).split(StringValue.Comma);
 				for (String generic : generics) {
-					generic = typeNameConverter.toCompilableType(
-							generic, classMeta.importedList, classMeta.packageName).trim();
+					generic = typeNameConverter
+							.toCompilableType(generic, classMeta.importedList, classMeta.packageName).trim();
 					meta.returnType.generics.add(generic);
 				}
 			}
 			String returnTypeName = returnTypeFull.replace(RegExp.Generics, StringValue.Empty);
 			if (!returnTypeName.equals("void")) {
-				meta.returnType.name = typeNameConverter.toCompilableType(returnTypeName,
-						meta.returnType.generics, classMeta.importedList, classMeta.packageName).trim();
+				meta.returnType.name = typeNameConverter.toCompilableType(returnTypeName, meta.returnType.generics,
+						classMeta.importedList, classMeta.packageName).trim();
 				meta.returnType.nameInMethodName = typeNameConverter.toAvailableInMethodName(meta.returnType.name);
 			}
 			// -----------------
@@ -175,8 +168,8 @@ public class MethodMetaExtractor {
 			String throwsExceptions = matcherGrouping.group(4);
 			if (throwsExceptions != null) {
 				String[] exceptions = throwsExceptions.replaceAll(
-						"throws" + RegExp.WhiteSpace.Consecutive_OneOrMore_Max,
-						StringValue.Empty).split(StringValue.Comma);
+						"throws" + RegExp.WhiteSpace.Consecutive_OneOrMore_Max, StringValue.Empty).split(
+						StringValue.Comma);
 				for (String exception : exceptions) {
 					exception = exception.trim();
 					ExceptionMeta exceptionMeta = new ExceptionMeta();
@@ -191,21 +184,21 @@ public class MethodMetaExtractor {
 	}
 
 	boolean isPrivateFieldExists(String fieldType, String fieldName, String sourceCodeString) {
+
+		Assertion.mustNotBeEmpty(fieldType, "fieldType");
+		Assertion.mustNotBeEmpty(fieldName, "fieldName");
+		Assertion.mustNotBeNull(sourceCodeString, "sourceCodeString");
+
 		// field name
 		String regExpForFieldNameArea = fieldName.substring(0, 1).toLowerCase() + fieldName.substring(1);
 		// field type
 		// considering array, generics comma
-		String regExpForFieldTypeArea = fieldType
-				.replaceAll("\\[", "\\\\[")
-				.replaceAll("\\]", "\\\\]")
+		String regExpForFieldTypeArea = fieldType.replaceAll("\\[", "\\\\[").replaceAll("\\]", "\\\\]")
 				.replaceAll(",", "\\\\s*,\\\\s*");
-		String regExpForPrivateFieldThatHasAccessors = ".*?private\\s+"
-				+ regExpForFieldTypeArea + "(" + RegExp.Generics + ")*"
-				+ RegExp.WhiteSpace.Consecutive_OneOrMore_Max
-				+ regExpForFieldNameArea + ".+";
-		return sourceCodeString
-				.replaceAll(RegExp.CRLF, StringValue.Empty)
-				.matches(regExpForPrivateFieldThatHasAccessors);
+		String regExpForPrivateFieldThatHasAccessors = ".*?private\\s+" + regExpForFieldTypeArea + "("
+				+ RegExp.Generics + ")*" + RegExp.WhiteSpace.Consecutive_OneOrMore_Max + regExpForFieldNameArea + ".+";
+		return sourceCodeString.replaceAll(RegExp.CRLF, StringValue.Empty).matches(
+				regExpForPrivateFieldThatHasAccessors);
 	}
 
 	AccessModifier getAccessModifier(String methodSignatureArea) {
@@ -223,10 +216,11 @@ public class MethodMetaExtractor {
 	}
 
 	static String trimAccessModifierFromMethodSignatureArea(String methodSignatureArea) {
-		String regExpForAccessModifier_public
-				= AccessModifierDetector.RegExp.Prefix + "public" + "\\s+";
-		String regExpForAccessModifier_protected
-				= AccessModifierDetector.RegExp.Prefix + "protected" + "\\s+";
+
+		Assertion.mustNotBeNull(methodSignatureArea, "methodSignatureArea");
+
+		String regExpForAccessModifier_public = AccessModifierDetector.RegExp.Prefix + "public" + "\\s+";
+		String regExpForAccessModifier_protected = AccessModifierDetector.RegExp.Prefix + "protected" + "\\s+";
 		String methodSignatureAreaWithoutAccessModifier = methodSignatureArea
 				.replaceAll(StringValue.Tab, StringValue.Space)
 				.replaceAll(regExpForAccessModifier_public, StringValue.Space)
@@ -262,9 +256,7 @@ public class MethodMetaExtractor {
 			}
 		}
 		if (hasNestedGenerics) {
-			return returnTypeDef
-					.replaceFirst(RegExp.Generics, StringValue.Empty)
-					.replaceAll("<", StringValue.Empty)
+			return returnTypeDef.replaceFirst(RegExp.Generics, StringValue.Empty).replaceAll("<", StringValue.Empty)
 					.replaceAll(">", StringValue.Empty);
 		}
 		return returnTypeDef;

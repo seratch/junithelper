@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.JUnitVersion;
 import org.junithelper.core.config.extension.ExtConfigurationLoader;
+import org.junithelper.core.exception.JUnitHelperCoreException;
 import org.junithelper.core.meta.AccessModifier;
 import org.junithelper.core.meta.ArgTypeMeta;
 import org.junithelper.core.meta.ClassMeta;
@@ -367,6 +368,119 @@ public class DefaultTestCaseGeneratorTest {
 	public void appendIfExtensionAssertionsExist_A$TestMethodMeta$Configuration() throws Exception {
 		TestMethodMeta testMethodMeta = new TestMethodMeta();
 		TestMethodMeta actual = DefaultTestCaseGenerator.appendIfExtensionAssertionsExist(testMethodMeta, config);
+		assertThat(actual, notNullValue());
+	}
+
+	@Test
+	public void initialize_A$String_StringIsNull() throws Exception {
+		DefaultTestCaseGenerator target = new DefaultTestCaseGenerator(config);
+		String targetSourceCodeString = null;
+		try {
+			target.initialize(targetSourceCodeString);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void initialize_A$String_StringIsEmpty() throws Exception {
+		DefaultTestCaseGenerator target = new DefaultTestCaseGenerator(config);
+		String targetSourceCodeString = "";
+		DefaultTestCaseGenerator actual = target.initialize(targetSourceCodeString);
+		assertThat(actual, notNullValue());
+	}
+
+	@Test
+	public void getLackingTestMethodMetaList_A$String_StringIsNull() throws Exception {
+		DefaultTestCaseGenerator target = new DefaultTestCaseGenerator(config);
+		String currentTestCaseSourceCode = null;
+		try {
+			target.getLackingTestMethodMetaList(currentTestCaseSourceCode);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void getLackingTestMethodMetaList_A$String_StringIsEmpty() throws Exception {
+		DefaultTestCaseGenerator target = new DefaultTestCaseGenerator(config);
+		String currentSourceCode = "public class Sample {}";
+		target.initialize(new ClassMetaExtractor(config).extract(currentSourceCode));
+		String currentTestCaseSourceCode = "";
+		List<TestMethodMeta> actual = target.getLackingTestMethodMetaList(currentTestCaseSourceCode);
+		assertThat(actual, notNullValue());
+	}
+
+	@Test
+	public void getTestCaseSourceCodeWithLackingTestMethod_A$String_StringIsNull() throws Exception {
+		DefaultTestCaseGenerator target = new DefaultTestCaseGenerator(config);
+		String currentTestCaseSourceCode = null;
+		try {
+			target.getTestCaseSourceCodeWithLackingTestMethod(currentTestCaseSourceCode);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void getTestCaseSourceCodeWithLackingTestMethod_A$String_StringIsEmpty() throws Exception {
+		DefaultTestCaseGenerator target = new DefaultTestCaseGenerator(config);
+		String currentTestCaseSourceCode = "";
+		try {
+			target.getTestCaseSourceCodeWithLackingTestMethod(currentTestCaseSourceCode);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void getUnifiedVersionTestCaseSourceCode_A$String$JUnitVersion_StringIsNull() throws Exception {
+		DefaultTestCaseGenerator target = new DefaultTestCaseGenerator(config);
+		String currentTestCaseSourceCode = null;
+		JUnitVersion version = null;
+		try {
+			target.getUnifiedVersionTestCaseSourceCode(currentTestCaseSourceCode, version);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void getUnifiedVersionTestCaseSourceCode_A$String$JUnitVersion_StringIsEmpty() throws Exception {
+		DefaultTestCaseGenerator target = new DefaultTestCaseGenerator(config);
+		String currentTestCaseSourceCode = "";
+		JUnitVersion version = null;
+		String actual = target.getUnifiedVersionTestCaseSourceCode(currentTestCaseSourceCode, version);
+		String expected = "";
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void appendRequiredImportListToSourceCode_A$String$ClassMeta$Configuration() throws Exception {
+		String sourceCode = "public class Sample {}";
+		ClassMeta targetClassMeta = new ClassMeta();
+		String actual = DefaultTestCaseGenerator.appendRequiredImportListToSourceCode(sourceCode, targetClassMeta,
+				config);
+		assertThat(actual, notNullValue());
+	}
+
+	@Test
+	public void appendRequiredImportListToSourceCode_A$String$ClassMeta$Configuration_StringIsNull() throws Exception {
+		String sourceCode = null;
+		ClassMeta targetClassMeta = new ClassMeta();
+		try {
+			DefaultTestCaseGenerator.appendRequiredImportListToSourceCode(sourceCode, targetClassMeta, config);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void appendRequiredImportListToSourceCode_A$String$ClassMeta$Configuration_StringIsEmpty() throws Exception {
+		String sourceCode = "";
+		ClassMeta targetClassMeta = new ClassMeta();
+		String actual = DefaultTestCaseGenerator.appendRequiredImportListToSourceCode(sourceCode, targetClassMeta,
+				config);
 		assertThat(actual, notNullValue());
 	}
 

@@ -21,6 +21,7 @@ public class Stdout {
 	}
 
 	public static final void printf(String format, Object... values) {
+		Assertion.mustNotBeEmpty(format, "format");
 		System.out.printf(format, values);
 	}
 

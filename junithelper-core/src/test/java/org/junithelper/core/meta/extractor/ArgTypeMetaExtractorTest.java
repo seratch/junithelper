@@ -1,12 +1,16 @@
 package org.junithelper.core.meta.extractor;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import org.junit.Test;
 import org.junithelper.core.config.Configuration;
+import org.junithelper.core.exception.JUnitHelperCoreException;
 import org.junithelper.core.meta.ClassMeta;
 
 public class ArgTypeMetaExtractorTest {
+
+	Configuration config = new Configuration();
 
 	@Test
 	public void type() throws Exception {
@@ -64,6 +68,47 @@ public class ArgTypeMetaExtractorTest {
 		// e.g. : verify(mocked).called();
 		ArgTypeMetaExtractor expected = target;
 		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void initialize_A$String_StringIsNull() throws Exception {
+		ArgTypeMetaExtractor target = new ArgTypeMetaExtractor(config);
+		String sourceCodeString = null;
+		try {
+			target.initialize(sourceCodeString);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void initialize_A$String_StringIsEmpty() throws Exception {
+		ArgTypeMetaExtractor target = new ArgTypeMetaExtractor(config);
+		String sourceCodeString = "";
+		ArgTypeMetaExtractor actual = target.initialize(sourceCodeString);
+		assertThat(actual, notNullValue());
+	}
+
+	@Test
+	public void doExtract_A$String_StringIsNull() throws Exception {
+		ArgTypeMetaExtractor target = new ArgTypeMetaExtractor(config);
+		ClassMeta classMeta = new ClassMetaExtractor(config).extract("public class Sample {}");
+		target.initialize(classMeta);
+		String argsAreaString = null;
+		try {
+			target.doExtract(argsAreaString);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void doExtract_A$String_StringIsEmpty() throws Exception {
+		ArgTypeMetaExtractor target = new ArgTypeMetaExtractor(config);
+		ClassMeta classMeta = new ClassMetaExtractor(config).extract("public class Sample {}");
+		target.initialize(classMeta);
+		String argsAreaString = "";
+		target.doExtract(argsAreaString);
 	}
 
 }

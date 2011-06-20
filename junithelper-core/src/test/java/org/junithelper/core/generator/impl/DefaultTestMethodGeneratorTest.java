@@ -8,6 +8,8 @@ import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.JUnitVersion;
 import org.junithelper.core.config.MockObjectFramework;
 import org.junithelper.core.config.TestingPatternExplicitComment;
+import org.junithelper.core.exception.JUnitHelperCoreException;
+import org.junithelper.core.meta.ArgTypeMeta;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.ExceptionMeta;
 import org.junithelper.core.meta.MethodMeta;
@@ -650,6 +652,252 @@ public class DefaultTestMethodGeneratorTest {
 		target.appendTestingPatternExplicitComment(buf, value, depth);
 		// Assert
 		assertThat(buf.toString(), is(equalTo("// When\r\n")));
+	}
+
+	@Test
+	public void appendTabs_A$StringBuilder$int_intIsMinus1() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		int times = -1;
+		try {
+			target.appendTabs(buf, times);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void appendTabs_A$StringBuilder$int_intIs0() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		int times = 0;
+		target.appendTabs(buf, times);
+	}
+
+	@Test
+	public void appendTabs_A$StringBuilder$int_intIs1() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		int times = 1;
+		target.appendTabs(buf, times);
+	}
+
+	@Test
+	public void appendTabs_A$StringBuilder$int_intIs2() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		int times = 2;
+		target.appendTabs(buf, times);
+	}
+
+	@Test
+	public void appendMockChecking_A$StringBuilder$int_intIsMinus1() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		int depth = -1;
+		target.appendMockChecking(buf, depth);
+	}
+
+	@Test
+	public void appendMockChecking_A$StringBuilder$int_intIs0() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		int depth = 0;
+		target.appendMockChecking(buf, depth);
+	}
+
+	@Test
+	public void appendMockChecking_A$StringBuilder$int_intIs1() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		int depth = 1;
+		target.appendMockChecking(buf, depth);
+	}
+
+	@Test
+	public void appendMockChecking_A$StringBuilder$int_intIs2() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		int depth = 2;
+		target.appendMockChecking(buf, depth);
+	}
+
+	@Test
+	public void appendMockVerifying_A$StringBuilder$int_intIsMinus1() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		int depth = -1;
+		target.appendMockVerifying(buf, depth);
+	}
+
+	@Test
+	public void appendMockVerifying_A$StringBuilder$int_intIs0() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		int depth = 0;
+		target.appendMockVerifying(buf, depth);
+	}
+
+	@Test
+	public void appendMockVerifying_A$StringBuilder$int_intIs1() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		int depth = 1;
+		target.appendMockVerifying(buf, depth);
+	}
+
+	@Test
+	public void appendMockVerifying_A$StringBuilder$int_intIs2() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		int depth = 2;
+		target.appendMockVerifying(buf, depth);
+	}
+
+	@Test
+	public void appendBDDMockitoComment_A$StringBuilder$String$int_intIsMinus1() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		String value = null;
+		int depth = -1;
+		target.appendBDDMockitoComment(buf, value, depth);
+	}
+
+	@Test
+	public void appendBDDMockitoComment_A$StringBuilder$String$int_intIs0() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		String value = null;
+		int depth = 0;
+		target.appendBDDMockitoComment(buf, value, depth);
+	}
+
+	@Test
+	public void appendBDDMockitoComment_A$StringBuilder$String$int_intIs1() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		String value = null;
+		int depth = 1;
+		target.appendBDDMockitoComment(buf, value, depth);
+	}
+
+	@Test
+	public void appendBDDMockitoComment_A$StringBuilder$String$int_intIs2() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		String value = null;
+		int depth = 2;
+		target.appendBDDMockitoComment(buf, value, depth);
+	}
+
+	@Test
+	public void appendBDDMockitoComment_A$StringBuilder$String$int_StringIsNull() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		String value = null;
+		int depth = 0;
+		target.appendBDDMockitoComment(buf, value, depth);
+	}
+
+	@Test
+	public void appendBDDMockitoComment_A$StringBuilder$String$int_StringIsEmpty() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		String value = "";
+		int depth = 0;
+		target.appendBDDMockitoComment(buf, value, depth);
+	}
+
+	@Test
+	public void appendTestingPatternExplicitComment_A$StringBuilder$String$int_intIsMinus1() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		String value = null;
+		int depth = -1;
+		target.appendTestingPatternExplicitComment(buf, value, depth);
+	}
+
+	@Test
+	public void appendTestingPatternExplicitComment_A$StringBuilder$String$int_intIs0() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		String value = null;
+		int depth = 0;
+		target.appendTestingPatternExplicitComment(buf, value, depth);
+	}
+
+	@Test
+	public void appendTestingPatternExplicitComment_A$StringBuilder$String$int_intIs1() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		String value = null;
+		int depth = 1;
+		target.appendTestingPatternExplicitComment(buf, value, depth);
+	}
+
+	@Test
+	public void appendTestingPatternExplicitComment_A$StringBuilder$String$int_intIs2() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		String value = null;
+		int depth = 2;
+		target.appendTestingPatternExplicitComment(buf, value, depth);
+	}
+
+	@Test
+	public void appendTestingPatternExplicitComment_A$StringBuilder$String$int_StringIsNull() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		String value = null;
+		int depth = 0;
+		target.appendTestingPatternExplicitComment(buf, value, depth);
+	}
+
+	@Test
+	public void appendTestingPatternExplicitComment_A$StringBuilder$String$int_StringIsEmpty() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		String value = "";
+		int depth = 0;
+		target.appendTestingPatternExplicitComment(buf, value, depth);
+	}
+
+	@Test
+	public void getArgValue_A$TestMethodMeta$ArgTypeMeta$String_StringIsNull() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		TestMethodMeta testMethodMeta = new TestMethodMeta();
+		ArgTypeMeta argTypeMeta = new ArgTypeMeta();
+		argTypeMeta.name = "java.lang.String";
+		String argName = "name";
+		String actual = target.getArgValue(testMethodMeta, argTypeMeta, argName);
+		String expected = "null";
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void getArgValue_A$TestMethodMeta$ArgTypeMeta$String_StringIsEmpty() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		TestMethodMeta testMethodMeta = new TestMethodMeta();
+		ArgTypeMeta argTypeMeta = new ArgTypeMeta();
+		argTypeMeta.name = "";
+		String argName = "";
+		try {
+			target.getArgValue(testMethodMeta, argTypeMeta, argName);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void getArgValue_A$TestMethodMeta$ArgTypeMeta$String_PrimitiveValue() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		TestMethodMeta testMethodMeta = new TestMethodMeta();
+		ArgTypeMeta argTypeMeta = new ArgTypeMeta();
+		argTypeMeta.name = "int";
+		String argName = "name";
+		String actual = target.getArgValue(testMethodMeta, argTypeMeta, argName);
+		String expected = "0";
+		assertThat(actual, is(equalTo(expected)));
 	}
 
 }

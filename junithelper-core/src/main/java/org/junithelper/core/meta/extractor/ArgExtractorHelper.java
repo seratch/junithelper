@@ -1,10 +1,10 @@
 package org.junithelper.core.meta.extractor;
 
-import org.junithelper.core.constant.RegExp;
-import org.junithelper.core.constant.StringValue;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.junithelper.core.constant.RegExp;
+import org.junithelper.core.constant.StringValue;
+import org.junithelper.core.util.Assertion;
 
 public class ArgExtractorHelper {
 
@@ -14,6 +14,8 @@ public class ArgExtractorHelper {
 	static final String NESTED_GENERICS_MARK = "@NESTED_GENERICS@";
 
 	static List<String> getArgListFromArgsDefAreaString(String argsDefAreaString) {
+
+		Assertion.mustNotBeNull(argsDefAreaString, "argsDefAreaString");
 
 		// nested generics
 		StringBuilder tmp = new StringBuilder();
@@ -97,8 +99,8 @@ public class ArgExtractorHelper {
 	}
 
 	static String trimGenericsAreaIfNestedGenericsExists(String target) {
-		if (target.matches(
-				RegExp.Anything_OneOrMore_Min + NESTED_GENERICS_MARK + RegExp.Anything_OneOrMore_Min)) {
+		Assertion.mustNotBeNull(target, "target");
+		if (target.matches(RegExp.Anything_OneOrMore_Min + NESTED_GENERICS_MARK + RegExp.Anything_OneOrMore_Min)) {
 			return target.replaceAll(RegExp.Generics, StringValue.Empty);
 		}
 		return target;

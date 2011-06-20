@@ -2,6 +2,7 @@ package org.junithelper.core.config;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.junithelper.core.exception.JUnitHelperCoreException;
 
 public class MessageValueTest {
 
@@ -100,7 +101,7 @@ public class MessageValueTest {
 		try {
 			target.get(key);
 			fail();
-		} catch (IllegalArgumentException e) {
+		} catch (JUnitHelperCoreException e) {
 		}
 	}
 
@@ -111,7 +112,7 @@ public class MessageValueTest {
 		try {
 			target.get(key);
 			fail();
-		} catch (IllegalArgumentException e) {
+		} catch (JUnitHelperCoreException e) {
 		}
 	}
 

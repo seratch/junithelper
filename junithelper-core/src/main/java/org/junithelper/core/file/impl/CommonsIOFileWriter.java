@@ -15,12 +15,11 @@
  */
 package org.junithelper.core.file.impl;
 
+import java.io.File;
+import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.file.FileWriter;
-
-import java.io.File;
-import java.io.IOException;
 
 public class CommonsIOFileWriter implements FileWriter {
 
@@ -54,6 +53,9 @@ public class CommonsIOFileWriter implements FileWriter {
 
 	@Override
 	public void writeText(String text, String encoding) throws IOException {
+		if (encoding == null || encoding.length() == 0) {
+			encoding = this.encoding;
+		}
 		FileUtils.writeStringToFile(file, text, encoding);
 	}
 

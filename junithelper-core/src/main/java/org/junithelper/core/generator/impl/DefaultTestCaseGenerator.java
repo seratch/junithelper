@@ -41,6 +41,7 @@ import org.junithelper.core.meta.MethodMeta;
 import org.junithelper.core.meta.TestCaseMeta;
 import org.junithelper.core.meta.TestMethodMeta;
 import org.junithelper.core.meta.extractor.ClassMetaExtractor;
+import org.junithelper.core.util.Assertion;
 import org.junithelper.core.util.ObjectUtil;
 import org.junithelper.core.util.Stderr;
 
@@ -85,6 +86,9 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 
 	@Override
 	public List<TestMethodMeta> getLackingTestMethodMetaList(String currentTestCaseSourceCode) {
+
+		Assertion.mustNotBeNull(currentTestCaseSourceCode, "currentTestCaseSourceCode");
+		Assertion.mustNotBeNull(targetClassMeta, "targetClassMeta");
 
 		List<TestMethodMeta> dest = new ArrayList<TestMethodMeta>();
 		String checkTargetSourceCode = TrimFilterUtil.doAllFilters(currentTestCaseSourceCode);
@@ -373,6 +377,9 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 
 	static String appendRequiredImportListToSourceCode(String sourceCode, ClassMeta targetClassMeta,
 			Configuration config) {
+
+		Assertion.mustNotBeNull(targetClassMeta, "targetClassMeta");
+
 		String dest = sourceCode;
 		String oneline = TrimFilterUtil.doAllFilters(sourceCode);
 		StringBuilder importedListBuf = new StringBuilder();

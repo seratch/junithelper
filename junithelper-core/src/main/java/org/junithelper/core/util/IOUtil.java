@@ -35,15 +35,17 @@ public final class IOUtil {
 	}
 
 	public static InputStream getResourceAsStream(String name) {
+		Assertion.mustNotBeNull(name, "name");
 		return new IOUtil().getClass().getClassLoader().getResourceAsStream(name);
 	}
 
 	public static final String readAsString(InputStream is, String encoding) throws IOException {
+		Assertion.mustNotBeNull(is, "is");
+		if (encoding == null) {
+			encoding = DEFAULT_OUTPUT_FILE_ENCODING;
+		}
 		BufferedReader br = null;
 		try {
-			if (encoding == null) {
-				encoding = DEFAULT_OUTPUT_FILE_ENCODING;
-			}
 			br = new BufferedReader(new InputStreamReader(is, encoding));
 			StringBuilder sb = new StringBuilder();
 			String line = null;

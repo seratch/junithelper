@@ -1,5 +1,6 @@
 package org.junithelper.core.parser.detect;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -88,6 +89,78 @@ public class AccessModifierDetectorTest {
 		boolean actual = target.isPrivate(methodSignature);
 		boolean expected = false;
 		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void isPublic_A$String_StringIsNull() throws Exception {
+		AccessModifierDetector target = new AccessModifierDetector();
+		String methodSignature = null;
+		boolean actual = target.isPublic(methodSignature);
+		boolean expected = false;
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void isPublic_A$String_StringIsEmpty() throws Exception {
+		AccessModifierDetector target = new AccessModifierDetector();
+		String methodSignature = "";
+		boolean actual = target.isPublic(methodSignature);
+		boolean expected = false;
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void isProtected_A$String_StringIsNull() throws Exception {
+		AccessModifierDetector target = new AccessModifierDetector();
+		String methodSignature = null;
+		boolean actual = target.isProtected(methodSignature);
+		boolean expected = false;
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void isProtected_A$String_StringIsEmpty() throws Exception {
+		AccessModifierDetector target = new AccessModifierDetector();
+		String methodSignature = "";
+		boolean actual = target.isProtected(methodSignature);
+		boolean expected = false;
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void isPackageLocal_A$String_StringIsNull() throws Exception {
+		AccessModifierDetector target = new AccessModifierDetector();
+		String methodSignature = null;
+		boolean actual = target.isPackageLocal(methodSignature);
+		boolean expected = false;
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void isPackageLocal_A$String_StringIsEmpty() throws Exception {
+		AccessModifierDetector target = new AccessModifierDetector();
+		String methodSignature = "";
+		boolean actual = target.isPackageLocal(methodSignature);
+		boolean expected = true;
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void isPrivate_A$String_StringIsNull() throws Exception {
+		AccessModifierDetector target = new AccessModifierDetector();
+		String methodSignature = null;
+		boolean actual = target.isPrivate(methodSignature);
+		boolean expected = false;
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void isPrivate_A$String_StringIsEmpty() throws Exception {
+		AccessModifierDetector target = new AccessModifierDetector();
+		String methodSignature = "";
+		boolean actual = target.isPrivate(methodSignature);
+		boolean expected = false;
+		assertThat(actual, is(equalTo(expected)));
 	}
 
 }

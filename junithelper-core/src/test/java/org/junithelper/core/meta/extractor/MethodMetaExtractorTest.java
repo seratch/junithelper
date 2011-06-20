@@ -1,10 +1,12 @@
 package org.junithelper.core.meta.extractor;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import java.util.List;
 import org.junit.Test;
 import org.junithelper.core.config.Configuration;
+import org.junithelper.core.exception.JUnitHelperCoreException;
 import org.junithelper.core.meta.AccessModifier;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.MethodMeta;
@@ -149,6 +151,122 @@ public class MethodMetaExtractorTest {
 		// then
 		String expected = "List";
 		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void initialize_A$String_StringIsNull() throws Exception {
+		MethodMetaExtractor target = new MethodMetaExtractor(config);
+		String sourceCodeString = null;
+		try {
+			target.initialize(sourceCodeString);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void initialize_A$String_StringIsEmpty() throws Exception {
+		MethodMetaExtractor target = new MethodMetaExtractor(config);
+		String sourceCodeString = "";
+		MethodMetaExtractor actual = target.initialize(sourceCodeString);
+		assertThat(actual, notNullValue());
+	}
+
+	@Test
+	public void extract_A$String_StringIsNull() throws Exception {
+		MethodMetaExtractor target = new MethodMetaExtractor(config);
+		String sourceCodeString = null;
+		try {
+			target.extract(sourceCodeString);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void extract_A$String_StringIsEmpty() throws Exception {
+		MethodMetaExtractor target = new MethodMetaExtractor(config);
+		String sourceCodeString = "";
+		List<MethodMeta> actual = target.extract(sourceCodeString);
+		assertThat(actual, notNullValue());
+	}
+
+	@Test
+	public void isPrivateFieldExists_A$String$String$String_StringIsNull() throws Exception {
+		MethodMetaExtractor target = new MethodMetaExtractor(config);
+		String fieldType = null;
+		String fieldName = null;
+		String sourceCodeString = null;
+		try {
+			target.isPrivateFieldExists(fieldType, fieldName, sourceCodeString);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void isPrivateFieldExists_A$String$String$String_StringIsEmpty() throws Exception {
+		MethodMetaExtractor target = new MethodMetaExtractor(config);
+		String fieldType = "";
+		String fieldName = "";
+		String sourceCodeString = "";
+		try {
+			target.isPrivateFieldExists(fieldType, fieldName, sourceCodeString);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void getAccessModifier_A$String_StringIsNull() throws Exception {
+		MethodMetaExtractor target = new MethodMetaExtractor(config);
+		String methodSignatureArea = null;
+		AccessModifier actual = target.getAccessModifier(methodSignatureArea);
+		AccessModifier expected = AccessModifier.Public;
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void getAccessModifier_A$String_StringIsEmpty() throws Exception {
+		MethodMetaExtractor target = new MethodMetaExtractor(config);
+		String methodSignatureArea = "";
+		AccessModifier actual = target.getAccessModifier(methodSignatureArea);
+		AccessModifier expected = AccessModifier.PackageLocal;
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void trimAccessModifierFromMethodSignatureArea_A$String_StringIsNull() throws Exception {
+		String methodSignatureArea = null;
+		try {
+			MethodMetaExtractor.trimAccessModifierFromMethodSignatureArea(methodSignatureArea);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void trimAccessModifierFromMethodSignatureArea_A$String_StringIsEmpty() throws Exception {
+		String methodSignatureArea = "";
+		String actual = MethodMetaExtractor.trimAccessModifierFromMethodSignatureArea(methodSignatureArea);
+		String expected = "";
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void trimGenericsIfNested_A$String_StringIsNull() throws Exception {
+		String returnTypeDef = null;
+		String actual = MethodMetaExtractor.trimGenericsIfNested(returnTypeDef);
+		String expected = null;
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void trimGenericsIfNested_A$String_StringIsEmpty() throws Exception {
+		String returnTypeDef = "";
+		String actual = MethodMetaExtractor.trimGenericsIfNested(returnTypeDef);
+		String expected = "";
+		assertThat(actual, is(equalTo(expected)));
 	}
 
 }

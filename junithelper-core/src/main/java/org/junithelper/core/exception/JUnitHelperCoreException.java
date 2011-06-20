@@ -1,5 +1,5 @@
 /* 
- * Copyright 2009-2010 junithelper.org. 
+ * Copyright 2009-2011 junithelper.org. 
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -13,20 +13,22 @@
  * either express or implied. See the License for the specific language 
  * governing permissions and limitations under the License. 
  */
-package org.junithelper.core.util;
+package org.junithelper.core.exception;
 
-public class Stderr {
+public class JUnitHelperCoreException extends RuntimeException {
 
-	private Stderr() {
+	private static final long serialVersionUID = 1L;
+
+	public JUnitHelperCoreException() {
+		super();
 	}
 
-	public static final void printf(String format, Object... values) {
-		Assertion.mustNotBeEmpty(format, "format");
-		System.err.printf(format, values);
+	public JUnitHelperCoreException(String message) {
+		super(message);
 	}
 
-	public static final void p(String str) {
-		System.err.println(str);
+	public JUnitHelperCoreException(String message, Throwable t) {
+		super(message, t);
 	}
 
 }

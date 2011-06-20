@@ -1,8 +1,10 @@
 package org.junithelper.core.meta.extractor;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import java.util.List;
 import org.junit.Test;
+import org.junithelper.core.exception.JUnitHelperCoreException;
 
 public class ArgExtractorHelperTest {
 
@@ -37,6 +39,41 @@ public class ArgExtractorHelperTest {
 		// then
 		String expected = "List aaa";
 		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void getArgListFromArgsDefAreaString_A$String_StringIsNull() throws Exception {
+		String argsDefAreaString = null;
+		try {
+			ArgExtractorHelper.getArgListFromArgsDefAreaString(argsDefAreaString);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void getArgListFromArgsDefAreaString_A$String_StringIsEmpty() throws Exception {
+		String argsDefAreaString = "";
+		List<String> actual = ArgExtractorHelper.getArgListFromArgsDefAreaString(argsDefAreaString);
+		assertThat(actual.size(), is(equalTo(1)));
+	}
+
+	@Test
+	public void trimGenericsAreaIfNestedGenericsExists_A$String_StringIsNull() throws Exception {
+		String target_ = null;
+		try {
+			ArgExtractorHelper.trimGenericsAreaIfNestedGenericsExists(target_);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void trimGenericsAreaIfNestedGenericsExists_A$String_StringIsEmpty() throws Exception {
+		String target_ = "";
+		String actual = ArgExtractorHelper.trimGenericsAreaIfNestedGenericsExists(target_);
+		String expected = "";
+		assertThat(actual, is(equalTo(expected)));
 	}
 
 }

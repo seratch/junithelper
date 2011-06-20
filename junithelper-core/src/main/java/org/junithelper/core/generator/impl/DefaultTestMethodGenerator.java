@@ -34,6 +34,7 @@ import org.junithelper.core.meta.ExceptionMeta;
 import org.junithelper.core.meta.MethodMeta;
 import org.junithelper.core.meta.TestMethodMeta;
 import org.junithelper.core.parser.detect.AvailableTypeDetector;
+import org.junithelper.core.util.Assertion;
 import org.junithelper.core.util.PrimitiveTypeUtil;
 
 public class DefaultTestMethodGenerator implements TestMethodGenerator {
@@ -356,6 +357,8 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 	}
 
 	void appendTabs(StringBuilder buf, int times) {
+		Assertion.mustNotBeNull(buf, "buf");
+		Assertion.mustBeGreaterThanOrEqual(times, 0, "times");
 		for (int i = 0; i < times; i++) {
 			buf.append(StringValue.Tab);
 		}
@@ -616,6 +619,10 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 	}
 
 	String getArgValue(TestMethodMeta testMethodMeta, ArgTypeMeta argTypeMeta, String argName) {
+
+		Assertion.mustNotBeNull(testMethodMeta, "testMethodMeta");
+		Assertion.mustNotBeNull(argTypeMeta, "argTypeMeta");
+		Assertion.mustNotBeEmpty(argName, "argName");
 
 		// extension instantiation
 		if (config.extConfiguration.extInstantiations != null) {

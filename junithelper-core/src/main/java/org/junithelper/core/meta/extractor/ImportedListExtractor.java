@@ -15,13 +15,13 @@
  */
 package org.junithelper.core.meta.extractor;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
 import org.junithelper.core.filter.TrimFilterUtil;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.junithelper.core.util.Assertion;
 
 public class ImportedListExtractor {
 
@@ -33,9 +33,9 @@ public class ImportedListExtractor {
 	}
 
 	public List<String> extract(String sourceCodeString) {
+		Assertion.mustNotBeNull(sourceCodeString, "sourceCodeString");
 		List<String> dest = new ArrayList<String>();
-		sourceCodeString = TrimFilterUtil.doAllFilters(sourceCodeString)
-				.replaceAll(RegExp.CRLF, StringValue.Space);
+		sourceCodeString = TrimFilterUtil.doAllFilters(sourceCodeString).replaceAll(RegExp.CRLF, StringValue.Space);
 		String[] splittedArray = sourceCodeString.split("import\\s+");
 		int len = splittedArray.length;
 		for (int i = 1; i < len; i++) {

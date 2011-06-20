@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.util.List;
 import org.junit.Test;
+import org.junithelper.core.exception.JUnitHelperCoreException;
 import org.junithelper.core.file.FileSearcher;
 
 public class CommonsIOFileSearcherTest {
@@ -36,7 +37,7 @@ public class CommonsIOFileSearcherTest {
 		try {
 			target.searchFilesRecursivelyByName(baseAbsoluteDir, regexp);
 			fail();
-		} catch (IllegalArgumentException e) {
+		} catch (JUnitHelperCoreException e) {
 		}
 	}
 
@@ -48,7 +49,7 @@ public class CommonsIOFileSearcherTest {
 		try {
 			target.searchFilesRecursivelyByName(baseAbsoluteDir, regexp);
 			fail();
-		} catch (IllegalArgumentException e) {
+		} catch (JUnitHelperCoreException e) {
 		}
 	}
 

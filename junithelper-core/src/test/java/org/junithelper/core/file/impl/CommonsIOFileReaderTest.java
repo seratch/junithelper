@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import org.junit.Test;
+import org.junithelper.core.exception.JUnitHelperCoreException;
 import org.junithelper.core.util.IOUtil;
 
 public class CommonsIOFileReaderTest {
@@ -82,7 +83,7 @@ public class CommonsIOFileReaderTest {
 		try {
 			target.getResourceAsStream(name);
 			fail();
-		} catch (IllegalArgumentException e) {
+		} catch (JUnitHelperCoreException e) {
 		}
 	}
 
