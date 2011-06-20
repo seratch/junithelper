@@ -21,7 +21,6 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.ConfigurationLoader;
 import org.junithelper.core.config.extension.ExtConfigurationLoader;
@@ -41,7 +40,10 @@ public abstract class AbstractCommand {
 		if (configFile != null) {
 			config = new ConfigurationLoader().load(configFile);
 		}
-		if (new File(config.extensionConfigXML).exists()) {
+		String extensionConfig = System.getProperty("junithelper.extensionConfigXML");
+		if (extensionConfig != null) {
+			config.extConfiguration = new ExtConfigurationLoader().load(extensionConfig);
+		} else if (new File(config.extensionConfigXML).exists()) {
 			config.extConfiguration = new ExtConfigurationLoader().load(config.extensionConfigXML);
 		}
 		return config;

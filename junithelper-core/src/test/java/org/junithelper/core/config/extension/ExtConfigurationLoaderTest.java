@@ -2,9 +2,7 @@ package org.junithelper.core.config.extension;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
-
 import java.io.InputStream;
-
 import org.junit.Test;
 import org.junithelper.core.util.IOUtil;
 
@@ -46,6 +44,7 @@ public class ExtConfigurationLoaderTest {
 		ExtConfiguration actual = target.load(filepath);
 		// then
 		assertThat(actual, notNullValue());
+		assertThat(actual.extArgs.size(), is(equalTo(4)));
 	}
 
 }
