@@ -1,15 +1,12 @@
 package org.junithelper.core.file.impl;
 
+import static org.junit.Assert.*;
+import java.io.File;
+import java.io.IOException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junithelper.core.file.FileWriter;
-
-import java.io.File;
-import java.io.IOException;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 public class CommonsIOFileWriterTest {
 
@@ -107,6 +104,33 @@ public class CommonsIOFileWriterTest {
 		} catch (IOException e) {
 			// then
 		}
+		file.setWritable(true);
+	}
+
+	@Test
+	public void writeText_A$String_StringIsNull() throws Exception {
+		File file = new File("src/test/resources/tmp.txt");
+		CommonsIOFileWriter target = new CommonsIOFileWriter(file);
+		String text = null;
+		target.writeText(text);
+		file.setWritable(true);
+	}
+
+	@Test
+	public void writeText_A$String_StringIsEmpty() throws Exception {
+		File file = new File("src/test/resources/tmp.txt");
+		CommonsIOFileWriter target = new CommonsIOFileWriter(file);
+		String text = "";
+		target.writeText(text);
+		file.setWritable(true);
+	}
+
+	@Test
+	public void writeText_A$String_StringIsFoo() throws Exception {
+		File file = new File("src/test/resources/tmp.txt");
+		CommonsIOFileWriter target = new CommonsIOFileWriter(file);
+		String text = "foo";
+		target.writeText(text);
 		file.setWritable(true);
 	}
 

@@ -2,9 +2,8 @@ package org.junithelper.core.config;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
-
+import java.io.FileNotFoundException;
 import java.io.InputStream;
-
 import org.junit.Test;
 import org.junithelper.core.util.IOUtil;
 
@@ -70,6 +69,28 @@ public class ConfigurationLoaderTest {
 			fail("Expected exception was not thrown!");
 		} catch (Exception e) {
 			// then
+		}
+	}
+
+	@Test
+	public void load_A$String_StringIsNull() throws Exception {
+		ConfigurationLoader target = new ConfigurationLoader();
+		String filepath = null;
+		try {
+			target.load(filepath);
+			fail();
+		} catch (IllegalArgumentException e) {
+		}
+	}
+
+	@Test
+	public void load_A$String_StringIsEmpty() throws Exception {
+		ConfigurationLoader target = new ConfigurationLoader();
+		String filepath = "";
+		try {
+			target.load(filepath);
+			fail();
+		} catch (FileNotFoundException e) {
 		}
 	}
 

@@ -15,21 +15,22 @@
  */
 package org.junithelper.core.file.impl;
 
-import org.apache.commons.io.FileUtils;
-import org.junithelper.core.file.FileReader;
-import org.junithelper.core.util.IOUtil;
-import org.mozilla.universalchardet.UniversalDetector;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import org.apache.commons.io.FileUtils;
+import org.junithelper.core.file.FileReader;
+import org.junithelper.core.util.Assertion;
+import org.junithelper.core.util.IOUtil;
+import org.mozilla.universalchardet.UniversalDetector;
 
 public class CommonsIOFileReader implements FileReader {
 
 	@Override
 	public InputStream getResourceAsStream(String name) {
+		Assertion.mustNotBeNull(name, "name");
 		return CommonsIOFileReader.class.getClassLoader().getResourceAsStream(name);
 	}
 

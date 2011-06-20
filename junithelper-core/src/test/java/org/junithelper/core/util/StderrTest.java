@@ -1,8 +1,7 @@
 package org.junithelper.core.util;
 
+import static org.junit.Assert.*;
 import org.junit.Test;
-
-import static org.junit.Assert.assertNotNull;
 
 public class StderrTest {
 
@@ -15,7 +14,7 @@ public class StderrTest {
 	public void printf_A$String$ObjectArray() throws Exception {
 		// given
 		String format = "%s";
-		Object[] values = new Object[]{"aaaa"};
+		Object[] values = new Object[] { "aaaa" };
 		// when
 		Stderr.printf(format, values);
 		// then

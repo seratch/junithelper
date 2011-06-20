@@ -1,8 +1,7 @@
 package org.junithelper.core.util;
 
+import static org.junit.Assert.*;
 import org.junit.Test;
-
-import static org.junit.Assert.assertNotNull;
 
 public class StdoutTest {
 
@@ -24,7 +23,7 @@ public class StdoutTest {
 	public void printf_A$String$ObjectArray() throws Exception {
 		// given
 		String format = "%02d";
-		Object[] values = new Object[]{2};
+		Object[] values = new Object[] { 2 };
 		// when
 		Stdout.printf(format, values);
 		// then

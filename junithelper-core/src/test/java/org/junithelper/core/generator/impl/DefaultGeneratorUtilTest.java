@@ -3,10 +3,12 @@ package org.junithelper.core.generator.impl;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.TestingTarget;
 import org.junithelper.core.meta.AccessModifier;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.MethodMeta;
+import org.junithelper.core.meta.TestMethodMeta;
 
 public class DefaultGeneratorUtilTest {
 
@@ -128,6 +130,65 @@ public class DefaultGeneratorUtilTest {
 		// then
 		boolean expected = false;
 		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void getInstantiationSourceCode_A$Configuration$TestMethodMeta_Null() throws Exception {
+		Configuration config = null;
+		TestMethodMeta testMethodMeta = null;
+		try {
+			DefaultGeneratorUtil.getInstantiationSourceCode(config, testMethodMeta);
+			fail();
+		} catch (IllegalArgumentException e) {
+		}
+	}
+
+	@Test
+	public void appendIfNotExists_A$StringBuilder$String$String() throws Exception {
+		StringBuilder buf = new StringBuilder();
+		String src = "abc";
+		String importLine = "com.example.Bean";
+		DefaultGeneratorUtil.appendIfNotExists(buf, src, importLine);
+	}
+
+	@Test
+	public void appendIfNotExists_A$StringBuilder$String$String_StringIsNull() throws Exception {
+		StringBuilder buf = new StringBuilder();
+		String src = null;
+		String importLine = null;
+		try {
+			DefaultGeneratorUtil.appendIfNotExists(buf, src, importLine);
+			fail();
+		} catch (IllegalArgumentException e) {
+		}
+	}
+
+	@Test
+	public void appendIfNotExists_A$StringBuilder$String$String_StringIsEmpty() throws Exception {
+		StringBuilder buf = new StringBuilder();
+		String src = "";
+		String importLine = "";
+		DefaultGeneratorUtil.appendIfNotExists(buf, src, importLine);
+	}
+
+	@Test
+	public void isCanonicalClassNameUsed_A$String$String$ClassMeta_StringIsNull() throws Exception {
+		String expectedCanonicalClassName = null;
+		String usedClassName = null;
+		ClassMeta targetClassMeta = null;
+		try {
+			DefaultGeneratorUtil.isCanonicalClassNameUsed(expectedCanonicalClassName, usedClassName, targetClassMeta);
+			fail();
+		} catch (IllegalArgumentException e) {
+		}
+	}
+
+	@Test
+	public void isCanonicalClassNameUsed_A$String$String$ClassMeta_StringIsEmpty() throws Exception {
+		String expectedCanonicalClassName = "";
+		String usedClassName = "";
+		ClassMeta targetClassMeta = new ClassMeta();
+		DefaultGeneratorUtil.isCanonicalClassNameUsed(expectedCanonicalClassName, usedClassName, targetClassMeta);
 	}
 
 }

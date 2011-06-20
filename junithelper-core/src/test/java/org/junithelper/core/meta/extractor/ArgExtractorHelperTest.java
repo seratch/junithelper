@@ -1,11 +1,8 @@
 package org.junithelper.core.meta.extractor;
 
-import org.junit.Test;
-
+import static org.junit.Assert.*;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.junit.Test;
 
 public class ArgExtractorHelperTest {
 
@@ -19,8 +16,7 @@ public class ArgExtractorHelperTest {
 		// given
 		String argsDefAreaString = "String str, List<String> list, Map<Object, Object> map, Object obj, Map<String, List<String>> listMap, List<Map<String,String>> mapList, List<Map<Map<String,Object>,List<String>>> deepNest) {";
 		// when
-		List<String> actual = ArgExtractorHelper
-				.getArgListFromArgsDefAreaString(argsDefAreaString);
+		List<String> actual = ArgExtractorHelper.getArgListFromArgsDefAreaString(argsDefAreaString);
 		// then
 		assertEquals("String str", actual.get(0));
 		assertEquals("List<String> list", actual.get(1));
@@ -32,15 +28,12 @@ public class ArgExtractorHelperTest {
 	}
 
 	@Test
-	public void trimGenericsAreaIfNestedGenericsExists_A$String()
-			throws Exception {
+	public void trimGenericsAreaIfNestedGenericsExists_A$String() throws Exception {
 		// given
-		String target = "List<Map" + ArgExtractorHelper.NESTED_GENERICS_MARK
-				+ "> aaa";
+		String target = "List<Map" + ArgExtractorHelper.NESTED_GENERICS_MARK + "> aaa";
 		// e.g. : given(mocked.called()).willReturn(1);
 		// when
-		String actual = ArgExtractorHelper
-				.trimGenericsAreaIfNestedGenericsExists(target);
+		String actual = ArgExtractorHelper.trimGenericsAreaIfNestedGenericsExists(target);
 		// then
 		String expected = "List aaa";
 		assertEquals(expected, actual);

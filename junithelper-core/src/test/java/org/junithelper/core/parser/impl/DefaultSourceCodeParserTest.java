@@ -1,5 +1,8 @@
 package org.junithelper.core.parser.impl;
 
+import static org.junit.Assert.*;
+import java.io.InputStream;
+import java.util.List;
 import org.junit.Test;
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.meta.ClassMeta;
@@ -8,11 +11,6 @@ import org.junithelper.core.meta.MethodMeta;
 import org.junithelper.core.meta.extractor.ClassMetaExtractor;
 import org.junithelper.core.util.IOUtil;
 import org.junithelper.core.util.UniversalDetectorUtil;
-
-import java.io.InputStream;
-import java.util.List;
-
-import static org.junit.Assert.*;
 
 public class DefaultSourceCodeParserTest {
 
@@ -48,8 +46,7 @@ public class DefaultSourceCodeParserTest {
 		assertTrue(actual.methods.get(0).returnType != null);
 		assertTrue(actual.methods.get(0).returnType.name.equals("String"));
 		assertTrue(actual.methods.get(0).throwsExceptions.size() == 1);
-		assertTrue(actual.methods.get(0).throwsExceptions.get(0).name
-				.equals("Exception"));
+		assertTrue(actual.methods.get(0).throwsExceptions.get(0).name.equals("Exception"));
 	}
 
 	@Test
@@ -69,27 +66,22 @@ public class DefaultSourceCodeParserTest {
 		assertTrue(actual.methods.get(0).returnType != null);
 		assertTrue(actual.methods.get(0).returnType.name.equals("int"));
 		assertTrue(actual.methods.get(0).throwsExceptions.size() == 1);
-		assertTrue(actual.methods.get(0).throwsExceptions.get(0).name
-				.equals("Throwable"));
+		assertTrue(actual.methods.get(0).throwsExceptions.get(0).name.equals("Throwable"));
 	}
 
 	@Test
 	public void getMethods_A$ClassMeta$String() throws Exception {
 		String sourceCodeString = "package hoge.foo; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\") } }";
-		ClassMeta classMeta = new ClassMetaExtractor(config)
-				.extract(sourceCodeString);
-		List<MethodMeta> actual = target
-				.getMethods(classMeta, sourceCodeString);
+		ClassMeta classMeta = new ClassMetaExtractor(config).extract(sourceCodeString);
+		List<MethodMeta> actual = target.getMethods(classMeta, sourceCodeString);
 		assertEquals(1, actual.size());
 	}
 
 	@Test
 	public void getConstructors_A$ClassMeta$String() throws Exception {
 		String sourceCodeString = "package hoge.foo; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\") } }";
-		ClassMeta classMeta = new ClassMetaExtractor(config)
-				.extract(sourceCodeString);
-		List<ConstructorMeta> actual = target.getConstructors(classMeta,
-				sourceCodeString);
+		ClassMeta classMeta = new ClassMetaExtractor(config).extract(sourceCodeString);
+		List<ConstructorMeta> actual = target.getConstructors(classMeta, sourceCodeString);
 		assertEquals(1, actual.size());
 	}
 

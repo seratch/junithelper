@@ -15,9 +15,13 @@
  */
 package org.junithelper.core.config.extension;
 
+import org.junithelper.core.util.Assertion;
+
 public class ExtArgPattern {
 
 	public ExtArgPattern(ExtArg extArg, String name) {
+		Assertion.mustNotBeNull(extArg, "extArg");
+		Assertion.mustNotBeNull(name, "name");
 		this.extArg = extArg;
 		this.name = name;
 	}

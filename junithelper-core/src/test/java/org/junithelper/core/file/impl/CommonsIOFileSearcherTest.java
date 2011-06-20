@@ -1,12 +1,10 @@
 package org.junithelper.core.file.impl;
 
-import org.junit.Test;
-import org.junithelper.core.file.FileSearcher;
-
+import static org.junit.Assert.*;
 import java.io.File;
 import java.util.List;
-
-import static org.junit.Assert.assertNotNull;
+import org.junit.Test;
+import org.junithelper.core.file.FileSearcher;
 
 public class CommonsIOFileSearcherTest {
 
@@ -26,9 +24,32 @@ public class CommonsIOFileSearcherTest {
 		FileSearcher target = new CommonsIOFileSearcher();
 		String baseDir = ".";
 		String regexp = ".java";
-		List<File> actual = target
-				.searchFilesRecursivelyByName(baseDir, regexp);
+		List<File> actual = target.searchFilesRecursivelyByName(baseDir, regexp);
 		assertNotNull(actual);
+	}
+
+	@Test
+	public void searchFilesRecursivelyByName_A$String$String_StringIsNull() throws Exception {
+		CommonsIOFileSearcher target = new CommonsIOFileSearcher();
+		String baseAbsoluteDir = null;
+		String regexp = null;
+		try {
+			target.searchFilesRecursivelyByName(baseAbsoluteDir, regexp);
+			fail();
+		} catch (IllegalArgumentException e) {
+		}
+	}
+
+	@Test
+	public void searchFilesRecursivelyByName_A$String$String_StringIsEmpty() throws Exception {
+		CommonsIOFileSearcher target = new CommonsIOFileSearcher();
+		String baseAbsoluteDir = "";
+		String regexp = "";
+		try {
+			target.searchFilesRecursivelyByName(baseAbsoluteDir, regexp);
+			fail();
+		} catch (IllegalArgumentException e) {
+		}
 	}
 
 }

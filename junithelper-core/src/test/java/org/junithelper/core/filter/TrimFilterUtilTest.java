@@ -1,10 +1,9 @@
 package org.junithelper.core.filter;
 
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junithelper.core.util.IOUtil;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class TrimFilterUtilTest {
 
@@ -29,12 +28,26 @@ public class TrimFilterUtilTest {
 
 	@Test
 	public void doAllFilters_A$String_Enum_ContentType() throws Exception {
-		String src = IOUtil.readAsString(
-				IOUtil.getResourceAsStream("parser/impl/Enum_ContentType.txt"),
-				"UTF-8");
+		String src = IOUtil.readAsString(IOUtil.getResourceAsStream("parser/impl/Enum_ContentType.txt"), "UTF-8");
 		String actual = TrimFilterUtil.doAllFilters(src);
 		String expected = "package a.b.c;  public enum ContentType {  	relax(), 	nurturing(), 	word();  	private String name; 	 	public String lable;  	private ContentType(String name) {}  	public String toString() {} 	 	public String toLable() {}  } ";
 		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void doAllFilters_A$String_StringIsNull() throws Exception {
+		String src = null;
+		String actual = TrimFilterUtil.doAllFilters(src);
+		String expected = null;
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void doAllFilters_A$String_StringIsEmpty() throws Exception {
+		String src = "";
+		String actual = TrimFilterUtil.doAllFilters(src);
+		String expected = "";
+		assertThat(actual, is(equalTo(expected)));
 	}
 
 }

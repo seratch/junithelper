@@ -62,6 +62,10 @@
     <pattern name="true"><assign>true</assign></pattern>
     <pattern name="false"><assign>false</assign></pattern>
   </arg>
+  <arg class="java.lang.String" >
+    <pattern name="null"><assign>null</assign></pattern>
+    <pattern name="empty"><assign>""</assign></pattern>
+  </arg>
 
   <!-- 
   <return class="java.util.Calendar">

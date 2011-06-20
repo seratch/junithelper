@@ -1,17 +1,14 @@
 package org.junithelper.core.meta.extractor;
 
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+import java.util.List;
 import org.junit.Test;
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.meta.AccessModifier;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.ConstructorMeta;
 import org.junithelper.core.util.IOUtil;
-
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.mock;
 
 public class ConstructorMetaExtractorTest {
 
@@ -51,8 +48,7 @@ public class ConstructorMetaExtractorTest {
 		String sourceCodeString = "package hoge; public class Sample { public void doSomething(String str) {} }";
 		// e.g. : given(mocked.called()).willReturn(1);
 		// when
-		ConstructorMetaExtractor actual = target.initialize(classMeta,
-				sourceCodeString);
+		ConstructorMetaExtractor actual = target.initialize(classMeta, sourceCodeString);
 		// then
 		// e.g. : verify(mocked).called();
 		ConstructorMetaExtractor expected = target;
@@ -100,8 +96,7 @@ public class ConstructorMetaExtractorTest {
 		Configuration config = new Configuration();
 		ConstructorMetaExtractor target = new ConstructorMetaExtractor(config);
 		// given
-		String sourceCodeString = IOUtil.readAsString(
-				IOUtil.getResourceAsStream("parser/impl/Slim3_HtmlUtil.txt"),
+		String sourceCodeString = IOUtil.readAsString(IOUtil.getResourceAsStream("parser/impl/Slim3_HtmlUtil.txt"),
 				"UTF-8");
 		target.initialize(sourceCodeString);
 		// e.g. : given(mocked.called()).willReturn(1);
@@ -129,16 +124,14 @@ public class ConstructorMetaExtractorTest {
 	}
 
 	@Test
-	public void trimAccessModifierFromMethodSignatureArea_A$String()
-			throws Exception {
+	public void trimAccessModifierFromMethodSignatureArea_A$String() throws Exception {
 		Configuration config = new Configuration();
 		ConstructorMetaExtractor target = new ConstructorMetaExtractor(config);
 		// given
 		String methodSignatureArea = "} public static void main(String[] args) {";
 		// e.g. : given(mocked.called()).willReturn(1);
 		// when
-		String actual = target
-				.trimAccessModifierFromMethodSignatureArea(methodSignatureArea);
+		String actual = target.trimAccessModifierFromMethodSignatureArea(methodSignatureArea);
 		// then
 		// e.g. : verify(mocked).called();
 		String expected = " static void main(String[] args) {";

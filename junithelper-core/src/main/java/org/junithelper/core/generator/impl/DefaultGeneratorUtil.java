@@ -9,6 +9,7 @@ import org.junithelper.core.meta.AccessModifier;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.MethodMeta;
 import org.junithelper.core.meta.TestMethodMeta;
+import org.junithelper.core.util.Assertion;
 
 final class DefaultGeneratorUtil {
 
@@ -28,6 +29,8 @@ final class DefaultGeneratorUtil {
 	}
 
 	static String getInstantiationSourceCode(Configuration config, TestMethodMeta testMethodMeta) {
+		Assertion.mustNotBeNull(config, "config");
+		Assertion.mustNotBeNull(testMethodMeta, "testMethodMeta");
 		if (config.extConfiguration.extInstantiations != null) {
 			for (ExtInstantiation ins : config.extConfiguration.extInstantiations) {
 				if (isCanonicalClassNameUsed(ins.canonicalClassName, testMethodMeta.classMeta.name,
@@ -77,6 +80,9 @@ final class DefaultGeneratorUtil {
 	}
 
 	static void appendIfNotExists(StringBuilder buf, String src, String importLine) {
+		Assertion.mustNotBeNull(buf, "buf");
+		Assertion.mustNotBeNull(src, "src");
+		Assertion.mustNotBeNull(importLine, "importLine");
 		String oneline = src.replaceAll(RegExp.CRLF, StringValue.Space);
 		importLine = importLine.replace(StringValue.CarriageReturn + StringValue.LineFeed, StringValue.Empty);
 		String importLineRegExp = importLine.replaceAll("\\s+", "\\\\s+").replaceAll("\\.", "\\\\.")
@@ -90,6 +96,9 @@ final class DefaultGeneratorUtil {
 
 	static boolean isCanonicalClassNameUsed(String expectedCanonicalClassName, String usedClassName,
 			ClassMeta targetClassMeta) {
+		Assertion.mustNotBeNull(expectedCanonicalClassName, "expectedCanonicalClassName");
+		Assertion.mustNotBeNull(usedClassName, "usedClassName");
+		Assertion.mustNotBeNull(targetClassMeta, "targetClassMeta");
 		if (usedClassName.equals(expectedCanonicalClassName)
 				|| usedClassName.equals(expectedCanonicalClassName.replace("java.lang.", ""))) {
 			// canonical class name

@@ -1,13 +1,12 @@
 package org.junithelper.core.file.impl;
 
-import org.junit.Test;
-import org.junithelper.core.util.IOUtil;
-
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-
-import static org.junit.Assert.*;
+import org.junit.Test;
+import org.junithelper.core.util.IOUtil;
 
 public class CommonsIOFileReaderTest {
 
@@ -74,6 +73,25 @@ public class CommonsIOFileReaderTest {
 		// e.g. : verify(mocked).called();
 		String expected = "UTF-8";
 		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void getResourceAsStream_A$String_StringIsNull() throws Exception {
+		CommonsIOFileReader target = new CommonsIOFileReader();
+		String name = null;
+		try {
+			target.getResourceAsStream(name);
+			fail();
+		} catch (IllegalArgumentException e) {
+		}
+	}
+
+	@Test
+	public void getResourceAsStream_A$String_StringIsEmpty() throws Exception {
+		CommonsIOFileReader target = new CommonsIOFileReader();
+		String name = "";
+		InputStream actual = target.getResourceAsStream(name);
+		assertThat(actual, notNullValue());
 	}
 
 }

@@ -15,6 +15,7 @@
  */
 package org.junithelper.core.config.extension;
 
+import org.junithelper.core.util.Assertion;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -44,6 +45,7 @@ public class ExtConfigurationParserHandler extends DefaultHandler {
 
 	@Override
 	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException {
+		Assertion.mustNotBeEmpty(name, "name");
 		if (name.equals("junithelper-extension")) {
 			config = new ExtConfiguration();
 		} else if (name.equals("instantiation")) {
@@ -75,6 +77,8 @@ public class ExtConfigurationParserHandler extends DefaultHandler {
 
 	@Override
 	public void endElement(String uri, String localName, String name) throws SAXException {
+		Assertion.mustNotBeNull(config, "config");
+		Assertion.mustNotBeEmpty(name, "name");
 		if (name.equals("instantiation")) {
 			config.extInstantiations.add(currentInstantiation);
 			currentInstantiation = null;
@@ -117,5 +121,4 @@ public class ExtConfigurationParserHandler extends DefaultHandler {
 			currentReturn.asserts.add(tempValue);
 		}
 	}
-
 }

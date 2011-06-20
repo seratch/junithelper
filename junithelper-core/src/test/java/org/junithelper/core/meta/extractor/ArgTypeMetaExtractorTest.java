@@ -1,12 +1,10 @@
 package org.junithelper.core.meta.extractor;
 
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 import org.junit.Test;
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.meta.ClassMeta;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.mock;
 
 public class ArgTypeMetaExtractorTest {
 
@@ -35,8 +33,7 @@ public class ArgTypeMetaExtractorTest {
 		Configuration config = new Configuration();
 		ArgTypeMetaExtractor target = new ArgTypeMetaExtractor(config);
 		String sourceCodeString = "package hoge.foo; public class Sample { public Sample() {}\r\n public void doSomething(String str) { System.out.println(\"aaaa\") } }";
-		ClassMeta classMeta = new ClassMetaExtractor(config)
-				.extract(sourceCodeString);
+		ClassMeta classMeta = new ClassMetaExtractor(config).extract(sourceCodeString);
 		target.initialize(classMeta, sourceCodeString);
 	}
 

@@ -15,11 +15,11 @@
  */
 package org.junithelper.core.filter.impl;
 
+import java.util.Stack;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
 import org.junithelper.core.filter.TrimFilter;
-
-import java.util.Stack;
+import org.junithelper.core.util.Assertion;
 
 public class TrimInsideOfBraceFilter implements TrimFilter {
 
@@ -65,15 +65,12 @@ public class TrimInsideOfBraceFilter implements TrimFilter {
 			if (!isInsideOfTargetClass) {
 				sb.append(current);
 				// might be started class def
-				if (i >= 6 && src.charAt(i - 6) == ' '
-						&& src.charAt(i - 5) == 'c' && src.charAt(i - 4) == 'l'
-						&& src.charAt(i - 3) == 'a' && src.charAt(i - 2) == 's'
-						&& src.charAt(i - 1) == 's' && current == ' ') {
-					isInsideOfTargetClass = true;
-				} else if (i >= 5 && src.charAt(i - 5) == ' '
-						&& src.charAt(i - 4) == 'e' && src.charAt(i - 3) == 'n'
-						&& src.charAt(i - 2) == 'u' && src.charAt(i - 1) == 'm'
+				if (i >= 6 && src.charAt(i - 6) == ' ' && src.charAt(i - 5) == 'c' && src.charAt(i - 4) == 'l'
+						&& src.charAt(i - 3) == 'a' && src.charAt(i - 2) == 's' && src.charAt(i - 1) == 's'
 						&& current == ' ') {
+					isInsideOfTargetClass = true;
+				} else if (i >= 5 && src.charAt(i - 5) == ' ' && src.charAt(i - 4) == 'e' && src.charAt(i - 3) == 'n'
+						&& src.charAt(i - 2) == 'u' && src.charAt(i - 1) == 'm' && current == ' ') {
 					isInsideOfTargetClass = true;
 				}
 				continue;
@@ -112,13 +109,14 @@ public class TrimInsideOfBraceFilter implements TrimFilter {
 	}
 
 	static int countPreviousContinuedBackslash(String str, int currentNotBackslashCharIndex, int count) {
+		Assertion.mustBeGreaterThanOrEqual(currentNotBackslashCharIndex, 0, "currentNotBackslashCharIndex");
+		Assertion.mustBeGreaterThanOrEqual(count, 0, "count");
 		Character previous = null;
 		if (currentNotBackslashCharIndex > 0) {
 			int previousIndex = currentNotBackslashCharIndex - 1;
 			previous = str.charAt(previousIndex);
 			if (previous == '\\') {
-				return countPreviousContinuedBackslash(str, previousIndex,
-						count + 1);
+				return countPreviousContinuedBackslash(str, previousIndex, count + 1);
 			} else {
 				return count;
 			}

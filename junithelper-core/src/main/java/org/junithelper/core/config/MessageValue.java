@@ -18,6 +18,7 @@ package org.junithelper.core.config;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import org.junithelper.core.util.Assertion;
 
 public class MessageValue {
 
@@ -34,14 +35,14 @@ public class MessageValue {
 			props.load(is);
 		} catch (IOException e) {
 			try {
-				props.load(this.getClass().getClassLoader()
-						.getResourceAsStream("junithelper-core_en.properties"));
+				props.load(this.getClass().getClassLoader().getResourceAsStream("junithelper-core_en.properties"));
 			} catch (Exception e2) {
 			}
 		}
 	}
 
 	String get(String key) {
+		Assertion.mustNotBeEmpty(key, "key");
 		if (props == null) {
 			initialize(null);
 		}

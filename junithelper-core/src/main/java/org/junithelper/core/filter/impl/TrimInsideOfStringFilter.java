@@ -1,11 +1,15 @@
 package org.junithelper.core.filter.impl;
 
 import org.junithelper.core.filter.TrimFilter;
+import org.junithelper.core.util.Assertion;
 
 public class TrimInsideOfStringFilter implements TrimFilter {
 
 	@Override
 	public String trimAll(String src) {
+		if (src == null) {
+			return null;
+		}
 		int len = src.length();
 		boolean isInsideOfString = false;
 		boolean isInsideOfChar = false;
@@ -40,6 +44,8 @@ public class TrimInsideOfStringFilter implements TrimFilter {
 	}
 
 	static int countPreviousContinuedBackslash(String str, int currentNotBackslashCharIndex, int count) {
+		Assertion.mustBeGreaterThanOrEqual(currentNotBackslashCharIndex, 0, "currentNotBackslashCharIndex");
+		Assertion.mustBeGreaterThanOrEqual(count, 0, "count");
 		Character previous = null;
 		if (currentNotBackslashCharIndex > 0) {
 			int previousIndex = currentNotBackslashCharIndex - 1;

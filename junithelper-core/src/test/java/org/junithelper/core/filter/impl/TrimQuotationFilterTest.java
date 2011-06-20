@@ -1,9 +1,8 @@
 package org.junithelper.core.filter.impl;
 
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class TrimQuotationFilterTest {
 
@@ -40,6 +39,24 @@ public class TrimQuotationFilterTest {
 		// then
 		String expected = "sdfasdfsfa\r\naaaasdfsfaaaa";
 		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void trimAll_A$String_StringIsNull() throws Exception {
+		TrimQuotationFilter target = new TrimQuotationFilter();
+		String src = null;
+		String actual = target.trimAll(src);
+		String expected = null;
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void trimAll_A$String_StringIsEmpty() throws Exception {
+		TrimQuotationFilter target = new TrimQuotationFilter();
+		String src = "";
+		String actual = target.trimAll(src);
+		String expected = "";
+		assertThat(actual, is(equalTo(expected)));
 	}
 
 }

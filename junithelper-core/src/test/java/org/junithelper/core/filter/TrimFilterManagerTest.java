@@ -1,13 +1,12 @@
 package org.junithelper.core.filter;
 
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junithelper.core.filter.impl.TrimAnnotationFilter;
 import org.junithelper.core.filter.impl.TrimCommentFilter;
 import org.junithelper.core.filter.impl.TrimInsideOfBraceFilter;
 import org.junithelper.core.filter.impl.TrimQuotationFilter;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class TrimFilterManagerTest {
 
@@ -26,7 +25,7 @@ public class TrimFilterManagerTest {
 	public void addFilter_A$TrimFilterArray_0() throws Exception {
 		TrimFilterManager target = new TrimFilterManager();
 		// given
-		TrimFilter[] filters = new TrimFilter[]{};
+		TrimFilter[] filters = new TrimFilter[] {};
 		// when
 		target.addFilter(filters);
 		// then
@@ -37,7 +36,7 @@ public class TrimFilterManagerTest {
 	public void addFilter_A$TrimFilterArray_1() throws Exception {
 		TrimFilterManager target = new TrimFilterManager();
 		// given
-		TrimFilter[] filters = new TrimFilter[]{new TrimAnnotationFilter()};
+		TrimFilter[] filters = new TrimFilter[] { new TrimAnnotationFilter() };
 		// when
 		target.addFilter(filters);
 		// then
@@ -48,8 +47,7 @@ public class TrimFilterManagerTest {
 	public void addFilter_A$TrimFilterArray_2() throws Exception {
 		TrimFilterManager target = new TrimFilterManager();
 		// given
-		TrimFilter[] filters = new TrimFilter[]{new TrimAnnotationFilter(),
-				new TrimCommentFilter()};
+		TrimFilter[] filters = new TrimFilter[] { new TrimAnnotationFilter(), new TrimCommentFilter() };
 		// when
 		target.addFilter(filters);
 		// then
@@ -71,8 +69,7 @@ public class TrimFilterManagerTest {
 	@Test
 	public void doTrimAll_A$String_notNull() throws Exception {
 		TrimFilterManager target = new TrimFilterManager();
-		target.addFilter(new TrimCommentFilter(),
-				new TrimInsideOfBraceFilter(), new TrimQuotationFilter());
+		target.addFilter(new TrimCommentFilter(), new TrimInsideOfBraceFilter(), new TrimQuotationFilter());
 		String src = "package foo.var; \r\n public class Sample { \r\n// hogehoge \r\n public void hoge() { System.out.println(\"aaa\"); } }";
 		// when
 		String actual = target.doTrimAll(src);
@@ -85,13 +82,30 @@ public class TrimFilterManagerTest {
 	public void removeFilter_A$Class() throws Exception {
 		TrimFilterManager target = new TrimFilterManager();
 		// given
-		target.addFilter(new TrimCommentFilter(),
-				new TrimInsideOfBraceFilter(), new TrimQuotationFilter());
+		target.addFilter(new TrimCommentFilter(), new TrimInsideOfBraceFilter(), new TrimQuotationFilter());
 		Class<?> filterClass = TrimQuotationFilter.class;
 		// when
 		target.removeFilter(filterClass);
 		// then
 		assertEquals(2, target.getFilters().size());
+	}
+
+	@Test
+	public void doTrimAll_A$String_StringIsNull() throws Exception {
+		TrimFilterManager target = new TrimFilterManager();
+		String src = null;
+		String actual = target.doTrimAll(src);
+		String expected = null;
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void doTrimAll_A$String_StringIsEmpty() throws Exception {
+		TrimFilterManager target = new TrimFilterManager();
+		String src = "";
+		String actual = target.doTrimAll(src);
+		String expected = "";
+		assertThat(actual, is(equalTo(expected)));
 	}
 
 }

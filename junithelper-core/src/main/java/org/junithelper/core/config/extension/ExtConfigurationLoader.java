@@ -18,13 +18,14 @@ package org.junithelper.core.config.extension;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import org.junithelper.core.util.Assertion;
 
 public class ExtConfigurationLoader {
 
 	public ExtConfiguration load(String filepath) throws Exception {
+		Assertion.mustNotBeNull(filepath, "filepath");
 		return load(new FileInputStream(new File(filepath)));
 	}
 

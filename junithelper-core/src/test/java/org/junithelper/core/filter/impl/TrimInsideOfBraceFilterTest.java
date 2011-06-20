@@ -1,9 +1,8 @@
 package org.junithelper.core.filter.impl;
 
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class TrimInsideOfBraceFilterTest {
 
@@ -37,18 +36,96 @@ public class TrimInsideOfBraceFilterTest {
 	}
 
 	@Test
-	public void countPreviousContinuedBackslash_A$String$int$int()
-			throws Exception {
+	public void countPreviousContinuedBackslash_A$String$int$int() throws Exception {
 		// given
 		String str = null;
 		int currentNotBackslashCharIndex = 0;
 		int count = 0;
 		// when
-		int actual = TrimInsideOfBraceFilter.countPreviousContinuedBackslash(
-				str, currentNotBackslashCharIndex, count);
+		int actual = TrimInsideOfBraceFilter.countPreviousContinuedBackslash(str, currentNotBackslashCharIndex, count);
 		// then
 		int expected = 0;
 		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void trimAll_A$String_StringIsNull() throws Exception {
+		TrimInsideOfBraceFilter target = new TrimInsideOfBraceFilter();
+		String src = null;
+		String actual = target.trimAll(src);
+		String expected = null;
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void trimAll_A$String_StringIsEmpty() throws Exception {
+		TrimInsideOfBraceFilter target = new TrimInsideOfBraceFilter();
+		String src = "";
+		String actual = target.trimAll(src);
+		String expected = "";
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void countPreviousContinuedBackslash_A$String$int$int_intIsMinus1() throws Exception {
+		String str = null;
+		int currentNotBackslashCharIndex = -1;
+		int count = -1;
+		try {
+			TrimInsideOfBraceFilter.countPreviousContinuedBackslash(str, currentNotBackslashCharIndex, count);
+			fail();
+		} catch (IllegalArgumentException e) {
+		}
+	}
+
+	@Test
+	public void countPreviousContinuedBackslash_A$String$int$int_intIs0() throws Exception {
+		String str = null;
+		int currentNotBackslashCharIndex = 0;
+		int count = 0;
+		int actual = TrimInsideOfBraceFilter.countPreviousContinuedBackslash(str, currentNotBackslashCharIndex, count);
+		int expected = 0;
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void countPreviousContinuedBackslash_A$String$int$int_intIs1() throws Exception {
+		String str = "test";
+		int currentNotBackslashCharIndex = 1;
+		int count = 1;
+		int actual = TrimInsideOfBraceFilter.countPreviousContinuedBackslash(str, currentNotBackslashCharIndex, count);
+		int expected = 1;
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void countPreviousContinuedBackslash_A$String$int$int_intIs2() throws Exception {
+		String str = "test";
+		int currentNotBackslashCharIndex = 2;
+		int count = 2;
+		int actual = TrimInsideOfBraceFilter.countPreviousContinuedBackslash(str, currentNotBackslashCharIndex, count);
+		int expected = 2;
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void countPreviousContinuedBackslash_A$String$int$int_StringIsNull() throws Exception {
+		String str = "test";
+		int currentNotBackslashCharIndex = 0;
+		int count = 0;
+		int actual = TrimInsideOfBraceFilter.countPreviousContinuedBackslash(str, currentNotBackslashCharIndex, count);
+		int expected = 0;
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void countPreviousContinuedBackslash_A$String$int$int_StringIsEmpty() throws Exception {
+		String str = "";
+		int currentNotBackslashCharIndex = 0;
+		int count = 0;
+		int actual = TrimInsideOfBraceFilter.countPreviousContinuedBackslash(str, currentNotBackslashCharIndex, count);
+		int expected = 0;
+		assertThat(actual, is(equalTo(expected)));
 	}
 
 }

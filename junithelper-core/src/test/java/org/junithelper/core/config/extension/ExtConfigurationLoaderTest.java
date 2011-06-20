@@ -2,6 +2,7 @@ package org.junithelper.core.config.extension;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import org.junit.Test;
 import org.junithelper.core.util.IOUtil;
@@ -45,6 +46,28 @@ public class ExtConfigurationLoaderTest {
 		// then
 		assertThat(actual, notNullValue());
 		assertThat(actual.extArgs.size(), is(equalTo(4)));
+	}
+
+	@Test
+	public void load_A$String_StringIsNull() throws Exception {
+		ExtConfigurationLoader target = new ExtConfigurationLoader();
+		String filepath = null;
+		try {
+			target.load(filepath);
+			fail("filepath is null, but it does not throw exception.");
+		} catch (IllegalArgumentException e) {
+		}
+	}
+
+	@Test
+	public void load_A$String_StringIsEmpty() throws Exception {
+		ExtConfigurationLoader target = new ExtConfigurationLoader();
+		String filepath = "";
+		try {
+			target.load(filepath);
+			fail("filepath is empty, but it does not throw exception.");
+		} catch (FileNotFoundException e) {
+		}
 	}
 
 }

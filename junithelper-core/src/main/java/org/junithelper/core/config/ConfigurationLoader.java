@@ -22,14 +22,17 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Properties;
 import java.util.Set;
+import org.junithelper.core.util.Assertion;
 
 public class ConfigurationLoader {
 
 	public Configuration load(String filepath) throws Exception {
+		Assertion.mustNotBeNull(filepath, "filepath");
 		return load(new FileInputStream(new File(filepath)));
 	}
 
 	public Configuration load(InputStream is) throws Exception {
+		Assertion.mustNotBeNull(is, "InputStream");
 		Properties props = new Properties();
 		props.load(is);
 		Configuration config = new Configuration();

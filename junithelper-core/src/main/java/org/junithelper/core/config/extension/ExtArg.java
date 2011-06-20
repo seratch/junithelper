@@ -17,10 +17,12 @@ package org.junithelper.core.config.extension;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.junithelper.core.util.Assertion;
 
 public class ExtArg {
 
 	public ExtArg(String canonicalClassName) {
+		Assertion.mustNotBeNull(canonicalClassName, "canonicalClassName");
 		this.canonicalClassName = canonicalClassName;
 	}
 

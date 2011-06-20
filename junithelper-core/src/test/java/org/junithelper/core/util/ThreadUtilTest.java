@@ -1,9 +1,7 @@
 package org.junithelper.core.util;
 
+import static org.junit.Assert.*;
 import org.junit.Test;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 public class ThreadUtilTest {
 
@@ -21,6 +19,34 @@ public class ThreadUtilTest {
 			fail("Expected exception did not occurred!");
 		} catch (IllegalArgumentException expected) {
 		}
+	}
+
+	@Test
+	public void sleep_A$long_longIsMinus1L() throws Exception {
+		long millisec = -1L;
+		try {
+			ThreadUtil.sleep(millisec);
+			fail();
+		} catch (IllegalArgumentException e) {
+		}
+	}
+
+	@Test
+	public void sleep_A$long_longIs0L() throws Exception {
+		long millisec = 0L;
+		ThreadUtil.sleep(millisec);
+	}
+
+	@Test
+	public void sleep_A$long_longIs1L() throws Exception {
+		long millisec = 1L;
+		ThreadUtil.sleep(millisec);
+	}
+
+	@Test
+	public void sleep_A$long_longIs2L() throws Exception {
+		long millisec = 2L;
+		ThreadUtil.sleep(millisec);
 	}
 
 }

@@ -1,16 +1,13 @@
 package org.junithelper.core.meta.extractor;
 
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+import java.util.List;
 import org.junit.Test;
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.meta.AccessModifier;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.MethodMeta;
-
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.mock;
 
 public class MethodMetaExtractorTest {
 
@@ -101,8 +98,7 @@ public class MethodMetaExtractorTest {
 		String sourceCodeString = "package hoge; public class Sample { public void doSomething() {} }";
 		// e.g. : given(mocked.called()).willReturn(1);
 		// when
-		boolean actual = target.isPrivateFieldExists(fieldType, fieldName,
-				sourceCodeString);
+		boolean actual = target.isPrivateFieldExists(fieldType, fieldName, sourceCodeString);
 		// then
 		// e.g. : verify(mocked).called();
 		boolean expected = false;
@@ -121,14 +117,12 @@ public class MethodMetaExtractorTest {
 	}
 
 	@Test
-	public void trimAccessModifierFromMethodSignatureArea_A$String()
-			throws Exception {
+	public void trimAccessModifierFromMethodSignatureArea_A$String() throws Exception {
 		// given
 		String methodSignatureArea = "} public static void main(String[] args) {";
 		// e.g. : given(mocked.called()).willReturn(1);
 		// when
-		String actual = MethodMetaExtractor
-				.trimAccessModifierFromMethodSignatureArea(methodSignatureArea);
+		String actual = MethodMetaExtractor.trimAccessModifierFromMethodSignatureArea(methodSignatureArea);
 		// then
 		// e.g. : verify(mocked).called();
 		String expected = " static void main(String[] args) {";
@@ -156,4 +150,5 @@ public class MethodMetaExtractorTest {
 		String expected = "List";
 		assertEquals(expected, actual);
 	}
+
 }

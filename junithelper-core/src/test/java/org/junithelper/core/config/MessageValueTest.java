@@ -1,9 +1,7 @@
 package org.junithelper.core.config;
 
+import static org.junit.Assert.*;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class MessageValueTest {
 
@@ -79,6 +77,42 @@ public class MessageValueTest {
 		// e.g. : verify(mocked).called();
 		String expected = "e.g.";
 		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void initialize_A$String_StringIsNull() throws Exception {
+		MessageValue target = new MessageValue();
+		String lang = null;
+		target.initialize(lang);
+	}
+
+	@Test
+	public void initialize_A$String_StringIsEmpty() throws Exception {
+		MessageValue target = new MessageValue();
+		String lang = "";
+		target.initialize(lang);
+	}
+
+	@Test
+	public void get_A$String_StringIsNull() throws Exception {
+		MessageValue target = new MessageValue();
+		String key = null;
+		try {
+			target.get(key);
+			fail();
+		} catch (IllegalArgumentException e) {
+		}
+	}
+
+	@Test
+	public void get_A$String_StringIsEmpty() throws Exception {
+		MessageValue target = new MessageValue();
+		String key = "";
+		try {
+			target.get(key);
+			fail();
+		} catch (IllegalArgumentException e) {
+		}
 	}
 
 }

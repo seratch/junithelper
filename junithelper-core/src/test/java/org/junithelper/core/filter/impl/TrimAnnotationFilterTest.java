@@ -1,5 +1,6 @@
 package org.junithelper.core.filter.impl;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -59,6 +60,24 @@ public class TrimAnnotationFilterTest {
 		String actual = target.trimAll(src);
 		String expected = " \r\n  \r\npublic void aaa(  String bbb) {";
 		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void trimAll_A$String_StringIsNull() throws Exception {
+		TrimAnnotationFilter target = new TrimAnnotationFilter();
+		String src = null;
+		String actual = target.trimAll(src);
+		String expected = null;
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void trimAll_A$String_StringIsEmpty() throws Exception {
+		TrimAnnotationFilter target = new TrimAnnotationFilter();
+		String src = "";
+		String actual = target.trimAll(src);
+		String expected = "";
+		assertThat(actual, is(equalTo(expected)));
 	}
 
 }

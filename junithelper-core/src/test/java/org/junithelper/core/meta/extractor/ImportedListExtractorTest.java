@@ -1,12 +1,9 @@
 package org.junithelper.core.meta.extractor;
 
+import static org.junit.Assert.*;
+import java.util.List;
 import org.junit.Test;
 import org.junithelper.core.config.Configuration;
-
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class ImportedListExtractorTest {
 
