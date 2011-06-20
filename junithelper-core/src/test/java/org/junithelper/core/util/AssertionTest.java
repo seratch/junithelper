@@ -670,4 +670,68 @@ public class AssertionTest {
 		Assertion.mustBeLessThanOrEqual(arg, upperLimit, name);
 	}
 
+	@Test
+	public void mustBeGreaterThan_A$double$double$String_StringIsNull() throws Exception {
+		double arg = 1.0;
+		double lowerLimit = 0.0;
+		String name = null;
+		Assertion.mustBeGreaterThan(arg, lowerLimit, name);
+	}
+
+	@Test
+	public void mustBeGreaterThan_A$double$double$String_StringIsEmpty() throws Exception {
+		double arg = 1.0;
+		double lowerLimit = 0.0;
+		String name = "";
+		Assertion.mustBeGreaterThan(arg, lowerLimit, name);
+	}
+
+	@Test
+	public void mustBeGreaterThanOrEqual_A$double$double$String_StringIsNull() throws Exception {
+		double arg = 0.0;
+		double lowerLimit = 0.0;
+		String name = null;
+		Assertion.mustBeGreaterThanOrEqual(arg, lowerLimit, name);
+	}
+
+	@Test
+	public void mustBeGreaterThanOrEqual_A$double$double$String_StringIsEmpty() throws Exception {
+		double arg = 0.0;
+		double lowerLimit = 0.0;
+		String name = "";
+		Assertion.mustBeGreaterThanOrEqual(arg, lowerLimit, name);
+	}
+
+	@Test
+	public void mustBeLessThan_A$double$double$String_StringIsNull() throws Exception {
+		double arg = -0.05;
+		double upperLimit = 0.0;
+		String name = null;
+		Assertion.mustBeLessThan(arg, upperLimit, name);
+	}
+
+	@Test
+	public void mustBeLessThan_A$double$double$String_StringIsEmpty() throws Exception {
+		double arg = -0.05;
+		double upperLimit = 0.0;
+		String name = "";
+		Assertion.mustBeLessThan(arg, upperLimit, name);
+	}
+
+	@Test
+	public void mustBeLessThanOrEqual_A$double$double$String_StringIsNull() throws Exception {
+		double arg = 0.0;
+		double upperLimit = 0.0;
+		String name = null;
+		Assertion.mustBeLessThanOrEqual(arg, upperLimit, name);
+	}
+
+	@Test
+	public void mustBeLessThanOrEqual_A$double$double$String_StringIsEmpty() throws Exception {
+		double arg = 0.0;
+		double upperLimit = 0.0;
+		String name = "";
+		Assertion.mustBeLessThanOrEqual(arg, upperLimit, name);
+	}
+
 }

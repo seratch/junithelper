@@ -152,4 +152,23 @@ public class DefaultSourceCodeParserTest {
 		assertThat(actual, notNullValue());
 	}
 
+	@Test
+	public void parse_A$String_StringIsNull() throws Exception {
+		DefaultSourceCodeParser target = new DefaultSourceCodeParser(config);
+		String sourceCodeString = null;
+		try {
+			target.parse(sourceCodeString);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void parse_A$String_StringIsEmpty() throws Exception {
+		DefaultSourceCodeParser target = new DefaultSourceCodeParser(config);
+		String sourceCodeString = "";
+		ClassMeta actual = target.parse(sourceCodeString);
+		assertThat(actual, notNullValue());
+	}
+
 }
