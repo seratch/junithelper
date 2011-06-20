@@ -269,4 +269,22 @@ public class MethodMetaExtractorTest {
 		assertThat(actual, is(equalTo(expected)));
 	}
 
+	@Test
+	public void initialize_A$ClassMeta$String_StringIsNull() throws Exception {
+		MethodMetaExtractor target = new MethodMetaExtractor(config);
+		ClassMeta classMeta = new ClassMetaExtractor(config).extract("public class Sample {}");
+		String sourceCodeString = null;
+		MethodMetaExtractor actual = target.initialize(classMeta, sourceCodeString);
+		assertThat(actual, notNullValue());
+	}
+
+	@Test
+	public void initialize_A$ClassMeta$String_StringIsEmpty() throws Exception {
+		MethodMetaExtractor target = new MethodMetaExtractor(config);
+		ClassMeta classMeta = new ClassMetaExtractor(config).extract("public class Sample {}");
+		String sourceCodeString = "";
+		MethodMetaExtractor actual = target.initialize(classMeta, sourceCodeString);
+		assertThat(actual, notNullValue());
+	}
+
 }

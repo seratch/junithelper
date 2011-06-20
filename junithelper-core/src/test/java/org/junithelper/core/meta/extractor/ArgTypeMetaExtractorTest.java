@@ -111,4 +111,22 @@ public class ArgTypeMetaExtractorTest {
 		target.doExtract(argsAreaString);
 	}
 
+	@Test
+	public void initialize_A$ClassMeta$String_StringIsNull() throws Exception {
+		ArgTypeMetaExtractor target = new ArgTypeMetaExtractor(config);
+		ClassMeta classMeta = new ClassMetaExtractor(config).extract("public class Sample {}");
+		String sourceCodeString = null;
+		ArgTypeMetaExtractor actual = target.initialize(classMeta, sourceCodeString);
+		assertThat(actual, notNullValue());
+	}
+
+	@Test
+	public void initialize_A$ClassMeta$String_StringIsEmpty() throws Exception {
+		ArgTypeMetaExtractor target = new ArgTypeMetaExtractor(config);
+		ClassMeta classMeta = new ClassMetaExtractor(config).extract("public class Sample {}");
+		String sourceCodeString = "";
+		ArgTypeMetaExtractor actual = target.initialize(classMeta, sourceCodeString);
+		assertThat(actual, notNullValue());
+	}
+
 }

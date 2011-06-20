@@ -207,4 +207,22 @@ public class ConstructorMetaExtractorTest {
 		assertThat(actual, is(equalTo(expected)));
 	}
 
+	@Test
+	public void initialize_A$ClassMeta$String_StringIsNull() throws Exception {
+		ConstructorMetaExtractor target = new ConstructorMetaExtractor(config);
+		ClassMeta classMeta = new ClassMetaExtractor(config).extract("public class Sample {}");
+		String sourceCodeString = null;
+		ConstructorMetaExtractor actual = target.initialize(classMeta, sourceCodeString);
+		assertThat(actual, notNullValue());
+	}
+
+	@Test
+	public void initialize_A$ClassMeta$String_StringIsEmpty() throws Exception {
+		ConstructorMetaExtractor target = new ConstructorMetaExtractor(config);
+		ClassMeta classMeta = new ClassMetaExtractor(config).extract("public class Sample {}");
+		String sourceCodeString = "";
+		ConstructorMetaExtractor actual = target.initialize(classMeta, sourceCodeString);
+		assertThat(actual, notNullValue());
+	}
+
 }

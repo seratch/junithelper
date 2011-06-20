@@ -1,10 +1,14 @@
 package org.junithelper.core.parser.impl;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import org.junit.Test;
 import org.junithelper.core.config.Configuration;
+import org.junithelper.core.exception.JUnitHelperCoreException;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.ConstructorMeta;
 import org.junithelper.core.meta.MethodMeta;
@@ -83,6 +87,69 @@ public class DefaultSourceCodeParserTest {
 		ClassMeta classMeta = new ClassMetaExtractor(config).extract(sourceCodeString);
 		List<ConstructorMeta> actual = target.getConstructors(classMeta, sourceCodeString);
 		assertEquals(1, actual.size());
+	}
+
+	@Test
+	public void parse_A$InputStream$String_StringIsNull() throws Exception {
+		DefaultSourceCodeParser target = new DefaultSourceCodeParser(config);
+		InputStream is = new ByteArrayInputStream(new byte[] {});
+		String encoding = null;
+		ClassMeta actual = target.parse(is, encoding);
+		assertThat(actual, notNullValue());
+	}
+
+	@Test
+	public void parse_A$InputStream$String_StringIsEmpty() throws Exception {
+		DefaultSourceCodeParser target = new DefaultSourceCodeParser(config);
+		InputStream is = new ByteArrayInputStream(new byte[] {});
+		String encoding = "";
+		try {
+			target.parse(is, encoding);
+			fail();
+		} catch (UnsupportedEncodingException e) {
+		}
+	}
+
+	@Test
+	public void getMethods_A$ClassMeta$String_StringIsNull() throws Exception {
+		DefaultSourceCodeParser target = new DefaultSourceCodeParser(config);
+		ClassMeta classMeta = null;
+		String sourceCodeString = null;
+		try {
+			target.getMethods(classMeta, sourceCodeString);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void getMethods_A$ClassMeta$String_StringIsEmpty() throws Exception {
+		DefaultSourceCodeParser target = new DefaultSourceCodeParser(config);
+		ClassMeta classMeta = null;
+		String sourceCodeString = "";
+		List<MethodMeta> actual = target.getMethods(classMeta, sourceCodeString);
+		assertThat(actual, notNullValue());
+	}
+
+	@Test
+	public void getConstructors_A$ClassMeta$String_StringIsNull() throws Exception {
+		DefaultSourceCodeParser target = new DefaultSourceCodeParser(config);
+		ClassMeta classMeta = null;
+		String sourceCodeString = null;
+		try {
+			target.getConstructors(classMeta, sourceCodeString);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void getConstructors_A$ClassMeta$String_StringIsEmpty() throws Exception {
+		DefaultSourceCodeParser target = new DefaultSourceCodeParser(config);
+		ClassMeta classMeta = null;
+		String sourceCodeString = "";
+		List<ConstructorMeta> actual = target.getConstructors(classMeta, sourceCodeString);
+		assertThat(actual, notNullValue());
 	}
 
 }
