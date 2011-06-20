@@ -384,7 +384,9 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 				}
 
 				ExtInstantiation extInstantiation = null;
-				if (config.extConfiguration.extInstantiations != null) {
+				// -----------
+				// Extension
+				if (config.isExtensionEnabled && config.extConfiguration.extInstantiations != null) {
 					for (ExtInstantiation ins : config.extConfiguration.extInstantiations) {
 						if (isCanonicalClassNameUsed(ins.canonicalClassName, argTypeMeta.name, testMethodMeta.classMeta)) {
 							extInstantiation = ins;
@@ -624,8 +626,9 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 		Assertion.mustNotBeNull(argTypeMeta, "argTypeMeta");
 		Assertion.mustNotBeEmpty(argName, "argName");
 
-		// extension instantiation
-		if (config.extConfiguration.extInstantiations != null) {
+		// -----------
+		// Extension
+		if (config.isExtensionEnabled && config.extConfiguration.extInstantiations != null) {
 			for (ExtInstantiation ins : config.extConfiguration.extInstantiations) {
 				if (isCanonicalClassNameUsed(ins.canonicalClassName, argTypeMeta.name, testMethodMeta.classMeta)) {
 					return ins.assignCode;

@@ -187,9 +187,46 @@ public class DefaultTestCaseGeneratorTest {
 	}
 
 	@Test
+	public void getLackingTestMethodMetaList_A$String_Ext_NotEnabled() throws Exception {
+		// ext config
+		InputStream is = this.getClass().getClassLoader().getResourceAsStream("junithelper-extension.xml");
+		config.extConfiguration = new ExtConfigurationLoader().load(is);
+
+		String sourceCodeString = "package hoge.foo; import java.util.List; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\") } public void overload(String str) { } public void overload(String str, Object obj) { } }";
+		ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
+		target.initialize(targetClassMeta);
+		String currentTestCaseSourceCode = "package hoge.foo; public class SampleTest extends TestCase { public void test_overload_A$String$Object() throws Exception { } }";
+		List<TestMethodMeta> actual = target.getLackingTestMethodMetaList(currentTestCaseSourceCode);
+		assertEquals(4, actual.size());
+		assertEquals(true, actual.get(0).isTypeTest);
+		assertEquals(true, actual.get(1).isInstantiationTest);
+		assertEquals("doSomething", actual.get(2).methodMeta.name);
+	}
+
+	@Test
+	public void getLackingTestMethodMetaList_A$String_Ext_2_NotEnabled() throws Exception {
+		// ext config
+		InputStream is = this.getClass().getClassLoader().getResourceAsStream("junithelper-extension.xml");
+		config.extConfiguration = new ExtConfigurationLoader().load(is);
+
+		String sourceCodeString = "package hoge.foo; import java.util.List; public class Sample { "
+				+ "public int doSomething(Something something, String str, String str2, long longValue) throws Throwable { System.out.println(\"aaaa\") } "
+				+ "public void overload(String str) { } " + "public void overload(String str, Object obj) { } }";
+		ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
+		target.initialize(targetClassMeta);
+		String currentTestCaseSourceCode = "package hoge.foo; public class SampleTest extends TestCase { public void test_overload_A$String$Object() throws Exception { } }";
+		List<TestMethodMeta> actual = target.getLackingTestMethodMetaList(currentTestCaseSourceCode);
+		assertEquals(4, actual.size());
+		assertEquals(true, actual.get(0).isTypeTest);
+		assertEquals(true, actual.get(1).isInstantiationTest);
+		assertEquals("doSomething", actual.get(2).methodMeta.name);
+	}
+
+	@Test
 	public void getLackingTestMethodMetaList_A$String_Ext() throws Exception {
 		// ext config
 		InputStream is = this.getClass().getClassLoader().getResourceAsStream("junithelper-extension.xml");
+		config.isExtensionEnabled = true;
 		config.extConfiguration = new ExtConfigurationLoader().load(is);
 
 		String sourceCodeString = "package hoge.foo; import java.util.List; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\") } public void overload(String str) { } public void overload(String str, Object obj) { } }";
@@ -207,6 +244,7 @@ public class DefaultTestCaseGeneratorTest {
 	public void getLackingTestMethodMetaList_A$String_Ext_2() throws Exception {
 		// ext config
 		InputStream is = this.getClass().getClassLoader().getResourceAsStream("junithelper-extension.xml");
+		config.isExtensionEnabled = true;
 		config.extConfiguration = new ExtConfigurationLoader().load(is);
 
 		String sourceCodeString = "package hoge.foo; import java.util.List; public class Sample { "

@@ -167,28 +167,32 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 					}
 				}
 				// -----------
-				// extension arg patterns
-				List<ExtArg> extArgs = config.extConfiguration.extArgs;
-				for (ExtArg extArg : extArgs) {
-					// import and className
-					for (ArgTypeMeta argType : methodMeta.argTypes) {
-						if (isCanonicalClassNameUsed(extArg.canonicalClassName, argType.name, targetClassMeta)) {
-							for (ExtArgPattern pattern : extArg.patterns) {
-								// extension pattern is not matched
-								// e.g.
-								// .*?doSomething_A$String_StringIsNull.*?
-								String IS_ALREADY_EXISTS_FOR_PATTERN = RegExp.Anything_ZeroOrMore_Min
-										+ testMethodNamePrefix + config.testMethodName.basicDelimiter
-										+ extArg.getCanonicalClassNameInMethodName() + "Is"
-										+ pattern.getNameWhichFirstCharIsUpper() + RegExp.Anything_ZeroOrMore_Min;
-								IS_ALREADY_EXISTS_FOR_PATTERN = Matcher.quoteReplacement(IS_ALREADY_EXISTS_FOR_PATTERN);
-								if (!checkTargetSourceCode.matches(IS_ALREADY_EXISTS_FOR_PATTERN)) {
-									// testing target access modifier
-									TestMethodMeta meta = testMethodGenerator.getTestMethodMeta(methodMeta, null);
-									meta.extArgPattern = pattern;
-									// extension assertions
-									meta = appendIfExtensionAssertionsExist(meta, config);
-									addTestMethodMetaToListIfNotExists(dest, meta);
+				// Extension
+				if (config.isExtensionEnabled) {
+					// extension arg patterns
+					List<ExtArg> extArgs = config.extConfiguration.extArgs;
+					for (ExtArg extArg : extArgs) {
+						// import and className
+						for (ArgTypeMeta argType : methodMeta.argTypes) {
+							if (isCanonicalClassNameUsed(extArg.canonicalClassName, argType.name, targetClassMeta)) {
+								for (ExtArgPattern pattern : extArg.patterns) {
+									// extension pattern is not matched
+									// e.g.
+									// .*?doSomething_A$String_StringIsNull.*?
+									String IS_ALREADY_EXISTS_FOR_PATTERN = RegExp.Anything_ZeroOrMore_Min
+											+ testMethodNamePrefix + config.testMethodName.basicDelimiter
+											+ extArg.getCanonicalClassNameInMethodName() + "Is"
+											+ pattern.getNameWhichFirstCharIsUpper() + RegExp.Anything_ZeroOrMore_Min;
+									IS_ALREADY_EXISTS_FOR_PATTERN = Matcher
+											.quoteReplacement(IS_ALREADY_EXISTS_FOR_PATTERN);
+									if (!checkTargetSourceCode.matches(IS_ALREADY_EXISTS_FOR_PATTERN)) {
+										// testing target access modifier
+										TestMethodMeta meta = testMethodGenerator.getTestMethodMeta(methodMeta, null);
+										meta.extArgPattern = pattern;
+										// extension assertions
+										meta = appendIfExtensionAssertionsExist(meta, config);
+										addTestMethodMetaToListIfNotExists(dest, meta);
+									}
 								}
 							}
 						}
@@ -232,14 +236,18 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 	static TestMethodMeta appendIfExtensionAssertionsExist(TestMethodMeta testMethodMeta, Configuration config) {
 		if (testMethodMeta.methodMeta != null && testMethodMeta.methodMeta.returnType != null
 				&& testMethodMeta.methodMeta.returnType.name != null) {
-			List<ExtReturn> extReturns = config.extConfiguration.extReturns;
-			if (extReturns != null && extReturns.size() > 0) {
-				for (ExtReturn extReturn : extReturns) {
-					// The return type matches ext return type
-					if (isCanonicalClassNameUsed(extReturn.canonicalClassName,
-							testMethodMeta.methodMeta.returnType.name, testMethodMeta.classMeta)) {
-						testMethodMeta.extReturn = extReturn;
-						break;
+			// -----------
+			// Extension
+			if (config.isExtensionEnabled) {
+				List<ExtReturn> extReturns = config.extConfiguration.extReturns;
+				if (extReturns != null && extReturns.size() > 0) {
+					for (ExtReturn extReturn : extReturns) {
+						// The return type matches ext return type
+						if (isCanonicalClassNameUsed(extReturn.canonicalClassName,
+								testMethodMeta.methodMeta.returnType.name, testMethodMeta.classMeta)) {
+							testMethodMeta.extReturn = extReturn;
+							break;
+						}
 					}
 				}
 			}
