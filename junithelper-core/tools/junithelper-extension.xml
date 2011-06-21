@@ -9,15 +9,6 @@
     <assign>new ByteArrayInputStream(new byte[] {})</assign>
   </instantiation>
 
-  <arg class="java.util.Calendar" >
-    <pattern name="null"><assign>null</assign></pattern>
-    <pattern name="now"><assign>Calendar.getInstance()</assign></pattern>
-    <pattern name="yesterday">
-      <assign>Calendar.getInstance();</assign>
-      <post-assign>{arg}.add(Calendar.DATE, -1);</post-assign>
-    </pattern>
-  </arg>
-
   <arg class="int" >
     <pattern name="MinValue"><assign>Integer.MIN_VALUE</assign></pattern>
     <pattern name="minus1"><assign>-1</assign></pattern>
@@ -78,6 +69,74 @@
   <arg class="java.lang.String" >
     <pattern name="null"><assign>null</assign></pattern>
     <pattern name="empty"><assign>""</assign></pattern>
+  </arg>
+
+  <arg class="java.util.Calendar" >
+    <pattern name="null"><assign>null</assign></pattern>
+    <pattern name="now"><assign>Calendar.getInstance();</assign></pattern>
+    <pattern name="yesterday">
+      <assign>Calendar.getInstance();</assign>
+      <post-assign>{arg}.add(Calendar.DATE, -1);</post-assign>
+    </pattern>
+    <pattern name="Date02_29">
+      <assign>Calendar.getInstance();</assign>
+      <post-assign>
+		{arg}.set(Calendar.YEAR, 2000);
+		{arg}.set(Calendar.MONTH, 2 - 1);
+		{arg}.set(Calendar.DATE, 29);
+		{arg}.set(Calendar.HOUR_OF_DAY, 0);
+		{arg}.set(Calendar.MINUTE, 0);
+		{arg}.set(Calendar.SECOND, 0);
+		{arg}.set(Calendar.MILLISECOND, 0);
+      </post-assign>
+    </pattern>
+    <pattern name="Date12_31">
+      <assign>Calendar.getInstance();</assign>
+      <post-assign>
+    	{arg}.set(Calendar.YEAR, 1999);
+		{arg}.set(Calendar.MONTH, 12 - 1);
+		{arg}.set(Calendar.DATE, 31);
+		{arg}.set(Calendar.HOUR_OF_DAY, 0);
+		{arg}.set(Calendar.MINUTE, 0);
+		{arg}.set(Calendar.SECOND, 0);
+		{arg}.set(Calendar.MILLISECOND, 0);
+      </post-assign>
+    </pattern>
+    <pattern name="Date01_01">
+      <assign>Calendar.getInstance();</assign>
+      <post-assign>
+    	{arg}.set(Calendar.YEAR, 2000);
+		{arg}.set(Calendar.MONTH, 1 - 1);
+		{arg}.set(Calendar.DATE, 1);
+		{arg}.set(Calendar.HOUR_OF_DAY, 0);
+		{arg}.set(Calendar.MINUTE, 0);
+		{arg}.set(Calendar.SECOND, 0);
+		{arg}.set(Calendar.MILLISECOND, 0);
+      </post-assign>
+    </pattern>
+    <pattern name="Time23_59_59">
+      <assign>Calendar.getInstance();</assign>
+      <post-assign>{arg}.set(Calendar.YEAR, 1995);
+		{arg}.set(Calendar.MONTH, 5 - 1);
+		{arg}.set(Calendar.DATE, 24);
+		{arg}.set(Calendar.HOUR_OF_DAY, 23);
+		{arg}.set(Calendar.MINUTE, 59);
+		{arg}.set(Calendar.SECOND, 59);
+		{arg}.set(Calendar.MILLISECOND, 0);
+      </post-assign>
+    </pattern>
+    <pattern name="Time00_00_00">
+      <assign>Calendar.getInstance();</assign>
+      <post-assign>
+    	{arg}.set(Calendar.YEAR, 1995);
+		{arg}.set(Calendar.MONTH, 5 - 1);
+		{arg}.set(Calendar.DATE, 25);
+		{arg}.set(Calendar.HOUR_OF_DAY, 0);
+		{arg}.set(Calendar.MINUTE, 0);
+		{arg}.set(Calendar.SECOND, 0);
+		{arg}.set(Calendar.MILLISECOND, 0);
+      </post-assign>
+    </pattern>
   </arg>
 
   <!-- 
