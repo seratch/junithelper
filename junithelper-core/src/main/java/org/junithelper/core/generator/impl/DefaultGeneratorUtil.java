@@ -37,7 +37,7 @@ final class DefaultGeneratorUtil {
 				for (String line : lines) {
 					if (line != null && line.trim().length() > 0) {
 						appendTabs(buf, 2);
-						buf.append(line);
+						buf.append(line.trim());
 						if (!line.endsWith("{") && !line.endsWith("}")) {
 							buf.append(StringValue.Semicolon);
 						}
@@ -57,7 +57,7 @@ final class DefaultGeneratorUtil {
 				for (String line : lines) {
 					if (line != null && line.trim().length() > 0) {
 						appendTabs(buf, 2);
-						buf.append(line.replaceAll(from, to));
+						buf.append(line.trim().replaceAll(from, to));
 						if (!line.endsWith("{") && !line.endsWith("}")) {
 							buf.append(StringValue.Semicolon);
 						}
