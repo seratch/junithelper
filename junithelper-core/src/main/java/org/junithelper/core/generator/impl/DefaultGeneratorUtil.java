@@ -47,33 +47,37 @@ final class DefaultGeneratorUtil {
 					// e.g. Sample target = new Sample();
 					StringBuilder buf = new StringBuilder();
 					if (ins.preAssignCode != null && ins.preAssignCode.trim().length() > 0) {
-						buf.append(StringValue.Tab);
-						buf.append(StringValue.Tab);
 						String[] lines = ins.preAssignCode.split(StringValue.Semicolon);
 						for (String line : lines) {
+							buf.append(StringValue.Tab);
+							buf.append(StringValue.Tab);
+							line = line.trim().replaceAll(StringValue.CarriageReturn, "")
+									.replaceAll(StringValue.LineFeed, "");
 							buf.append(line);
 							buf.append(StringValue.Semicolon);
+							buf.append(StringValue.CarriageReturn);
+							buf.append(StringValue.LineFeed);
 						}
-						buf.append(StringValue.CarriageReturn);
-						buf.append(StringValue.LineFeed);
 					}
 					buf.append(StringValue.Tab);
 					buf.append(StringValue.Tab);
 					buf.append(testMethodMeta.classMeta.name);
 					buf.append(" target = ");
-					buf.append(ins.assignCode);
+					buf.append(ins.assignCode.trim());
 					buf.append(StringValue.CarriageReturn);
 					buf.append(StringValue.LineFeed);
 					if (ins.postAssignCode != null && ins.postAssignCode.trim().length() > 0) {
-						buf.append(StringValue.Tab);
-						buf.append(StringValue.Tab);
 						String[] lines = ins.postAssignCode.split(StringValue.Semicolon);
 						for (String line : lines) {
+							buf.append(StringValue.Tab);
+							buf.append(StringValue.Tab);
+							line = line.trim().replaceAll(StringValue.CarriageReturn, "")
+									.replaceAll(StringValue.LineFeed, "").replaceAll("\\{instance\\}", "target");
 							buf.append(line);
 							buf.append(StringValue.Semicolon);
+							buf.append(StringValue.CarriageReturn);
+							buf.append(StringValue.LineFeed);
 						}
-						buf.append(StringValue.CarriageReturn);
-						buf.append(StringValue.LineFeed);
 					}
 					return buf.toString();
 				}

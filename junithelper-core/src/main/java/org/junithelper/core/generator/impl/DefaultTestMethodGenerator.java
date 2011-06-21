@@ -282,7 +282,9 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 								for (String line : lines) {
 									if (line != null && line.trim().length() > 0) {
 										appendTabs(buf, 2);
-										buf.append(line.trim());
+										line = line.trim().replaceAll(StringValue.CarriageReturn, "")
+												.replaceAll(StringValue.LineFeed, "");
+										buf.append(line);
 										buf.append(StringValue.Semicolon);
 										appendCRLF(buf);
 									}
@@ -479,6 +481,8 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 						for (String line : lines) {
 							if (line != null && line.trim().length() > 0) {
 								appendTabs(buf, 2);
+								line = line.trim().replaceAll(StringValue.CarriageReturn, "")
+										.replaceAll(StringValue.LineFeed, "").replaceAll("\\{instance\\}", argName);
 								buf.append(line);
 								buf.append(StringValue.Semicolon);
 								appendCRLF(buf);
@@ -640,7 +644,7 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 		if (config.isExtensionEnabled && config.extConfiguration.extInstantiations != null) {
 			for (ExtInstantiation ins : config.extConfiguration.extInstantiations) {
 				if (isCanonicalClassNameUsed(ins.canonicalClassName, argTypeMeta.name, testMethodMeta.classMeta)) {
-					return ins.assignCode;
+					return ins.assignCode.trim();
 				}
 			}
 		}
