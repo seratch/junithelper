@@ -29,6 +29,9 @@ final class DefaultGeneratorUtil {
 	}
 
 	static void appendExtensionSourceCode(StringBuilder buf, String code) {
+
+		Assertion.mustNotBeNull(code, "code");
+
 		String[] separatedListBySemicolon = code.split(StringValue.Semicolon);
 		for (String separatedBySemicolon : separatedListBySemicolon) {
 			if (separatedBySemicolon != null && separatedBySemicolon.trim().length() > 0) {
@@ -48,7 +51,12 @@ final class DefaultGeneratorUtil {
 		}
 	}
 
-	static void appendExtensionPostAssignSourceCode(StringBuilder buf, String code, String from, String to) {
+	static void appendExtensionPostAssignSourceCode(StringBuilder buf, String code, String[] fromList, String to) {
+
+		Assertion.mustNotBeNull(code, "code");
+		Assertion.mustNotBeNull(fromList, "fromList");
+		Assertion.mustNotBeNull(to, "to");
+
 		String[] separatedListBySemicolon = code.split(StringValue.Semicolon);
 		for (String separatedBySemicolon : separatedListBySemicolon) {
 			if (separatedBySemicolon != null && separatedBySemicolon.trim().length() > 0) {
@@ -57,7 +65,11 @@ final class DefaultGeneratorUtil {
 				for (String line : lines) {
 					if (line != null && line.trim().length() > 0) {
 						appendTabs(buf, 2);
-						buf.append(line.trim().replaceAll(from, to));
+						line = line.trim();
+						for (String from : fromList) {
+							line = line.replaceAll(from, to);
+						}
+						buf.append(line);
 						if (!line.endsWith("{") && !line.endsWith("}")) {
 							buf.append(StringValue.Semicolon);
 						}
@@ -97,7 +109,8 @@ final class DefaultGeneratorUtil {
 					buf.append(StringValue.CarriageReturn);
 					buf.append(StringValue.LineFeed);
 					if (ins.postAssignCode != null && ins.postAssignCode.trim().length() > 0) {
-						appendExtensionPostAssignSourceCode(buf, ins.postAssignCode, "\\{instance\\}", "target");
+						appendExtensionPostAssignSourceCode(buf, ins.postAssignCode, new String[] { "\\{instance\\}" },
+								"target");
 					}
 					return buf.toString();
 				}

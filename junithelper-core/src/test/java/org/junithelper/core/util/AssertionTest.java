@@ -1,8 +1,9 @@
 package org.junithelper.core.util;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
+
+import java.util.Random;
 
 import org.junit.Test;
 import org.junithelper.core.exception.JUnitHelperCoreException;
@@ -862,6 +863,38 @@ public class AssertionTest {
 		long lowerLimit = Long.MAX_VALUE - 1;
 		String name = null;
 		Assertion.mustBeGreaterThan(arg, lowerLimit, name);
+	}
+
+	@Test
+	public void mustBeGreaterThan_A$int$int$String_intIsRandom() throws Exception {
+		int arg = new Random().nextInt(10);
+		int lowerLimit = arg - 1;
+		String name = null;
+		Assertion.mustBeGreaterThan(arg, lowerLimit, name);
+	}
+
+	@Test
+	public void mustBeGreaterThanOrEqual_A$int$int$String_intIsRandom() throws Exception {
+		int arg = new Random().nextInt(10);
+		int lowerLimit = arg - 1;
+		String name = null;
+		Assertion.mustBeGreaterThanOrEqual(arg, lowerLimit, name);
+	}
+
+	@Test
+	public void mustBeLessThan_A$int$int$String_intIsRandom() throws Exception {
+		int arg = new Random().nextInt(10);
+		int upperLimit = arg + 1;
+		String name = null;
+		Assertion.mustBeLessThan(arg, upperLimit, name);
+	}
+
+	@Test
+	public void mustBeLessThanOrEqual_A$int$int$String_intIsRandom() throws Exception {
+		int arg = new Random().nextInt(10);
+		int upperLimit = arg + 1;
+		String name = null;
+		Assertion.mustBeLessThanOrEqual(arg, upperLimit, name);
 	}
 
 }

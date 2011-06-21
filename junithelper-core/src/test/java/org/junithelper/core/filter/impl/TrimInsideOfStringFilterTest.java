@@ -1,11 +1,15 @@
 package org.junithelper.core.filter.impl;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
+
+import java.util.Random;
 
 import org.junit.Test;
 import org.junithelper.core.exception.JUnitHelperCoreException;
@@ -162,6 +166,16 @@ public class TrimInsideOfStringFilterTest {
 			fail();
 		} catch (StringIndexOutOfBoundsException e) {
 		}
+	}
+
+	@Test
+	public void countPreviousContinuedBackslash_A$String$int$int_intIsRandom() throws Exception {
+		String str = "123456789012345";
+		int currentNotBackslashCharIndex = new Random().nextInt(10);
+		int count = new Random().nextInt(10);
+		int actual = TrimInsideOfStringFilter.countPreviousContinuedBackslash(str, currentNotBackslashCharIndex, count);
+		assertThat(actual, is(greaterThanOrEqualTo(0)));
+		assertThat(actual, is(lessThanOrEqualTo(Integer.MAX_VALUE)));
 	}
 
 }

@@ -16,8 +16,10 @@
 package org.junithelper.core.generator.impl;
 
 import static org.junithelper.core.generator.impl.DefaultGeneratorUtil.*;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.JUnitVersion;
 import org.junithelper.core.config.MessageValue;
@@ -385,12 +387,14 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 
 				// --------------------------
 				// extension : pre-assign
-				if (isExtArgPatternTarget && extArgPattern.preAssignCode != null) {
+				if (isExtArgPatternTarget) {
 					// arg patterns
-					appendExtensionSourceCode(buf, extArgPattern.preAssignCode);
-				} else if (extInstantiation != null) {
-					// instantiation
-					if (extInstantiation.preAssignCode != null && extInstantiation.preAssignCode.trim().length() > 0) {
+					if (extArgPattern.preAssignCode != null) {
+						appendExtensionSourceCode(buf, extArgPattern.preAssignCode);
+					}
+				} else {
+					if (extInstantiation != null && extInstantiation.preAssignCode != null
+							&& extInstantiation.preAssignCode.trim().length() > 0) {
 						appendExtensionSourceCode(buf, extInstantiation.preAssignCode);
 					}
 				}
@@ -420,12 +424,16 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 				// --------------------------
 				// extension : post-assign
 				// arg patterns
-				if (isExtArgPatternTarget && extArgPattern.postAssignCode != null) {
-					appendExtensionPostAssignSourceCode(buf, extArgPattern.postAssignCode, "\\{arg\\}", argName);
-				} else if (extInstantiation != null) {
-					// instantiation
-					if (extInstantiation.postAssignCode != null && extInstantiation.postAssignCode.trim().length() > 0) {
-						appendExtensionPostAssignSourceCode(buf, extInstantiation.postAssignCode, "\\{arg\\}", argName);
+				if (isExtArgPatternTarget) {
+					if (extArgPattern.postAssignCode != null) {
+						appendExtensionPostAssignSourceCode(buf, extArgPattern.postAssignCode, new String[] {
+								"\\{arg\\}", "\\{instance\\}" }, argName);
+					}
+				} else {
+					if (extInstantiation != null && extInstantiation.postAssignCode != null
+							&& extInstantiation.postAssignCode.trim().length() > 0) {
+						appendExtensionPostAssignSourceCode(buf, extInstantiation.postAssignCode, new String[] {
+								"\\{arg\\}", "\\{instance\\}" }, argName);
 					}
 				}
 			}

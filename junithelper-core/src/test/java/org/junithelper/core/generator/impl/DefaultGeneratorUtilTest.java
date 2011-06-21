@@ -1,7 +1,10 @@
 package org.junithelper.core.generator.impl;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
+
+import java.util.Random;
+
 import org.junit.Test;
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.TestingTarget;
@@ -289,6 +292,76 @@ public class DefaultGeneratorUtilTest {
 			fail();
 		} catch (JUnitHelperCoreException e) {
 		}
+	}
+
+	@Test
+	public void appendExtensionSourceCode_A$StringBuilder$String() throws Exception {
+		StringBuilder buf = new StringBuilder();
+		String code = "tmp";
+		DefaultGeneratorUtil.appendExtensionSourceCode(buf, code);
+		assertThat(buf.toString(), is(equalTo("\t\ttmp;\r\n")));
+	}
+
+	@Test
+	public void appendExtensionSourceCode_A$StringBuilder$String_StringIsNull() throws Exception {
+		StringBuilder buf = new StringBuilder();
+		String code = null;
+		try {
+			DefaultGeneratorUtil.appendExtensionSourceCode(buf, code);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void appendExtensionSourceCode_A$StringBuilder$String_StringIsEmpty() throws Exception {
+		StringBuilder buf = new StringBuilder();
+		String code = "";
+		DefaultGeneratorUtil.appendExtensionSourceCode(buf, code);
+		assertThat(buf.toString(), is(equalTo("")));
+	}
+
+	@Test
+	public void appendExtensionPostAssignSourceCode_A$StringBuilder$String$StringArray$String() throws Exception {
+		StringBuilder buf = new StringBuilder();
+		String code = "new Something(\"test\")";
+		String[] fromList = new String[] { "\\{arg\\}" };
+		String to = "target";
+		DefaultGeneratorUtil.appendExtensionPostAssignSourceCode(buf, code, fromList, to);
+		assertThat(buf.toString(), is(equalTo("\t\tnew Something(\"test\");\r\n")));
+	}
+
+	@Test
+	public void appendExtensionPostAssignSourceCode_A$StringBuilder$String$StringArray$String_StringIsNull()
+			throws Exception {
+		StringBuilder buf = new StringBuilder();
+		String code = null;
+		String[] fromList = new String[] {};
+		String to = null;
+		try {
+			DefaultGeneratorUtil.appendExtensionPostAssignSourceCode(buf, code, fromList, to);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void appendExtensionPostAssignSourceCode_A$StringBuilder$String$StringArray$String_StringIsEmpty()
+			throws Exception {
+		StringBuilder buf = new StringBuilder();
+		String code = "";
+		String[] fromList = new String[] {};
+		String to = "";
+		DefaultGeneratorUtil.appendExtensionPostAssignSourceCode(buf, code, fromList, to);
+		assertThat(buf.toString(), is(equalTo("")));
+	}
+
+	@Test
+	public void appendTabs_A$StringBuilder$int_intIsRandom() throws Exception {
+		StringBuilder buf = new StringBuilder();
+		int times = new Random().nextInt(10);
+		DefaultGeneratorUtil.appendTabs(buf, times);
+		assertThat(buf.toString().length(), is(equalTo(times)));
 	}
 
 }

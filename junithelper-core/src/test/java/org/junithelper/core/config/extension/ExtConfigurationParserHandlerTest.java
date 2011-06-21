@@ -1,10 +1,9 @@
 package org.junithelper.core.config.extension;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
+
+import java.util.Random;
 
 import org.junit.Test;
 import org.junithelper.core.exception.JUnitHelperCoreException;
@@ -179,6 +178,15 @@ public class ExtConfigurationParserHandlerTest {
 			fail();
 		} catch (StringIndexOutOfBoundsException e) {
 		}
+	}
+
+	@Test
+	public void characters_A$charArray$int$int_intIsRandom() throws Exception {
+		ExtConfigurationParserHandler target = new ExtConfigurationParserHandler();
+		char[] ch = new char[] { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k' };
+		int start = new Random().nextInt(5);
+		int length = new Random().nextInt(5);
+		target.characters(ch, start, length);
 	}
 
 }

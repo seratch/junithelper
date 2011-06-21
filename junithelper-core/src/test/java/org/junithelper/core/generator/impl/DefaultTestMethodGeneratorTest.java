@@ -2,7 +2,10 @@ package org.junithelper.core.generator.impl;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
+
 import java.util.List;
+import java.util.Random;
+
 import org.junit.Test;
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.JUnitVersion;
@@ -884,6 +887,40 @@ public class DefaultTestMethodGeneratorTest {
 		StringBuilder buf = new StringBuilder();
 		String value = "when";
 		int depth = Integer.MAX_VALUE;
+		target.appendTestingPatternExplicitComment(buf, value, depth);
+	}
+
+	@Test
+	public void appendMockChecking_A$StringBuilder$int_intIsRandom() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		int depth = new Random().nextInt(10);
+		target.appendMockChecking(buf, depth);
+	}
+
+	@Test
+	public void appendMockVerifying_A$StringBuilder$int_intIsRandom() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		int depth = new Random().nextInt(10);
+		target.appendMockVerifying(buf, depth);
+	}
+
+	@Test
+	public void appendBDDMockitoComment_A$StringBuilder$String$int_intIsRandom() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		String value = "tmp";
+		int depth = new Random().nextInt(10);
+		target.appendBDDMockitoComment(buf, value, depth);
+	}
+
+	@Test
+	public void appendTestingPatternExplicitComment_A$StringBuilder$String$int_intIsRandom() throws Exception {
+		DefaultTestMethodGenerator target = new DefaultTestMethodGenerator(config);
+		StringBuilder buf = new StringBuilder();
+		String value = "test";
+		int depth = new Random().nextInt(10);
 		target.appendTestingPatternExplicitComment(buf, value, depth);
 	}
 
