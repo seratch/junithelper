@@ -28,6 +28,46 @@ final class DefaultGeneratorUtil {
 		return methodMeta.accessModifier == AccessModifier.PackageLocal && target.isPackageLocalMethodRequired;
 	}
 
+	static void appendExtensionSourceCode(StringBuilder buf, String code) {
+		String[] separatedListBySemicolon = code.split(StringValue.Semicolon);
+		for (String separatedBySemicolon : separatedListBySemicolon) {
+			if (separatedBySemicolon != null && separatedBySemicolon.trim().length() > 0) {
+				separatedBySemicolon = separatedBySemicolon.trim().replaceAll(StringValue.CarriageReturn, "");
+				String[] lines = separatedBySemicolon.split(StringValue.LineFeed);
+				for (String line : lines) {
+					if (line != null && line.trim().length() > 0) {
+						appendTabs(buf, 2);
+						buf.append(line);
+						if (!line.endsWith("{") && !line.endsWith("}")) {
+							buf.append(StringValue.Semicolon);
+						}
+						appendCRLF(buf);
+					}
+				}
+			}
+		}
+	}
+
+	static void appendExtensionPostAssignSourceCode(StringBuilder buf, String code, String from, String to) {
+		String[] separatedListBySemicolon = code.split(StringValue.Semicolon);
+		for (String separatedBySemicolon : separatedListBySemicolon) {
+			if (separatedBySemicolon != null && separatedBySemicolon.trim().length() > 0) {
+				separatedBySemicolon = separatedBySemicolon.trim().replaceAll(StringValue.CarriageReturn, "");
+				String[] lines = separatedBySemicolon.split(StringValue.LineFeed);
+				for (String line : lines) {
+					if (line != null && line.trim().length() > 0) {
+						appendTabs(buf, 2);
+						buf.append(line.replaceAll(from, to));
+						if (!line.endsWith("{") && !line.endsWith("}")) {
+							buf.append(StringValue.Semicolon);
+						}
+						appendCRLF(buf);
+					}
+				}
+			}
+		}
+	}
+
 	static String getInstantiationSourceCode(Configuration config, TestMethodMeta testMethodMeta) {
 
 		Assertion.mustNotBeNull(config, "config");
@@ -47,17 +87,7 @@ final class DefaultGeneratorUtil {
 					// e.g. Sample target = new Sample();
 					StringBuilder buf = new StringBuilder();
 					if (ins.preAssignCode != null && ins.preAssignCode.trim().length() > 0) {
-						String[] lines = ins.preAssignCode.split(StringValue.Semicolon);
-						for (String line : lines) {
-							buf.append(StringValue.Tab);
-							buf.append(StringValue.Tab);
-							line = line.trim().replaceAll(StringValue.CarriageReturn, "")
-									.replaceAll(StringValue.LineFeed, "");
-							buf.append(line);
-							buf.append(StringValue.Semicolon);
-							buf.append(StringValue.CarriageReturn);
-							buf.append(StringValue.LineFeed);
-						}
+						appendExtensionSourceCode(buf, ins.preAssignCode);
 					}
 					buf.append(StringValue.Tab);
 					buf.append(StringValue.Tab);
@@ -67,17 +97,7 @@ final class DefaultGeneratorUtil {
 					buf.append(StringValue.CarriageReturn);
 					buf.append(StringValue.LineFeed);
 					if (ins.postAssignCode != null && ins.postAssignCode.trim().length() > 0) {
-						String[] lines = ins.postAssignCode.split(StringValue.Semicolon);
-						for (String line : lines) {
-							buf.append(StringValue.Tab);
-							buf.append(StringValue.Tab);
-							line = line.trim().replaceAll(StringValue.CarriageReturn, "")
-									.replaceAll(StringValue.LineFeed, "").replaceAll("\\{instance\\}", "target");
-							buf.append(line);
-							buf.append(StringValue.Semicolon);
-							buf.append(StringValue.CarriageReturn);
-							buf.append(StringValue.LineFeed);
-						}
+						appendExtensionPostAssignSourceCode(buf, ins.postAssignCode, "\\{instance\\}", "target");
 					}
 					return buf.toString();
 				}
@@ -142,6 +162,19 @@ final class DefaultGeneratorUtil {
 			}
 		}
 		return false;
+	}
+
+	static void appendCRLF(StringBuilder buf) {
+		buf.append(StringValue.CarriageReturn);
+		buf.append(StringValue.LineFeed);
+	}
+
+	static void appendTabs(StringBuilder buf, int times) {
+		Assertion.mustNotBeNull(buf, "buf");
+		Assertion.mustBeGreaterThanOrEqual(times, 0, "times");
+		for (int i = 0; i < times; i++) {
+			buf.append(StringValue.Tab);
+		}
 	}
 
 }

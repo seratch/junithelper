@@ -278,16 +278,8 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 						if (isCanonicalClassNameUsed(testMethodMeta.extReturn.canonicalClassName,
 								testMethodMeta.methodMeta.returnType.name, targetClassMeta)) {
 							for (String assertion : testMethodMeta.extReturn.asserts) {
-								String[] lines = assertion.split(StringValue.Semicolon);
-								for (String line : lines) {
-									if (line != null && line.trim().length() > 0) {
-										appendTabs(buf, 2);
-										line = line.trim().replaceAll(StringValue.CarriageReturn, "")
-												.replaceAll(StringValue.LineFeed, "");
-										buf.append(line);
-										buf.append(StringValue.Semicolon);
-										appendCRLF(buf);
-									}
+								if (assertion != null && assertion.trim().length() > 0) {
+									appendExtensionSourceCode(buf, assertion);
 								}
 							}
 						}
@@ -356,19 +348,6 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 		return buf.toString();
 	}
 
-	void appendCRLF(StringBuilder buf) {
-		buf.append(StringValue.CarriageReturn);
-		buf.append(StringValue.LineFeed);
-	}
-
-	void appendTabs(StringBuilder buf, int times) {
-		Assertion.mustNotBeNull(buf, "buf");
-		Assertion.mustBeGreaterThanOrEqual(times, 0, "times");
-		for (int i = 0; i < times; i++) {
-			buf.append(StringValue.Tab);
-		}
-	}
-
 	void appendPreparingArgs(StringBuilder buf, TestMethodMeta testMethodMeta) {
 		// prepare args
 		int argsLen = testMethodMeta.methodMeta.argTypes.size();
@@ -408,31 +387,11 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 				// extension : pre-assign
 				if (isExtArgPatternTarget && extArgPattern.preAssignCode != null) {
 					// arg patterns
-					String[] lines = extArgPattern.preAssignCode.split(StringValue.Semicolon);
-					for (String line : lines) {
-						if (line != null && line.trim().length() > 0) {
-							appendTabs(buf, 2);
-							line = line.trim().replaceAll(StringValue.CarriageReturn, "")
-									.replaceAll(StringValue.LineFeed, "");
-							buf.append(line);
-							buf.append(StringValue.Semicolon);
-							appendCRLF(buf);
-						}
-					}
+					appendExtensionSourceCode(buf, extArgPattern.preAssignCode);
 				} else if (extInstantiation != null) {
 					// instantiation
 					if (extInstantiation.preAssignCode != null && extInstantiation.preAssignCode.trim().length() > 0) {
-						String[] lines = extInstantiation.preAssignCode.split(StringValue.Semicolon);
-						for (String line : lines) {
-							if (line != null && line.trim().length() > 0) {
-								appendTabs(buf, 2);
-								line = line.trim().replaceAll(StringValue.CarriageReturn, "")
-										.replaceAll(StringValue.LineFeed, "");
-								buf.append(line);
-								buf.append(StringValue.Semicolon);
-								appendCRLF(buf);
-							}
-						}
+						appendExtensionSourceCode(buf, extInstantiation.preAssignCode);
 					}
 				}
 
@@ -460,34 +419,13 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 
 				// --------------------------
 				// extension : post-assign
+				// arg patterns
 				if (isExtArgPatternTarget && extArgPattern.postAssignCode != null) {
-					// arg patterns
-					String[] lines = extArgPattern.postAssignCode.replaceAll("\\{arg\\}", argName).split(
-							StringValue.Semicolon);
-					for (String line : lines) {
-						if (line != null && line.trim().length() > 0) {
-							appendTabs(buf, 2);
-							line = line.trim().replaceAll(StringValue.CarriageReturn, "")
-									.replaceAll(StringValue.LineFeed, "");
-							buf.append(line);
-							buf.append(StringValue.Semicolon);
-							appendCRLF(buf);
-						}
-					}
+					appendExtensionPostAssignSourceCode(buf, extArgPattern.postAssignCode, "\\{arg\\}", argName);
 				} else if (extInstantiation != null) {
 					// instantiation
 					if (extInstantiation.postAssignCode != null && extInstantiation.postAssignCode.trim().length() > 0) {
-						String[] lines = extInstantiation.postAssignCode.split(StringValue.Semicolon);
-						for (String line : lines) {
-							if (line != null && line.trim().length() > 0) {
-								appendTabs(buf, 2);
-								line = line.trim().replaceAll(StringValue.CarriageReturn, "")
-										.replaceAll(StringValue.LineFeed, "").replaceAll("\\{instance\\}", argName);
-								buf.append(line);
-								buf.append(StringValue.Semicolon);
-								appendCRLF(buf);
-							}
-						}
+						appendExtensionPostAssignSourceCode(buf, extInstantiation.postAssignCode, "\\{arg\\}", argName);
 					}
 				}
 			}

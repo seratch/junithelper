@@ -192,4 +192,103 @@ public class DefaultGeneratorUtilTest {
 		DefaultGeneratorUtil.isCanonicalClassNameUsed(expectedCanonicalClassName, usedClassName, targetClassMeta);
 	}
 
+	@Test
+	public void appendCRLF_A$StringBuilder() throws Exception {
+		// given
+		StringBuilder buf = new StringBuilder();
+		// e.g. : given(mocked.called()).willReturn(1);
+		// when
+		DefaultGeneratorUtil.appendCRLF(buf);
+		// then
+		// e.g. : verify(mocked).called();
+		assertEquals("\r\n", buf.toString());
+	}
+
+	@Test
+	public void appendTabs_A$StringBuilder$int_0times() throws Exception {
+		// given
+		StringBuilder buf = new StringBuilder();
+		int times = 0;
+		// when
+		DefaultGeneratorUtil.appendTabs(buf, times);
+		// then
+		assertEquals("", buf.toString());
+	}
+
+	@Test
+	public void appendTabs_A$StringBuilder$int_1times() throws Exception {
+		// given
+		StringBuilder buf = new StringBuilder();
+		int times = 1;
+		// when
+		DefaultGeneratorUtil.appendTabs(buf, times);
+		// then
+		assertEquals("\t", buf.toString());
+	}
+
+	@Test
+	public void appendTabs_A$StringBuilder$int_2times() throws Exception {
+		// given
+		StringBuilder buf = new StringBuilder();
+		int times = 2;
+		// when
+		DefaultGeneratorUtil.appendTabs(buf, times);
+		// then
+		assertEquals("\t\t", buf.toString());
+	}
+
+	@Test
+	public void appendTabs_A$StringBuilder$int_intIsMinus1() throws Exception {
+		StringBuilder buf = new StringBuilder();
+		int times = -1;
+		try {
+			DefaultGeneratorUtil.appendTabs(buf, times);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void appendTabs_A$StringBuilder$int_intIs0() throws Exception {
+		StringBuilder buf = new StringBuilder();
+		int times = 0;
+		DefaultGeneratorUtil.appendTabs(buf, times);
+	}
+
+	@Test
+	public void appendTabs_A$StringBuilder$int_intIs1() throws Exception {
+		StringBuilder buf = new StringBuilder();
+		int times = 1;
+		DefaultGeneratorUtil.appendTabs(buf, times);
+	}
+
+	@Test
+	public void appendTabs_A$StringBuilder$int_intIs2() throws Exception {
+		StringBuilder buf = new StringBuilder();
+		int times = 2;
+		DefaultGeneratorUtil.appendTabs(buf, times);
+	}
+
+	@Test
+	public void appendTabs_A$StringBuilder$int_intIsMinValue() throws Exception {
+		StringBuilder buf = null;
+		int times = Integer.MIN_VALUE;
+		try {
+			DefaultGeneratorUtil.appendTabs(buf, times);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
+	@Test
+	public void appendTabs_A$StringBuilder$int_intIsMaxValue() throws Exception {
+		StringBuilder buf = null;
+		int times = Integer.MAX_VALUE;
+		try {
+			DefaultGeneratorUtil.appendTabs(buf, times);
+			fail();
+		} catch (JUnitHelperCoreException e) {
+		}
+	}
+
 }
