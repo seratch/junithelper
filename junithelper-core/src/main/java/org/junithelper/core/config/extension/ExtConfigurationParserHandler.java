@@ -32,7 +32,7 @@ public class ExtConfigurationParserHandler extends DefaultHandler {
 
 	private ExtReturn currentReturn;
 
-	private String tempValue;
+	private StringBuilder tempValue;
 
 	public ExtConfiguration getExtConfiguration() {
 		return this.config;
@@ -40,7 +40,10 @@ public class ExtConfigurationParserHandler extends DefaultHandler {
 
 	@Override
 	public void characters(char[] ch, int start, int length) throws SAXException {
-		tempValue = new String(ch, start, length);
+		if (tempValue == null) {
+			tempValue = new StringBuilder();
+		}
+		tempValue.append(new String(ch, start, length));
 	}
 
 	@Override
@@ -93,32 +96,43 @@ public class ExtConfigurationParserHandler extends DefaultHandler {
 			currentReturn = null;
 		} else if (name.equals("import")) {
 			if (currentInstantiation != null) {
-				currentInstantiation.importList.add(tempValue);
+				currentInstantiation.importList.add(tempValue.toString());
+				tempValue = new StringBuilder();
 			} else if (currentArg != null) {
-				currentArg.importList.add(tempValue);
+				currentArg.importList.add(tempValue.toString());
+				tempValue = new StringBuilder();
 			} else if (currentReturn != null) {
-				currentReturn.importList.add(tempValue);
+				currentReturn.importList.add(tempValue.toString());
+				tempValue = new StringBuilder();
 			}
 		} else if (name.equals("pre-assign")) {
 			if (currentInstantiation != null) {
-				currentInstantiation.preAssignCode = tempValue;
+				currentInstantiation.preAssignCode = tempValue.toString();
+				tempValue = new StringBuilder();
 			} else if (currentArg != null) {
-				currentArgPattern.preAssignCode = tempValue;
+				currentArgPattern.preAssignCode = tempValue.toString();
+				tempValue = new StringBuilder();
 			}
 		} else if (name.equals("assign")) {
 			if (currentInstantiation != null) {
-				currentInstantiation.assignCode = tempValue;
+				currentInstantiation.assignCode = tempValue.toString();
+				tempValue = new StringBuilder();
 			} else if (currentArg != null) {
-				currentArgPattern.assignCode = tempValue;
+				currentArgPattern.assignCode = tempValue.toString();
+				tempValue = new StringBuilder();
 			}
 		} else if (name.equals("post-assign")) {
 			if (currentInstantiation != null) {
-				currentInstantiation.postAssignCode = tempValue;
+				currentInstantiation.postAssignCode = tempValue.toString();
+				tempValue = new StringBuilder();
 			} else if (currentArg != null) {
-				currentArgPattern.postAssignCode = tempValue;
+				currentArgPattern.postAssignCode = tempValue.toString();
+				tempValue = new StringBuilder();
 			}
 		} else if (name.equals("assert")) {
-			currentReturn.asserts.add(tempValue);
+			currentReturn.asserts.add(tempValue.toString());
+			tempValue = new StringBuilder();
 		}
 	}
+
 }
