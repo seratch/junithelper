@@ -140,6 +140,7 @@
 			<scope>provided</scope>
 		</dependency>
 		<!-- JMockit -->
+<!-- 
 		<dependency>
 			<groupId>mockit</groupId>
 			<artifactId>jmockit</artifactId>
@@ -152,6 +153,7 @@
 			<version>${jmockit.version}</version>
 			<scope>runtime</scope>
 		</dependency>
+ -->
 		<!-- EasyMock -->
 		<dependency>
 			<groupId>easymock</groupId>
