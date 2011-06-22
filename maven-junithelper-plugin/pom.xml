@@ -4,7 +4,7 @@
     <groupId>org.junithelper</groupId>
     <artifactId>maven-junithelper-plugin</artifactId>
     <packaging>maven-plugin</packaging>
-    <version>1.5</version>
+    <version>1.6</version>
     <name>maven-junithelper-plugin Maven Mojo</name>
     <url>http://junithelper.org</url>
 
@@ -83,7 +83,7 @@
         <dependency>
             <groupId>org.junithelper</groupId>
             <artifactId>junithelper-core</artifactId>
-            <version>1.5</version>
+            <version>1.6</version>
         </dependency>
         <dependency>
             <groupId>org.mozilla</groupId>
