@@ -3,6 +3,11 @@
 	http://junithelper.org/
 ------------------------------------------
 
+* Release Notes - 1.6
+
+** Feature Request
+	* Issue 62:	Extensions to customize template generation(instantiation, arg patterns, assertions)
+
 * Release Notes - 1.5
 
 ** Versioning policy has been changed. This version is the same as version 1.0.4.
