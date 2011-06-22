@@ -16,10 +16,12 @@
 package org.junithelper.core.generator.impl;
 
 import static org.junithelper.core.generator.impl.DefaultGeneratorUtil.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.JUnitVersion;
 import org.junithelper.core.config.MessageValue;
@@ -414,7 +416,10 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 		if (config.junitVersion == JUnitVersion.version3) {
 			appendIfNotExists(importedListBuf, oneline, "import " + config.testCaseClassNameToExtend + ";");
 		} else if (config.junitVersion == JUnitVersion.version4) {
-			appendIfNotExists(importedListBuf, oneline, "import static org.hamcrest.CoreMatchers.*;");
+			if (!sourceCode.contains("org.hamcrest.Matchers.*;")
+					&& !uniqImportedList.contains("org.hamcrest.Matchers.*;")) {
+				appendIfNotExists(importedListBuf, oneline, "import static org.hamcrest.CoreMatchers.*;");
+			}
 			appendIfNotExists(importedListBuf, oneline, "import static org.junit.Assert.*;");
 			appendIfNotExists(importedListBuf, oneline, "import org.junit.Test;");
 		}
