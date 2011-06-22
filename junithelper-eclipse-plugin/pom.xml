@@ -5,7 +5,7 @@
 
 	<groupId>org.junithelper</groupId>
 	<artifactId>junithelper-plugin</artifactId>
-	<version>1.5.0</version>
+	<version>1.6.0</version>
 
 	<name>${project.artifactId}</name>
 	<description>JUnit Helper Eclipse Plugin</description>
@@ -46,7 +46,12 @@
 		</repository>
 	</repositories>
 
-	<pluginRepositories/>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>junithelper.org releases</id>
+            <url>http://junithelper.googlecode.com/svn/trunk/mvn-repo/releases</url>
+        </pluginRepository>
+    </pluginRepositories>
 
 	<distributionManagement/>
 
@@ -60,9 +65,9 @@
 		<dependency>
 			<groupId>junithelper-core</groupId>
 			<artifactId>junithelper-core</artifactId>
-			<version>1.0.2</version>
+			<version>1.6</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/lib/junithelper-core-1.5.jar</systemPath>
+			<systemPath>${basedir}/lib/junithelper-core-1.6.jar</systemPath>
 		</dependency>
 
 		<!-- juniversalchardet -->
@@ -155,6 +160,7 @@
 		</dependency>
  -->
 		<!-- EasyMock -->
+<!-- 
 		<dependency>
 			<groupId>easymock</groupId>
 			<artifactId>easymock</artifactId>
@@ -167,10 +173,45 @@
 			<version>2.2</version>
 			<scope>test</scope>
 		</dependency>
+ -->
 	</dependencies>
 
 	<build>
 		<plugins>
+            <plugin>
+                <groupId>org.junithelper</groupId>
+                <artifactId>maven-junithelper-plugin</artifactId>
+            <configuration>
+                <!-- language:en/ja -->
+                <language>en</language>
+                <outputFileEncoding>UTF-8</outputFileEncoding>
+                <directoryPathOfProductSourceCode>src/main/java</directoryPathOfProductSourceCode>
+                <directoryPathOfTestSourceCode>src/test/java</directoryPathOfTestSourceCode>
+                <!-- junitVersion:version3/version4 -->
+                <junitVersion>version4</junitVersion>
+                <testCaseClassNameToExtend>junit.framework.TestCase</testCaseClassNameToExtend>
+                <isTemplateImplementationRequired>true</isTemplateImplementationRequired>
+                <target_isAccessorExcluded>true</target_isAccessorExcluded>
+                <target_isExceptionPatternRequired>false</target_isExceptionPatternRequired>
+                <target_isPackageLocalMethodRequired>true</target_isPackageLocalMethodRequired>
+                <target_isProtectedMethodRequired>true</target_isProtectedMethodRequired>
+                <target_isPublicMethodRequired>true</target_isPublicMethodRequired>
+                <target_regexpCsvForExclusion></target_regexpCsvForExclusion>
+                <testMethodName_isArgsRequired>true</testMethodName_isArgsRequired>
+                <testMethodName_isReturnRequired>false</testMethodName_isReturnRequired>
+                <testMethodName_basicDelimiter>_</testMethodName_basicDelimiter>
+                <testMethodName_argsAreaPrefix>A</testMethodName_argsAreaPrefix>
+                <testMethodName_argsAreaDelimiter>$</testMethodName_argsAreaDelimiter>
+                <testMethodName_returnAreaPrefix>R</testMethodName_returnAreaPrefix>
+                <testMethodName_returnAreaDelimiter>$</testMethodName_returnAreaDelimiter>
+                <testMethodName_exceptionAreaPrefix>T</testMethodName_exceptionAreaPrefix>
+                <testMethodName_exceptionAreaDelimiter>$</testMethodName_exceptionAreaDelimiter>
+                <!-- mockObjectFramework:Mockito/JMock2/JMockit/EasyMock -->
+                <mockObjectFramework>Mockito</mockObjectFramework>
+                <!-- testingPatternExplicitComment:ArrangeActAssert/GivenWhenThen -->
+                <testingPatternExplicitComment></testingPatternExplicitComment>
+            </configuration>
+            </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
