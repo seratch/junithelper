@@ -1,6 +1,7 @@
 package org.junithelper.plugin.action;
 
 import java.io.File;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -17,6 +18,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.ConfigurationLoader;
+import org.junithelper.core.config.extension.ExtConfiguration;
+import org.junithelper.core.config.extension.ExtConfigurationLoader;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
 import org.junithelper.plugin.Activator;
@@ -32,6 +35,8 @@ public abstract class AbstractAction extends Action {
 
 	protected Configuration getConfiguration(IPreferenceStore store, ISelection selection) {
 
+		Configuration config = null;
+
 		// read from "junithelper-config.properties" if it exsits
 		// at project root dir
 		StructuredSelection structuredSelection = null;
@@ -43,19 +48,31 @@ public abstract class AbstractAction extends Action {
 			String projectName = getProjectName(structuredSelection);
 			String projectRootPath = getWorkspaceRootAbsolutePath(getIWorkspaceRoot())
 					+ StringValue.DirectorySeparator.General + projectName + StringValue.DirectorySeparator.General;
-			String filepath = projectRootPath + "junithelper-config.properties";
-			File configProperites = new File(filepath);
+			String configFilepath = projectRootPath + "junithelper-config.properties";
+			File configProperites = new File(configFilepath);
 			if (configProperites.exists()) {
 				try {
-					return new ConfigurationLoader().load(filepath);
+					config = new ConfigurationLoader().load(configFilepath);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			} else {
+				// load from Eclipse Preference
+				config = new PreferenceLoader(store).getConfig();
+			}
+			String extConfigFilepath = projectRootPath + "junithelper-extension.xml";
+			File extConfigXML = new File(extConfigFilepath);
+			if (extConfigXML.exists()) {
+				try {
+					ExtConfiguration extConfig = new ExtConfigurationLoader().load(extConfigFilepath);
+					config.isExtensionEnabled = true;
+					config.extConfiguration = extConfig;
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		}
-		// load from Eclipse Preference
-		return new PreferenceLoader(store).getConfig();
-
+		return config;
 	}
 
 	protected PropertiesLoader getPropertiesLoader(String language) {
