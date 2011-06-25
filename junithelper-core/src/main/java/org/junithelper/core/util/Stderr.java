@@ -21,7 +21,7 @@ public class Stderr {
 	}
 
 	public static final void printf(String format, Object... values) {
-		Assertion.mustNotBeEmpty(format, "format");
+		Assertion.on("format").mustNotBeEmpty(format);
 		System.err.printf(format, values);
 	}
 

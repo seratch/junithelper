@@ -24,6 +24,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.constant.StringValue;
 
@@ -35,12 +36,12 @@ public final class IOUtil {
 	}
 
 	public static InputStream getResourceAsStream(String name) {
-		Assertion.mustNotBeNull(name, "name");
+		Assertion.on("name").mustNotBeNull(name);
 		return new IOUtil().getClass().getClassLoader().getResourceAsStream(name);
 	}
 
 	public static final String readAsString(InputStream is, String encoding) throws IOException {
-		Assertion.mustNotBeNull(is, "is");
+		Assertion.on("is(InputStream)").mustNotBeNull(is);
 		if (encoding == null) {
 			encoding = DEFAULT_OUTPUT_FILE_ENCODING;
 		}

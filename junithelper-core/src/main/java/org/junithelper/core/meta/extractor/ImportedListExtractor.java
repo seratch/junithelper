@@ -17,6 +17,7 @@ package org.junithelper.core.meta.extractor;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
@@ -33,7 +34,7 @@ public class ImportedListExtractor {
 	}
 
 	public List<String> extract(String sourceCodeString) {
-		Assertion.mustNotBeNull(sourceCodeString, "sourceCodeString");
+		Assertion.on("sourceCodeString").mustNotBeNull(sourceCodeString);
 		List<String> dest = new ArrayList<String>();
 		sourceCodeString = TrimFilterUtil.doAllFilters(sourceCodeString).replaceAll(RegExp.CRLF, StringValue.Space);
 		String[] splittedArray = sourceCodeString.split("import\\s+");

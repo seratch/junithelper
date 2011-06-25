@@ -44,8 +44,8 @@ public class TrimInsideOfStringFilter implements TrimFilter {
 	}
 
 	static int countPreviousContinuedBackslash(String str, int currentNotBackslashCharIndex, int count) {
-		Assertion.mustBeGreaterThanOrEqual(currentNotBackslashCharIndex, 0, "currentNotBackslashCharIndex");
-		Assertion.mustBeGreaterThanOrEqual(count, 0, "count");
+		Assertion.on("currentNotBackslashCharIndex").mustBeGreaterThanOrEqual(currentNotBackslashCharIndex, 0);
+		Assertion.on("count").mustBeGreaterThanOrEqual(count, 0);
 		Character previous = null;
 		if (currentNotBackslashCharIndex > 0) {
 			int previousIndex = currentNotBackslashCharIndex - 1;

@@ -16,6 +16,7 @@
 package org.junithelper.core.filter.impl;
 
 import java.util.Stack;
+
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
 import org.junithelper.core.filter.TrimFilter;
@@ -109,8 +110,8 @@ public class TrimInsideOfBraceFilter implements TrimFilter {
 	}
 
 	static int countPreviousContinuedBackslash(String str, int currentNotBackslashCharIndex, int count) {
-		Assertion.mustBeGreaterThanOrEqual(currentNotBackslashCharIndex, 0, "currentNotBackslashCharIndex");
-		Assertion.mustBeGreaterThanOrEqual(count, 0, "count");
+		Assertion.on("currentNotBackslashCharIndex").mustBeGreaterThanOrEqual(currentNotBackslashCharIndex, 0);
+		Assertion.on("count").mustBeGreaterThanOrEqual(count, 0);
 		Character previous = null;
 		if (currentNotBackslashCharIndex > 0) {
 			int previousIndex = currentNotBackslashCharIndex - 1;

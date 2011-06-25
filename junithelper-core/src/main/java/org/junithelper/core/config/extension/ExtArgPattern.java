@@ -20,8 +20,8 @@ import org.junithelper.core.util.Assertion;
 public class ExtArgPattern {
 
 	public ExtArgPattern(ExtArg extArg, String name) {
-		Assertion.mustNotBeNull(extArg, "extArg");
-		Assertion.mustNotBeNull(name, "name");
+		Assertion.on("extArg").mustNotBeNull(extArg);
+		Assertion.on("name").mustNotBeNull(name);
 		this.extArg = extArg;
 		this.name = name;
 	}

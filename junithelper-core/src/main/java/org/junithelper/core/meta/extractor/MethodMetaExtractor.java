@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
@@ -61,7 +62,7 @@ public class MethodMetaExtractor {
 
 	public List<MethodMeta> extract(String sourceCodeString) {
 
-		Assertion.mustNotBeNull(sourceCodeString, "sourceCodeString");
+		Assertion.on("sourceCodeString").mustNotBeNull(sourceCodeString);
 
 		List<MethodMeta> dest = new ArrayList<MethodMeta>();
 
@@ -185,9 +186,9 @@ public class MethodMetaExtractor {
 
 	boolean isPrivateFieldExists(String fieldType, String fieldName, String sourceCodeString) {
 
-		Assertion.mustNotBeEmpty(fieldType, "fieldType");
-		Assertion.mustNotBeEmpty(fieldName, "fieldName");
-		Assertion.mustNotBeNull(sourceCodeString, "sourceCodeString");
+		Assertion.on("fieldType").mustNotBeEmpty(fieldType);
+		Assertion.on("fieldName").mustNotBeEmpty(fieldName);
+		Assertion.on("sourceCodeString").mustNotBeNull(sourceCodeString);
 
 		// field name
 		String regExpForFieldNameArea = fieldName.substring(0, 1).toLowerCase() + fieldName.substring(1);
@@ -217,7 +218,7 @@ public class MethodMetaExtractor {
 
 	static String trimAccessModifierFromMethodSignatureArea(String methodSignatureArea) {
 
-		Assertion.mustNotBeNull(methodSignatureArea, "methodSignatureArea");
+		Assertion.on("methodSignatureArea").mustNotBeNull(methodSignatureArea);
 
 		String regExpForAccessModifier_public = AccessModifierDetector.RegExp.Prefix + "public" + "\\s+";
 		String regExpForAccessModifier_protected = AccessModifierDetector.RegExp.Prefix + "protected" + "\\s+";

@@ -30,7 +30,7 @@ final class DefaultGeneratorUtil {
 
 	static void appendExtensionSourceCode(StringBuilder buf, String code) {
 
-		Assertion.mustNotBeNull(code, "code");
+		Assertion.on("code").mustNotBeNull(code);
 
 		String[] separatedListBySemicolon = code.split(StringValue.Semicolon);
 		for (String separatedBySemicolon : separatedListBySemicolon) {
@@ -53,9 +53,9 @@ final class DefaultGeneratorUtil {
 
 	static void appendExtensionPostAssignSourceCode(StringBuilder buf, String code, String[] fromList, String to) {
 
-		Assertion.mustNotBeNull(code, "code");
-		Assertion.mustNotBeNull(fromList, "fromList");
-		Assertion.mustNotBeNull(to, "to");
+		Assertion.on("code").mustNotBeNull(code);
+		Assertion.on("fromList").mustNotBeNull(fromList);
+		Assertion.on("to").mustNotBeNull(to);
 
 		String[] separatedListBySemicolon = code.split(StringValue.Semicolon);
 		for (String separatedBySemicolon : separatedListBySemicolon) {
@@ -82,8 +82,8 @@ final class DefaultGeneratorUtil {
 
 	static String getInstantiationSourceCode(Configuration config, TestMethodMeta testMethodMeta) {
 
-		Assertion.mustNotBeNull(config, "config");
-		Assertion.mustNotBeNull(testMethodMeta, "testMethodMeta");
+		Assertion.on("config").mustNotBeNull(config);
+		Assertion.on("testMethodMeta").mustNotBeNull(testMethodMeta);
 
 		// -----------
 		// Extension
@@ -122,9 +122,9 @@ final class DefaultGeneratorUtil {
 
 	static void appendIfNotExists(StringBuilder buf, String src, String importLine) {
 
-		Assertion.mustNotBeNull(buf, "buf");
-		Assertion.mustNotBeNull(src, "src");
-		Assertion.mustNotBeNull(importLine, "importLine");
+		Assertion.on("buf").mustNotBeNull(buf);
+		Assertion.on("src").mustNotBeNull(src);
+		Assertion.on("importLine").mustNotBeNull(importLine);
 
 		String oneline = src.replaceAll(RegExp.CRLF, StringValue.Space);
 		importLine = importLine.replace(StringValue.CarriageReturn + StringValue.LineFeed, StringValue.Empty);
@@ -141,9 +141,9 @@ final class DefaultGeneratorUtil {
 	static boolean isCanonicalClassNameUsed(String expectedCanonicalClassName, String usedClassName,
 			ClassMeta targetClassMeta) {
 
-		Assertion.mustNotBeNull(expectedCanonicalClassName, "expectedCanonicalClassName");
-		Assertion.mustNotBeNull(usedClassName, "usedClassName");
-		Assertion.mustNotBeNull(targetClassMeta, "targetClassMeta");
+		Assertion.on("expectedCanonicalClassName").mustNotBeNull(expectedCanonicalClassName);
+		Assertion.on("usedClassName").mustNotBeNull(usedClassName);
+		Assertion.on("targetClassMeta").mustNotBeNull(targetClassMeta);
 
 		if (usedClassName.equals(expectedCanonicalClassName)
 				|| usedClassName.equals(expectedCanonicalClassName.replace("java.lang.", ""))) {
@@ -183,8 +183,10 @@ final class DefaultGeneratorUtil {
 	}
 
 	static void appendTabs(StringBuilder buf, int times) {
-		Assertion.mustNotBeNull(buf, "buf");
-		Assertion.mustBeGreaterThanOrEqual(times, 0, "times");
+
+		Assertion.on("buf").mustNotBeNull(buf);
+		Assertion.on("times").mustBeGreaterThanOrEqual(times, 0);
+
 		for (int i = 0; i < times; i++) {
 			buf.append(StringValue.Tab);
 		}

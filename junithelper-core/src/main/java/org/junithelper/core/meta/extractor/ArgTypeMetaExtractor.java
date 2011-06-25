@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
@@ -66,7 +67,7 @@ public class ArgTypeMetaExtractor {
 
 	public void doExtract(String argsAreaString) {
 
-		Assertion.mustNotBeNull(classMeta, "classMeta");
+		Assertion.on("classMeta").mustNotBeNull(classMeta);
 
 		TypeNameConverter typeNameConverter = new TypeNameConverter(config);
 		// -----------------

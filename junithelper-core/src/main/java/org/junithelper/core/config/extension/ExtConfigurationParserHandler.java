@@ -48,7 +48,7 @@ public class ExtConfigurationParserHandler extends DefaultHandler {
 
 	@Override
 	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException {
-		Assertion.mustNotBeEmpty(name, "name");
+		Assertion.on("name").mustNotBeEmpty(name);
 		if (name.equals("junithelper-extension")) {
 			config = new ExtConfiguration();
 		} else if (name.equals("instantiation")) {
@@ -80,8 +80,8 @@ public class ExtConfigurationParserHandler extends DefaultHandler {
 
 	@Override
 	public void endElement(String uri, String localName, String name) throws SAXException {
-		Assertion.mustNotBeNull(config, "config");
-		Assertion.mustNotBeEmpty(name, "name");
+		Assertion.on("config").mustNotBeNull(config);
+		Assertion.on("name").mustNotBeEmpty(name);
 		if (name.equals("instantiation")) {
 			config.extInstantiations.add(currentInstantiation);
 			currentInstantiation = null;

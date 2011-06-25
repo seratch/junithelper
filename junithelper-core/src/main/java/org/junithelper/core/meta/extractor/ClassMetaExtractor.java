@@ -18,6 +18,7 @@ package org.junithelper.core.meta.extractor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
+
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
@@ -44,7 +45,7 @@ public class ClassMetaExtractor {
 
 	public ClassMeta extract(String sourceCodeString) {
 
-		Assertion.mustNotBeNull(sourceCodeString, "sourceCodeString");
+		Assertion.on("sourceCodeString").mustNotBeNull(sourceCodeString);
 
 		ClassMeta meta = new ClassMeta();
 		String modifiedSourceCodeString = TrimFilterUtil.doAllFilters(sourceCodeString);
@@ -169,7 +170,7 @@ public class ClassMetaExtractor {
 	}
 
 	boolean isDuplicatedVariableName(String name) {
-		Assertion.mustNotBeNull(name, "name");
+		Assertion.on("name").mustNotBeNull(name);
 		return name.equals("target") || name.equals("actual") || name.equals("expected") || name.equals("context")
 				|| name.equals("mocks");
 	}

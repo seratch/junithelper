@@ -18,6 +18,7 @@ package org.junithelper.core.config;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+
 import org.junithelper.core.util.Assertion;
 
 public class MessageValue {
@@ -42,7 +43,7 @@ public class MessageValue {
 	}
 
 	String get(String key) {
-		Assertion.mustNotBeEmpty(key, "key");
+		Assertion.on("key").mustNotBeEmpty(key);
 		if (props == null) {
 			initialize(null);
 		}

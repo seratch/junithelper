@@ -21,7 +21,7 @@ public class PrimitiveTypeUtil {
 	}
 
 	public static final boolean isPrimitive(String typeName) {
-		Assertion.mustNotBeEmpty(typeName, "typeName");
+		Assertion.on("typeName").mustNotBeEmpty(typeName);
 		if (typeName == null)
 			return false;
 		if (typeName.equals("byte"))
@@ -46,7 +46,7 @@ public class PrimitiveTypeUtil {
 	}
 
 	public static final Class<?> getPrimitiveClass(String typeName) {
-		Assertion.mustNotBeEmpty(typeName, "typeName");
+		Assertion.on("typeName").mustNotBeEmpty(typeName);
 		if (typeName.equals("byte"))
 			return byte.class;
 		if (typeName.equals("short"))
@@ -69,7 +69,7 @@ public class PrimitiveTypeUtil {
 	}
 
 	public static final String getTypeDefaultValue(String typeName) {
-		Assertion.mustNotBeEmpty(typeName, "typeName");
+		Assertion.on("typeName").mustNotBeEmpty(typeName);
 		if (typeName.equals("byte"))
 			return "0";
 		if (typeName.equals("short"))

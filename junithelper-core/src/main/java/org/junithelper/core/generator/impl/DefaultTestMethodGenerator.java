@@ -581,9 +581,9 @@ public class DefaultTestMethodGenerator implements TestMethodGenerator {
 
 	String getArgValue(TestMethodMeta testMethodMeta, ArgTypeMeta argTypeMeta, String argName) {
 
-		Assertion.mustNotBeNull(testMethodMeta, "testMethodMeta");
-		Assertion.mustNotBeNull(argTypeMeta, "argTypeMeta");
-		Assertion.mustNotBeEmpty(argName, "argName");
+		Assertion.on("testMethodMeta").mustNotBeNull(testMethodMeta);
+		Assertion.on("argTypeMeta").mustNotBeNull(argTypeMeta);
+		Assertion.on("argName").mustNotBeEmpty(argName);
 
 		// -----------
 		// Extension

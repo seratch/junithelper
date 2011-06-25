@@ -19,6 +19,7 @@ import java.io.File;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
@@ -35,7 +36,7 @@ public class TypeNameConverter {
 	}
 
 	public String toAvailableInMethodName(String typeName) {
-		Assertion.mustNotBeEmpty(typeName, "typeName");
+		Assertion.on("typeName").mustNotBeEmpty(typeName);
 		typeName = typeName.replaceAll(RegExp.Generics, StringValue.Empty);
 		typeName = typeName.replaceAll("final ", StringValue.Empty);
 		typeName = typeName.replaceAll("\\.\\.\\.", "Array").replaceAll("\\[\\]", "Array");

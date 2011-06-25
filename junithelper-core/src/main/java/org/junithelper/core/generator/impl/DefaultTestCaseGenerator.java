@@ -89,8 +89,8 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 	@Override
 	public List<TestMethodMeta> getLackingTestMethodMetaList(String currentTestCaseSourceCode) {
 
-		Assertion.mustNotBeNull(currentTestCaseSourceCode, "currentTestCaseSourceCode");
-		Assertion.mustNotBeNull(targetClassMeta, "targetClassMeta");
+		Assertion.on("currentTestCaseSourceCode").mustNotBeNull(currentTestCaseSourceCode);
+		Assertion.on("targetClassMeta").mustNotBeNull(targetClassMeta);
 
 		List<TestMethodMeta> dest = new ArrayList<TestMethodMeta>();
 		String checkTargetSourceCode = TrimFilterUtil.doAllFilters(currentTestCaseSourceCode);
@@ -388,7 +388,7 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 	static String appendRequiredImportListToSourceCode(String sourceCode, ClassMeta targetClassMeta,
 			Configuration config) {
 
-		Assertion.mustNotBeNull(targetClassMeta, "targetClassMeta");
+		Assertion.on("targetClassMeta").mustNotBeNull(targetClassMeta);
 
 		String dest = sourceCode;
 		String oneline = TrimFilterUtil.doAllFilters(sourceCode);

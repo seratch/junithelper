@@ -2,6 +2,7 @@ package org.junithelper.core.meta.extractor;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
 import org.junithelper.core.util.Assertion;
@@ -15,7 +16,7 @@ public class ArgExtractorHelper {
 
 	static List<String> getArgListFromArgsDefAreaString(String argsDefAreaString) {
 
-		Assertion.mustNotBeNull(argsDefAreaString, "argsDefAreaString");
+		Assertion.on("argsDefAreaString").mustNotBeNull(argsDefAreaString);
 
 		// nested generics
 		StringBuilder tmp = new StringBuilder();
@@ -99,7 +100,7 @@ public class ArgExtractorHelper {
 	}
 
 	static String trimGenericsAreaIfNestedGenericsExists(String target) {
-		Assertion.mustNotBeNull(target, "target");
+		Assertion.on("target").mustNotBeNull(target);
 		if (target.matches(RegExp.Anything_OneOrMore_Min + NESTED_GENERICS_MARK + RegExp.Anything_OneOrMore_Min)) {
 			return target.replaceAll(RegExp.Generics, StringValue.Empty);
 		}

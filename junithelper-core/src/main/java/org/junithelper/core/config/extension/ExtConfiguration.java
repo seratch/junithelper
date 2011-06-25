@@ -17,6 +17,7 @@ package org.junithelper.core.config.extension;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.util.Assertion;
 
@@ -26,7 +27,7 @@ public class ExtConfiguration {
 	}
 
 	public ExtConfiguration(Configuration config) {
-		Assertion.mustNotBeNull(config, "config");
+		Assertion.on("config").mustNotBeNull(config);
 		this.config = config;
 	}
 

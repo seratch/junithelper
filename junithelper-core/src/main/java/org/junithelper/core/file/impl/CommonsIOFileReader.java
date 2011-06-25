@@ -20,6 +20,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+
 import org.apache.commons.io.FileUtils;
 import org.junithelper.core.file.FileReader;
 import org.junithelper.core.util.Assertion;
@@ -30,7 +31,7 @@ public class CommonsIOFileReader implements FileReader {
 
 	@Override
 	public InputStream getResourceAsStream(String name) {
-		Assertion.mustNotBeNull(name, "name");
+		Assertion.on("name").mustNotBeNull(name);
 		return CommonsIOFileReader.class.getClassLoader().getResourceAsStream(name);
 	}
 

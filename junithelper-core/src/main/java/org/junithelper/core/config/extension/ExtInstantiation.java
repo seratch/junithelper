@@ -17,12 +17,13 @@ package org.junithelper.core.config.extension;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.junithelper.core.util.Assertion;
 
 public class ExtInstantiation {
 
 	public ExtInstantiation(String canonicalClassName) {
-		Assertion.mustNotBeNull(canonicalClassName, "canonicalClassName");
+		Assertion.on("canonicalClassName").mustNotBeNull(canonicalClassName);
 		this.canonicalClassName = canonicalClassName;
 	}
 
