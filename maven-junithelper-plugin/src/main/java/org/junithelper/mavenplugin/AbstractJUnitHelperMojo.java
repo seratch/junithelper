@@ -161,7 +161,7 @@ public abstract class AbstractJUnitHelperMojo extends AbstractMojo {
 		try {
 			config.testingPatternExplicitComment = TestingPatternExplicitComment.valueOf(testingPatternExplicitComment);
 		} catch (Exception e) {
-			config.testingPatternExplicitComment = null;
+			config.testingPatternExplicitComment = TestingPatternExplicitComment.None;
 		}
 		config.isExtensionEnabled = isExtensionEnabled;
 		config.extensionConfigXML = extensionConfigXML;
