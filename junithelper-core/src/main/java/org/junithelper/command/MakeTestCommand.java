@@ -17,6 +17,7 @@ package org.junithelper.command;
 
 import java.io.File;
 import java.util.List;
+
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.file.FileReader;
 import org.junithelper.core.file.impl.CommonsIOFileReader;
@@ -87,7 +88,8 @@ public class MakeTestCommand extends AbstractCommand {
 		String canonicalClassName = javaFile.getAbsolutePath().replaceAll("\\\\", "/").replace("/", ".").trim();
 		String[] regexpListForExclusion = config.target.getRegexpArrayForExclusion();
 		for (String regexp : regexpListForExclusion) {
-			if (regexp != null && regexp.trim().length() > 0 && canonicalClassName.matches(".+" + regexp + ".java$")) {
+			if (regexp != null && regexp.trim().length() > 0
+					&& canonicalClassName.matches(".+" + regexp.trim() + ".java$")) {
 				return true;
 			}
 		}

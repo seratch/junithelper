@@ -30,7 +30,7 @@ public class TestingTarget {
 	public String regexpCsvForExclusion = "";
 
 	public String[] getRegexpArrayForExclusion() {
-		return regexpCsvForExclusion.split(",");
+		return regexpCsvForExclusion.replaceAll("\r", "").replaceAll("\n", "").trim().split(",");
 	}
 
 }
