@@ -1,38 +1,29 @@
 package org.junithelper.mavenplugin;
 
-
-
-import static org.hamcrest.CoreMatchers.*;
-
 import static org.junit.Assert.*;
 
-import org.apache.maven.plugin.MojoExecutionException;
-import org.junithelper.command.ForceJUnitVersion4Command;
-import org.junithelper.mavenplugin.Force4Mojo.*;
-
-
+import org.junit.Ignore;
 import org.junit.Test;
-
-import static org.junit.Assert.assertNotNull;
 
 public class Force4MojoTest {
 
-    @Test 
+	@Test
 	public void type() throws Exception {
-        assertNotNull(Force4Mojo.class);
-    }
+		assertNotNull(Force4Mojo.class);
+	}
 
-    @Test 
+	@Test
 	public void instantiation() throws Exception {
-        Force4Mojo target = new Force4Mojo();
-        assertNotNull(target);
-    }
+		Force4Mojo target = new Force4Mojo();
+		assertNotNull(target);
+	}
 
-    @Test 
+	@Test
+	@Ignore
 	public void execute_A$() throws Exception {
-        System.setProperty("junithelper.skipConfirming", "true");
-        Force4Mojo target = new Force4Mojo();
-        target.execute();
-    }
+		System.setProperty("junithelper.skipConfirming", "true");
+		Force4Mojo target = new Force4Mojo();
+		target.execute();
+	}
 
 }
