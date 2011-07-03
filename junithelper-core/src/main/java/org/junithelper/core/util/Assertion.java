@@ -7,6 +7,9 @@ public final class Assertion {
 	private String name;
 
 	private Assertion(String name) {
+		if (name == null || name.length() == 0) {
+			throw new JUnitHelperCoreException("assertion target name must not be empty.");
+		}
 		this.name = name;
 	}
 

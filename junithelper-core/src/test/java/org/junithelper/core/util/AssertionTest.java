@@ -594,24 +594,16 @@ public class AssertionTest {
 		assertThat(actual, notNullValue());
 	}
 
-	@Test
+	@Test(expected = JUnitHelperCoreException.class)
 	public void on_A$String_StringIsNull() throws Exception {
 		String name_ = null;
-		try {
-			Assertion.on(name_);
-			fail();
-		} catch (JUnitHelperCoreException e) {
-		}
+		Assertion.on(name_);
 	}
 
-	@Test
+	@Test(expected = JUnitHelperCoreException.class)
 	public void on_A$String_StringIsEmpty() throws Exception {
 		String name_ = "";
-		try {
-			Assertion.on(name_);
-			fail();
-		} catch (JUnitHelperCoreException e) {
-		}
+		Assertion.on(name_);
 	}
 
 	@Test
@@ -626,24 +618,16 @@ public class AssertionTest {
 		Assertion.on("test").mustNotBeEmpty(arg);
 	}
 
-	@Test
+	@Test(expected = JUnitHelperCoreException.class)
 	public void mustNotBeEmpty_A$String_StringIsNull() throws Exception {
 		String arg = null;
-		try {
-			Assertion.on("test").mustNotBeEmpty(arg);
-			fail();
-		} catch (JUnitHelperCoreException e) {
-		}
+		Assertion.on("test").mustNotBeEmpty(arg);
 	}
 
-	@Test
+	@Test(expected = JUnitHelperCoreException.class)
 	public void mustNotBeEmpty_A$String_StringIsEmpty() throws Exception {
 		String arg = "";
-		try {
-			Assertion.on("test").mustNotBeEmpty(arg);
-			fail();
-		} catch (JUnitHelperCoreException e) {
-		}
+		Assertion.on("test").mustNotBeEmpty(arg);
 	}
 
 }
