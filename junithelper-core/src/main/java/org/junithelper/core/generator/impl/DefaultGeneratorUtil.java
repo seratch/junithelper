@@ -30,6 +30,7 @@ final class DefaultGeneratorUtil {
 
 	static void appendExtensionSourceCode(StringBuilder buf, String code) {
 
+		Assertion.on("buf(StringBuilder)").mustNotBeNull(buf);
 		Assertion.on("code").mustNotBeNull(code);
 
 		String[] separatedListBySemicolon = code.split(StringValue.Semicolon);
@@ -41,7 +42,7 @@ final class DefaultGeneratorUtil {
 					if (line != null && line.trim().length() > 0) {
 						appendTabs(buf, 2);
 						buf.append(line.trim());
-						if (!line.endsWith("{") && !line.endsWith("}")) {
+						if (!line.endsWith("{") && !line.endsWith("}") && !line.endsWith("/*") && !line.endsWith("*/")) {
 							buf.append(StringValue.Semicolon);
 						}
 						appendCRLF(buf);
@@ -70,7 +71,7 @@ final class DefaultGeneratorUtil {
 							line = line.replaceAll(from, to);
 						}
 						buf.append(line);
-						if (!line.endsWith("{") && !line.endsWith("}")) {
+						if (!line.endsWith("{") && !line.endsWith("}") && !line.endsWith("/*") && !line.endsWith("*/")) {
 							buf.append(StringValue.Semicolon);
 						}
 						appendCRLF(buf);

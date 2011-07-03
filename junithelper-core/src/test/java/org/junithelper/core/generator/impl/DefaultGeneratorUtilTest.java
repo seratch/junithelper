@@ -136,15 +136,11 @@ public class DefaultGeneratorUtilTest {
 		assertThat(actual, is(equalTo(expected)));
 	}
 
-	@Test
+	@Test(expected = JUnitHelperCoreException.class)
 	public void getInstantiationSourceCode_A$Configuration$TestMethodMeta_Null() throws Exception {
 		Configuration config = null;
 		TestMethodMeta testMethodMeta = null;
-		try {
-			DefaultGeneratorUtil.getInstantiationSourceCode(config, testMethodMeta);
-			fail();
-		} catch (JUnitHelperCoreException e) {
-		}
+		DefaultGeneratorUtil.getInstantiationSourceCode(config, testMethodMeta);
 	}
 
 	@Test
@@ -155,16 +151,12 @@ public class DefaultGeneratorUtilTest {
 		DefaultGeneratorUtil.appendIfNotExists(buf, src, importLine);
 	}
 
-	@Test
+	@Test(expected = JUnitHelperCoreException.class)
 	public void appendIfNotExists_A$StringBuilder$String$String_StringIsNull() throws Exception {
 		StringBuilder buf = new StringBuilder();
 		String src = null;
 		String importLine = null;
-		try {
-			DefaultGeneratorUtil.appendIfNotExists(buf, src, importLine);
-			fail();
-		} catch (JUnitHelperCoreException e) {
-		}
+		DefaultGeneratorUtil.appendIfNotExists(buf, src, importLine);
 	}
 
 	@Test
@@ -175,16 +167,12 @@ public class DefaultGeneratorUtilTest {
 		DefaultGeneratorUtil.appendIfNotExists(buf, src, importLine);
 	}
 
-	@Test
+	@Test(expected = JUnitHelperCoreException.class)
 	public void isCanonicalClassNameUsed_A$String$String$ClassMeta_StringIsNull() throws Exception {
 		String expectedCanonicalClassName = null;
 		String usedClassName = null;
 		ClassMeta targetClassMeta = null;
-		try {
-			DefaultGeneratorUtil.isCanonicalClassNameUsed(expectedCanonicalClassName, usedClassName, targetClassMeta);
-			fail();
-		} catch (JUnitHelperCoreException e) {
-		}
+		DefaultGeneratorUtil.isCanonicalClassNameUsed(expectedCanonicalClassName, usedClassName, targetClassMeta);
 	}
 
 	@Test
@@ -240,15 +228,11 @@ public class DefaultGeneratorUtilTest {
 		assertEquals("\t\t", buf.toString());
 	}
 
-	@Test
+	@Test(expected = JUnitHelperCoreException.class)
 	public void appendTabs_A$StringBuilder$int_intIsMinus1() throws Exception {
 		StringBuilder buf = new StringBuilder();
 		int times = -1;
-		try {
-			DefaultGeneratorUtil.appendTabs(buf, times);
-			fail();
-		} catch (JUnitHelperCoreException e) {
-		}
+		DefaultGeneratorUtil.appendTabs(buf, times);
 	}
 
 	@Test
@@ -272,26 +256,18 @@ public class DefaultGeneratorUtilTest {
 		DefaultGeneratorUtil.appendTabs(buf, times);
 	}
 
-	@Test
+	@Test(expected = JUnitHelperCoreException.class)
 	public void appendTabs_A$StringBuilder$int_intIsMinValue() throws Exception {
 		StringBuilder buf = null;
 		int times = Integer.MIN_VALUE;
-		try {
-			DefaultGeneratorUtil.appendTabs(buf, times);
-			fail();
-		} catch (JUnitHelperCoreException e) {
-		}
+		DefaultGeneratorUtil.appendTabs(buf, times);
 	}
 
-	@Test
+	@Test(expected = JUnitHelperCoreException.class)
 	public void appendTabs_A$StringBuilder$int_intIsMaxValue() throws Exception {
 		StringBuilder buf = null;
 		int times = Integer.MAX_VALUE;
-		try {
-			DefaultGeneratorUtil.appendTabs(buf, times);
-			fail();
-		} catch (JUnitHelperCoreException e) {
-		}
+		DefaultGeneratorUtil.appendTabs(buf, times);
 	}
 
 	@Test
@@ -302,15 +278,11 @@ public class DefaultGeneratorUtilTest {
 		assertThat(buf.toString(), is(equalTo("\t\ttmp;\r\n")));
 	}
 
-	@Test
+	@Test(expected = JUnitHelperCoreException.class)
 	public void appendExtensionSourceCode_A$StringBuilder$String_StringIsNull() throws Exception {
 		StringBuilder buf = new StringBuilder();
 		String code = null;
-		try {
-			DefaultGeneratorUtil.appendExtensionSourceCode(buf, code);
-			fail();
-		} catch (JUnitHelperCoreException e) {
-		}
+		DefaultGeneratorUtil.appendExtensionSourceCode(buf, code);
 	}
 
 	@Test
@@ -319,6 +291,14 @@ public class DefaultGeneratorUtilTest {
 		String code = "";
 		DefaultGeneratorUtil.appendExtensionSourceCode(buf, code);
 		assertThat(buf.toString(), is(equalTo("")));
+	}
+
+	@Test
+	public void appendExtensionSourceCode_A$StringBuilder$String_SeveralLines() throws Exception {
+		StringBuilder buf = new StringBuilder();
+		String code = "/*\r\n System.out.println(\"test\");\r\n */";
+		DefaultGeneratorUtil.appendExtensionSourceCode(buf, code);
+		assertThat(buf.toString(), is(equalTo("\t\t/*\r\n\t\tSystem.out.println(\"test\");\r\n\t\t*/\r\n")));
 	}
 
 	@Test
@@ -331,18 +311,14 @@ public class DefaultGeneratorUtilTest {
 		assertThat(buf.toString(), is(equalTo("\t\tnew Something(\"test\");\r\n")));
 	}
 
-	@Test
+	@Test(expected = JUnitHelperCoreException.class)
 	public void appendExtensionPostAssignSourceCode_A$StringBuilder$String$StringArray$String_StringIsNull()
 			throws Exception {
 		StringBuilder buf = new StringBuilder();
 		String code = null;
 		String[] fromList = new String[] {};
 		String to = null;
-		try {
-			DefaultGeneratorUtil.appendExtensionPostAssignSourceCode(buf, code, fromList, to);
-			fail();
-		} catch (JUnitHelperCoreException e) {
-		}
+		DefaultGeneratorUtil.appendExtensionPostAssignSourceCode(buf, code, fromList, to);
 	}
 
 	@Test
