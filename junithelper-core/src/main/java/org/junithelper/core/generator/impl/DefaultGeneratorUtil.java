@@ -38,15 +38,22 @@ final class DefaultGeneratorUtil {
 			if (separatedBySemicolon != null && separatedBySemicolon.trim().length() > 0) {
 				separatedBySemicolon = separatedBySemicolon.trim().replaceAll(StringValue.CarriageReturn, "");
 				String[] lines = separatedBySemicolon.split(StringValue.LineFeed);
-				for (String line : lines) {
+				for (int i = 0; i < (lines.length - 1); i++) {
+					String line = lines[i];
 					if (line != null && line.trim().length() > 0) {
 						appendTabs(buf, 2);
 						buf.append(line.trim());
-						if (!line.endsWith("{") && !line.endsWith("}") && !line.endsWith("/*") && !line.endsWith("*/")) {
-							buf.append(StringValue.Semicolon);
-						}
 						appendCRLF(buf);
 					}
+				}
+				String lastLine = lines[lines.length - 1];
+				if (lastLine != null && lastLine.trim().length() > 0) {
+					appendTabs(buf, 2);
+					buf.append(lastLine.trim());
+					if (!lastLine.endsWith("}") && !lastLine.endsWith("/")) {
+						buf.append(StringValue.Semicolon);
+					}
+					appendCRLF(buf);
 				}
 			}
 		}
@@ -63,19 +70,22 @@ final class DefaultGeneratorUtil {
 			if (separatedBySemicolon != null && separatedBySemicolon.trim().length() > 0) {
 				separatedBySemicolon = separatedBySemicolon.trim().replaceAll(StringValue.CarriageReturn, "");
 				String[] lines = separatedBySemicolon.split(StringValue.LineFeed);
-				for (String line : lines) {
+				for (int i = 0; i < (lines.length - 1); i++) {
+					String line = lines[i];
 					if (line != null && line.trim().length() > 0) {
 						appendTabs(buf, 2);
-						line = line.trim();
-						for (String from : fromList) {
-							line = line.replaceAll(from, to);
-						}
-						buf.append(line);
-						if (!line.endsWith("{") && !line.endsWith("}") && !line.endsWith("/*") && !line.endsWith("*/")) {
-							buf.append(StringValue.Semicolon);
-						}
+						buf.append(line.trim());
 						appendCRLF(buf);
 					}
+				}
+				String lastLine = lines[lines.length - 1];
+				if (lastLine != null && lastLine.trim().length() > 0) {
+					appendTabs(buf, 2);
+					buf.append(lastLine.trim());
+					if (!lastLine.endsWith("}") && !lastLine.endsWith("/")) {
+						buf.append(StringValue.Semicolon);
+					}
+					appendCRLF(buf);
 				}
 			}
 		}

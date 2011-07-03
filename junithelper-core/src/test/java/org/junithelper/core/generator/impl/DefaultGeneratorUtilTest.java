@@ -273,9 +273,9 @@ public class DefaultGeneratorUtilTest {
 	@Test
 	public void appendExtensionSourceCode_A$StringBuilder$String() throws Exception {
 		StringBuilder buf = new StringBuilder();
-		String code = "tmp";
+		String code = "\"hoge\"";
 		DefaultGeneratorUtil.appendExtensionSourceCode(buf, code);
-		assertThat(buf.toString(), is(equalTo("\t\ttmp;\r\n")));
+		assertThat(buf.toString(), is(equalTo("\t\t\"hoge\";\r\n")));
 	}
 
 	@Test(expected = JUnitHelperCoreException.class)
@@ -304,7 +304,7 @@ public class DefaultGeneratorUtilTest {
 	@Test
 	public void appendExtensionPostAssignSourceCode_A$StringBuilder$String$StringArray$String() throws Exception {
 		StringBuilder buf = new StringBuilder();
-		String code = "new Something(\"test\")";
+		String code = "new Something(\"test\");";
 		String[] fromList = new String[] { "\\{arg\\}" };
 		String to = "target";
 		DefaultGeneratorUtil.appendExtensionPostAssignSourceCode(buf, code, fromList, to);
