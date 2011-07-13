@@ -297,7 +297,8 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 	@Override
 	public String getNewTestCaseSourceCode() {
 		StringBuilder buf = new StringBuilder();
-		if (targetClassMeta.packageName != null) {
+		if (targetClassMeta.packageName != null
+				&& targetClassMeta.packageName.trim().length() > 0) {
 			buf.append("package ");
 			buf.append(targetClassMeta.packageName);
 			buf.append(";");
@@ -305,10 +306,12 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 			appendCRLF(buf);
 		}
 		for (String imported : targetClassMeta.importedList) {
-			buf.append("import ");
-			buf.append(imported);
-			buf.append(";");
-			appendCRLF(buf);
+			if (imported != null && imported.trim().length() > 0) {
+				buf.append("import ");
+				buf.append(imported);
+				buf.append(";");
+				appendCRLF(buf);
+			}
 		}
 		// JUnit 3.x or specified super class
 		if (config.testCaseClassNameToExtend != null
@@ -322,6 +325,8 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 				appendCRLF(buf);
 				appendCRLF(buf);
 			}
+		} else {
+			appendCRLF(buf);
 		}
 		buf.append("public class ");
 		buf.append(targetClassMeta.name);
@@ -466,9 +471,10 @@ public class DefaultTestCaseGenerator implements TestCaseGenerator {
 			}
 		}
 		// Inner classes of test target class
-		appendIfNotExists(importedListBuf, oneline, "import "
-				+ targetClassMeta.packageName + "." + targetClassMeta.name
-				+ ".*;");
+		String prefix = targetClassMeta.packageName == null ? ""
+				: targetClassMeta.packageName + ".";
+		appendIfNotExists(importedListBuf, oneline, "import " + prefix
+				+ targetClassMeta.name + ".*;");
 		// JUnit
 		if (config.junitVersion == JUnitVersion.version3) {
 			appendIfNotExists(importedListBuf, oneline, "import "
