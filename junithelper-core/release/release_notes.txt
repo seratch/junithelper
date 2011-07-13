@@ -3,6 +3,15 @@
 	http://junithelper.org/
 ------------------------------------------
 
+* Release Notes - 1.7
+
+** Bug
+	* Issue 63: Unnecessary semicolon for comment area when using extension
+	* Issue 64: Cannot load the value of "target_regexpCsvForExclusion" with line breaks in pom.xml
+	* Issue 65: Generated invalid test code when "testCaseClassNameToExtend" is empty.
+	* Issue 66: Test code generator does not work fine for default package class.
+	* Issue 68: Extension for instantiation does not work fine for constructor args.
+
 * Release Notes - 1.6
 
 ** Feature Request
