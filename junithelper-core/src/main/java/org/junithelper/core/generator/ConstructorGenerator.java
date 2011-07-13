@@ -15,17 +15,20 @@
  */
 package org.junithelper.core.generator;
 
+import java.util.List;
+import org.junithelper.core.config.Configuration;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.ConstructorMeta;
 
-import java.util.List;
-
 public interface ConstructorGenerator {
 
-	List<String> getAllInstantiationSourceCodeList(ClassMeta classMeta);
+	List<String> getAllInstantiationSourceCodeList(Configuration config,
+			ClassMeta classMeta);
 
-	String getFirstInstantiationSourceCode(ClassMeta classMeta);
+	String getFirstInstantiationSourceCode(Configuration config,
+			ClassMeta classMeta);
 
-	String getInstantiationSourceCode(ClassMeta classMeta, ConstructorMeta constructorMeta);
+	String getInstantiationSourceCode(Configuration config,
+			ClassMeta classMeta, ConstructorMeta constructorMeta);
 
 }

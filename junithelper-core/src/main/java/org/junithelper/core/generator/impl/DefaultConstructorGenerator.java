@@ -15,9 +15,11 @@
  */
 package org.junithelper.core.generator.impl;
 
+import static org.junithelper.core.generator.impl.DefaultGeneratorUtil.*;
 import java.util.ArrayList;
 import java.util.List;
-
+import org.junithelper.core.config.Configuration;
+import org.junithelper.core.config.extension.ExtInstantiation;
 import org.junithelper.core.constant.StringValue;
 import org.junithelper.core.generator.ConstructorGenerator;
 import org.junithelper.core.meta.AccessModifier;
@@ -28,21 +30,26 @@ import org.junithelper.core.util.PrimitiveTypeUtil;
 public class DefaultConstructorGenerator implements ConstructorGenerator {
 
 	@Override
-	public List<String> getAllInstantiationSourceCodeList(ClassMeta classMeta) {
+	public List<String> getAllInstantiationSourceCodeList(Configuration config,
+			ClassMeta classMeta) {
 		List<String> dest = new ArrayList<String>();
 		for (ConstructorMeta constructorMeta : classMeta.constructors) {
-			dest.add(getInstantiationSourceCode(classMeta, constructorMeta));
+			dest.add(getInstantiationSourceCode(config, classMeta,
+					constructorMeta));
 		}
 		return dest;
 	}
 
 	@Override
-	public String getFirstInstantiationSourceCode(ClassMeta classMeta) {
-		return getInstantiationSourceCode(classMeta, getFirstConstructor(classMeta));
+	public String getFirstInstantiationSourceCode(Configuration config,
+			ClassMeta classMeta) {
+		return getInstantiationSourceCode(config, classMeta,
+				getFirstConstructor(classMeta));
 	}
 
 	@Override
-	public String getInstantiationSourceCode(ClassMeta classMeta, ConstructorMeta constructorMeta) {
+	public String getInstantiationSourceCode(Configuration config,
+			ClassMeta classMeta, ConstructorMeta constructorMeta) {
 		// TODO better implementation
 		StringBuilder buf = new StringBuilder();
 		if (constructorMeta == null) {
@@ -56,24 +63,63 @@ public class DefaultConstructorGenerator implements ConstructorGenerator {
 		} else {
 			int len = constructorMeta.argTypes.size();
 			for (int i = 0; i < len; i++) {
-				buf.append(StringValue.Tab);
-				buf.append(StringValue.Tab);
 				String typeName = constructorMeta.argTypes.get(i).name;
-				buf.append(typeName);
-				buf.append(" ");
-				buf.append(constructorMeta.argNames.get(i));
-				buf.append(" = ");
-				if (PrimitiveTypeUtil.isPrimitive(typeName)) {
-					buf.append(PrimitiveTypeUtil.getTypeDefaultValue(typeName));
-				} else {
-					buf.append("null");
+
+				boolean isAssigned = false;
+				if (config.isExtensionEnabled
+						&& config.extConfiguration.extInstantiations != null) {
+					for (ExtInstantiation ins : config.extConfiguration.extInstantiations) {
+						if (isCanonicalClassNameUsed(ins.canonicalClassName,
+								typeName, classMeta)) {
+							// add import list
+							for (String newImport : ins.importList) {
+								classMeta.importedList.add(newImport);
+							}
+							// pre-assign
+							if (ins.preAssignCode != null
+									&& ins.preAssignCode.trim().length() > 0) {
+								appendExtensionSourceCode(buf,
+										ins.preAssignCode);
+							}
+							// assign
+							// \t\tBean bean =
+							appendTabs(buf, 2);
+							buf.append(typeName);
+							buf.append(" ");
+							buf.append(constructorMeta.argNames.get(i));
+							buf.append(" = ");
+							buf.append(ins.assignCode.trim());
+							appendCRLF(buf);
+							// post-assign
+							if (ins.postAssignCode != null
+									&& ins.postAssignCode.trim().length() > 0) {
+								appendExtensionPostAssignSourceCode(buf,
+										ins.postAssignCode,
+										new String[] { "\\{instance\\}" },
+										constructorMeta.argNames.get(i));
+							}
+							isAssigned = true;
+						}
+					}
 				}
-				buf.append(StringValue.Semicolon);
-				buf.append(StringValue.CarriageReturn);
-				buf.append(StringValue.LineFeed);
+
+				if (!isAssigned) {
+					appendTabs(buf, 2);
+					buf.append(typeName);
+					buf.append(" ");
+					buf.append(constructorMeta.argNames.get(i));
+					buf.append(" = ");
+					if (PrimitiveTypeUtil.isPrimitive(typeName)) {
+						buf.append(PrimitiveTypeUtil
+								.getTypeDefaultValue(typeName));
+					} else {
+						buf.append("null");
+					}
+					buf.append(StringValue.Semicolon);
+					appendCRLF(buf);
+				}
 			}
-			buf.append(StringValue.Tab);
-			buf.append(StringValue.Tab);
+			appendTabs(buf, 2);
 			buf.append(classMeta.name);
 			buf.append(" target = new ");
 			buf.append(classMeta.name);
@@ -90,14 +136,14 @@ public class DefaultConstructorGenerator implements ConstructorGenerator {
 			}
 			buf.append(")");
 			buf.append(StringValue.Semicolon);
-			buf.append(StringValue.CarriageReturn);
-			buf.append(StringValue.LineFeed);
+			appendCRLF(buf);
 		}
 		return buf.toString();
 	}
 
 	ConstructorMeta getFirstConstructor(ClassMeta classMeta) {
-		if (classMeta.constructors == null || classMeta.constructors.size() == 0) {
+		if (classMeta.constructors == null
+				|| classMeta.constructors.size() == 0) {
 			return null;
 		}
 		for (ConstructorMeta constructor : classMeta.constructors) {

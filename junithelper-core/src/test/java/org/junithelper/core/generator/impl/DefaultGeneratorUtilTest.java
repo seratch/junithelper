@@ -2,15 +2,17 @@ package org.junithelper.core.generator.impl;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-
 import java.util.Random;
-
 import org.junit.Test;
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.TestingTarget;
+import org.junithelper.core.config.extension.ExtConfiguration;
+import org.junithelper.core.config.extension.ExtInstantiation;
 import org.junithelper.core.exception.JUnitHelperCoreException;
 import org.junithelper.core.meta.AccessModifier;
+import org.junithelper.core.meta.ArgTypeMeta;
 import org.junithelper.core.meta.ClassMeta;
+import org.junithelper.core.meta.ConstructorMeta;
 import org.junithelper.core.meta.MethodMeta;
 import org.junithelper.core.meta.TestMethodMeta;
 
@@ -22,7 +24,8 @@ public class DefaultGeneratorUtilTest {
 	}
 
 	@Test
-	public void appendIfNotExists_A$StringBuilder$String$String_alradyExists() throws Exception {
+	public void appendIfNotExists_A$StringBuilder$String$String_alradyExists()
+			throws Exception {
 		StringBuilder buf = new StringBuilder();
 		String src = "package hoge.foo;\r\nimport junit.framework.TestCase;\r\n\r\npublic class Sample {\r\n\r\n}";
 		String importLine = "import junit.framework.TestCase;";
@@ -31,17 +34,20 @@ public class DefaultGeneratorUtilTest {
 	}
 
 	@Test
-	public void appendIfNotExists_A$StringBuilder$String$String_notExists() throws Exception {
+	public void appendIfNotExists_A$StringBuilder$String$String_notExists()
+			throws Exception {
 		StringBuilder buf = new StringBuilder();
 		String src = "package hoge.foo;\r\nimport junit.framework.TestCase;\r\n\r\npublic class Sample {\r\n\r\n}";
 		String importLine = "import org.junit.Test;";
 		DefaultGeneratorUtil.appendIfNotExists(buf, src, importLine);
 		DefaultGeneratorUtil.appendIfNotExists(buf, src, importLine);
-		assertEquals("import org.junit.Test;\r\nimport org.junit.Test;\r\n", buf.toString());
+		assertEquals("import org.junit.Test;\r\nimport org.junit.Test;\r\n",
+				buf.toString());
 	}
 
 	@Test
-	public void appendIfNotExists_A$StringBuilder$String$String_staticImportAsssert() throws Exception {
+	public void appendIfNotExists_A$StringBuilder$String$String_staticImportAsssert()
+			throws Exception {
 		StringBuilder buf = new StringBuilder();
 		String src = "package hoge.foo;\r\nimport static org.junit.Assert.assertNotNull;\r\nimport junit.framework.TestCase;\r\n\r\npublic class Sample {\r\n\r\n}";
 		String importLine = "import static org.junit.Assert.*;";
@@ -50,101 +56,141 @@ public class DefaultGeneratorUtilTest {
 	}
 
 	@Test
-	public void isPublicMethodAndTestingRequired_A$MethodMeta$TestingTarget() throws Exception {
+	public void isPublicMethodAndTestingRequired_A$MethodMeta$TestingTarget()
+			throws Exception {
 		MethodMeta methodMeta = new MethodMeta();
 		methodMeta.accessModifier = AccessModifier.Public;
 		TestingTarget target_ = new TestingTarget();
 		target_.isPublicMethodRequired = true;
-		boolean actual = DefaultGeneratorUtil.isPublicMethodAndTestingRequired(methodMeta, target_);
+		boolean actual = DefaultGeneratorUtil.isPublicMethodAndTestingRequired(
+				methodMeta, target_);
 		boolean expected = true;
 		assertThat(actual, is(equalTo(expected)));
 	}
 
 	@Test
-	public void isProtectedMethodAndTestingRequired_A$MethodMeta$TestingTarget() throws Exception {
+	public void isProtectedMethodAndTestingRequired_A$MethodMeta$TestingTarget()
+			throws Exception {
 		MethodMeta methodMeta = new MethodMeta();
 		methodMeta.accessModifier = AccessModifier.Protected;
 		TestingTarget target_ = new TestingTarget();
 		target_.isPublicMethodRequired = true;
-		boolean actual = DefaultGeneratorUtil.isProtectedMethodAndTestingRequired(methodMeta, target_);
+		boolean actual = DefaultGeneratorUtil
+				.isProtectedMethodAndTestingRequired(methodMeta, target_);
 		boolean expected = true;
 		assertThat(actual, is(equalTo(expected)));
 	}
 
 	@Test
-	public void isPackageLocalMethodAndTestingRequired_A$MethodMeta$TestingTarget() throws Exception {
+	public void isPackageLocalMethodAndTestingRequired_A$MethodMeta$TestingTarget()
+			throws Exception {
 		MethodMeta methodMeta = new MethodMeta();
 		methodMeta.accessModifier = AccessModifier.PackageLocal;
 		TestingTarget target_ = new TestingTarget();
 		target_.isPublicMethodRequired = true;
-		boolean actual = DefaultGeneratorUtil.isPackageLocalMethodAndTestingRequired(methodMeta, target_);
+		boolean actual = DefaultGeneratorUtil
+				.isPackageLocalMethodAndTestingRequired(methodMeta, target_);
 		boolean expected = true;
 		assertThat(actual, is(equalTo(expected)));
 	}
 
 	@Test
-	public void isCanonicalClassNameUsed_A$String$String$ClassMeta_ImportWildCard() throws Exception {
+	public void isCanonicalClassNameUsed_A$String$String$ClassMeta_ImportWildCard()
+			throws Exception {
 		String expectedCanonicalClassName = "com.example.bean.SampleBean";
 		String usedClassName = "SampleBean";
 		ClassMeta targetClassMeta = new ClassMeta();
 		targetClassMeta.importedList.add("com.example.bean.*");
 		// when
-		boolean actual = DefaultGeneratorUtil.isCanonicalClassNameUsed(expectedCanonicalClassName, usedClassName,
-				targetClassMeta);
+		boolean actual = DefaultGeneratorUtil.isCanonicalClassNameUsed(
+				expectedCanonicalClassName, usedClassName, targetClassMeta);
 		// then
 		boolean expected = true;
 		assertThat(actual, is(equalTo(expected)));
 	}
 
 	@Test
-	public void isCanonicalClassNameUsed_A$String$String$ClassMeta_Imported() throws Exception {
+	public void isCanonicalClassNameUsed_A$String$String$ClassMeta_Imported()
+			throws Exception {
 		String expectedCanonicalClassName = "com.example.bean.SampleBean";
 		String usedClassName = "SampleBean";
 		ClassMeta targetClassMeta = new ClassMeta();
 		targetClassMeta.importedList.add("com.example.bean.SampleBean");
 		// when
-		boolean actual = DefaultGeneratorUtil.isCanonicalClassNameUsed(expectedCanonicalClassName, usedClassName,
-				targetClassMeta);
+		boolean actual = DefaultGeneratorUtil.isCanonicalClassNameUsed(
+				expectedCanonicalClassName, usedClassName, targetClassMeta);
 		// then
 		boolean expected = true;
 		assertThat(actual, is(equalTo(expected)));
 	}
 
 	@Test
-	public void isCanonicalClassNameUsed_A$String$String$ClassMeta_CanonicalClassName() throws Exception {
+	public void isCanonicalClassNameUsed_A$String$String$ClassMeta_CanonicalClassName()
+			throws Exception {
 		String expectedCanonicalClassName = "com.example.bean.SampleBean";
 		String usedClassName = "com.example.bean.SampleBean";
 		ClassMeta targetClassMeta = new ClassMeta();
 		// when
-		boolean actual = DefaultGeneratorUtil.isCanonicalClassNameUsed(expectedCanonicalClassName, usedClassName,
-				targetClassMeta);
+		boolean actual = DefaultGeneratorUtil.isCanonicalClassNameUsed(
+				expectedCanonicalClassName, usedClassName, targetClassMeta);
 		// then
 		boolean expected = true;
 		assertThat(actual, is(equalTo(expected)));
 	}
 
 	@Test
-	public void isCanonicalClassNameUsed_A$String$String$ClassMeta_NotUsed() throws Exception {
+	public void isCanonicalClassNameUsed_A$String$String$ClassMeta_NotUsed()
+			throws Exception {
 		String expectedCanonicalClassName = "com.example.bean.SampleBean";
 		String usedClassName = "SampleBean";
 		ClassMeta targetClassMeta = new ClassMeta();
 		// when
-		boolean actual = DefaultGeneratorUtil.isCanonicalClassNameUsed(expectedCanonicalClassName, usedClassName,
-				targetClassMeta);
+		boolean actual = DefaultGeneratorUtil.isCanonicalClassNameUsed(
+				expectedCanonicalClassName, usedClassName, targetClassMeta);
 		// then
 		boolean expected = false;
 		assertThat(actual, is(equalTo(expected)));
 	}
 
 	@Test(expected = JUnitHelperCoreException.class)
-	public void getInstantiationSourceCode_A$Configuration$TestMethodMeta_Null() throws Exception {
+	public void getInstantiationSourceCode_A$Configuration$TestMethodMeta_Null()
+			throws Exception {
 		Configuration config = null;
 		TestMethodMeta testMethodMeta = null;
 		DefaultGeneratorUtil.getInstantiationSourceCode(config, testMethodMeta);
 	}
 
 	@Test
-	public void appendIfNotExists_A$StringBuilder$String$String() throws Exception {
+	public void getInstantiationSourceCode_A$Configuration$TestMethodMeta()
+			throws Exception {
+		Configuration config = new Configuration();
+		config.isExtensionEnabled = true;
+		config.extConfiguration = new ExtConfiguration(config);
+		ExtInstantiation ins = new ExtInstantiation("com.example.Bean");
+		ins.importList.add("com.example.BeanFactory");
+		ins.assignCode = "BeanFactory.getInstance();";
+		config.extConfiguration.extInstantiations.add(ins);
+		TestMethodMeta testMethodMeta = new TestMethodMeta();
+		ConstructorMeta cons = new ConstructorMeta();
+		cons.argNames.add("bean");
+		ArgTypeMeta argType = new ArgTypeMeta();
+		argType.name = "com.example.Bean";
+		argType.nameInMethodName = "Bean";
+		cons.argTypes.add(argType);
+		testMethodMeta.classMeta = new ClassMeta();
+		testMethodMeta.classMeta.name = "Target";
+		testMethodMeta.classMeta.importedList.add("com.example.Bean");
+		testMethodMeta.classMeta.packageName = "com.example";
+		testMethodMeta.classMeta.constructors.add(cons);
+		String actual = DefaultGeneratorUtil.getInstantiationSourceCode(config,
+				testMethodMeta);
+		String expected = "\t\tcom.example.Bean bean = BeanFactory.getInstance();\r\n\t\tTarget target = new Target(bean);\r\n";
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void appendIfNotExists_A$StringBuilder$String$String()
+			throws Exception {
 		StringBuilder buf = new StringBuilder();
 		String src = "abc";
 		String importLine = "com.example.Bean";
@@ -152,7 +198,8 @@ public class DefaultGeneratorUtilTest {
 	}
 
 	@Test(expected = JUnitHelperCoreException.class)
-	public void appendIfNotExists_A$StringBuilder$String$String_StringIsNull() throws Exception {
+	public void appendIfNotExists_A$StringBuilder$String$String_StringIsNull()
+			throws Exception {
 		StringBuilder buf = new StringBuilder();
 		String src = null;
 		String importLine = null;
@@ -160,7 +207,8 @@ public class DefaultGeneratorUtilTest {
 	}
 
 	@Test
-	public void appendIfNotExists_A$StringBuilder$String$String_StringIsEmpty() throws Exception {
+	public void appendIfNotExists_A$StringBuilder$String$String_StringIsEmpty()
+			throws Exception {
 		StringBuilder buf = new StringBuilder();
 		String src = "";
 		String importLine = "";
@@ -168,19 +216,23 @@ public class DefaultGeneratorUtilTest {
 	}
 
 	@Test(expected = JUnitHelperCoreException.class)
-	public void isCanonicalClassNameUsed_A$String$String$ClassMeta_StringIsNull() throws Exception {
+	public void isCanonicalClassNameUsed_A$String$String$ClassMeta_StringIsNull()
+			throws Exception {
 		String expectedCanonicalClassName = null;
 		String usedClassName = null;
 		ClassMeta targetClassMeta = null;
-		DefaultGeneratorUtil.isCanonicalClassNameUsed(expectedCanonicalClassName, usedClassName, targetClassMeta);
+		DefaultGeneratorUtil.isCanonicalClassNameUsed(
+				expectedCanonicalClassName, usedClassName, targetClassMeta);
 	}
 
 	@Test
-	public void isCanonicalClassNameUsed_A$String$String$ClassMeta_StringIsEmpty() throws Exception {
+	public void isCanonicalClassNameUsed_A$String$String$ClassMeta_StringIsEmpty()
+			throws Exception {
 		String expectedCanonicalClassName = "";
 		String usedClassName = "";
 		ClassMeta targetClassMeta = new ClassMeta();
-		DefaultGeneratorUtil.isCanonicalClassNameUsed(expectedCanonicalClassName, usedClassName, targetClassMeta);
+		DefaultGeneratorUtil.isCanonicalClassNameUsed(
+				expectedCanonicalClassName, usedClassName, targetClassMeta);
 	}
 
 	@Test
@@ -271,7 +323,8 @@ public class DefaultGeneratorUtilTest {
 	}
 
 	@Test
-	public void appendExtensionSourceCode_A$StringBuilder$String() throws Exception {
+	public void appendExtensionSourceCode_A$StringBuilder$String()
+			throws Exception {
 		StringBuilder buf = new StringBuilder();
 		String code = "\"hoge\"";
 		DefaultGeneratorUtil.appendExtensionSourceCode(buf, code);
@@ -279,14 +332,16 @@ public class DefaultGeneratorUtilTest {
 	}
 
 	@Test(expected = JUnitHelperCoreException.class)
-	public void appendExtensionSourceCode_A$StringBuilder$String_StringIsNull() throws Exception {
+	public void appendExtensionSourceCode_A$StringBuilder$String_StringIsNull()
+			throws Exception {
 		StringBuilder buf = new StringBuilder();
 		String code = null;
 		DefaultGeneratorUtil.appendExtensionSourceCode(buf, code);
 	}
 
 	@Test
-	public void appendExtensionSourceCode_A$StringBuilder$String_StringIsEmpty() throws Exception {
+	public void appendExtensionSourceCode_A$StringBuilder$String_StringIsEmpty()
+			throws Exception {
 		StringBuilder buf = new StringBuilder();
 		String code = "";
 		DefaultGeneratorUtil.appendExtensionSourceCode(buf, code);
@@ -294,21 +349,27 @@ public class DefaultGeneratorUtilTest {
 	}
 
 	@Test
-	public void appendExtensionSourceCode_A$StringBuilder$String_SeveralLines() throws Exception {
+	public void appendExtensionSourceCode_A$StringBuilder$String_SeveralLines()
+			throws Exception {
 		StringBuilder buf = new StringBuilder();
 		String code = "/*\r\n System.out.println(\"test\");\r\n */";
 		DefaultGeneratorUtil.appendExtensionSourceCode(buf, code);
-		assertThat(buf.toString(), is(equalTo("\t\t/*\r\n\t\tSystem.out.println(\"test\");\r\n\t\t*/\r\n")));
+		assertThat(
+				buf.toString(),
+				is(equalTo("\t\t/*\r\n\t\tSystem.out.println(\"test\");\r\n\t\t*/\r\n")));
 	}
 
 	@Test
-	public void appendExtensionPostAssignSourceCode_A$StringBuilder$String$StringArray$String() throws Exception {
+	public void appendExtensionPostAssignSourceCode_A$StringBuilder$String$StringArray$String()
+			throws Exception {
 		StringBuilder buf = new StringBuilder();
 		String code = "new Something(\"test\");";
 		String[] fromList = new String[] { "\\{arg\\}" };
 		String to = "target";
-		DefaultGeneratorUtil.appendExtensionPostAssignSourceCode(buf, code, fromList, to);
-		assertThat(buf.toString(), is(equalTo("\t\tnew Something(\"test\");\r\n")));
+		DefaultGeneratorUtil.appendExtensionPostAssignSourceCode(buf, code,
+				fromList, to);
+		assertThat(buf.toString(),
+				is(equalTo("\t\tnew Something(\"test\");\r\n")));
 	}
 
 	@Test(expected = JUnitHelperCoreException.class)
@@ -318,7 +379,8 @@ public class DefaultGeneratorUtilTest {
 		String code = null;
 		String[] fromList = new String[] {};
 		String to = null;
-		DefaultGeneratorUtil.appendExtensionPostAssignSourceCode(buf, code, fromList, to);
+		DefaultGeneratorUtil.appendExtensionPostAssignSourceCode(buf, code,
+				fromList, to);
 	}
 
 	@Test
@@ -328,7 +390,8 @@ public class DefaultGeneratorUtilTest {
 		String code = "";
 		String[] fromList = new String[] {};
 		String to = "";
-		DefaultGeneratorUtil.appendExtensionPostAssignSourceCode(buf, code, fromList, to);
+		DefaultGeneratorUtil.appendExtensionPostAssignSourceCode(buf, code,
+				fromList, to);
 		assertThat(buf.toString(), is(equalTo("")));
 	}
 

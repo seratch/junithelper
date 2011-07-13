@@ -16,16 +16,22 @@ final class DefaultGeneratorUtil {
 	private DefaultGeneratorUtil() {
 	}
 
-	static boolean isPublicMethodAndTestingRequired(MethodMeta methodMeta, TestingTarget target) {
-		return methodMeta.accessModifier == AccessModifier.Public && target.isPublicMethodRequired;
+	static boolean isPublicMethodAndTestingRequired(MethodMeta methodMeta,
+			TestingTarget target) {
+		return methodMeta.accessModifier == AccessModifier.Public
+				&& target.isPublicMethodRequired;
 	}
 
-	static boolean isProtectedMethodAndTestingRequired(MethodMeta methodMeta, TestingTarget target) {
-		return methodMeta.accessModifier == AccessModifier.Protected && target.isProtectedMethodRequired;
+	static boolean isProtectedMethodAndTestingRequired(MethodMeta methodMeta,
+			TestingTarget target) {
+		return methodMeta.accessModifier == AccessModifier.Protected
+				&& target.isProtectedMethodRequired;
 	}
 
-	static boolean isPackageLocalMethodAndTestingRequired(MethodMeta methodMeta, TestingTarget target) {
-		return methodMeta.accessModifier == AccessModifier.PackageLocal && target.isPackageLocalMethodRequired;
+	static boolean isPackageLocalMethodAndTestingRequired(
+			MethodMeta methodMeta, TestingTarget target) {
+		return methodMeta.accessModifier == AccessModifier.PackageLocal
+				&& target.isPackageLocalMethodRequired;
 	}
 
 	static void appendExtensionSourceCode(StringBuilder buf, String code) {
@@ -35,9 +41,12 @@ final class DefaultGeneratorUtil {
 
 		String[] separatedListBySemicolon = code.split(StringValue.Semicolon);
 		for (String separatedBySemicolon : separatedListBySemicolon) {
-			if (separatedBySemicolon != null && separatedBySemicolon.trim().length() > 0) {
-				separatedBySemicolon = separatedBySemicolon.trim().replaceAll(StringValue.CarriageReturn, "");
-				String[] lines = separatedBySemicolon.split(StringValue.LineFeed);
+			if (separatedBySemicolon != null
+					&& separatedBySemicolon.trim().length() > 0) {
+				separatedBySemicolon = separatedBySemicolon.trim().replaceAll(
+						StringValue.CarriageReturn, "");
+				String[] lines = separatedBySemicolon
+						.split(StringValue.LineFeed);
 				for (int i = 0; i < (lines.length - 1); i++) {
 					String line = lines[i];
 					if (line != null && line.trim().length() > 0) {
@@ -59,7 +68,8 @@ final class DefaultGeneratorUtil {
 		}
 	}
 
-	static void appendExtensionPostAssignSourceCode(StringBuilder buf, String code, String[] fromList, String to) {
+	static void appendExtensionPostAssignSourceCode(StringBuilder buf,
+			String code, String[] fromList, String to) {
 
 		Assertion.on("code").mustNotBeNull(code);
 		Assertion.on("fromList").mustNotBeNull(fromList);
@@ -67,9 +77,12 @@ final class DefaultGeneratorUtil {
 
 		String[] separatedListBySemicolon = code.split(StringValue.Semicolon);
 		for (String separatedBySemicolon : separatedListBySemicolon) {
-			if (separatedBySemicolon != null && separatedBySemicolon.trim().length() > 0) {
-				separatedBySemicolon = separatedBySemicolon.trim().replaceAll(StringValue.CarriageReturn, "");
-				String[] lines = separatedBySemicolon.split(StringValue.LineFeed);
+			if (separatedBySemicolon != null
+					&& separatedBySemicolon.trim().length() > 0) {
+				separatedBySemicolon = separatedBySemicolon.trim().replaceAll(
+						StringValue.CarriageReturn, "");
+				String[] lines = separatedBySemicolon
+						.split(StringValue.LineFeed);
 				for (int i = 0; i < (lines.length - 1); i++) {
 					String line = lines[i];
 					if (line != null && line.trim().length() > 0) {
@@ -91,17 +104,19 @@ final class DefaultGeneratorUtil {
 		}
 	}
 
-	static String getInstantiationSourceCode(Configuration config, TestMethodMeta testMethodMeta) {
+	static String getInstantiationSourceCode(Configuration config,
+			TestMethodMeta testMethodMeta) {
 
 		Assertion.on("config").mustNotBeNull(config);
 		Assertion.on("testMethodMeta").mustNotBeNull(testMethodMeta);
 
 		// -----------
 		// Extension
-		if (config.isExtensionEnabled && config.extConfiguration.extInstantiations != null) {
+		if (config.isExtensionEnabled
+				&& config.extConfiguration.extInstantiations != null) {
 			for (ExtInstantiation ins : config.extConfiguration.extInstantiations) {
-				if (isCanonicalClassNameUsed(ins.canonicalClassName, testMethodMeta.classMeta.name,
-						testMethodMeta.classMeta)) {
+				if (isCanonicalClassNameUsed(ins.canonicalClassName,
+						testMethodMeta.classMeta.name, testMethodMeta.classMeta)) {
 					// add import list
 					for (String newImport : ins.importList) {
 						testMethodMeta.classMeta.importedList.add(newImport);
@@ -109,7 +124,8 @@ final class DefaultGeneratorUtil {
 					// instantiation code
 					// e.g. Sample target = new Sample();
 					StringBuilder buf = new StringBuilder();
-					if (ins.preAssignCode != null && ins.preAssignCode.trim().length() > 0) {
+					if (ins.preAssignCode != null
+							&& ins.preAssignCode.trim().length() > 0) {
 						appendExtensionSourceCode(buf, ins.preAssignCode);
 					}
 					buf.append(StringValue.Tab);
@@ -119,29 +135,36 @@ final class DefaultGeneratorUtil {
 					buf.append(ins.assignCode.trim());
 					buf.append(StringValue.CarriageReturn);
 					buf.append(StringValue.LineFeed);
-					if (ins.postAssignCode != null && ins.postAssignCode.trim().length() > 0) {
-						appendExtensionPostAssignSourceCode(buf, ins.postAssignCode, new String[] { "\\{instance\\}" },
-								"target");
+					if (ins.postAssignCode != null
+							&& ins.postAssignCode.trim().length() > 0) {
+						appendExtensionPostAssignSourceCode(buf,
+								ins.postAssignCode,
+								new String[] { "\\{instance\\}" }, "target");
 					}
 					return buf.toString();
 				}
 			}
 		}
 		// TODO better implementation
-		return new DefaultConstructorGenerator().getFirstInstantiationSourceCode(testMethodMeta.classMeta);
+		return new DefaultConstructorGenerator()
+				.getFirstInstantiationSourceCode(config,
+						testMethodMeta.classMeta);
 	}
 
-	static void appendIfNotExists(StringBuilder buf, String src, String importLine) {
+	static void appendIfNotExists(StringBuilder buf, String src,
+			String importLine) {
 
 		Assertion.on("buf").mustNotBeNull(buf);
 		Assertion.on("src").mustNotBeNull(src);
 		Assertion.on("importLine").mustNotBeNull(importLine);
 
 		String oneline = src.replaceAll(RegExp.CRLF, StringValue.Space);
-		importLine = importLine.replace(StringValue.CarriageReturn + StringValue.LineFeed, StringValue.Empty);
-		String importLineRegExp = importLine.replaceAll("\\s+", "\\\\s+").replaceAll("\\.", "\\\\.")
-				.replaceAll("\\*", "\\\\*");
-		if (!oneline.matches(RegExp.Anything_ZeroOrMore_Min + importLineRegExp + RegExp.Anything_ZeroOrMore_Min)) {
+		importLine = importLine.replace(StringValue.CarriageReturn
+				+ StringValue.LineFeed, StringValue.Empty);
+		String importLineRegExp = importLine.replaceAll("\\s+", "\\\\s+")
+				.replaceAll("\\.", "\\\\.").replaceAll("\\*", "\\\\*");
+		if (!oneline.matches(RegExp.Anything_ZeroOrMore_Min + importLineRegExp
+				+ RegExp.Anything_ZeroOrMore_Min)) {
 			buf.append(importLine);
 			buf.append(StringValue.CarriageReturn);
 			buf.append(StringValue.LineFeed);
@@ -149,15 +172,17 @@ final class DefaultGeneratorUtil {
 
 	}
 
-	static boolean isCanonicalClassNameUsed(String expectedCanonicalClassName, String usedClassName,
-			ClassMeta targetClassMeta) {
+	static boolean isCanonicalClassNameUsed(String expectedCanonicalClassName,
+			String usedClassName, ClassMeta targetClassMeta) {
 
-		Assertion.on("expectedCanonicalClassName").mustNotBeNull(expectedCanonicalClassName);
+		Assertion.on("expectedCanonicalClassName").mustNotBeNull(
+				expectedCanonicalClassName);
 		Assertion.on("usedClassName").mustNotBeNull(usedClassName);
 		Assertion.on("targetClassMeta").mustNotBeNull(targetClassMeta);
 
 		if (usedClassName.equals(expectedCanonicalClassName)
-				|| usedClassName.equals(expectedCanonicalClassName.replace("java.lang.", ""))) {
+				|| usedClassName.equals(expectedCanonicalClassName.replace(
+						"java.lang.", ""))) {
 			// canonical class name
 			// e.g.
 			// "com.example.ArgBean"
@@ -172,13 +197,16 @@ final class DefaultGeneratorUtil {
 			String[] extSplitted = expectedCanonicalClassName.split("\\.");
 			String extClassName = extSplitted[extSplitted.length - 1];
 			if (usedClassName.equals(extClassName)) {
-				String extInSamplePackage = targetClassMeta.packageName + "." + extClassName;
+				String extInSamplePackage = targetClassMeta.packageName + "."
+						+ extClassName;
 				if (extInSamplePackage.equals(expectedCanonicalClassName)) {
 					return true;
 				} else {
 					for (String imported : targetClassMeta.importedList) {
-						String target = expectedCanonicalClassName.replaceFirst(extClassName, "");
-						if (imported.matches(expectedCanonicalClassName) || imported.matches(target + ".+")) {
+						String target = expectedCanonicalClassName
+								.replaceFirst(extClassName, "");
+						if (imported.matches(expectedCanonicalClassName)
+								|| imported.matches(target + ".+")) {
 							return true;
 						}
 					}

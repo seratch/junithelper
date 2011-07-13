@@ -1,16 +1,13 @@
 package org.junithelper.core.generator.impl;
 
+import static org.junit.Assert.*;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.ConstructorMeta;
 import org.junithelper.core.meta.extractor.ClassMetaExtractor;
-
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class DefaultConstructorGeneratorTest {
 
@@ -38,40 +35,42 @@ public class DefaultConstructorGeneratorTest {
 	}
 
 	@Test
-	public void getAllInstantiationSourceCodeList_A$ClassMeta()
+	public void getAllInstantiationSourceCodeList_A$Configuration$ClassMeta()
 			throws Exception {
 		// given
 		ClassMeta classMeta = targetClassMeta;
 		// e.g. : given(mocked.called()).willReturn(1);
 		// when
-		List<String> actual = target
-				.getAllInstantiationSourceCodeList(classMeta);
+		List<String> actual = target.getAllInstantiationSourceCodeList(config,
+				classMeta);
 		// then
 		// e.g. : verify(mocked).called();
 		assertEquals("		Sample target = new Sample();\r\n", actual.get(0));
 	}
 
 	@Test
-	public void getFirstInstantiationSourceCode_A$ClassMeta() throws Exception {
+	public void getFirstInstantiationSourceCode_A$Configuration$ClassMeta()
+			throws Exception {
 		// given
 		ClassMeta classMeta = targetClassMeta;
 		// e.g. : given(mocked.called()).willReturn(1);
 		// when
-		String actual = target.getFirstInstantiationSourceCode(classMeta);
+		String actual = target.getFirstInstantiationSourceCode(config,
+				classMeta);
 		// then
 		// e.g. : verify(mocked).called();
 		assertEquals("		Sample target = new Sample();\r\n", actual);
 	}
 
 	@Test
-	public void getInstantiationSourceCode_A$ClassMeta$ConstructorMeta()
+	public void getInstantiationSourceCode_A$Configuration$ClassMeta$ConstructorMeta()
 			throws Exception {
 		// given
 		ClassMeta classMeta = targetClassMeta;
 		ConstructorMeta constructorMeta = target.getFirstConstructor(classMeta);
 		// e.g. : given(mocked.called()).willReturn(1);
 		// when
-		String actual = target.getInstantiationSourceCode(classMeta,
+		String actual = target.getInstantiationSourceCode(config, classMeta,
 				constructorMeta);
 		// then
 		// e.g. : verify(mocked).called();
