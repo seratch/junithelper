@@ -128,13 +128,11 @@ final class DefaultGeneratorUtil {
 							&& ins.preAssignCode.trim().length() > 0) {
 						appendExtensionSourceCode(buf, ins.preAssignCode);
 					}
-					buf.append(StringValue.Tab);
-					buf.append(StringValue.Tab);
+					appendTabs(buf, 2);
 					buf.append(testMethodMeta.classMeta.name);
 					buf.append(" target = ");
 					buf.append(ins.assignCode.trim());
-					buf.append(StringValue.CarriageReturn);
-					buf.append(StringValue.LineFeed);
+					appendCRLF(buf);
 					if (ins.postAssignCode != null
 							&& ins.postAssignCode.trim().length() > 0) {
 						appendExtensionPostAssignSourceCode(buf,
