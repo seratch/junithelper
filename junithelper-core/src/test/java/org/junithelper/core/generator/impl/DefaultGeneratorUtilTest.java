@@ -168,6 +168,34 @@ public class DefaultGeneratorUtilTest {
 		config.extConfiguration = new ExtConfiguration(config);
 		ExtInstantiation ins = new ExtInstantiation("com.example.Bean");
 		ins.importList.add("com.example.BeanFactory");
+		ins.assignCode = "BeanFactory.getInstance()";
+		config.extConfiguration.extInstantiations.add(ins);
+		TestMethodMeta testMethodMeta = new TestMethodMeta();
+		ConstructorMeta cons = new ConstructorMeta();
+		cons.argNames.add("bean");
+		ArgTypeMeta argType = new ArgTypeMeta();
+		argType.name = "com.example.Bean";
+		argType.nameInMethodName = "Bean";
+		cons.argTypes.add(argType);
+		testMethodMeta.classMeta = new ClassMeta();
+		testMethodMeta.classMeta.name = "Target";
+		testMethodMeta.classMeta.importedList.add("com.example.Bean");
+		testMethodMeta.classMeta.packageName = "com.example";
+		testMethodMeta.classMeta.constructors.add(cons);
+		String actual = DefaultGeneratorUtil.getInstantiationSourceCode(config,
+				testMethodMeta);
+		String expected = "\t\tcom.example.Bean bean = BeanFactory.getInstance();\r\n\t\tTarget target = new Target(bean);\r\n";
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void getInstantiationSourceCode_A$Configuration$TestMethodMeta_WithSemicolon()
+			throws Exception {
+		Configuration config = new Configuration();
+		config.isExtensionEnabled = true;
+		config.extConfiguration = new ExtConfiguration(config);
+		ExtInstantiation ins = new ExtInstantiation("com.example.Bean");
+		ins.importList.add("com.example.BeanFactory");
 		ins.assignCode = "BeanFactory.getInstance();";
 		config.extConfiguration.extInstantiations.add(ins);
 		TestMethodMeta testMethodMeta = new TestMethodMeta();
@@ -185,6 +213,48 @@ public class DefaultGeneratorUtilTest {
 		String actual = DefaultGeneratorUtil.getInstantiationSourceCode(config,
 				testMethodMeta);
 		String expected = "\t\tcom.example.Bean bean = BeanFactory.getInstance();\r\n\t\tTarget target = new Target(bean);\r\n";
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void getInstantiationSourceCode_A$Configuration$TestMethodMeta_TargetByExtInstantiation()
+			throws Exception {
+		Configuration config = new Configuration();
+		config.isExtensionEnabled = true;
+		config.extConfiguration = new ExtConfiguration(config);
+		ExtInstantiation ins = new ExtInstantiation("com.example.Bean");
+		ins.importList.add("com.example.BeanFactory");
+		ins.assignCode = "BeanFactory.getInstance()";
+		config.extConfiguration.extInstantiations.add(ins);
+		TestMethodMeta testMethodMeta = new TestMethodMeta();
+		testMethodMeta.classMeta = new ClassMeta();
+		testMethodMeta.classMeta.name = "Bean";
+		testMethodMeta.classMeta.importedList.add("com.example.Bean");
+		testMethodMeta.classMeta.packageName = "com.example";
+		String actual = DefaultGeneratorUtil.getInstantiationSourceCode(config,
+				testMethodMeta);
+		String expected = "\t\tBean target = BeanFactory.getInstance();\r\n";
+		assertThat(actual, is(equalTo(expected)));
+	}
+
+	@Test
+	public void getInstantiationSourceCode_A$Configuration$TestMethodMeta_TargetByExtInstantiation_WithSemicolon()
+			throws Exception {
+		Configuration config = new Configuration();
+		config.isExtensionEnabled = true;
+		config.extConfiguration = new ExtConfiguration(config);
+		ExtInstantiation ins = new ExtInstantiation("com.example.Bean");
+		ins.importList.add("com.example.BeanFactory");
+		ins.assignCode = "BeanFactory.getInstance();";
+		config.extConfiguration.extInstantiations.add(ins);
+		TestMethodMeta testMethodMeta = new TestMethodMeta();
+		testMethodMeta.classMeta = new ClassMeta();
+		testMethodMeta.classMeta.name = "Bean";
+		testMethodMeta.classMeta.importedList.add("com.example.Bean");
+		testMethodMeta.classMeta.packageName = "com.example";
+		String actual = DefaultGeneratorUtil.getInstantiationSourceCode(config,
+				testMethodMeta);
+		String expected = "\t\tBean target = BeanFactory.getInstance();\r\n";
 		assertThat(actual, is(equalTo(expected)));
 	}
 

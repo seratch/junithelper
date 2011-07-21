@@ -132,6 +132,9 @@ final class DefaultGeneratorUtil {
 					buf.append(testMethodMeta.classMeta.name);
 					buf.append(" target = ");
 					buf.append(ins.assignCode.trim());
+					if (!ins.assignCode.trim().endsWith(StringValue.Semicolon)) {
+						buf.append(StringValue.Semicolon);
+					}
 					appendCRLF(buf);
 					if (ins.postAssignCode != null
 							&& ins.postAssignCode.trim().length() > 0) {
