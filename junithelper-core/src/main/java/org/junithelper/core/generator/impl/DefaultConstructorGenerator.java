@@ -16,8 +16,10 @@
 package org.junithelper.core.generator.impl;
 
 import static org.junithelper.core.generator.impl.DefaultGeneratorUtil.*;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.extension.ExtInstantiation;
 import org.junithelper.core.constant.StringValue;
@@ -53,13 +55,11 @@ public class DefaultConstructorGenerator implements ConstructorGenerator {
 		// TODO better implementation
 		StringBuilder buf = new StringBuilder();
 		if (constructorMeta == null) {
-			buf.append(StringValue.Tab);
-			buf.append(StringValue.Tab);
+			appendTabs(buf, 2);
 			buf.append(classMeta.name);
 			buf.append(" target = null");
 			buf.append(StringValue.Semicolon);
-			buf.append(StringValue.CarriageReturn);
-			buf.append(StringValue.LineFeed);
+			appendCRLF(buf);
 		} else {
 			int len = constructorMeta.argTypes.size();
 			for (int i = 0; i < len; i++) {
@@ -89,6 +89,9 @@ public class DefaultConstructorGenerator implements ConstructorGenerator {
 							buf.append(constructorMeta.argNames.get(i));
 							buf.append(" = ");
 							buf.append(ins.assignCode.trim());
+							if (!ins.assignCode.endsWith(StringValue.Semicolon)) {
+								buf.append(StringValue.Semicolon);
+							}
 							appendCRLF(buf);
 							// post-assign
 							if (ins.postAssignCode != null
