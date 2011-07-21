@@ -3,6 +3,11 @@
 	http://junithelper.org/
 ------------------------------------------
 
+* Release Notes - 1.9
+
+** Bug
+	* Issue 70:	Extension: Missing semicolon when test target object is assigned by ext-instantiation definition
+
 * Release Notes - 1.8
 
 ** Bug
