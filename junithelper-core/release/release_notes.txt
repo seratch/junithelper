@@ -3,6 +3,11 @@
 	http://junithelper.org/
 ------------------------------------------
 
+* Release Notes - 1.8
+
+** Bug
+	* Issue 69:	Extension: Missing semicolon for constructor args
+
 * Release Notes - 1.7
 
 ** Bug
