@@ -2,7 +2,7 @@
 <feature
       id="org.junithelper.plugin"
       label="JUnit Helper Eclipse Plugin"
-      version="1.8.0"
+      version="1.9.0"
       provider-name="junithelper.org"
       plugin="org.junithelper.plugin"
       image="icon/junithelper.png"
@@ -10,7 +10,7 @@
       colocation-affinity="org.junithelper.plugin.feature">
 
    <description url="http://code.google.com/p/junithelper/">
-      &quot;JUnit Helper&quot; is an open-source project helping JUnit users
+      &quot;JUnit Helper&quot; helps JUnit users
 to cover all tests for public, protected and package local methods
 by saving much labor to start writing new test cases.
 Eclipse plugin also has an advantage of making it easier to go
@@ -269,7 +269,7 @@ limitations under the License.
          id="org.junithelper.plugin"
          download-size="0"
          install-size="0"
-         version="1.8.0"
+         version="1.9.0"
          unpack="false"/>
 
 </feature>
