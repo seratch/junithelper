@@ -92,10 +92,10 @@
 
 	<!-- package explorer -->
 	<objectContribution
-		id="org.junithelper.plugin.popupmenu.contribution"
+		id="org.junithelper.plugin.popupmenu.contribution.pe"
 		objectClass="org.eclipse.jdt.core.IJavaElement">
 		<menu
-			id="org.junithelper.plugin.popupmenu"
+			id="org.junithelper.plugin.popupmenu.pe"
 			label="JUnit Helper"
 			path="additions">
 		</menu>
@@ -103,87 +103,96 @@
 			label="Force JUnit 3.x Style Alt+3"
 			class="org.junithelper.plugin.action.Force3TestCaseAction"
 			id="org.junithelper.plugin.action.Force3TestCaseAction.pe"
-			menubarPath="org.junithelper.plugin.popupmenu/additions" >
+			menubarPath="org.junithelper.plugin.popupmenu.pe/additions" >
 		</action>
 		<action
 			label="Force JUnit 4.x Style Alt+4"
 			class="org.junithelper.plugin.action.Force4TestCaseAction"
 			id="org.junithelper.plugin.action.Force4TestCaseAction.pe"
-			menubarPath="org.junithelper.plugin.popupmenu/additions" >
+			menubarPath="org.junithelper.plugin.popupmenu.pe/additions" >
 		</action>
 		<action
 			label="Open Test Target Alt+8"
 			class="org.junithelper.plugin.action.OpenTestTargetAction"
 			id="org.junithelper.plugin.action.OpenTestTargetAction.pe"
-			menubarPath="org.junithelper.plugin.popupmenu/additions">
+			menubarPath="org.junithelper.plugin.popupmenu.pe/additions">
 		</action>
 		<action
 			label="Open Test Class Alt+9"
 			class="org.junithelper.plugin.action.OpenTestCaseAction"
 			id="org.junithelper.plugin.action.OpenTestCaseAction.pe"
-			menubarPath="org.junithelper.plugin.popupmenu/additions" >
+			menubarPath="org.junithelper.plugin.popupmenu.pe/additions" >
 		</action>
 	</objectContribution>
 
 	<!-- navigator -->
 	<objectContribution
-		id="org.junithelper.plugin.popupmenu.contribution"
+		id="org.junithelper.plugin.popupmenu.contribution.nv"
 		nameFilter="*.java"
-		objectClass="org.eclipse.core.resource.IResource">
+		objectClass="org.eclipse.core.resources.IFile">
 		<menu
-			id="org.junithelper.plugin.popupmenu"
+			id="org.junithelper.plugin.popupmenu.nv"
 			label="JUnit Helper"
 			path="additions">
 		</menu>
 		<action
 			label="Force JUnit 3.x Style Alt+3"
 			class="org.junithelper.plugin.action.Force3TestCaseAction"
-			id="org.junithelper.plugin.action.Force3TestCaseAction.nvg"
-			menubarPath="org.junithelper.plugin.popupmenu/additions" >
+			id="org.junithelper.plugin.action.Force3TestCaseAction.nv"
+			menubarPath="org.junithelper.plugin.popupmenu.nv/additions" >
 		</action>
 		<action
 			label="Force JUnit 4.x Style Alt+4"
 			class="org.junithelper.plugin.action.Force4TestCaseAction"
-			id="org.junithelper.plugin.action.Force4TestCaseAction.nvg"
-			menubarPath="org.junithelper.plugin.popupmenu/additions" >
+			id="org.junithelper.plugin.action.Force4TestCaseAction.nv"
+			menubarPath="org.junithelper.plugin.popupmenu.nv/additions" >
 		</action>
 		<action
 			label="Open Test Target Alt+8"
 			class="org.junithelper.plugin.action.OpenTestTargetAction"
-			id="org.junithelper.plugin.action.OpenTestTargetAction.nvg"
-			menubarPath="org.junithelper.plugin.popupmenu/additions">
+			id="org.junithelper.plugin.action.OpenTestTargetAction.nv"
+			menubarPath="org.junithelper.plugin.popupmenu.nv/additions">
 		</action>
 		<action
 			label="Open Test Class Alt+9"
 			class="org.junithelper.plugin.action.OpenTestCaseAction"
-			id="org.junithelper.plugin.action.OpenTestCaseAction.nvg"
-			menubarPath="org.junithelper.plugin.popupmenu/additions" >
+			id="org.junithelper.plugin.action.OpenTestCaseAction.nv"
+			menubarPath="org.junithelper.plugin.popupmenu.nv/additions" >
 		</action>
 	</objectContribution>
 
 	<!-- java editor -->
 	<viewerContribution
 		targetID="#CompilationUnitEditorContext"
-		id="org.junithelper.plugin.test.framework.create">
+		id="org.junithelper.plugin.popupmenu.contribution.je">
+		<menu
+			id="org.junithelper.plugin.popupmenu.je"
+			label="JUnit Helper"
+			path="additions">
+		</menu>
 		<action
 			label="Force JUnit 3 Style Alt+3"
 			class="org.junithelper.plugin.action.Force3TestCaseAction"
-			id="org.junithelper.plugin.action.Force3TestCaseAction.je">
+			id="org.junithelper.plugin.action.Force3TestCaseAction.je"
+			menubarPath="org.junithelper.plugin.popupmenu.je/additions" >
 		</action>
 		<action
 			label="Force JUnit 4.x Style Alt+4"
 			class="org.junithelper.plugin.action.Force4TestCaseAction"
-			id="org.junithelper.plugin.action.Force4TestCaseAction.je">
+			id="org.junithelper.plugin.action.Force4TestCaseAction.je"
+			menubarPath="org.junithelper.plugin.popupmenu.je/additions" >
 		</action>
 		<action
 			label="Open Test Target Alt+8"
 			class="org.junithelper.plugin.action.OpenTestTargetAction"
-			id="org.junithelper.plugin.action.OpenTestTargetAction.je">
+			id="org.junithelper.plugin.action.OpenTestTargetAction.je"
+			menubarPath="org.junithelper.plugin.popupmenu.je/additions" >
 		</action>
 		<action
 			label="Open Test Class Alt+9"
 			class="org.junithelper.plugin.action.OpenTestCaseAction"
-			id="org.junithelper.plugin.action.OpenTestCaseAction.je">
+			id="org.junithelper.plugin.action.OpenTestCaseAction.je"
+			menubarPath="org.junithelper.plugin.popupmenu.je/additions" >
 		</action>
 	</viewerContribution>
 
