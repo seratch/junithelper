@@ -170,6 +170,14 @@ public class CreateNewTestCaseAction extends AbstractAction implements IActionDe
                 IResource targetClassResource = getIWorkspaceRoot().findMember(
                         "/" + projectName + "/" + resourcePathForTargetClassFile);
                 IFile targetClassFile = (IFile) targetClassResource;
+
+                // -------------------------
+                // overwrite config
+                // http://code.google.com/p/junithelper/issues/detail?id=72
+                String absolutePath = projectRootAbsolutePath + StringValue.DirectorySeparator.General;
+                config.directoryPathOfProductSourceCode = absolutePath + config.directoryPathOfProductSourceCode;
+                config.directoryPathOfTestSourceCode = absolutePath + config.directoryPathOfTestSourceCode;
+
                 // ---------------
                 // generate test case source code string
                 TestCaseGenerator generator = new DefaultTestCaseGenerator(config);
@@ -178,6 +186,7 @@ public class CreateNewTestCaseAction extends AbstractAction implements IActionDe
                 String sourceCodeString = IOUtil.readAsString(EclipseIFileUtil.getInputStreamFrom(targetClassFile),
                         encoding);
                 generator.initialize(new ClassMetaExtractor(config).extract(sourceCodeString));
+
                 // ---------------
                 // write test case
                 outputStream = new FileOutputStream(testCaseCreateDirPath + StringValue.DirectorySeparator.General
