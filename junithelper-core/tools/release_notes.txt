@@ -1,0 +1,82 @@
+------------------------------------------
+	*** JUnit Helper core library ***
+	http://junithelper.org/
+------------------------------------------
+
+* Release Notes - 1.10
+
+** Feature Request
+	* Issue 73: Feature Request: Need to enable specifying line break (CRLF or LF)
+	* Issue 75: Feature Request: Need to enable specifying soft tabs
+
+** Bug
+	* Issue 74:	Does not work fine with package local classes
+
+* Release Notes - 1.9
+
+** Bug
+	* Issue 70:	Extension: Missing semicolon when test target object is assigned by ext-instantiation definition
+
+* Release Notes - 1.8
+
+** Bug
+	* Issue 69:	Extension: Missing semicolon for constructor args
+
+* Release Notes - 1.7
+
+** Bug
+	* Issue 63: Unnecessary semicolon for comment area when using extension
+	* Issue 64: Cannot load the value of "target_regexpCsvForExclusion" with line breaks in pom.xml
+	* Issue 65: Generated invalid test code when "testCaseClassNameToExtend" is empty.
+	* Issue 66: Test code generator does not work fine for default package class.
+	* Issue 68: Extension for instantiation does not work fine for constructor args.
+
+* Release Notes - 1.6
+
+** Feature Request
+	* Issue 62:	Extensions to customize template generation(instantiation, arg patterns, assertions)
+
+* Release Notes - 1.5
+
+** Versioning policy has been changed. This version is the same as version 1.0.4.
+
+* Release Notes - 1.0.4
+
+** Feature Request
+	* Issue 58:	Need to enable dropping specified pacakges or classes from test target
+	* Issue 59:	"force4 command" removes super class even if it isn't a "junit.framework.TestCase"
+
+* Release Notes - 1.0.3
+
+** Bug
+	* Issue 56:	Bug: Arg types are unrecognized when using wildcard import
+
+** Feature Request
+	* Issue 57:	Unit 4.x should use assertThat() style.
+
+* Release Notes - 1.0.2
+
+** Enabled to add testing pattern comments(Arrange-Act-Assert/Given-When-Then) explicitly.
+
+* Release Notes - 1.0.1
+
+** Internal improvement only.
+
+* Release Notes - 1.0.0
+
+** Bug
+	* Issue 46:	Compile error at generated template test code when "[]" exists after variable name
+	* Issue 47:	Supporting array of array in generating template test code
+	* Issue 48:	Compile error when the duplicated variable names exist
+	* Issue 49:	Compile error if test target method throws Throwable
+	* Issue 50:	Compile error at instantiation test method for enum
+	* Issue 51:	Compile error when test target class is defined with generic class literal
+	* Issue 52:	Invalid test methods are created when using anonymous inner class
+	* Issue 53:	Compile error when using inner classes of test target class
+	* Issue 54:	Invalid test methods are created when methods in enum
+
+** Feature Request
+	* Issue 44:	Supporting args with nested generics in generating template test code
+	* Issue 45:	Supporting return type with nested generics in generating template test code
+
+
