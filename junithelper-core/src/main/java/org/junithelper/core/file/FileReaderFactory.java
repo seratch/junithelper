@@ -21,7 +21,7 @@ public class FileReaderFactory {
     }
 
     public static FileReader create() {
-        return new CommonsIOFileReader();
+        return new FileReaderCommonsIOImpl();
     }
 
 }

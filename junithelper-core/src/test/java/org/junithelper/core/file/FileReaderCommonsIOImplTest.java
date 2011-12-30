@@ -11,22 +11,22 @@ import org.junit.Test;
 import org.junithelper.core.exception.JUnitHelperCoreException;
 import org.junithelper.core.util.IOUtil;
 
-public class CommonsIOFileReaderTest {
+public class FileReaderCommonsIOImplTest {
 
     @Test
     public void type() throws Exception {
-        assertNotNull(CommonsIOFileReader.class);
+        assertNotNull(FileReaderCommonsIOImpl.class);
     }
 
     @Test
     public void instantiation() throws Exception {
-        CommonsIOFileReader target = new CommonsIOFileReader();
+        FileReaderCommonsIOImpl target = new FileReaderCommonsIOImpl();
         assertNotNull(target);
     }
 
     @Test
     public void getResourceAsStream_A$String() throws Exception {
-        CommonsIOFileReader target = new CommonsIOFileReader();
+        FileReaderCommonsIOImpl target = new FileReaderCommonsIOImpl();
         // given
         String name = "junithelper-config.properties";
         // e.g. : given(mocked.called()).willReturn(1);
@@ -40,7 +40,7 @@ public class CommonsIOFileReaderTest {
 
     @Test
     public void readAsString_A$File() throws Exception {
-        CommonsIOFileReader target = new CommonsIOFileReader();
+        FileReaderCommonsIOImpl target = new FileReaderCommonsIOImpl();
         // given
         File file = new File("release/junithelper-config.properties");
         // when
@@ -51,7 +51,7 @@ public class CommonsIOFileReaderTest {
 
     @Test
     public void readAsString_A$File_T$IOException() throws Exception {
-        CommonsIOFileReader target = new CommonsIOFileReader();
+        FileReaderCommonsIOImpl target = new FileReaderCommonsIOImpl();
         // given
         File file = new File("hogehoge");
         // e.g. : given(mocked.called()).willReturn(1);
@@ -66,7 +66,7 @@ public class CommonsIOFileReaderTest {
 
     @Test
     public void getDetectedEncoding_A$File() throws Exception {
-        CommonsIOFileReader target = new CommonsIOFileReader();
+        FileReaderCommonsIOImpl target = new FileReaderCommonsIOImpl();
         // given
         File file = new File("src/test/resources/UTF-8.txt");
         // e.g. : given(mocked.called()).willReturn(1);
@@ -80,7 +80,7 @@ public class CommonsIOFileReaderTest {
 
     @Test
     public void getResourceAsStream_A$String_StringIsNull() throws Exception {
-        CommonsIOFileReader target = new CommonsIOFileReader();
+        FileReaderCommonsIOImpl target = new FileReaderCommonsIOImpl();
         String name = null;
         try {
             target.getResourceAsStream(name);
@@ -91,7 +91,7 @@ public class CommonsIOFileReaderTest {
 
     @Test
     public void getResourceAsStream_A$String_StringIsEmpty() throws Exception {
-        CommonsIOFileReader target = new CommonsIOFileReader();
+        FileReaderCommonsIOImpl target = new FileReaderCommonsIOImpl();
         String name = "";
         InputStream actual = target.getResourceAsStream(name);
         assertThat(actual, notNullValue());

@@ -8,22 +8,22 @@ import java.util.List;
 import org.junit.Test;
 import org.junithelper.core.exception.JUnitHelperCoreException;
 
-public class CommonsIOFileSearcherTest {
+public class FileSearcherCommonsIOImplTest {
 
     @Test
     public void type() throws Exception {
-        assertNotNull(CommonsIOFileSearcher.class);
+        assertNotNull(FileSearcherCommonsIOImpl.class);
     }
 
     @Test
     public void instantiation() throws Exception {
-        CommonsIOFileSearcher target = new CommonsIOFileSearcher();
+        FileSearcherCommonsIOImpl target = new FileSearcherCommonsIOImpl();
         assertNotNull(target);
     }
 
     @Test
     public void searchFilesRecursivelyByName_A$String$String() throws Exception {
-        FileSearcher target = new CommonsIOFileSearcher();
+        FileSearcher target = new FileSearcherCommonsIOImpl();
         String baseDir = ".";
         String regexp = ".java";
         List<File> actual = target.searchFilesRecursivelyByName(baseDir, regexp);
@@ -32,7 +32,7 @@ public class CommonsIOFileSearcherTest {
 
     @Test
     public void searchFilesRecursivelyByName_A$String$String_StringIsNull() throws Exception {
-        CommonsIOFileSearcher target = new CommonsIOFileSearcher();
+        FileSearcherCommonsIOImpl target = new FileSearcherCommonsIOImpl();
         String baseAbsoluteDir = null;
         String regexp = null;
         try {
@@ -44,7 +44,7 @@ public class CommonsIOFileSearcherTest {
 
     @Test
     public void searchFilesRecursivelyByName_A$String$String_StringIsEmpty() throws Exception {
-        CommonsIOFileSearcher target = new CommonsIOFileSearcher();
+        FileSearcherCommonsIOImpl target = new FileSearcherCommonsIOImpl();
         String baseAbsoluteDir = "";
         String regexp = "";
         try {

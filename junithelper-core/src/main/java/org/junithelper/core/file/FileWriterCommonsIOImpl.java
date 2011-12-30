@@ -21,12 +21,12 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.junithelper.core.config.Configuration;
 
-class CommonsIOFileWriter implements FileWriter {
+class FileWriterCommonsIOImpl implements FileWriter {
 
     private File file;
     private String encoding = new Configuration().outputFileEncoding;
 
-    public CommonsIOFileWriter(File file) {
+    public FileWriterCommonsIOImpl(File file) {
         setWriteTarget(file);
     }
 

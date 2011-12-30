@@ -9,7 +9,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class CommonsIOFileWriterTest {
+public class FileWriterCommonsIOImplTest {
 
     @Before
     public void setUp() throws Exception {
@@ -25,20 +25,20 @@ public class CommonsIOFileWriterTest {
 
     @Test
     public void type() throws Exception {
-        assertNotNull(CommonsIOFileWriter.class);
+        assertNotNull(FileWriterCommonsIOImpl.class);
     }
 
     @Test
     public void instantiation() throws Exception {
         File file = null;
-        CommonsIOFileWriter target = new CommonsIOFileWriter(file);
+        FileWriterCommonsIOImpl target = new FileWriterCommonsIOImpl(file);
         assertNotNull(target);
     }
 
     @Test
     public void setWriteTarget_A$File() throws Exception {
         File argFile = null;
-        CommonsIOFileWriter target = new CommonsIOFileWriter(argFile);
+        FileWriterCommonsIOImpl target = new FileWriterCommonsIOImpl(argFile);
         // given
         File file = new File("src/test/resources/tmp.txt");
         // when
@@ -50,7 +50,7 @@ public class CommonsIOFileWriterTest {
     @Test
     public void writeText_A$String() throws Exception {
         File file = new File("src/test/resources/tmp.txt");
-        CommonsIOFileWriter target = new CommonsIOFileWriter(file);
+        FileWriterCommonsIOImpl target = new FileWriterCommonsIOImpl(file);
         // given
         String text = "testtest\r\ntest";
         // when
@@ -61,7 +61,7 @@ public class CommonsIOFileWriterTest {
     @Test
     public void writeText_A$String_T$IOException() throws Exception {
         File file = new File("src/test/resources/tmp.txt");
-        CommonsIOFileWriter target = new CommonsIOFileWriter(file);
+        FileWriterCommonsIOImpl target = new FileWriterCommonsIOImpl(file);
         // given
         String text = null;
         try {
@@ -78,7 +78,7 @@ public class CommonsIOFileWriterTest {
     @Test
     public void writeText_A$String$String() throws Exception {
         File file = new File("src/test/resources/tmp.txt");
-        CommonsIOFileWriter target = new CommonsIOFileWriter(file);
+        FileWriterCommonsIOImpl target = new FileWriterCommonsIOImpl(file);
         String text = null;
         String encoding = "UTF-8";
         target.writeText(text, encoding);
@@ -87,7 +87,7 @@ public class CommonsIOFileWriterTest {
     @Test
     public void writeText_A$String$String_NotWritable() throws Exception {
         File file = new File("src/test/resources/tmp.txt");
-        CommonsIOFileWriter target = new CommonsIOFileWriter(file);
+        FileWriterCommonsIOImpl target = new FileWriterCommonsIOImpl(file);
         String text = null;
         String encoding = "UTF-8";
         try {
@@ -102,7 +102,7 @@ public class CommonsIOFileWriterTest {
     @Test
     public void writeText_A$String_StringIsNull() throws Exception {
         File file = new File("src/test/resources/tmp.txt");
-        CommonsIOFileWriter target = new CommonsIOFileWriter(file);
+        FileWriterCommonsIOImpl target = new FileWriterCommonsIOImpl(file);
         String text = null;
         target.writeText(text);
         file.setWritable(true);
@@ -111,7 +111,7 @@ public class CommonsIOFileWriterTest {
     @Test
     public void writeText_A$String_StringIsEmpty() throws Exception {
         File file = new File("src/test/resources/tmp.txt");
-        CommonsIOFileWriter target = new CommonsIOFileWriter(file);
+        FileWriterCommonsIOImpl target = new FileWriterCommonsIOImpl(file);
         String text = "";
         target.writeText(text);
         file.setWritable(true);
@@ -120,7 +120,7 @@ public class CommonsIOFileWriterTest {
     @Test
     public void writeText_A$String_StringIsFoo() throws Exception {
         File file = new File("src/test/resources/tmp.txt");
-        CommonsIOFileWriter target = new CommonsIOFileWriter(file);
+        FileWriterCommonsIOImpl target = new FileWriterCommonsIOImpl(file);
         String text = "foo";
         target.writeText(text);
         file.setWritable(true);
@@ -129,7 +129,7 @@ public class CommonsIOFileWriterTest {
     @Test
     public void writeText_A$String$String_StringIsNull() throws Exception {
         File file = new File("src/test/resources/tmp.txt");
-        CommonsIOFileWriter target = new CommonsIOFileWriter(file);
+        FileWriterCommonsIOImpl target = new FileWriterCommonsIOImpl(file);
         String text = null;
         String encoding = null;
         target.writeText(text, encoding);
@@ -139,7 +139,7 @@ public class CommonsIOFileWriterTest {
     @Test
     public void writeText_A$String$String_StringIsEmpty() throws Exception {
         File file = new File("src/test/resources/tmp.txt");
-        CommonsIOFileWriter target = new CommonsIOFileWriter(file);
+        FileWriterCommonsIOImpl target = new FileWriterCommonsIOImpl(file);
         String text = "";
         String encoding = "";
         target.writeText(text, encoding);

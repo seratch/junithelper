@@ -26,7 +26,7 @@ import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.util.Assertion;
 
-class CommonsIOFileSearcher implements FileSearcher {
+class FileSearcherCommonsIOImpl implements FileSearcher {
 
     @Override
     public List<File> searchFilesRecursivelyByName(String baseAbsoluteDir, String regexp) {

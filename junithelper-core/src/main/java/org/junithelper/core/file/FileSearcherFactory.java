@@ -21,7 +21,7 @@ public class FileSearcherFactory {
     }
 
     public static FileSearcher create() {
-        return new CommonsIOFileSearcher();
+        return new FileSearcherCommonsIOImpl();
     }
 
 }

@@ -26,12 +26,12 @@ import org.junithelper.core.util.Assertion;
 import org.junithelper.core.util.IOUtil;
 import org.mozilla.universalchardet.UniversalDetector;
 
-class CommonsIOFileReader implements FileReader {
+class FileReaderCommonsIOImpl implements FileReader {
 
     @Override
     public InputStream getResourceAsStream(String name) {
         Assertion.on("name").mustNotBeNull(name);
-        return CommonsIOFileReader.class.getClassLoader().getResourceAsStream(name);
+        return FileReaderCommonsIOImpl.class.getClassLoader().getResourceAsStream(name);
     }
 
     @Override

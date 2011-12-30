@@ -23,7 +23,7 @@ public class FileWriterFactory {
     }
 
     public static FileWriter create(File file) {
-        return new CommonsIOFileWriter(file);
+        return new FileWriterCommonsIOImpl(file);
     }
 
 }
