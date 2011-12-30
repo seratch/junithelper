@@ -20,33 +20,33 @@ import java.util.List;
 
 public class TrimFilterManager {
 
-	private List<TrimFilter> filters = new ArrayList<TrimFilter>();
+    private List<TrimFilter> filters = new ArrayList<TrimFilter>();
 
-	public List<TrimFilter> getFilters() {
-		return this.filters;
-	}
+    public List<TrimFilter> getFilters() {
+        return this.filters;
+    }
 
-	public void removeFilter(Class<?> filterClass) {
-		for (TrimFilter filter : filters) {
-			if (filter.getClass().equals(filterClass)) {
-				filters.remove(filter);
-				break;
-			}
-		}
-	}
+    public void removeFilter(Class<?> filterClass) {
+        for (TrimFilter filter : filters) {
+            if (filter.getClass().equals(filterClass)) {
+                filters.remove(filter);
+                break;
+            }
+        }
+    }
 
-	public void addFilter(TrimFilter... filters) {
-		for (TrimFilter filter : filters) {
-			this.filters.add(filter);
-		}
-	}
+    public void addFilter(TrimFilter... filters) {
+        for (TrimFilter filter : filters) {
+            this.filters.add(filter);
+        }
+    }
 
-	public String doTrimAll(String src) {
-		String dest = src;
-		for (TrimFilter filter : filters) {
-			dest = filter.trimAll(dest);
-		}
-		return dest;
-	}
+    public String doTrimAll(String src) {
+        String dest = src;
+        for (TrimFilter filter : filters) {
+            dest = filter.trimAll(dest);
+        }
+        return dest;
+    }
 
 }

@@ -21,6 +21,7 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.ConfigurationLoader;
 import org.junithelper.core.config.extension.ExtConfigurationLoader;
@@ -35,86 +36,86 @@ import org.junithelper.core.util.UniversalDetectorUtil;
 
 public abstract class AbstractCommand {
 
-	protected static Configuration overrideConfiguration(Configuration config) throws Exception {
-		String configFile = System.getProperty("junithelper.configProperties");
-		if (configFile != null) {
-			config = new ConfigurationLoader().load(configFile);
-		}
-		String extensionConfig = System.getProperty("junithelper.extensionConfigXML");
-		if (extensionConfig != null) {
-			config.extConfiguration = new ExtConfigurationLoader().load(extensionConfig);
-		} else if (new File(config.extensionConfigXML).exists()) {
-			config.extConfiguration = new ExtConfigurationLoader().load(config.extensionConfigXML);
-		}
-		return config;
-	}
+    protected static Configuration overrideConfiguration(Configuration config) throws Exception {
+        String configFile = System.getProperty("junithelper.configProperties");
+        if (configFile != null) {
+            config = new ConfigurationLoader().load(configFile);
+        }
+        String extensionConfig = System.getProperty("junithelper.extensionConfigXML");
+        if (extensionConfig != null) {
+            config.extConfiguration = new ExtConfigurationLoader().load(extensionConfig);
+        } else if (new File(config.extensionConfigXML).exists()) {
+            config.extConfiguration = new ExtConfigurationLoader().load(config.extensionConfigXML);
+        }
+        return config;
+    }
 
-	protected static boolean skipConfirming() {
-		String value = System.getProperty("junithelper.skipConfirming");
-		try {
-			return Boolean.valueOf(value);
-		} catch (Exception e) {
-			return false;
-		}
-	}
+    protected static boolean skipConfirming() {
+        String value = System.getProperty("junithelper.skipConfirming");
+        try {
+            return Boolean.valueOf(value);
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
-	protected static int confirmToExecute() {
-		if (skipConfirming()) {
-			return 0;
-		}
-		Stdout.p("");
-		BufferedReader reader = null;
-		try {
-			while (true) {
-				reader = new BufferedReader(new InputStreamReader(System.in), 1);
-				Stdout.p("Are you sure?(y/n)");
-				String input = reader.readLine();
-				if (input.equals("y")) {
-					break;
-				} else if (input.equals("n")) {
-					Stdout.p("Canceled.");
-					return 1;
-				}
-			}
-		} catch (Exception e) {
-		} finally {
-			IOUtil.close(reader);
-		}
-		return 0;
-	}
+    protected static int confirmToExecute() {
+        if (skipConfirming()) {
+            return 0;
+        }
+        Stdout.p("");
+        BufferedReader reader = null;
+        try {
+            while (true) {
+                reader = new BufferedReader(new InputStreamReader(System.in), 1);
+                Stdout.p("Are you sure?(y/n)");
+                String input = reader.readLine();
+                if (input.equals("y")) {
+                    break;
+                } else if (input.equals("n")) {
+                    Stdout.p("Canceled.");
+                    return 1;
+                }
+            }
+        } catch (Exception e) {
+        } finally {
+            IOUtil.close(reader);
+        }
+        return 0;
+    }
 
-	protected static List<File> findTargets(Configuration config, String dirOrFile) throws Exception {
-		dirOrFile = dirOrFile.replaceAll("\\\\", "/");
-		List<File> dest = new ArrayList<File>();
-		ClassMetaExtractor extractor = new ClassMetaExtractor(config);
-		if (dirOrFile.matches(".+\\.java$")) {
-			File file = new File(dirOrFile);
-			String encoding = UniversalDetectorUtil.getDetectedEncoding(file);
-			ClassMeta classMeta = extractor.extract(IOUtil.readAsString(new FileInputStream(file), encoding));
-			if (!classMeta.isAbstract) {
-				dest.add(file);
-			}
-		} else {
-			List<File> javaFiles = new ArrayList<File>();
-			FileSearcher fileSearcher = new CommonsIOFileSearcher();
-			javaFiles = fileSearcher.searchFilesRecursivelyByName(dirOrFile, RegExp.FileExtension.JavaFile);
-			for (File file : javaFiles) {
-				String encoding = UniversalDetectorUtil.getDetectedEncoding(file);
-				ClassMeta classMeta = extractor.extract(IOUtil.readAsString(new FileInputStream(file), encoding));
-				if (!classMeta.name.matches(".*Test$") && !classMeta.isAbstract) {
-					dest.add(file);
-				}
-			}
-		}
-		return dest;
-	}
+    protected static List<File> findTargets(Configuration config, String dirOrFile) throws Exception {
+        dirOrFile = dirOrFile.replaceAll("\\\\", "/");
+        List<File> dest = new ArrayList<File>();
+        ClassMetaExtractor extractor = new ClassMetaExtractor(config);
+        if (dirOrFile.matches(".+\\.java$")) {
+            File file = new File(dirOrFile);
+            String encoding = UniversalDetectorUtil.getDetectedEncoding(file);
+            ClassMeta classMeta = extractor.extract(IOUtil.readAsString(new FileInputStream(file), encoding));
+            if (!classMeta.isAbstract) {
+                dest.add(file);
+            }
+        } else {
+            List<File> javaFiles = new ArrayList<File>();
+            FileSearcher fileSearcher = new CommonsIOFileSearcher();
+            javaFiles = fileSearcher.searchFilesRecursivelyByName(dirOrFile, RegExp.FileExtension.JavaFile);
+            for (File file : javaFiles) {
+                String encoding = UniversalDetectorUtil.getDetectedEncoding(file);
+                ClassMeta classMeta = extractor.extract(IOUtil.readAsString(new FileInputStream(file), encoding));
+                if (!classMeta.name.matches(".*Test$") && !classMeta.isAbstract) {
+                    dest.add(file);
+                }
+            }
+        }
+        return dest;
+    }
 
-	protected static String getDirectoryPathOfProductSourceCode(Configuration config) {
-		return "/" + config.directoryPathOfProductSourceCode.replaceFirst("^/", "").replaceFirst("/$", "") + "/";
-	}
+    protected static String getDirectoryPathOfProductSourceCode(Configuration config) {
+        return "/" + config.directoryPathOfProductSourceCode.replaceFirst("^/", "").replaceFirst("/$", "") + "/";
+    }
 
-	protected static String getDirectoryPathOfTestSourceCode(Configuration config) {
-		return "/" + config.directoryPathOfTestSourceCode.replaceFirst("^/", "").replaceFirst("/$", "") + "/";
-	}
+    protected static String getDirectoryPathOfTestSourceCode(Configuration config) {
+        return "/" + config.directoryPathOfTestSourceCode.replaceFirst("^/", "").replaceFirst("/$", "") + "/";
+    }
 
 }

@@ -26,28 +26,28 @@ import org.junithelper.core.util.Assertion;
 
 public class ImportedListExtractor {
 
-	@SuppressWarnings("unused")
-	private Configuration config;
+    @SuppressWarnings("unused")
+    private Configuration config;
 
-	public ImportedListExtractor(Configuration config) {
-		this.config = config;
-	}
+    public ImportedListExtractor(Configuration config) {
+        this.config = config;
+    }
 
-	public List<String> extract(String sourceCodeString) {
-		Assertion.on("sourceCodeString").mustNotBeNull(sourceCodeString);
-		List<String> dest = new ArrayList<String>();
-		sourceCodeString = TrimFilterUtil.doAllFilters(sourceCodeString).replaceAll(RegExp.CRLF, StringValue.Space);
-		String[] splittedArray = sourceCodeString.split("import\\s+");
-		int len = splittedArray.length;
-		for (int i = 1; i < len; i++) {
-			String each = splittedArray[i].trim();
-			if (each.matches("\\s*(static)*[^;]+?;")) {
-				dest.add(each.replaceAll(";", ""));
-			} else if (each.matches("\\s*(static)*.+?;.+")) {
-				dest.add(each.split(";")[0]);
-			}
-		}
-		return dest;
-	}
+    public List<String> extract(String sourceCodeString) {
+        Assertion.on("sourceCodeString").mustNotBeNull(sourceCodeString);
+        List<String> dest = new ArrayList<String>();
+        sourceCodeString = TrimFilterUtil.doAllFilters(sourceCodeString).replaceAll(RegExp.CRLF, StringValue.Space);
+        String[] splittedArray = sourceCodeString.split("import\\s+");
+        int len = splittedArray.length;
+        for (int i = 1; i < len; i++) {
+            String each = splittedArray[i].trim();
+            if (each.matches("\\s*(static)*[^;]+?;")) {
+                dest.add(each.replaceAll(";", ""));
+            } else if (each.matches("\\s*(static)*.+?;.+")) {
+                dest.add(each.split(";")[0]);
+            }
+        }
+        return dest;
+    }
 
 }

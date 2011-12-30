@@ -17,16 +17,16 @@ package org.junithelper.core.util;
 
 public class Stderr {
 
-	private Stderr() {
-	}
+    private Stderr() {
+    }
 
-	public static final void printf(String format, Object... values) {
-		Assertion.on("format").mustNotBeEmpty(format);
-		System.err.printf(format, values);
-	}
+    public static final void printf(String format, Object... values) {
+        Assertion.on("format").mustNotBeEmpty(format);
+        System.err.printf(format, values);
+    }
 
-	public static final void p(String str) {
-		System.err.println(str);
-	}
+    public static final void p(String str) {
+        System.err.println(str);
+    }
 
 }

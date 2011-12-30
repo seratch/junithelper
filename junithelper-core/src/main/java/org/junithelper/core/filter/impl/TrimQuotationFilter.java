@@ -20,12 +20,12 @@ import org.junithelper.core.filter.TrimFilter;
 
 public class TrimQuotationFilter implements TrimFilter {
 
-	@Override
-	public String trimAll(String src) {
-		if (src == null) {
-			return null;
-		}
-		return src.replaceAll("\"", StringValue.Empty).replaceAll("'", StringValue.Empty);
-	}
+    @Override
+    public String trimAll(String src) {
+        if (src == null) {
+            return null;
+        }
+        return src.replaceAll("\"", StringValue.Empty).replaceAll("'", StringValue.Empty);
+    }
 
 }

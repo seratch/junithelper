@@ -31,130 +31,116 @@ import org.junithelper.core.util.PrimitiveTypeUtil;
 
 public class DefaultConstructorGenerator implements ConstructorGenerator {
 
-	@Override
-	public List<String> getAllInstantiationSourceCodeList(Configuration config,
-			ClassMeta classMeta) {
-		List<String> dest = new ArrayList<String>();
-		for (ConstructorMeta constructorMeta : classMeta.constructors) {
-			dest.add(getInstantiationSourceCode(config, classMeta,
-					constructorMeta));
-		}
-		return dest;
-	}
+    @Override
+    public List<String> getAllInstantiationSourceCodeList(Configuration config, ClassMeta classMeta) {
+        List<String> dest = new ArrayList<String>();
+        for (ConstructorMeta constructorMeta : classMeta.constructors) {
+            dest.add(getInstantiationSourceCode(config, classMeta, constructorMeta));
+        }
+        return dest;
+    }
 
-	@Override
-	public String getFirstInstantiationSourceCode(Configuration config,
-			ClassMeta classMeta) {
-		return getInstantiationSourceCode(config, classMeta,
-				getFirstConstructor(classMeta));
-	}
+    @Override
+    public String getFirstInstantiationSourceCode(Configuration config, ClassMeta classMeta) {
+        return getInstantiationSourceCode(config, classMeta, getFirstConstructor(classMeta));
+    }
 
-	@Override
-	public String getInstantiationSourceCode(Configuration config,
-			ClassMeta classMeta, ConstructorMeta constructorMeta) {
-		// TODO better implementation
-		StringBuilder buf = new StringBuilder();
-		if (constructorMeta == null) {
-			appendTabs(buf, 2);
-			buf.append(classMeta.name);
-			buf.append(" target = null");
-			buf.append(StringValue.Semicolon);
-			appendCRLF(buf);
-		} else {
-			int len = constructorMeta.argTypes.size();
-			for (int i = 0; i < len; i++) {
-				String typeName = constructorMeta.argTypes.get(i).name;
+    @Override
+    public String getInstantiationSourceCode(Configuration config, ClassMeta classMeta, ConstructorMeta constructorMeta) {
+        // TODO better implementation
+        StringBuilder buf = new StringBuilder();
+        if (constructorMeta == null) {
+            appendTabs(buf, 2);
+            buf.append(classMeta.name);
+            buf.append(" target = null");
+            buf.append(StringValue.Semicolon);
+            appendCRLF(buf);
+        } else {
+            int len = constructorMeta.argTypes.size();
+            for (int i = 0; i < len; i++) {
+                String typeName = constructorMeta.argTypes.get(i).name;
 
-				boolean isAssigned = false;
-				if (config.isExtensionEnabled
-						&& config.extConfiguration.extInstantiations != null) {
-					for (ExtInstantiation ins : config.extConfiguration.extInstantiations) {
-						if (isCanonicalClassNameUsed(ins.canonicalClassName,
-								typeName, classMeta)) {
-							// add import list
-							for (String newImport : ins.importList) {
-								classMeta.importedList.add(newImport);
-							}
-							// pre-assign
-							if (ins.preAssignCode != null
-									&& ins.preAssignCode.trim().length() > 0) {
-								appendExtensionSourceCode(buf,
-										ins.preAssignCode);
-							}
-							// assign
-							// \t\tBean bean =
-							appendTabs(buf, 2);
-							buf.append(typeName);
-							buf.append(" ");
-							buf.append(constructorMeta.argNames.get(i));
-							buf.append(" = ");
-							buf.append(ins.assignCode.trim());
-							if (!ins.assignCode.endsWith(StringValue.Semicolon)) {
-								buf.append(StringValue.Semicolon);
-							}
-							appendCRLF(buf);
-							// post-assign
-							if (ins.postAssignCode != null
-									&& ins.postAssignCode.trim().length() > 0) {
-								appendExtensionPostAssignSourceCode(buf,
-										ins.postAssignCode,
-										new String[] { "\\{instance\\}" },
-										constructorMeta.argNames.get(i));
-							}
-							isAssigned = true;
-						}
-					}
-				}
+                boolean isAssigned = false;
+                if (config.isExtensionEnabled && config.extConfiguration.extInstantiations != null) {
+                    for (ExtInstantiation ins : config.extConfiguration.extInstantiations) {
+                        if (isCanonicalClassNameUsed(ins.canonicalClassName, typeName, classMeta)) {
+                            // add import list
+                            for (String newImport : ins.importList) {
+                                classMeta.importedList.add(newImport);
+                            }
+                            // pre-assign
+                            if (ins.preAssignCode != null && ins.preAssignCode.trim().length() > 0) {
+                                appendExtensionSourceCode(buf, ins.preAssignCode);
+                            }
+                            // assign
+                            // \t\tBean bean =
+                            appendTabs(buf, 2);
+                            buf.append(typeName);
+                            buf.append(" ");
+                            buf.append(constructorMeta.argNames.get(i));
+                            buf.append(" = ");
+                            buf.append(ins.assignCode.trim());
+                            if (!ins.assignCode.endsWith(StringValue.Semicolon)) {
+                                buf.append(StringValue.Semicolon);
+                            }
+                            appendCRLF(buf);
+                            // post-assign
+                            if (ins.postAssignCode != null && ins.postAssignCode.trim().length() > 0) {
+                                appendExtensionPostAssignSourceCode(buf, ins.postAssignCode,
+                                        new String[] { "\\{instance\\}" }, constructorMeta.argNames.get(i));
+                            }
+                            isAssigned = true;
+                        }
+                    }
+                }
 
-				if (!isAssigned) {
-					appendTabs(buf, 2);
-					buf.append(typeName);
-					buf.append(" ");
-					buf.append(constructorMeta.argNames.get(i));
-					buf.append(" = ");
-					if (PrimitiveTypeUtil.isPrimitive(typeName)) {
-						buf.append(PrimitiveTypeUtil
-								.getTypeDefaultValue(typeName));
-					} else {
-						buf.append("null");
-					}
-					buf.append(StringValue.Semicolon);
-					appendCRLF(buf);
-				}
-			}
-			appendTabs(buf, 2);
-			buf.append(classMeta.name);
-			buf.append(" target = new ");
-			buf.append(classMeta.name);
-			buf.append("(");
-			if (len > 0) {
-				buf.append(constructorMeta.argNames.get(0));
-			}
-			if (len > 1) {
-				for (int i = 1; i < len; i++) {
-					buf.append(StringValue.Comma);
-					buf.append(StringValue.Space);
-					buf.append(constructorMeta.argNames.get(i));
-				}
-			}
-			buf.append(")");
-			buf.append(StringValue.Semicolon);
-			appendCRLF(buf);
-		}
-		return buf.toString();
-	}
+                if (!isAssigned) {
+                    appendTabs(buf, 2);
+                    buf.append(typeName);
+                    buf.append(" ");
+                    buf.append(constructorMeta.argNames.get(i));
+                    buf.append(" = ");
+                    if (PrimitiveTypeUtil.isPrimitive(typeName)) {
+                        buf.append(PrimitiveTypeUtil.getTypeDefaultValue(typeName));
+                    } else {
+                        buf.append("null");
+                    }
+                    buf.append(StringValue.Semicolon);
+                    appendCRLF(buf);
+                }
+            }
+            appendTabs(buf, 2);
+            buf.append(classMeta.name);
+            buf.append(" target = new ");
+            buf.append(classMeta.name);
+            buf.append("(");
+            if (len > 0) {
+                buf.append(constructorMeta.argNames.get(0));
+            }
+            if (len > 1) {
+                for (int i = 1; i < len; i++) {
+                    buf.append(StringValue.Comma);
+                    buf.append(StringValue.Space);
+                    buf.append(constructorMeta.argNames.get(i));
+                }
+            }
+            buf.append(")");
+            buf.append(StringValue.Semicolon);
+            appendCRLF(buf);
+        }
+        return buf.toString();
+    }
 
-	ConstructorMeta getFirstConstructor(ClassMeta classMeta) {
-		if (classMeta.constructors == null
-				|| classMeta.constructors.size() == 0) {
-			return null;
-		}
-		for (ConstructorMeta constructor : classMeta.constructors) {
-			if (constructor.accessModifier != AccessModifier.Private) {
-				return constructor;
-			}
-		}
-		return null;
-	}
+    ConstructorMeta getFirstConstructor(ClassMeta classMeta) {
+        if (classMeta.constructors == null || classMeta.constructors.size() == 0) {
+            return null;
+        }
+        for (ConstructorMeta constructor : classMeta.constructors) {
+            if (constructor.accessModifier != AccessModifier.Private) {
+                return constructor;
+            }
+        }
+        return null;
+    }
 
 }

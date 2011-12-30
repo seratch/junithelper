@@ -26,17 +26,17 @@ import org.junithelper.core.util.Assertion;
 
 public class ExtConfigurationLoader {
 
-	public ExtConfiguration load(String filepath) throws Exception {
-		Assertion.on("filepath").mustNotBeNull(filepath);
-		return load(new FileInputStream(new File(filepath)));
-	}
+    public ExtConfiguration load(String filepath) throws Exception {
+        Assertion.on("filepath").mustNotBeNull(filepath);
+        return load(new FileInputStream(new File(filepath)));
+    }
 
-	public ExtConfiguration load(InputStream inputStream) throws Exception {
-		SAXParserFactory factory = SAXParserFactory.newInstance();
-		SAXParser parser = factory.newSAXParser();
-		ExtConfigurationParserHandler handler = new ExtConfigurationParserHandler();
-		parser.parse(inputStream, handler);
-		return handler.getExtConfiguration();
-	}
+    public ExtConfiguration load(InputStream inputStream) throws Exception {
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        SAXParser parser = factory.newSAXParser();
+        ExtConfigurationParserHandler handler = new ExtConfigurationParserHandler();
+        parser.parse(inputStream, handler);
+        return handler.getExtConfiguration();
+    }
 
 }

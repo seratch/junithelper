@@ -20,18 +20,18 @@ import java.util.List;
 
 public class ClassMeta {
 
-	public boolean isAbstract;
+    public boolean isAbstract;
 
-	public boolean isEnum;
+    public boolean isEnum;
 
-	public String packageName;
+    public String packageName;
 
-	public String name;
+    public String name;
 
-	public List<String> importedList = new ArrayList<String>();
+    public List<String> importedList = new ArrayList<String>();
 
-	public List<ConstructorMeta> constructors = new ArrayList<ConstructorMeta>();
+    public List<ConstructorMeta> constructors = new ArrayList<ConstructorMeta>();
 
-	public List<MethodMeta> methods = new ArrayList<MethodMeta>();
+    public List<MethodMeta> methods = new ArrayList<MethodMeta>();
 
 }

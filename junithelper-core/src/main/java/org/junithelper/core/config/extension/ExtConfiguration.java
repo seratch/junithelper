@@ -23,20 +23,20 @@ import org.junithelper.core.util.Assertion;
 
 public class ExtConfiguration {
 
-	public ExtConfiguration() {
-	}
+    public ExtConfiguration() {
+    }
 
-	public ExtConfiguration(Configuration config) {
-		Assertion.on("config").mustNotBeNull(config);
-		this.config = config;
-	}
+    public ExtConfiguration(Configuration config) {
+        Assertion.on("config").mustNotBeNull(config);
+        this.config = config;
+    }
 
-	public Configuration config;
+    public Configuration config;
 
-	public List<ExtInstantiation> extInstantiations = new ArrayList<ExtInstantiation>();
+    public List<ExtInstantiation> extInstantiations = new ArrayList<ExtInstantiation>();
 
-	public List<ExtArg> extArgs = new ArrayList<ExtArg>();
+    public List<ExtArg> extArgs = new ArrayList<ExtArg>();
 
-	public List<ExtReturn> extReturns = new ArrayList<ExtReturn>();
+    public List<ExtReturn> extReturns = new ArrayList<ExtReturn>();
 
 }

@@ -29,19 +29,19 @@ import org.junithelper.core.util.Assertion;
 
 public class CommonsIOFileSearcher implements FileSearcher {
 
-	@Override
-	public List<File> searchFilesRecursivelyByName(String baseAbsoluteDir, String regexp) {
-		Assertion.on("baseAbsoluteDir").mustNotBeEmpty(baseAbsoluteDir);
-		File dir = new File(baseAbsoluteDir);
-		IOFileFilter fileFilter = new RegexFileFilter(RegExp.Anything_ZeroOrMore_Min + regexp
-				+ RegExp.Anything_ZeroOrMore_Min);
-		IOFileFilter dirFilter = new RegexFileFilter("[^(/\\.)]*");
-		Collection<File> files = FileUtils.listFiles(dir, fileFilter, dirFilter);
-		List<File> dest = new ArrayList<File>();
-		for (File file : files) {
-			dest.add(file);
-		}
-		return dest;
-	}
+    @Override
+    public List<File> searchFilesRecursivelyByName(String baseAbsoluteDir, String regexp) {
+        Assertion.on("baseAbsoluteDir").mustNotBeEmpty(baseAbsoluteDir);
+        File dir = new File(baseAbsoluteDir);
+        IOFileFilter fileFilter = new RegexFileFilter(RegExp.Anything_ZeroOrMore_Min + regexp
+                + RegExp.Anything_ZeroOrMore_Min);
+        IOFileFilter dirFilter = new RegexFileFilter("[^(/\\.)]*");
+        Collection<File> files = FileUtils.listFiles(dir, fileFilter, dirFilter);
+        List<File> dest = new ArrayList<File>();
+        for (File file : files) {
+            dest.add(file);
+        }
+        return dest;
+    }
 
 }

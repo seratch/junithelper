@@ -20,12 +20,12 @@ import java.io.IOException;
 
 public interface FileWriter {
 
-	FileWriter setEncoding(String encoding);
+    FileWriter setEncoding(String encoding);
 
-	FileWriter setWriteTarget(File file);
+    FileWriter setWriteTarget(File file);
 
-	void writeText(String text) throws IOException;
+    void writeText(String text) throws IOException;
 
-	void writeText(String text, String encoding) throws IOException;
+    void writeText(String text, String encoding) throws IOException;
 
 }

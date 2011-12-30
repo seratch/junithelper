@@ -17,18 +17,18 @@ package org.junithelper.core.exception;
 
 public class JUnitHelperCoreException extends RuntimeException {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public JUnitHelperCoreException() {
-		super();
-	}
+    public JUnitHelperCoreException() {
+        super();
+    }
 
-	public JUnitHelperCoreException(String message) {
-		super(message);
-	}
+    public JUnitHelperCoreException(String message) {
+        super(message);
+    }
 
-	public JUnitHelperCoreException(String message, Throwable t) {
-		super(message, t);
-	}
+    public JUnitHelperCoreException(String message, Throwable t) {
+        super(message, t);
+    }
 
 }

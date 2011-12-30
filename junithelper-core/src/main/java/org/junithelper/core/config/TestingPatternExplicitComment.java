@@ -17,17 +17,17 @@ package org.junithelper.core.config;
 
 public enum TestingPatternExplicitComment {
 
-	None("None"), ArrangeActAssert("ArrangeActAssert"), GivenWhenThen("GivenWhenThen");
+    None("None"), ArrangeActAssert("ArrangeActAssert"), GivenWhenThen("GivenWhenThen");
 
-	private String name;
+    private String name;
 
-	private TestingPatternExplicitComment(String name) {
-		this.name = name;
-	}
+    private TestingPatternExplicitComment(String name) {
+        this.name = name;
+    }
 
-	@Override
-	public String toString() {
-		return this.name;
-	}
+    @Override
+    public String toString() {
+        return this.name;
+    }
 
 }

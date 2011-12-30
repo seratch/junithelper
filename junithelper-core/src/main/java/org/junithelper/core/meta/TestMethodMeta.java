@@ -20,18 +20,18 @@ import org.junithelper.core.config.extension.ExtReturn;
 
 public class TestMethodMeta {
 
-	public boolean isTypeTest;
+    public boolean isTypeTest;
 
-	public boolean isInstantiationTest;
+    public boolean isInstantiationTest;
 
-	public ClassMeta classMeta;
+    public ClassMeta classMeta;
 
-	public MethodMeta methodMeta;
+    public MethodMeta methodMeta;
 
-	public ExtArgPattern extArgPattern;
+    public ExtArgPattern extArgPattern;
 
-	public ExtReturn extReturn;
+    public ExtReturn extReturn;
 
-	public ExceptionMeta testingTargetException;
+    public ExceptionMeta testingTargetException;
 
 }

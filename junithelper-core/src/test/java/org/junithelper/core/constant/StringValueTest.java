@@ -1,20 +1,20 @@
 package org.junithelper.core.constant;
 
-import org.junit.Test;
+import static org.junit.Assert.*;
 
-import static org.junit.Assert.assertNotNull;
+import org.junit.Test;
 
 public class StringValueTest {
 
-	@Test
-	public void type() throws Exception {
-		assertNotNull(StringValue.class);
-	}
+    @Test
+    public void type() throws Exception {
+        assertNotNull(StringValue.class);
+    }
 
-	@Test
-	public void instantiation() throws Exception {
-		StringValue target = new StringValue();
-		assertNotNull(target);
-	}
+    @Test
+    public void instantiation() throws Exception {
+        StringValue target = new StringValue();
+        assertNotNull(target);
+    }
 
 }

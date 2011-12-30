@@ -15,15 +15,15 @@
  */
 package org.junithelper.core.parser;
 
-import org.junithelper.core.meta.ClassMeta;
-
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.junithelper.core.meta.ClassMeta;
+
 public interface SourceCodeParser {
 
-	ClassMeta parse(InputStream is, String encoding) throws IOException;
+    ClassMeta parse(InputStream is, String encoding) throws IOException;
 
-	ClassMeta parse(String sourceCodeString);
+    ClassMeta parse(String sourceCodeString);
 
 }
