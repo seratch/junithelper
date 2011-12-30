@@ -4,16 +4,38 @@
     <groupId>org.junithelper</groupId>
     <artifactId>maven-junithelper-plugin</artifactId>
     <packaging>maven-plugin</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.10</version>
     <name>maven-junithelper-plugin Maven Mojo</name>
     <url>http://junithelper.org</url>
 
     <repositories>
         <repository>
-            <id>repo</id>
-            <url>file://../mvn-repo/releases</url>
+            <id>releases</id>
+            <url>http://junithelper.googlecode.com/svn/trunk/mvn-repo/releases</url>
+        </repository>
+        <repository>
+            <id>snapshots</id>
+            <url>http://junithelper.googlecode.com/svn/trunk/mvn-repo/snapshots</url>
         </repository>
     </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>junithelper.org releases</id>
+            <url>http://junithelper.googlecode.com/svn/trunk/mvn-repo/releases</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <distributionManagement>
+        <repository>
+            <id>repo</id>
+            <url>http://junithelper.googlecode.com/svn/trunk/mvn-repo/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshot-repo</id>
+            <url>http://junithelper.googlecode.com/svn/trunk/mvn-repo/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <build>
         <plugins>
@@ -31,9 +53,23 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.junithelper</groupId>
                 <artifactId>maven-junithelper-plugin</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <configuration>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -47,11 +83,11 @@
         <dependency>
             <groupId>org.junithelper</groupId>
             <artifactId>junithelper-core</artifactId>
-            <version>1.0.1</version>
+            <version>1.10</version>
         </dependency>
         <dependency>
             <groupId>org.mozilla</groupId>
-            <artifactId>universalchardet</artifactId>
+            <artifactId>juniversalchardet</artifactId>
             <version>1.0.3</version>
         </dependency>
         <dependency>
@@ -62,7 +98,8 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.8.2</version>
+            <version>4.10</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
