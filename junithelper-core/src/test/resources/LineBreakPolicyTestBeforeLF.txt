@@ -1,0 +1,18 @@
+package org.junithelper.core.config;
+
+import org.junithelper.core.config.LineBreakPolicy.*;
+import static org.mockito.BDDMockito.*;
+
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+public class LineBreakPolicyTest {
+
+    @Test
+    public void type() throws Exception {
+        assertThat(LineBreakPolicy.class, notNullValue());
+    }
+
+}

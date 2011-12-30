@@ -74,7 +74,7 @@ public class MakeTestCommandTest {
             // given
             File testFile = new File("src/test/java/org/junithelper/core/config/LineBreakPolicyTest.java");
             FileWriter writer = FileWriterFactory.create(testFile);
-            String preparedSource = IOUtil.readAsString(IOUtil.getResourceAsStream("LineBreakPolicyTestBefore.txt"),
+            String preparedSource = IOUtil.readAsString(IOUtil.getResourceAsStream("LineBreakPolicyTestBeforeLF.txt"),
                     "UTF-8");
             writer.writeText(preparedSource);
 
