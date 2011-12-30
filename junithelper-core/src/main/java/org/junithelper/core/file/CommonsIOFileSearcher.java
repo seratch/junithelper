@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language 
  * governing permissions and limitations under the License. 
  */
-package org.junithelper.core.file.impl;
+package org.junithelper.core.file;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -24,10 +24,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.junithelper.core.constant.RegExp;
-import org.junithelper.core.file.FileSearcher;
 import org.junithelper.core.util.Assertion;
 
-public class CommonsIOFileSearcher implements FileSearcher {
+class CommonsIOFileSearcher implements FileSearcher {
 
     @Override
     public List<File> searchFilesRecursivelyByName(String baseAbsoluteDir, String regexp) {

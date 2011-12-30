@@ -21,8 +21,8 @@ import java.util.List;
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.JUnitVersion;
 import org.junithelper.core.file.FileReader;
-import org.junithelper.core.file.impl.CommonsIOFileReader;
-import org.junithelper.core.file.impl.CommonsIOFileWriter;
+import org.junithelper.core.file.FileReaderFactory;
+import org.junithelper.core.file.FileWriterFactory;
 import org.junithelper.core.generator.TestCaseGenerator;
 import org.junithelper.core.generator.impl.DefaultTestCaseGenerator;
 import org.junithelper.core.util.Stdout;
@@ -48,7 +48,7 @@ public class ForceJUnitVersion4Command extends AbstractCommand {
             return;
         }
         TestCaseGenerator testCaseGenerator = new DefaultTestCaseGenerator(config);
-        FileReader fileReader = new CommonsIOFileReader();
+        FileReader fileReader = FileReaderFactory.create();
         for (File javaFile : javaFiles) {
             File testFile = null;
             String currentTestCaseSourceCode = null;
@@ -67,7 +67,7 @@ public class ForceJUnitVersion4Command extends AbstractCommand {
             } else {
                 testCodeString = testCaseGenerator.getNewTestCaseSourceCode();
             }
-            new CommonsIOFileWriter(testFile).writeText(testCodeString);
+            FileWriterFactory.create(testFile).writeText(testCodeString);
             Stdout.p("  Forced JUnit 4.x: " + testFile.getAbsolutePath());
         }
     }

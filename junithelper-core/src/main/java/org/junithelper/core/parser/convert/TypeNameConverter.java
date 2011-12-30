@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
-import org.junithelper.core.file.impl.CommonsIOFileSearcher;
+import org.junithelper.core.file.FileSearcherFactory;
 import org.junithelper.core.util.Assertion;
 import org.junithelper.core.util.PrimitiveTypeUtil;
 
@@ -89,10 +89,10 @@ public class TypeNameConverter {
                     isTypeAvailable = true;
                 } catch (Exception ignore) {
                     // check same package class
-                    List<File> files = new CommonsIOFileSearcher().searchFilesRecursivelyByName(
+                    List<File> files = FileSearcherFactory.create().searchFilesRecursivelyByName(
                             config.directoryPathOfProductSourceCode + "/"
-                                    + callerClassPackageName.replaceAll("\\.", "/"), typeName
-                                    + RegExp.FileExtension.JavaFile);
+                                    + callerClassPackageName.replaceAll("\\.", "/"),
+                            typeName + RegExp.FileExtension.JavaFile);
                     if (files != null && files.size() > 0) {
                         isTypeAvailable = true;
                     }

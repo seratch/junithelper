@@ -1,4 +1,4 @@
-package org.junithelper.core.file.impl;
+package org.junithelper.core.file;
 
 import static org.junit.Assert.*;
 
@@ -8,6 +8,7 @@ import java.io.IOException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junithelper.core.file.CommonsIOFileWriter;
 import org.junithelper.core.file.FileWriter;
 
 public class CommonsIOFileWriterTest {

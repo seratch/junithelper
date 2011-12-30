@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language 
  * governing permissions and limitations under the License. 
  */
-package org.junithelper.core.file.impl;
+package org.junithelper.core.file;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,12 +22,11 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 
 import org.apache.commons.io.FileUtils;
-import org.junithelper.core.file.FileReader;
 import org.junithelper.core.util.Assertion;
 import org.junithelper.core.util.IOUtil;
 import org.mozilla.universalchardet.UniversalDetector;
 
-public class CommonsIOFileReader implements FileReader {
+class CommonsIOFileReader implements FileReader {
 
     @Override
     public InputStream getResourceAsStream(String name) {

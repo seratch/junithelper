@@ -20,8 +20,8 @@ import java.util.List;
 
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.file.FileReader;
-import org.junithelper.core.file.impl.CommonsIOFileReader;
-import org.junithelper.core.file.impl.CommonsIOFileWriter;
+import org.junithelper.core.file.FileReaderFactory;
+import org.junithelper.core.file.FileWriterFactory;
 import org.junithelper.core.generator.TestCaseGenerator;
 import org.junithelper.core.generator.impl.DefaultTestCaseGenerator;
 import org.junithelper.core.util.Stdout;
@@ -48,7 +48,7 @@ public class MakeTestCommand extends AbstractCommand {
         if (confirmToExecute() > 0) {
             return;
         }
-        FileReader fileReader = new CommonsIOFileReader();
+        FileReader fileReader = FileReaderFactory.create();
         TestCaseGenerator testCaseGenerator = new DefaultTestCaseGenerator(config);
         for (File javaFile : javaFiles) {
             if (isNeedToExclude(javaFile)) {
@@ -70,12 +70,12 @@ public class MakeTestCommand extends AbstractCommand {
                         .getTestCaseSourceCodeWithLackingTestMethod(currentTestCaseSourceCode);
                 if (!testCodeString.equals(currentTestCaseSourceCode)) {
                     Stdout.p("  Modified: " + testFile.getAbsolutePath());
-                    new CommonsIOFileWriter(testFile).writeText(testCodeString);
+                    FileWriterFactory.create(testFile).writeText(testCodeString);
                 }
             } else {
                 testCodeString = testCaseGenerator.getNewTestCaseSourceCode();
                 Stdout.p("  Created: " + testFile.getAbsolutePath());
-                new CommonsIOFileWriter(testFile).writeText(testCodeString);
+                FileWriterFactory.create(testFile).writeText(testCodeString);
             }
         }
     }

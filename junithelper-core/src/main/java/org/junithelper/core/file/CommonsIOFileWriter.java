@@ -13,16 +13,15 @@
  * either express or implied. See the License for the specific language 
  * governing permissions and limitations under the License. 
  */
-package org.junithelper.core.file.impl;
+package org.junithelper.core.file;
 
 import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 import org.junithelper.core.config.Configuration;
-import org.junithelper.core.file.FileWriter;
 
-public class CommonsIOFileWriter implements FileWriter {
+class CommonsIOFileWriter implements FileWriter {
 
     private File file;
     private String encoding = new Configuration().outputFileEncoding;

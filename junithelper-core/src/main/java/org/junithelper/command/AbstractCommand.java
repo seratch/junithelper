@@ -27,7 +27,7 @@ import org.junithelper.core.config.ConfigurationLoader;
 import org.junithelper.core.config.extension.ExtConfigurationLoader;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.file.FileSearcher;
-import org.junithelper.core.file.impl.CommonsIOFileSearcher;
+import org.junithelper.core.file.FileSearcherFactory;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.extractor.ClassMetaExtractor;
 import org.junithelper.core.util.IOUtil;
@@ -97,7 +97,7 @@ public abstract class AbstractCommand {
             }
         } else {
             List<File> javaFiles = new ArrayList<File>();
-            FileSearcher fileSearcher = new CommonsIOFileSearcher();
+            FileSearcher fileSearcher = FileSearcherFactory.create();
             javaFiles = fileSearcher.searchFilesRecursivelyByName(dirOrFile, RegExp.FileExtension.JavaFile);
             for (File file : javaFiles) {
                 String encoding = UniversalDetectorUtil.getDetectedEncoding(file);

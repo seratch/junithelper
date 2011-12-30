@@ -22,7 +22,7 @@ import java.util.List;
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
-import org.junithelper.core.file.impl.CommonsIOFileSearcher;
+import org.junithelper.core.file.FileSearcherFactory;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.util.PrimitiveTypeUtil;
 import org.junithelper.core.util.Stderr;
@@ -83,8 +83,8 @@ public class AvailableTypeDetector {
                 // check same package class
                 String searchPath = config.directoryPathOfProductSourceCode + "/" + packageName.replaceAll("\\.", "/");
                 try {
-                    List<File> files = new CommonsIOFileSearcher().searchFilesRecursivelyByName(searchPath, typeName
-                            + RegExp.FileExtension.JavaFile);
+                    List<File> files = FileSearcherFactory.create().searchFilesRecursivelyByName(searchPath,
+                            typeName + RegExp.FileExtension.JavaFile);
                     if (files != null && files.size() > 0) {
                         isTypeAvailable = true;
                     }

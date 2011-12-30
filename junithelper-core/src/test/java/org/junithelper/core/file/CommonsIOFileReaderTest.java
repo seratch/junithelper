@@ -1,4 +1,4 @@
-package org.junithelper.core.file.impl;
+package org.junithelper.core.file;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
@@ -9,6 +9,7 @@ import java.io.InputStream;
 
 import org.junit.Test;
 import org.junithelper.core.exception.JUnitHelperCoreException;
+import org.junithelper.core.file.CommonsIOFileReader;
 import org.junithelper.core.util.IOUtil;
 
 public class CommonsIOFileReaderTest {
