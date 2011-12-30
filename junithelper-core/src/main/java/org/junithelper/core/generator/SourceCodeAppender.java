@@ -39,7 +39,8 @@ class SourceCodeAppender {
         String[] separatedListBySemicolon = code.split(StringValue.Semicolon);
         for (String separatedBySemicolon : separatedListBySemicolon) {
             if (separatedBySemicolon != null && separatedBySemicolon.trim().length() > 0) {
-                separatedBySemicolon = separatedBySemicolon.trim().replaceAll(StringValue.CarriageReturn, "");
+                separatedBySemicolon = separatedBySemicolon.trim().replaceAll(StringValue.CarriageReturn,
+                        StringValue.Empty);
                 String[] lines = separatedBySemicolon.split(StringValue.LineFeed);
                 for (int i = 0; i < (lines.length - 1); i++) {
                     String line = lines[i];

@@ -29,7 +29,7 @@ public class TrimInsideOfBraceFilter implements TrimFilter {
         if (src == null) {
             return null;
         }
-        src = src.replaceAll(RegExp.CRLF, StringValue.Space);
+        src = src.replaceAll(RegExp.CRLF, StringValue.Space).replaceAll(RegExp.LF, StringValue.Space);
         int len = src.length();
         boolean isInsideOfString = false;
         boolean isInsideOfChar = false;
@@ -66,12 +66,15 @@ public class TrimInsideOfBraceFilter implements TrimFilter {
             if (!isInsideOfTargetClass) {
                 sb.append(current);
                 // might be started class def
-                if (i >= 6 && src.charAt(i - 6) == ' ' && src.charAt(i - 5) == 'c' && src.charAt(i - 4) == 'l'
-                        && src.charAt(i - 3) == 'a' && src.charAt(i - 2) == 's' && src.charAt(i - 1) == 's'
-                        && current == ' ') {
+                if (i >= 6 && (src.charAt(i - 6) == ' ' || src.charAt(i - 6) == ';') && src.charAt(i - 5) == 'c'
+                        && src.charAt(i - 4) == 'l' && src.charAt(i - 3) == 'a' && src.charAt(i - 2) == 's'
+                        && src.charAt(i - 1) == 's' && current == ' ') {
+                    // class
                     isInsideOfTargetClass = true;
-                } else if (i >= 5 && src.charAt(i - 5) == ' ' && src.charAt(i - 4) == 'e' && src.charAt(i - 3) == 'n'
-                        && src.charAt(i - 2) == 'u' && src.charAt(i - 1) == 'm' && current == ' ') {
+                } else if (i >= 5 && (src.charAt(i - 5) == ' ' || src.charAt(i - 5) == ';') && src.charAt(i - 4) == 'e'
+                        && src.charAt(i - 3) == 'n' && src.charAt(i - 2) == 'u' && src.charAt(i - 1) == 'm'
+                        && current == ' ') {
+                    // enum
                     isInsideOfTargetClass = true;
                 }
                 continue;

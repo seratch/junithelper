@@ -80,7 +80,9 @@ public class ClassMetaExtractor {
         }
         String outOfBraceWithoutGenerics = bufForOutOfBrace.toString();
         String[] splittedBySpace = outOfBraceWithoutGenerics.split("\\s+");
-        if (!outOfBrace.matches(".*\\s+class\\s+.*") && !outOfBrace.matches(".*\\s+enum\\s+.*")) {
+        boolean isClass = outOfBrace.matches(".*\\s+class\\s+.*") || outOfBrace.matches(".*;class\\s+.*");
+        meta.isEnum = outOfBrace.matches(".*\\s+enum\\s+.*");
+        if (!isClass && !meta.isEnum) {
             meta.isAbstract = true;
         } else {
             for (String each : splittedBySpace) {
@@ -88,9 +90,6 @@ public class ClassMetaExtractor {
                     meta.isAbstract = true;
                     break;
                 }
-            }
-            if (outOfBrace.matches(".*\\s+enum\\s+.*")) {
-                meta.isEnum = true;
             }
         }
         // -----------------

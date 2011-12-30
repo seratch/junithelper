@@ -172,4 +172,12 @@ public class MakeTestCommandTest {
 
         }
     }
+
+    @Test
+    public void main_A$StringArray_Issue74() throws Exception {
+        String[] args = new String[] { "src/main/java/org/junithelper/core/generator/SourceCodeAppender.java" };
+        System.setProperty("junithelper.skipConfirming", "true");
+        System.setProperty("junithelper.configProperties", "src/test/resources/junithelper-config.properties");
+        MakeTestCommand.main(args);
+    }
 }
