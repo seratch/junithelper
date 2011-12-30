@@ -35,18 +35,23 @@ public class ForceJUnitVersion4Command extends AbstractCommand {
     public static Configuration config = new Configuration();
 
     public static void main(String[] args) throws Exception {
+
         initializeConfiguration(config);
+
         config.junitVersion = JUnitVersion.version4;
         boolean hasFirstArg = (args != null && args.length > 0 && args[0] != null);
         String dirOrFile = hasFirstArg ? args[0] : config.directoryPathOfProductSourceCode;
+
+        // Confirm input from stdin
         List<File> javaFiles = findTargets(config, dirOrFile);
         for (File javaFile : javaFiles) {
             Stdout.p("  Target: " + javaFile.getAbsolutePath());
         }
-        // confirm input from stdin
         if (confirmToExecute() > 0) {
             return;
         }
+
+        // Execute re-writing tests
         TestCaseGenerator testCaseGenerator = TestCaseGeneratorFactory.create(config);
         FileReader fileReader = FileReaderFactory.create();
         for (File javaFile : javaFiles) {
@@ -60,7 +65,8 @@ public class ForceJUnitVersion4Command extends AbstractCommand {
                 currentTestCaseSourceCode = fileReader.readAsString(testFile);
             } catch (Exception e) {
             }
-            testCaseGenerator.initialize(fileReader.readAsString(javaFile));
+            String targetSourceCodeString = fileReader.readAsString(javaFile);
+            testCaseGenerator.initialize(targetSourceCodeString);
             String testCodeString = null;
             if (currentTestCaseSourceCode != null) {
                 testCodeString = testCaseGenerator.getUnifiedVersionTestCaseSourceCode(testCaseGenerator
@@ -71,6 +77,7 @@ public class ForceJUnitVersion4Command extends AbstractCommand {
             FileWriterFactory.create(testFile).writeText(testCodeString);
             Stdout.p("  Forced JUnit 4.x: " + testFile.getAbsolutePath());
         }
+
     }
 
 }

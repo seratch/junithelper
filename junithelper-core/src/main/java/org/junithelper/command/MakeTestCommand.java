@@ -34,9 +34,13 @@ public class MakeTestCommand extends AbstractCommand {
     public static Configuration config = new Configuration();
 
     public static void main(String[] args) throws Exception {
+
         initializeConfiguration(config);
+
         boolean hasFirstArg = (args != null && args.length > 0 && args[0] != null);
         String dirOrFile = hasFirstArg ? args[0] : config.directoryPathOfProductSourceCode;
+
+        // Confirm input from stdin
         List<File> javaFiles = findTargets(config, dirOrFile);
         for (File javaFile : javaFiles) {
             if (isNeedToExclude(javaFile)) {
@@ -44,10 +48,11 @@ public class MakeTestCommand extends AbstractCommand {
             }
             Stdout.p("  Target: " + javaFile.getAbsolutePath());
         }
-        // confirm input from stdin
         if (confirmToExecute() > 0) {
             return;
         }
+
+        // Execute making tests
         FileReader fileReader = FileReaderFactory.create();
         TestCaseGenerator testCaseGenerator = TestCaseGeneratorFactory.create(config);
         for (File javaFile : javaFiles) {
@@ -64,7 +69,8 @@ public class MakeTestCommand extends AbstractCommand {
                 currentTestCaseSourceCode = fileReader.readAsString(testFile);
             } catch (Exception e) {
             }
-            testCaseGenerator.initialize(fileReader.readAsString(javaFile));
+            String targetSourceCodeString = fileReader.readAsString(javaFile);
+            testCaseGenerator.initialize(targetSourceCodeString);
             String testCodeString = null;
             if (currentTestCaseSourceCode != null) {
                 testCodeString = testCaseGenerator
@@ -79,6 +85,7 @@ public class MakeTestCommand extends AbstractCommand {
                 FileWriterFactory.create(testFile).writeText(testCodeString);
             }
         }
+
     }
 
     private static boolean isNeedToExclude(File javaFile) {

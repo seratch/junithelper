@@ -24,12 +24,14 @@ public class CommandLine {
     }
 
     public static void main(String[] args) throws Exception {
+
         Stdout.p("  _                         ");
         Stdout.p("   /   _  ._/_/_/_  /_  _  _");
         Stdout.p("(_//_// // / / //_'//_//_'/ ");
         Stdout.p("                   /        ");
         Stdout.p("JUnit Helper version " + Version.get());
         Stdout.p("");
+
         if (args != null && args.length > 0) {
             String command = args[0];
             if (command.equals("make")) {
@@ -57,7 +59,9 @@ public class CommandLine {
                 Stdout.p("-- Invalid command or parameter.");
             }
             Stdout.p("");
+
         } else {
+
             Stdout.p("Usage:");
             Stdout.p("  junithelper [command] [arg1] [arg2]");
             Stdout.p("");
@@ -69,6 +73,7 @@ public class CommandLine {
             Stdout.p("JVM Options:");
             Stdout.p("  -Djunithelper.configProperties=[filepath]");
             Stdout.p("");
+
         }
     }
 
