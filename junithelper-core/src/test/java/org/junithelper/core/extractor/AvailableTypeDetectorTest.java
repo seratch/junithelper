@@ -1,4 +1,4 @@
-package org.junithelper.core.parser.detect;
+package org.junithelper.core.extractor;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
@@ -6,6 +6,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.exception.JUnitHelperCoreException;
+import org.junithelper.core.extractor.AvailableTypeDetector;
 import org.junithelper.core.meta.ClassMeta;
 
 public class AvailableTypeDetectorTest {

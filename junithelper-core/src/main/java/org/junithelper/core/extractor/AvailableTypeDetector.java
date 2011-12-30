@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language 
  * governing permissions and limitations under the License. 
  */
-package org.junithelper.core.parser.detect;
+package org.junithelper.core.extractor;
 
 import java.io.File;
 import java.lang.reflect.Modifier;

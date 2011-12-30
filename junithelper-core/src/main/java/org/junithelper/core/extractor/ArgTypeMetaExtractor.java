@@ -25,7 +25,6 @@ import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
 import org.junithelper.core.meta.ArgTypeMeta;
 import org.junithelper.core.meta.ClassMeta;
-import org.junithelper.core.parser.convert.TypeNameConverter;
 import org.junithelper.core.util.Assertion;
 
 public class ArgTypeMetaExtractor {

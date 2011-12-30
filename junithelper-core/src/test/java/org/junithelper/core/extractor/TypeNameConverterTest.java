@@ -1,4 +1,4 @@
-package org.junithelper.core.parser.convert;
+package org.junithelper.core.extractor;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
@@ -9,6 +9,7 @@ import java.util.List;
 import org.junit.Test;
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.exception.JUnitHelperCoreException;
+import org.junithelper.core.extractor.TypeNameConverter;
 
 public class TypeNameConverterTest {
 

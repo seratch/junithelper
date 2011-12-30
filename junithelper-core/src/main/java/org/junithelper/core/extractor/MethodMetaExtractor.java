@@ -28,14 +28,12 @@ import org.junithelper.core.meta.AccessModifier;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.ExceptionMeta;
 import org.junithelper.core.meta.MethodMeta;
-import org.junithelper.core.parser.convert.TypeNameConverter;
-import org.junithelper.core.parser.detect.AccessModifierDetector;
+import org.junithelper.core.util.AccessModifierDetector;
 import org.junithelper.core.util.Assertion;
 
 public class MethodMetaExtractor {
 
     private Configuration config;
-    private AccessModifierDetector accessModifierDetector = new AccessModifierDetector();
     private ClassMeta classMeta;
 
     public MethodMetaExtractor(Configuration config) {
@@ -203,13 +201,13 @@ public class MethodMetaExtractor {
     }
 
     AccessModifier getAccessModifier(String methodSignatureArea) {
-        if (accessModifierDetector.isPublic(methodSignatureArea)) {
+        if (AccessModifierDetector.isPublic(methodSignatureArea)) {
             return AccessModifier.Public;
-        } else if (accessModifierDetector.isProtected(methodSignatureArea)) {
+        } else if (AccessModifierDetector.isProtected(methodSignatureArea)) {
             return AccessModifier.Protected;
-        } else if (accessModifierDetector.isPackageLocal(methodSignatureArea)) {
+        } else if (AccessModifierDetector.isPackageLocal(methodSignatureArea)) {
             return AccessModifier.PackageLocal;
-        } else if (accessModifierDetector.isPrivate(methodSignatureArea)) {
+        } else if (AccessModifierDetector.isPrivate(methodSignatureArea)) {
             return AccessModifier.Private;
         } else {
             return AccessModifier.Public;

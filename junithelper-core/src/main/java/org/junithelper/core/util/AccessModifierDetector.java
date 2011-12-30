@@ -13,25 +13,28 @@
  * either express or implied. See the License for the specific language 
  * governing permissions and limitations under the License. 
  */
-package org.junithelper.core.parser.detect;
+package org.junithelper.core.util;
 
 public class AccessModifierDetector {
 
-    public boolean isPublic(String methodSignature) {
+    private AccessModifierDetector() {
+    }
+
+    public static boolean isPublic(String methodSignature) {
         return methodSignature != null && methodSignature.matches(RegExp.Prefix + "public" + RegExp.Suffix);
     }
 
-    public boolean isProtected(String methodSignature) {
+    public static boolean isProtected(String methodSignature) {
         return methodSignature != null && methodSignature.matches(RegExp.Prefix + "protected" + RegExp.Suffix);
     }
 
-    public boolean isPackageLocal(String methodSignature) {
+    public static boolean isPackageLocal(String methodSignature) {
         return methodSignature != null && !methodSignature.matches(RegExp.Prefix + "public" + RegExp.Suffix)
                 && !methodSignature.matches(RegExp.Prefix + "protected" + RegExp.Suffix)
                 && !methodSignature.matches(RegExp.Prefix + "private" + RegExp.Suffix);
     }
 
-    public boolean isPrivate(String methodSignature) {
+    public static boolean isPrivate(String methodSignature) {
         return methodSignature != null && methodSignature.matches(RegExp.Prefix + "private" + RegExp.Suffix);
     }
 

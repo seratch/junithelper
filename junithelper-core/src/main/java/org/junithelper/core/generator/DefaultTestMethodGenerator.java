@@ -29,12 +29,12 @@ import org.junithelper.core.config.extension.ExtArgPattern;
 import org.junithelper.core.config.extension.ExtInstantiation;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
+import org.junithelper.core.extractor.AvailableTypeDetector;
 import org.junithelper.core.meta.ArgTypeMeta;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.ExceptionMeta;
 import org.junithelper.core.meta.MethodMeta;
 import org.junithelper.core.meta.TestMethodMeta;
-import org.junithelper.core.parser.detect.AvailableTypeDetector;
 import org.junithelper.core.util.Assertion;
 import org.junithelper.core.util.PrimitiveTypeUtil;
 
