@@ -9,16 +9,16 @@ import org.junithelper.command.ForceJUnitVersion3Command;
  */
 public class Force3Mojo extends AbstractJUnitHelperMojo {
 
-    @Override
-    public void execute() throws MojoExecutionException {
-        printLogoAndVersion();
-        String target = System.getProperty("target");
-        try {
-            ForceJUnitVersion3Command.config = loadConfig();
-            ForceJUnitVersion3Command.main(new String[]{target});
-        } catch (Exception e) {
-            throw new MojoExecutionException("junithelper force4 error!", e);
-        }
-    }
+	@Override
+	public void execute() throws MojoExecutionException {
+		printLogoAndVersion();
+		String target = System.getProperty("target");
+		try {
+			ForceJUnitVersion3Command.config = loadConfig();
+			ForceJUnitVersion3Command.main(new String[] { target });
+		} catch (Exception e) {
+			throw new MojoExecutionException("junithelper force4 error!", e);
+		}
+	}
 
 }

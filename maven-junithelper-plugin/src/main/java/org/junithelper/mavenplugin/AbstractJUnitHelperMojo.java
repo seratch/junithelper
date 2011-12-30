@@ -4,6 +4,7 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.junithelper.core.Version;
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.JUnitVersion;
+import org.junithelper.core.config.LineBreakPolicy;
 import org.junithelper.core.config.MockObjectFramework;
 import org.junithelper.core.config.TestingPatternExplicitComment;
 import org.junithelper.core.util.Stdout;
@@ -27,6 +28,21 @@ public abstract class AbstractJUnitHelperMojo extends AbstractMojo {
 	 * @parameter
 	 */
 	protected String directoryPathOfTestSourceCode = "src/test/java";
+
+	/**
+	 * @parameter
+	 */
+	protected String lineBreakPolicy = "forceNewFileCRLF";
+
+	/**
+	 * @parameter
+	 */
+	protected boolean useSoftTabs = false;
+
+	/**
+	 * @parameter
+	 */
+	protected String softTabSize = "4";
 
 	/**
 	 * @parameter
@@ -132,6 +148,13 @@ public abstract class AbstractJUnitHelperMojo extends AbstractMojo {
 		config.directoryPathOfProductSourceCode = directoryPathOfProductSourceCode;
 		config.directoryPathOfTestSourceCode = directoryPathOfTestSourceCode;
 		try {
+			config.lineBreakPolicy = LineBreakPolicy.valueOf(lineBreakPolicy);
+		} catch (Exception e) {
+			config.lineBreakPolicy = LineBreakPolicy.forceNewFileCRLF;
+		}
+		config.useSoftTabs = useSoftTabs;
+		config.softTabSize = Integer.valueOf(softTabSize);
+		try {
 			config.junitVersion = JUnitVersion.valueOf(junitVersion);
 		} catch (Exception e) {
 			config.junitVersion = JUnitVersion.version4;
@@ -154,12 +177,14 @@ public abstract class AbstractJUnitHelperMojo extends AbstractMojo {
 		config.testMethodName.exceptionAreaPrefix = testMethodName_exceptionAreaPrefix;
 		config.testMethodName.exceptionAreaDelimiter = testMethodName_exceptionAreaDelimiter;
 		try {
-			config.mockObjectFramework = MockObjectFramework.valueOf(mockObjectFramework);
+			config.mockObjectFramework = MockObjectFramework
+					.valueOf(mockObjectFramework);
 		} catch (Exception e) {
 			config.mockObjectFramework = null;
 		}
 		try {
-			config.testingPatternExplicitComment = TestingPatternExplicitComment.valueOf(testingPatternExplicitComment);
+			config.testingPatternExplicitComment = TestingPatternExplicitComment
+					.valueOf(testingPatternExplicitComment);
 		} catch (Exception e) {
 			config.testingPatternExplicitComment = TestingPatternExplicitComment.None;
 		}

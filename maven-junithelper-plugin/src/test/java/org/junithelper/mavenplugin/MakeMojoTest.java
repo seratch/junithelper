@@ -2,7 +2,6 @@ package org.junithelper.mavenplugin;
 
 import static org.junit.Assert.*;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class MakeMojoTest {
@@ -19,11 +18,12 @@ public class MakeMojoTest {
 	}
 
 	@Test
-	@Ignore
 	public void execute_A$() throws Exception {
 		System.setProperty("junithelper.skipConfirming", "true");
-		MakeMojo target = new MakeMojo();
-		target.execute();
+		System.setProperty("target",
+				"src/main/java/org/junithelper/mavenplugin/MakeMojo.java");
+		MakeMojo mojo = new MakeMojo();
+		mojo.execute();
 	}
 
 }
