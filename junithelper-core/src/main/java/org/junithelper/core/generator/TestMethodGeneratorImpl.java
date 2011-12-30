@@ -15,7 +15,7 @@
  */
 package org.junithelper.core.generator;
 
-import static org.junithelper.core.generator.DefaultGeneratorUtil.*;
+import static org.junithelper.core.generator.GeneratorImplFunction.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,13 +38,13 @@ import org.junithelper.core.meta.TestMethodMeta;
 import org.junithelper.core.util.Assertion;
 import org.junithelper.core.util.PrimitiveTypeUtil;
 
-class DefaultTestMethodGenerator implements TestMethodGenerator {
+class TestMethodGeneratorImpl implements TestMethodGenerator {
 
     private Configuration config;
     private ClassMeta targetClassMeta;
     private MessageValue messageValue = new MessageValue();
 
-    public DefaultTestMethodGenerator(Configuration config) {
+    public TestMethodGeneratorImpl(Configuration config) {
         this.config = config;
     }
 

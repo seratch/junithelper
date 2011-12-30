@@ -21,7 +21,7 @@ public class ConstructorGeneratorFactory {
     }
 
     public static ConstructorGenerator create() {
-        return new DefaultConstructorGenerator();
+        return new ConstructorGeneratorImpl();
     }
 
 }

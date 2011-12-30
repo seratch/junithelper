@@ -9,33 +9,33 @@ import org.junit.Test;
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.extension.ExtInstantiation;
 import org.junithelper.core.extractor.ClassMetaExtractor;
-import org.junithelper.core.generator.DefaultConstructorGenerator;
+import org.junithelper.core.generator.ConstructorGeneratorImpl;
 import org.junithelper.core.meta.ArgTypeMeta;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.ConstructorMeta;
 
-public class DefaultConstructorGeneratorTest {
+public class ConstructorGeneratorImplTest {
 
     Configuration config = new Configuration();
     ClassMetaExtractor classMetaExtractor = new ClassMetaExtractor(config);
     ClassMeta targetClassMeta;
-    DefaultConstructorGenerator target;
+    ConstructorGeneratorImpl target;
 
     @Before
     public void setUp() {
         String sourceCodeString = "package hoge.foo; import java.util.List; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\") } }";
         targetClassMeta = classMetaExtractor.extract(sourceCodeString);
-        target = new DefaultConstructorGenerator();
+        target = new ConstructorGeneratorImpl();
     }
 
     @Test
     public void type() throws Exception {
-        assertNotNull(DefaultConstructorGenerator.class);
+        assertNotNull(ConstructorGeneratorImpl.class);
     }
 
     @Test
     public void instantiation() throws Exception {
-        DefaultConstructorGenerator target = new DefaultConstructorGenerator();
+        ConstructorGeneratorImpl target = new ConstructorGeneratorImpl();
         assertNotNull(target);
     }
 

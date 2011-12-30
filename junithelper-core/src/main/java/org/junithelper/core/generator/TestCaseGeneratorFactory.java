@@ -23,7 +23,7 @@ public class TestCaseGeneratorFactory {
     }
 
     public static TestCaseGenerator create(Configuration config) {
-        return new DefaultTestCaseGenerator(config);
+        return new TestCaseGeneratorImpl(config);
     }
 
 }

@@ -23,7 +23,7 @@ public class TestMethodGeneratorFactory {
     }
 
     public static TestMethodGenerator create(Configuration config) {
-        return new DefaultTestMethodGenerator(config);
+        return new TestMethodGeneratorImpl(config);
     }
 
 }

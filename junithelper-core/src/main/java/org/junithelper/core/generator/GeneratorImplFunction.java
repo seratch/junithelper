@@ -11,9 +11,9 @@ import org.junithelper.core.meta.MethodMeta;
 import org.junithelper.core.meta.TestMethodMeta;
 import org.junithelper.core.util.Assertion;
 
-final class DefaultGeneratorUtil {
+final class GeneratorImplFunction {
 
-    private DefaultGeneratorUtil() {
+    private GeneratorImplFunction() {
     }
 
     static boolean isPublicMethodAndTestingRequired(MethodMeta methodMeta, TestingTarget target) {
@@ -129,7 +129,7 @@ final class DefaultGeneratorUtil {
             }
         }
         // TODO better implementation
-        return new DefaultConstructorGenerator().getFirstInstantiationSourceCode(config, testMethodMeta.classMeta);
+        return new ConstructorGeneratorImpl().getFirstInstantiationSourceCode(config, testMethodMeta.classMeta);
     }
 
     static void appendIfNotExists(StringBuilder buf, String src, String importLine) {

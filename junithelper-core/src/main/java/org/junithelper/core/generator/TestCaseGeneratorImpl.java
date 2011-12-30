@@ -15,7 +15,7 @@
  */
 package org.junithelper.core.generator;
 
-import static org.junithelper.core.generator.DefaultGeneratorUtil.*;
+import static org.junithelper.core.generator.GeneratorImplFunction.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,20 +45,20 @@ import org.junithelper.core.util.Assertion;
 import org.junithelper.core.util.ObjectUtil;
 import org.junithelper.core.util.Stderr;
 
-class DefaultTestCaseGenerator implements TestCaseGenerator {
+class TestCaseGeneratorImpl implements TestCaseGenerator {
 
     private Configuration config;
     private ClassMeta targetClassMeta;
     private MessageValue messageValue = new MessageValue();
     private TestMethodGenerator testMethodGenerator;
 
-    public DefaultTestCaseGenerator(Configuration config) {
+    public TestCaseGeneratorImpl(Configuration config) {
         this.config = config;
-        testMethodGenerator = new DefaultTestMethodGenerator(config);
+        testMethodGenerator = new TestMethodGeneratorImpl(config);
     }
 
     @Override
-    public DefaultTestCaseGenerator initialize(String targetSourceCodeString) {
+    public TestCaseGeneratorImpl initialize(String targetSourceCodeString) {
         ClassMetaExtractor classMetaExtractor = new ClassMetaExtractor(config);
         this.targetClassMeta = classMetaExtractor.extract(targetSourceCodeString);
         this.testMethodGenerator.initialize(targetClassMeta);
@@ -67,7 +67,7 @@ class DefaultTestCaseGenerator implements TestCaseGenerator {
     }
 
     @Override
-    public DefaultTestCaseGenerator initialize(ClassMeta targetClassMeta) {
+    public TestCaseGeneratorImpl initialize(ClassMeta targetClassMeta) {
         this.targetClassMeta = targetClassMeta;
         this.testMethodGenerator.initialize(targetClassMeta);
         this.messageValue.initialize(config.language);

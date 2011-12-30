@@ -15,7 +15,7 @@
  */
 package org.junithelper.core.generator;
 
-import static org.junithelper.core.generator.DefaultGeneratorUtil.*;
+import static org.junithelper.core.generator.GeneratorImplFunction.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.ConstructorMeta;
 import org.junithelper.core.util.PrimitiveTypeUtil;
 
-class DefaultConstructorGenerator implements ConstructorGenerator {
+class ConstructorGeneratorImpl implements ConstructorGenerator {
 
     @Override
     public List<String> getAllInstantiationSourceCodeList(Configuration config, ClassMeta classMeta) {
