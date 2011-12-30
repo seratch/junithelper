@@ -3,6 +3,15 @@
 	http://junithelper.org/
 ------------------------------------------
 
+* Release Notes - 1.10
+
+** Feature Request
+	* Issue 73: Feature Request: Need to enable specifying line break (CRLF or LF)
+	* Issue 75: Feature Request: Need to enable specifying soft tabs
+
+** Bug
+	* Issue 74:	Does not work fine with package local classes
+
 * Release Notes - 1.9
 
 ** Bug
