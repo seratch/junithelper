@@ -33,103 +33,103 @@ import org.junithelper.plugin.util.ResourceRefreshUtil;
 
 public class Force3TestCaseAction extends AbstractAction implements IActionDelegate, IEditorActionDelegate {
 
-	ISelection selection = null;
+    ISelection selection = null;
 
-	public void selectionChanged(IAction action, ISelection selection) {
-		this.selection = selection;
-	}
+    public void selectionChanged(IAction action, ISelection selection) {
+        this.selection = selection;
+    }
 
-	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
-	}
+    public void setActiveEditor(IAction action, IEditorPart targetEditor) {
+    }
 
-	public void run(IAction action) {
+    public void run(IAction action) {
 
-		store = getIPreferenceStore();
-		Configuration config = getConfiguration(store, selection);
-		PropertiesLoader props = getPropertiesLoader(store.getString(Preference.lang));
+        store = getIPreferenceStore();
+        Configuration config = getConfiguration(store, selection);
+        PropertiesLoader props = getPropertiesLoader(store.getString(Preference.lang));
 
-		StructuredSelection structuredSelection = null;
+        StructuredSelection structuredSelection = null;
 
-		try {
+        try {
 
-			if (selection instanceof StructuredSelection) {
-				// viewer
-				structuredSelection = (StructuredSelection) selection;
-			}
-			if (isNotSelected(structuredSelection)) {
-				// required selecttion
-				openWarningForRequired(props);
-				return;
-			} else if (isSelectedSeveral(structuredSelection)) {
-				// select only one
-				openWarningForSelectOneOnly(props);
-				return;
-			}
+            if (selection instanceof StructuredSelection) {
+                // viewer
+                structuredSelection = (StructuredSelection) selection;
+            }
+            if (isNotSelected(structuredSelection)) {
+                // required selecttion
+                openWarningForRequired(props);
+                return;
+            } else if (isSelectedSeveral(structuredSelection)) {
+                // select only one
+                openWarningForSelectOneOnly(props);
+                return;
+            }
 
-			// ----------------------------------------
-			// get project path, resource path
-			String resourcePathForTargetClassFile = getResourcePathForTargetClassFile(structuredSelection)
-					.replaceFirst(config.directoryPathOfTestSourceCode, config.directoryPathOfProductSourceCode);
-			String resourcePathForTestCaseFile = resourcePathForTargetClassFile.replaceFirst(
-					config.directoryPathOfProductSourceCode, config.directoryPathOfTestSourceCode).replaceFirst(
-					"[^(Test)]\\.java$", StringValue.JUnit.TestClassNameSuffix + StringValue.FileExtension.JavaFile);
-			String projectName = getProjectName(structuredSelection);
-			String projectRootAbsolutePath = getWorkspaceRootAbsolutePath(getIWorkspaceRoot())
-					+ StringValue.DirectorySeparator.General + projectName + StringValue.DirectorySeparator.General;
+            // ----------------------------------------
+            // get project path, resource path
+            String resourcePathForTargetClassFile = getResourcePathForTargetClassFile(structuredSelection)
+                    .replaceFirst(config.directoryPathOfTestSourceCode, config.directoryPathOfProductSourceCode);
+            String resourcePathForTestCaseFile = resourcePathForTargetClassFile.replaceFirst(
+                    config.directoryPathOfProductSourceCode, config.directoryPathOfTestSourceCode).replaceFirst(
+                    "[^(Test)]\\.java$", StringValue.JUnit.TestClassNameSuffix + StringValue.FileExtension.JavaFile);
+            String projectName = getProjectName(structuredSelection);
+            String projectRootAbsolutePath = getWorkspaceRootAbsolutePath(getIWorkspaceRoot())
+                    + StringValue.DirectorySeparator.General + projectName + StringValue.DirectorySeparator.General;
 
-			// ----------------------------------------
-			// check selection
-			if (!resourcePathForTestCaseFile.matches(".*" + RegExp.FileExtension.JavaFile)) {
-				openWarningForSelectJavaFile(props);
-				return;
-			}
+            // ----------------------------------------
+            // check selection
+            if (!resourcePathForTestCaseFile.matches(".*" + RegExp.FileExtension.JavaFile)) {
+                openWarningForSelectJavaFile(props);
+                return;
+            }
 
-			// ----------------------------------------
-			// confirm to execute
-			String targetClassName = getClassNameFromResourcePathForTargetClassFile(resourcePathForTargetClassFile);
-			String testCaseFilename = getTestClassNameFromClassName(targetClassName);
-			String msg = props.get(Dialog.Common.confirmToChangeToJUnitVersion3) + " (" + testCaseFilename + ")";
-			if (testCaseFilename == null || !openConfirm(props, msg)) {
-				return;
-			}
+            // ----------------------------------------
+            // confirm to execute
+            String targetClassName = getClassNameFromResourcePathForTargetClassFile(resourcePathForTargetClassFile);
+            String testCaseFilename = getTestClassNameFromClassName(targetClassName);
+            String msg = props.get(Dialog.Common.confirmToChangeToJUnitVersion3) + " (" + testCaseFilename + ")";
+            if (testCaseFilename == null || !openConfirm(props, msg)) {
+                return;
+            }
 
-			// ----------------------------------------
-			// force version 3.x
-			System.setProperty("junithelper.skipConfirming", "true");
-			ForceJUnitVersion3Command.main(new String[] { projectRootAbsolutePath + resourcePathForTargetClassFile });
+            // ----------------------------------------
+            // force version 3.x
+            System.setProperty("junithelper.skipConfirming", "true");
+            ForceJUnitVersion3Command.main(new String[] { projectRootAbsolutePath + resourcePathForTargetClassFile });
 
-			// ----------------------------------------
-			// open test case
-			ThreadUtil.sleep(200);
-			int retryCount = 0;
-			while (true) {
-				try {
-					// ----------------------------------------
-					// resource refresh
-					if (!ResourceRefreshUtil.refreshLocal(null, projectName + StringValue.DirectorySeparator.General
-							+ resourcePathForTestCaseFile + "/..")) {
-						openWarningForResourceRefreshError(props);
-						System.err.println("Resource refresh error!");
-						return;
-					}
+            // ----------------------------------------
+            // open test case
+            ThreadUtil.sleep(200);
+            int retryCount = 0;
+            while (true) {
+                try {
+                    // ----------------------------------------
+                    // resource refresh
+                    if (!ResourceRefreshUtil.refreshLocal(null, projectName + StringValue.DirectorySeparator.General
+                            + resourcePathForTestCaseFile + "/..")) {
+                        openWarningForResourceRefreshError(props);
+                        System.err.println("Resource refresh error!");
+                        return;
+                    }
 
-					// ----------------------------------------
-					// open test case file
-					retryCount = 0;
-					ThreadUtil.sleep(1500);
-				} catch (Exception e) {
-					retryCount++;
-					if (retryCount > 10) {
-						break;
-					}
-					e.printStackTrace();
-					ThreadUtil.sleep(1500);
-				}
-				break;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+                    // ----------------------------------------
+                    // open test case file
+                    retryCount = 0;
+                    ThreadUtil.sleep(1500);
+                } catch (Exception e) {
+                    retryCount++;
+                    if (retryCount > 10) {
+                        break;
+                    }
+                    e.printStackTrace();
+                    ThreadUtil.sleep(1500);
+                }
+                break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-	}
+    }
 }

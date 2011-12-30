@@ -29,38 +29,36 @@ import org.eclipse.ui.internal.WorkbenchWindow;
 @SuppressWarnings("restriction")
 public final class ResourceRefreshUtil {
 
-	// get progress monitor
-	private static IWorkbench workbench;
-	private static WorkbenchWindow workbenchWindow;
-	private static IActionBars bars;
-	private static IStatusLineManager lineManager;
-	private static IProgressMonitor monitor;
+    // get progress monitor
+    private static IWorkbench workbench;
+    private static WorkbenchWindow workbenchWindow;
+    private static IActionBars bars;
+    private static IStatusLineManager lineManager;
+    private static IProgressMonitor monitor;
 
-	static {
-		try {
-			workbench = PlatformUI.getWorkbench();
-			workbenchWindow = (WorkbenchWindow) workbench
-					.getActiveWorkbenchWindow();
-			bars = workbenchWindow.getActionBars();
-			lineManager = bars.getStatusLineManager();
-			monitor = lineManager.getProgressMonitor();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+    static {
+        try {
+            workbench = PlatformUI.getWorkbench();
+            workbenchWindow = (WorkbenchWindow) workbench.getActiveWorkbenchWindow();
+            bars = workbenchWindow.getActionBars();
+            lineManager = bars.getStatusLineManager();
+            monitor = lineManager.getProgressMonitor();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-	public static boolean refreshLocal(IWorkbenchWindow window, String param) {
-		try {
-			IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace()
-					.getRoot();
-			IResource resource = workspaceRoot.findMember(param);
-			// refresh resource
-			resource.refreshLocal(IResource.DEPTH_INFINITE, monitor);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-		return true;
-	}
+    public static boolean refreshLocal(IWorkbenchWindow window, String param) {
+        try {
+            IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+            IResource resource = workspaceRoot.findMember(param);
+            // refresh resource
+            resource.refreshLocal(IResource.DEPTH_INFINITE, monitor);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
 
 }

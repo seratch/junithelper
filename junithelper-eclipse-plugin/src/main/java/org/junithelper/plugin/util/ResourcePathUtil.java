@@ -25,50 +25,42 @@ import org.junithelper.plugin.page.PreferenceLoader;
 
 public final class ResourcePathUtil {
 
-	public static IPreferenceStore store = null;
+    public static IPreferenceStore store = null;
 
-	@SuppressWarnings("restriction")
-	public static String getPathStartsFromProjectRoot(
-			StructuredSelection structuredSelection) {
-		PreferenceLoader pref = new PreferenceLoader(store);
-		String pathFromProjectRoot = StringValue.Empty;
-		if (structuredSelection == null) {
-			// ----------------------------------------
-			// java editor
-			// ----------------------------------------
-			IWorkbenchPage activePage = PlatformUI.getWorkbench()
-					.getActiveWorkbenchWindow().getActivePage();
-			pathFromProjectRoot = StringValue.DirectorySeparator.General
-					+ activePage.getActiveEditor().getTitleToolTip();
-		} else if (structuredSelection.getFirstElement() instanceof org.eclipse.core.internal.resources.File) {
-			// ----------------------------------------
-			// navigator
-			// ----------------------------------------
-			pathFromProjectRoot = structuredSelection.toString()
-					.replace("[L", StringValue.Empty)
-					.replace("]", StringValue.Empty);
-		} else if (structuredSelection.getFirstElement() instanceof org.eclipse.jdt.internal.core.CompilationUnit) {
-			// ----------------------------------------
-			// package explorer
-			// ----------------------------------------
-			// TODO better implementation
-			String cuToString = structuredSelection.toString();
-			String packagePath = cuToString.split("\\[in")[1].trim()
-					.replaceAll("\\.", StringValue.DirectorySeparator.General);
-			String projectName = cuToString.split("\\[in")[3].trim().split("]")[0];
-			String testTargetClassname = cuToString
-					.split(RegExp.FileExtension.JavaFile)[0]
-					.replaceAll("(\\[|\\])", StringValue.Empty)
-					.replaceAll("Working copy ", StringValue.Empty).trim();
-			pathFromProjectRoot = StringValue.DirectorySeparator.General
-					+ projectName + StringValue.DirectorySeparator.General
-					+ pref.directoryPathOfProductSourceCode
-					+ StringValue.DirectorySeparator.General + packagePath
-					+ StringValue.DirectorySeparator.General
-					+ testTargetClassname
-					+ StringValue.DirectorySeparator.General;
-		}
-		return pathFromProjectRoot;
-	}
+    @SuppressWarnings("restriction")
+    public static String getPathStartsFromProjectRoot(StructuredSelection structuredSelection) {
+        PreferenceLoader pref = new PreferenceLoader(store);
+        String pathFromProjectRoot = StringValue.Empty;
+        if (structuredSelection == null) {
+            // ----------------------------------------
+            // java editor
+            // ----------------------------------------
+            IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+            pathFromProjectRoot = StringValue.DirectorySeparator.General
+                    + activePage.getActiveEditor().getTitleToolTip();
+        } else if (structuredSelection.getFirstElement() instanceof org.eclipse.core.internal.resources.File) {
+            // ----------------------------------------
+            // navigator
+            // ----------------------------------------
+            pathFromProjectRoot = structuredSelection.toString().replace("[L", StringValue.Empty).replace("]",
+                    StringValue.Empty);
+        } else if (structuredSelection.getFirstElement() instanceof org.eclipse.jdt.internal.core.CompilationUnit) {
+            // ----------------------------------------
+            // package explorer
+            // ----------------------------------------
+            // TODO better implementation
+            String cuToString = structuredSelection.toString();
+            String packagePath = cuToString.split("\\[in")[1].trim().replaceAll("\\.",
+                    StringValue.DirectorySeparator.General);
+            String projectName = cuToString.split("\\[in")[3].trim().split("]")[0];
+            String testTargetClassname = cuToString.split(RegExp.FileExtension.JavaFile)[0].replaceAll("(\\[|\\])",
+                    StringValue.Empty).replaceAll("Working copy ", StringValue.Empty).trim();
+            pathFromProjectRoot = StringValue.DirectorySeparator.General + projectName
+                    + StringValue.DirectorySeparator.General + pref.directoryPathOfProductSourceCode
+                    + StringValue.DirectorySeparator.General + packagePath + StringValue.DirectorySeparator.General
+                    + testTargetClassname + StringValue.DirectorySeparator.General;
+        }
+        return pathFromProjectRoot;
+    }
 
 }

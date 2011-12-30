@@ -17,48 +17,40 @@ package org.junithelper.plugin.constant;
 
 public final class Dialog {
 
-	private static final String common = "Dialog.Common.";
+    private static final String common = "Dialog.Common.";
 
-	public static class Common {
+    public static class Common {
 
-		public static final String title = common + "title";
+        public static final String title = common + "title";
 
-		public static final String invalidPreference = common
-				+ "invalidPreference";
+        public static final String invalidPreference = common + "invalidPreference";
 
-		public static final String confirmToExecute = common
-				+ "confirmToExecute";
+        public static final String confirmToExecute = common + "confirmToExecute";
 
-		public static final String required = common + "required";
+        public static final String required = common + "required";
 
-		public static final String selectOneOnly = common + "selectOneOnly";
+        public static final String selectOneOnly = common + "selectOneOnly";
 
-		public static final String alreadyExist = common + "alreadyExist";
+        public static final String alreadyExist = common + "alreadyExist";
 
-		public static final String notExist = common + "notExist";
+        public static final String notExist = common + "notExist";
 
-		public static final String confirmToProceed = common
-				+ "confirmToProceed";
+        public static final String confirmToProceed = common + "confirmToProceed";
 
-		public static final String notToCreateNewFilePreference = common
-				+ "notToCreateNewFilePreference";
+        public static final String notToCreateNewFilePreference = common + "notToCreateNewFilePreference";
 
-		public static final String confirmToCreateNewFile = common
-				+ "confirmToCreateNewFile";
+        public static final String confirmToCreateNewFile = common + "confirmToCreateNewFile";
 
-		public static final String resourceRefreshError = common
-				+ "resourceRefreshError";
+        public static final String resourceRefreshError = common + "resourceRefreshError";
 
-		public static final String confirmToChangeToJUnitVersion3 = common
-				+ "confirmToChangeToJUnitVersion3";
+        public static final String confirmToChangeToJUnitVersion3 = common + "confirmToChangeToJUnitVersion3";
 
-		public static final String confirmToChangeToJUnitVersion4 = common
-				+ "confirmToChangeToJUnitVersion4";
+        public static final String confirmToChangeToJUnitVersion4 = common + "confirmToChangeToJUnitVersion4";
 
-		public static final String selectJavaFile = common + "selectJavaFile";
+        public static final String selectJavaFile = common + "selectJavaFile";
 
-		public static final String notTestClass = common + "notTestClass";
+        public static final String notTestClass = common + "notTestClass";
 
-	}
+    }
 
 }

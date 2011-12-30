@@ -24,14 +24,14 @@ import org.junithelper.plugin.action.Force3TestCaseAction;
 
 public class Force3TestCaseHandler extends AbstractHandler {
 
-	public Force3TestCaseHandler() {
-	}
+    public Force3TestCaseHandler() {
+    }
 
-	public Object execute(ExecutionEvent event) throws ExecutionException {
-		ISelection selection = HandlerUtil.getCurrentSelection(event);
-		Force3TestCaseAction action = new Force3TestCaseAction();
-		action.selectionChanged(null, selection);
-		action.run(null);
-		return null;
-	}
+    public Object execute(ExecutionEvent event) throws ExecutionException {
+        ISelection selection = HandlerUtil.getCurrentSelection(event);
+        Force3TestCaseAction action = new Force3TestCaseAction();
+        action.selectionChanged(null, selection);
+        action.run(null);
+        return null;
+    }
 }

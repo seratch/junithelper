@@ -31,174 +31,173 @@ import org.junithelper.plugin.util.ResourcePathUtil;
 
 public abstract class AbstractAction extends Action {
 
-	public IPreferenceStore store = null;
+    public IPreferenceStore store = null;
 
-	protected Configuration getConfiguration(IPreferenceStore store, ISelection selection) {
+    protected Configuration getConfiguration(IPreferenceStore store, ISelection selection) {
 
-		Configuration config = null;
+        Configuration config = null;
 
-		// read from "junithelper-config.properties" if it exsits
-		// at project root dir
-		StructuredSelection structuredSelection = null;
-		if (selection instanceof StructuredSelection) {
-			// viewer
-			structuredSelection = (StructuredSelection) selection;
-		}
-		if (!isNotSelected(structuredSelection) && !isSelectedSeveral(structuredSelection)) {
-			String projectName = getProjectName(structuredSelection);
-			String projectRootPath = getWorkspaceRootAbsolutePath(getIWorkspaceRoot())
-					+ StringValue.DirectorySeparator.General + projectName + StringValue.DirectorySeparator.General;
-			String configFilepath = projectRootPath + "junithelper-config.properties";
-			File configProperites = new File(configFilepath);
-			if (configProperites.exists()) {
-				try {
-					config = new ConfigurationLoader().load(configFilepath);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			} else {
-				// load from Eclipse Preference
-				config = new PreferenceLoader(store).getConfig();
-			}
-			String extConfigFilepath = projectRootPath + "junithelper-extension.xml";
-			File extConfigXML = new File(extConfigFilepath);
-			if (extConfigXML.exists()) {
-				try {
-					ExtConfiguration extConfig = new ExtConfigurationLoader().load(extConfigFilepath);
-					config.isExtensionEnabled = true;
-					config.extConfiguration = extConfig;
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		return config;
-	}
+        // read from "junithelper-config.properties" if it exsits
+        // at project root dir
+        StructuredSelection structuredSelection = null;
+        if (selection instanceof StructuredSelection) {
+            // viewer
+            structuredSelection = (StructuredSelection) selection;
+        }
+        if (!isNotSelected(structuredSelection) && !isSelectedSeveral(structuredSelection)) {
+            String projectName = getProjectName(structuredSelection);
+            String projectRootPath = getWorkspaceRootAbsolutePath(getIWorkspaceRoot())
+                    + StringValue.DirectorySeparator.General + projectName + StringValue.DirectorySeparator.General;
+            String configFilepath = projectRootPath + "junithelper-config.properties";
+            File configProperites = new File(configFilepath);
+            if (configProperites.exists()) {
+                try {
+                    config = new ConfigurationLoader().load(configFilepath);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                // load from Eclipse Preference
+                config = new PreferenceLoader(store).getConfig();
+            }
+            String extConfigFilepath = projectRootPath + "junithelper-extension.xml";
+            File extConfigXML = new File(extConfigFilepath);
+            if (extConfigXML.exists()) {
+                try {
+                    ExtConfiguration extConfig = new ExtConfigurationLoader().load(extConfigFilepath);
+                    config.isExtensionEnabled = true;
+                    config.extConfiguration = extConfig;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return config;
+    }
 
-	protected PropertiesLoader getPropertiesLoader(String language) {
-		return new PropertiesLoader(language);
-	}
+    protected PropertiesLoader getPropertiesLoader(String language) {
+        return new PropertiesLoader(language);
+    }
 
-	// -------------------
-	// String value
-	protected String getTestClassNameFromClassName(String className) {
-		return className + StringValue.JUnit.TestClassNameSuffix + StringValue.FileExtension.JavaFile;
-	}
+    // -------------------
+    // String value
+    protected String getTestClassNameFromClassName(String className) {
+        return className + StringValue.JUnit.TestClassNameSuffix + StringValue.FileExtension.JavaFile;
+    }
 
-	protected String getDetectedEncodingFrom(IFile file, String defaultEncoding) {
-		return EclipseIFileUtil.getDetectedEncodingFrom(file, defaultEncoding);
-	}
+    protected String getDetectedEncodingFrom(IFile file, String defaultEncoding) {
+        return EclipseIFileUtil.getDetectedEncodingFrom(file, defaultEncoding);
+    }
 
-	protected String getClassNameFromResourcePathForTargetClassFile(String resourcePathForTargetClassFile) {
-		String[] splittedArray = resourcePathForTargetClassFile.split(StringValue.DirectorySeparator.General);
-		return splittedArray[splittedArray.length - 1].split("\\.")[0];
-	}
+    protected String getClassNameFromResourcePathForTargetClassFile(String resourcePathForTargetClassFile) {
+        String[] splittedArray = resourcePathForTargetClassFile.split(StringValue.DirectorySeparator.General);
+        return splittedArray[splittedArray.length - 1].split("\\.")[0];
+    }
 
-	protected String getProjectName(StructuredSelection structuredSelection) {
-		String pathFromProjectRoot = getPathFromProjectRoot(structuredSelection);
-		String[] dirArrFromProjectRoot = pathFromProjectRoot.split(StringValue.DirectorySeparator.General);
-		return dirArrFromProjectRoot[1];
-	}
+    protected String getProjectName(StructuredSelection structuredSelection) {
+        String pathFromProjectRoot = getPathFromProjectRoot(structuredSelection);
+        String[] dirArrFromProjectRoot = pathFromProjectRoot.split(StringValue.DirectorySeparator.General);
+        return dirArrFromProjectRoot[1];
+    }
 
-	// -------------------
-	// Path
+    // -------------------
+    // Path
 
-	protected String getPathFromProjectRoot(StructuredSelection structuredSelection) {
-		return ResourcePathUtil.getPathStartsFromProjectRoot(structuredSelection);
-	}
+    protected String getPathFromProjectRoot(StructuredSelection structuredSelection) {
+        return ResourcePathUtil.getPathStartsFromProjectRoot(structuredSelection);
+    }
 
-	protected String getWorkspaceRootAbsolutePath(IWorkspaceRoot workspaceRoot) {
-		return workspaceRoot.getLocation().toString();
-	}
+    protected String getWorkspaceRootAbsolutePath(IWorkspaceRoot workspaceRoot) {
+        return workspaceRoot.getLocation().toString();
+    }
 
-	protected String getResourcePathForTargetClassFile(StructuredSelection structuredSelection) {
-		// path started from project root
-		String pathFromProjectRoot = getPathFromProjectRoot(structuredSelection);
-		// path started from project root
-		// ex. /{projectName}/src/main/java/hoge/foo/var/TestTarget.java
-		String[] dirArrFromProjectRoot = pathFromProjectRoot.split(StringValue.DirectorySeparator.General);
-		// test case file create filesystem path
-		String resourcePathForTargetClassFile = StringValue.Empty;
-		int len = dirArrFromProjectRoot.length;
-		for (int i = 2; i < len; i++) {
-			resourcePathForTargetClassFile += dirArrFromProjectRoot[i] + StringValue.DirectorySeparator.General;
-		}
-		resourcePathForTargetClassFile = resourcePathForTargetClassFile
-				.replaceAll(RegExp.CRLF, StringValue.Empty)
-				.replaceFirst("\\.java.+", ".java")
-				.replace(StringValue.JUnit.TestClassNameSuffix + StringValue.FileExtension.JavaFile,
-						StringValue.FileExtension.JavaFile);
-		return resourcePathForTargetClassFile;
-	}
+    protected String getResourcePathForTargetClassFile(StructuredSelection structuredSelection) {
+        // path started from project root
+        String pathFromProjectRoot = getPathFromProjectRoot(structuredSelection);
+        // path started from project root
+        // ex. /{projectName}/src/main/java/hoge/foo/var/TestTarget.java
+        String[] dirArrFromProjectRoot = pathFromProjectRoot.split(StringValue.DirectorySeparator.General);
+        // test case file create filesystem path
+        String resourcePathForTargetClassFile = StringValue.Empty;
+        int len = dirArrFromProjectRoot.length;
+        for (int i = 2; i < len; i++) {
+            resourcePathForTargetClassFile += dirArrFromProjectRoot[i] + StringValue.DirectorySeparator.General;
+        }
+        resourcePathForTargetClassFile = resourcePathForTargetClassFile.replaceAll(RegExp.CRLF, StringValue.Empty)
+                .replaceFirst("\\.java.+", ".java").replace(
+                        StringValue.JUnit.TestClassNameSuffix + StringValue.FileExtension.JavaFile,
+                        StringValue.FileExtension.JavaFile);
+        return resourcePathForTargetClassFile;
+    }
 
-	// -------------------
-	// Eclipse SDK
+    // -------------------
+    // Eclipse SDK
 
-	protected IPreferenceStore getIPreferenceStore() {
-		if (store == null) {
-			store = Activator.getDefault().getPreferenceStore();
-		}
-		return store;
-	}
+    protected IPreferenceStore getIPreferenceStore() {
+        if (store == null) {
+            store = Activator.getDefault().getPreferenceStore();
+        }
+        return store;
+    }
 
-	protected IWorkspaceRoot getIWorkspaceRoot() {
-		return ResourcesPlugin.getWorkspace().getRoot();
-	}
+    protected IWorkspaceRoot getIWorkspaceRoot() {
+        return ResourcesPlugin.getWorkspace().getRoot();
+    }
 
-	protected IWorkbenchPage getIWorkbenchPage() {
-		return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-	}
+    protected IWorkbenchPage getIWorkbenchPage() {
+        return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+    }
 
-	protected IProject getIProject(String projectName) {
-		return getIWorkspaceRoot().getProject(projectName);
-	}
+    protected IProject getIProject(String projectName) {
+        return getIWorkspaceRoot().getProject(projectName);
+    }
 
-	protected IFile getIFile(IProject project, String resourcePath) {
-		return project.getFile(resourcePath);
-	}
+    protected IFile getIFile(IProject project, String resourcePath) {
+        return project.getFile(resourcePath);
+    }
 
-	protected IEditorPart getIEditorPart(IWorkbenchPage page, IFile file) throws Exception {
-		String editorId = EclipseIFileUtil.getIEditorDescriptorFrom(file).getId();
-		return IDE.openEditor(page, file, editorId);
-	}
+    protected IEditorPart getIEditorPart(IWorkbenchPage page, IFile file) throws Exception {
+        String editorId = EclipseIFileUtil.getIEditorDescriptorFrom(file).getId();
+        return IDE.openEditor(page, file, editorId);
+    }
 
-	// -------------------
-	// selection
+    // -------------------
+    // selection
 
-	protected boolean isNotSelected(StructuredSelection structuredSelection) {
-		return structuredSelection != null && structuredSelection.size() == 0;
-	}
+    protected boolean isNotSelected(StructuredSelection structuredSelection) {
+        return structuredSelection != null && structuredSelection.size() == 0;
+    }
 
-	protected boolean isSelectedSeveral(StructuredSelection structuredSelection) {
-		return structuredSelection != null && structuredSelection.size() > 1;
-	}
+    protected boolean isSelectedSeveral(StructuredSelection structuredSelection) {
+        return structuredSelection != null && structuredSelection.size() > 1;
+    }
 
-	// -------------------
-	// open dialog
+    // -------------------
+    // open dialog
 
-	protected void openWarningForRequired(PropertiesLoader props) {
-		MessageDialog.openWarning(new Shell(), props.get(Dialog.Common.title), props.get(Dialog.Common.required));
-	}
+    protected void openWarningForRequired(PropertiesLoader props) {
+        MessageDialog.openWarning(new Shell(), props.get(Dialog.Common.title), props.get(Dialog.Common.required));
+    }
 
-	protected void openWarningForResourceRefreshError(PropertiesLoader props) {
-		MessageDialog.openWarning(new Shell(), props.get(Dialog.Common.title),
-				props.get(Dialog.Common.resourceRefreshError));
-	}
+    protected void openWarningForResourceRefreshError(PropertiesLoader props) {
+        MessageDialog.openWarning(new Shell(), props.get(Dialog.Common.title), props
+                .get(Dialog.Common.resourceRefreshError));
+    }
 
-	protected void openWarningForSelectOneOnly(PropertiesLoader props) {
-		MessageDialog.openWarning(new Shell(), props.get(Dialog.Common.title), props.get(Dialog.Common.selectOneOnly));
-	}
+    protected void openWarningForSelectOneOnly(PropertiesLoader props) {
+        MessageDialog.openWarning(new Shell(), props.get(Dialog.Common.title), props.get(Dialog.Common.selectOneOnly));
+    }
 
-	protected void openWarningForSelectJavaFile(PropertiesLoader props) {
-		MessageDialog.openWarning(new Shell(), props.get(Dialog.Common.title), props.get(Dialog.Common.selectJavaFile));
-	}
+    protected void openWarningForSelectJavaFile(PropertiesLoader props) {
+        MessageDialog.openWarning(new Shell(), props.get(Dialog.Common.title), props.get(Dialog.Common.selectJavaFile));
+    }
 
-	protected void openWarning(PropertiesLoader props, String message) {
-		MessageDialog.openWarning(new Shell(), props.get(Dialog.Common.title), message);
-	}
+    protected void openWarning(PropertiesLoader props, String message) {
+        MessageDialog.openWarning(new Shell(), props.get(Dialog.Common.title), message);
+    }
 
-	protected boolean openConfirm(PropertiesLoader props, String message) {
-		return MessageDialog.openConfirm(new Shell(), props.get(Dialog.Common.title), message);
-	}
+    protected boolean openConfirm(PropertiesLoader props, String message) {
+        return MessageDialog.openConfirm(new Shell(), props.get(Dialog.Common.title), message);
+    }
 
 }

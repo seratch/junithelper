@@ -34,9 +34,10 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.constant.StringValue;
+import org.junithelper.core.extractor.ClassMetaExtractor;
+import org.junithelper.core.generator.LineBreakProvider;
 import org.junithelper.core.generator.TestCaseGenerator;
-import org.junithelper.core.generator.impl.DefaultTestCaseGenerator;
-import org.junithelper.core.meta.extractor.ClassMetaExtractor;
+import org.junithelper.core.generator.TestCaseGeneratorFactory;
 import org.junithelper.core.util.IOUtil;
 import org.junithelper.core.util.ThreadUtil;
 import org.junithelper.core.util.UniversalDetectorUtil;
@@ -180,11 +181,12 @@ public class CreateNewTestCaseAction extends AbstractAction implements IActionDe
 
                 // ---------------
                 // generate test case source code string
-                TestCaseGenerator generator = new DefaultTestCaseGenerator(config);
                 String encoding = UniversalDetectorUtil.getDetectedEncoding(EclipseIFileUtil
                         .getInputStreamFrom(targetClassFile));
-                String sourceCodeString = IOUtil.readAsString(EclipseIFileUtil.getInputStreamFrom(targetClassFile),
-                        encoding);
+                InputStream targetInputStream = EclipseIFileUtil.getInputStreamFrom(targetClassFile);
+                String sourceCodeString = IOUtil.readAsString(targetInputStream, encoding);
+                LineBreakProvider lineBreakProvider = new LineBreakProvider(config, null);
+                TestCaseGenerator generator = TestCaseGeneratorFactory.create(config, lineBreakProvider);
                 generator.initialize(new ClassMetaExtractor(config).extract(sourceCodeString));
 
                 // ---------------
