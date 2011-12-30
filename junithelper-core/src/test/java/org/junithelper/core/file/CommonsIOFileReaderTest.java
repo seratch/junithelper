@@ -9,7 +9,6 @@ import java.io.InputStream;
 
 import org.junit.Test;
 import org.junithelper.core.exception.JUnitHelperCoreException;
-import org.junithelper.core.file.CommonsIOFileReader;
 import org.junithelper.core.util.IOUtil;
 
 public class CommonsIOFileReaderTest {

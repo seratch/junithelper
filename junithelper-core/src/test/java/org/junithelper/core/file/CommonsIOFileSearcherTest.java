@@ -7,8 +7,6 @@ import java.util.List;
 
 import org.junit.Test;
 import org.junithelper.core.exception.JUnitHelperCoreException;
-import org.junithelper.core.file.CommonsIOFileSearcher;
-import org.junithelper.core.file.FileSearcher;
 
 public class CommonsIOFileSearcherTest {
 
