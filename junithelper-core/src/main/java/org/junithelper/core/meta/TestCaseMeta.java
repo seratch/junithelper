@@ -22,6 +22,8 @@ public class TestCaseMeta {
 
     public ClassMeta target;
 
+    public CurrentLineBreak currentLineBreak;
+
     public List<TestMethodMeta> tests = new ArrayList<TestMethodMeta>();
 
 }

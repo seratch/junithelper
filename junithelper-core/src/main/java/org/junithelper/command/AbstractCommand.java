@@ -24,8 +24,10 @@ import java.util.List;
 
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.ConfigurationLoader;
+import org.junithelper.core.config.LineBreakPolicy;
 import org.junithelper.core.config.extension.ExtConfigurationLoader;
 import org.junithelper.core.constant.RegExp;
+import org.junithelper.core.constant.StringValue;
 import org.junithelper.core.extractor.ClassMetaExtractor;
 import org.junithelper.core.file.FileSearcher;
 import org.junithelper.core.file.FileSearcherFactory;
@@ -36,7 +38,7 @@ import org.junithelper.core.util.UniversalDetectorUtil;
 
 public abstract class AbstractCommand {
 
-    protected static void initializeConfiguration(Configuration config) throws Exception {
+    protected static Configuration getUpdatedConfig(Configuration config) throws Exception {
         String configFile = System.getProperty("junithelper.configProperties");
         if (configFile != null) {
             config = new ConfigurationLoader().load(configFile);
@@ -47,6 +49,7 @@ public abstract class AbstractCommand {
         } else if (new File(config.extensionConfigXML).exists()) {
             config.extConfiguration = new ExtConfigurationLoader().load(config.extensionConfigXML);
         }
+        return config;
     }
 
     protected static boolean skipConfirming() {
@@ -115,6 +118,16 @@ public abstract class AbstractCommand {
 
     protected static String getDirectoryPathOfTestSourceCode(Configuration config) {
         return "/" + config.directoryPathOfTestSourceCode.replaceFirst("^/", "").replaceFirst("/$", "") + "/";
+    }
+
+    protected static String standardizeLineBreak(Configuration config, String testCodeString) {
+        if (config.lineBreakPolicy.equals(LineBreakPolicy.forceCRLF)) {
+            return testCodeString.replaceAll(StringValue.CarriageReturn, StringValue.Empty).replaceAll(
+                    StringValue.LineFeed, StringValue.CarriageReturn + StringValue.LineFeed);
+        } else if (config.lineBreakPolicy.equals(LineBreakPolicy.forceLF)) {
+            return testCodeString.replaceAll(StringValue.CarriageReturn, StringValue.Empty);
+        }
+        return testCodeString;
     }
 
 }

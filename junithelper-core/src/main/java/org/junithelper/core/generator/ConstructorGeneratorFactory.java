@@ -15,13 +15,15 @@
  */
 package org.junithelper.core.generator;
 
+import org.junithelper.core.config.Configuration;
+
 public class ConstructorGeneratorFactory {
 
     private ConstructorGeneratorFactory() {
     }
 
-    public static ConstructorGenerator create() {
-        return new ConstructorGeneratorImpl();
+    public static ConstructorGenerator create(Configuration config, LineBreakProvider lineBreakProvider) {
+        return new ConstructorGeneratorImpl(config, lineBreakProvider);
     }
 
 }

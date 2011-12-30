@@ -47,22 +47,30 @@ import org.junithelper.core.util.Stderr;
 
 class TestCaseGeneratorImpl implements TestCaseGenerator {
 
+    private SourceCodeAppender appender;
+    private boolean isAlreadyInitialized = false;
+
     private Configuration config;
     private ClassMeta targetClassMeta;
     private MessageValue messageValue = new MessageValue();
     private TestMethodGenerator testMethodGenerator;
 
-    public TestCaseGeneratorImpl(Configuration config) {
+    public TestCaseGeneratorImpl(Configuration config, LineBreakProvider lineBreakProvider) {
         this.config = config;
-        testMethodGenerator = new TestMethodGeneratorImpl(config);
+        appender = new SourceCodeAppender(lineBreakProvider);
+        testMethodGenerator = new TestMethodGeneratorImpl(config, lineBreakProvider);
     }
 
     @Override
     public TestCaseGeneratorImpl initialize(String targetSourceCodeString) {
+        if (isAlreadyInitialized) {
+            throw new IllegalStateException("Cannnot reuse this instance..");
+        }
         ClassMetaExtractor classMetaExtractor = new ClassMetaExtractor(config);
         this.targetClassMeta = classMetaExtractor.extract(targetSourceCodeString);
         this.testMethodGenerator.initialize(targetClassMeta);
         this.messageValue.initialize(config.language);
+        this.isAlreadyInitialized = true;
         return this;
     }
 
@@ -262,15 +270,15 @@ class TestCaseGeneratorImpl implements TestCaseGenerator {
             buf.append("package ");
             buf.append(targetClassMeta.packageName);
             buf.append(";");
-            appendCRLF(buf);
-            appendCRLF(buf);
+            appender.appendLineBreak(buf);
+            appender.appendLineBreak(buf);
         }
         for (String imported : targetClassMeta.importedList) {
             if (imported != null && imported.trim().length() > 0) {
                 buf.append("import ");
                 buf.append(imported);
                 buf.append(";");
-                appendCRLF(buf);
+                appender.appendLineBreak(buf);
             }
         }
         // JUnit 3.x or specified super class
@@ -280,11 +288,11 @@ class TestCaseGeneratorImpl implements TestCaseGenerator {
                 buf.append("import ");
                 buf.append(config.testCaseClassNameToExtend);
                 buf.append(";");
-                appendCRLF(buf);
-                appendCRLF(buf);
+                appender.appendLineBreak(buf);
+                appender.appendLineBreak(buf);
             }
         } else {
-            appendCRLF(buf);
+            appender.appendLineBreak(buf);
         }
         buf.append("public class ");
         buf.append(targetClassMeta.name);
@@ -300,10 +308,10 @@ class TestCaseGeneratorImpl implements TestCaseGenerator {
             }
         }
         buf.append("{");
-        appendCRLF(buf);
-        appendCRLF(buf);
+        appender.appendLineBreak(buf);
+        appender.appendLineBreak(buf);
         buf.append("}");
-        appendCRLF(buf);
+        appender.appendLineBreak(buf);
         return getTestCaseSourceCodeWithLackingTestMethod(buf.toString());
     }
 
@@ -383,8 +391,7 @@ class TestCaseGeneratorImpl implements TestCaseGenerator {
         return dest;
     }
 
-    static String appendRequiredImportListToSourceCode(String sourceCode, ClassMeta targetClassMeta,
-            Configuration config) {
+    String appendRequiredImportListToSourceCode(String sourceCode, ClassMeta targetClassMeta, Configuration config) {
 
         Assertion.on("targetClassMeta").mustNotBeNull(targetClassMeta);
 
@@ -409,31 +416,31 @@ class TestCaseGeneratorImpl implements TestCaseGenerator {
         }
         // Inner classes of test target class
         String prefix = targetClassMeta.packageName == null ? "" : targetClassMeta.packageName + ".";
-        appendIfNotExists(importedListBuf, oneline, "import " + prefix + targetClassMeta.name + ".*;");
+        appender.appendIfNotExists(importedListBuf, oneline, "import " + prefix + targetClassMeta.name + ".*;");
         // JUnit
         if (config.junitVersion == JUnitVersion.version3) {
-            appendIfNotExists(importedListBuf, oneline, "import " + config.testCaseClassNameToExtend + ";");
+            appender.appendIfNotExists(importedListBuf, oneline, "import " + config.testCaseClassNameToExtend + ";");
         } else if (config.junitVersion == JUnitVersion.version4) {
             if (!sourceCode.contains("org.hamcrest.Matchers.*;")
                     && !uniqImportedList.contains("org.hamcrest.Matchers.*;")) {
-                appendIfNotExists(importedListBuf, oneline, "import static org.hamcrest.CoreMatchers.*;");
+                appender.appendIfNotExists(importedListBuf, oneline, "import static org.hamcrest.CoreMatchers.*;");
             }
-            appendIfNotExists(importedListBuf, oneline, "import static org.junit.Assert.*;");
-            appendIfNotExists(importedListBuf, oneline, "import org.junit.Test;");
+            appender.appendIfNotExists(importedListBuf, oneline, "import static org.junit.Assert.*;");
+            appender.appendIfNotExists(importedListBuf, oneline, "import org.junit.Test;");
         }
         // Mock object framework
         if (config.mockObjectFramework == MockObjectFramework.EasyMock) {
-            appendIfNotExists(importedListBuf, oneline, "import org.easymock.classextension.EasyMock;");
-            appendIfNotExists(importedListBuf, oneline, "import org.easymock.classextension.IMocksControl;");
+            appender.appendIfNotExists(importedListBuf, oneline, "import org.easymock.classextension.EasyMock;");
+            appender.appendIfNotExists(importedListBuf, oneline, "import org.easymock.classextension.IMocksControl;");
         } else if (config.mockObjectFramework == MockObjectFramework.JMock2) {
-            appendIfNotExists(importedListBuf, oneline, "import org.jmock.Mockery;");
-            appendIfNotExists(importedListBuf, oneline, "import org.jmock.Expectations;");
-            appendIfNotExists(importedListBuf, oneline, "import org.jmock.lib.legacy.ClassImposteriser;");
+            appender.appendIfNotExists(importedListBuf, oneline, "import org.jmock.Mockery;");
+            appender.appendIfNotExists(importedListBuf, oneline, "import org.jmock.Expectations;");
+            appender.appendIfNotExists(importedListBuf, oneline, "import org.jmock.lib.legacy.ClassImposteriser;");
         } else if (config.mockObjectFramework == MockObjectFramework.JMockit) {
-            appendIfNotExists(importedListBuf, oneline, "import mockit.Mocked;");
-            appendIfNotExists(importedListBuf, oneline, "import mockit.Expectations;");
+            appender.appendIfNotExists(importedListBuf, oneline, "import mockit.Mocked;");
+            appender.appendIfNotExists(importedListBuf, oneline, "import mockit.Expectations;");
         } else if (config.mockObjectFramework == MockObjectFramework.Mockito) {
-            appendIfNotExists(importedListBuf, oneline, "import static org.mockito.BDDMockito.*;");
+            appender.appendIfNotExists(importedListBuf, oneline, "import static org.mockito.BDDMockito.*;");
         }
         if (importedListBuf.length() > 0) {
             Matcher matcher = RegExp.PatternObject.PackageDefArea_Group.matcher(sourceCode.replaceAll(RegExp.CRLF,

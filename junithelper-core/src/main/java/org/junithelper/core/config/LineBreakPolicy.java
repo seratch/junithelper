@@ -13,17 +13,21 @@
  * either express or implied. See the License for the specific language 
  * governing permissions and limitations under the License. 
  */
-package org.junithelper.core.generator;
+package org.junithelper.core.config;
 
-import org.junithelper.core.config.Configuration;
+public enum LineBreakPolicy {
 
-public class TestMethodGeneratorFactory {
+    forceCRLF("forceCRLF"), forceLF("forceLF"), forceNewFileCRLF("forceNewFileCRLF"), forceNewFileLF("forceNewFileLF");
 
-    private TestMethodGeneratorFactory() {
+    private String name;
+
+    private LineBreakPolicy(String name) {
+        this.name = name;
     }
 
-    public static TestMethodGenerator create(Configuration config, LineBreakProvider lineBreakProvider) {
-        return new TestMethodGeneratorImpl(config, lineBreakProvider);
+    @Override
+    public String toString() {
+        return this.name;
     }
 
 }

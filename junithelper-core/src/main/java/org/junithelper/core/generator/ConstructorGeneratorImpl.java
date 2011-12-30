@@ -30,6 +30,12 @@ import org.junithelper.core.util.PrimitiveTypeUtil;
 
 class ConstructorGeneratorImpl implements ConstructorGenerator {
 
+    private SourceCodeAppender appender;
+
+    public ConstructorGeneratorImpl(Configuration config, LineBreakProvider lineBreakProvider) {
+        appender = new SourceCodeAppender(lineBreakProvider);
+    }
+
     @Override
     public List<String> getAllInstantiationSourceCodeList(Configuration config, ClassMeta classMeta) {
         List<String> dest = new ArrayList<String>();
@@ -49,11 +55,11 @@ class ConstructorGeneratorImpl implements ConstructorGenerator {
         // TODO better implementation
         StringBuilder buf = new StringBuilder();
         if (constructorMeta == null) {
-            appendTabs(buf, 2);
+            appender.appendTabs(buf, 2);
             buf.append(classMeta.name);
             buf.append(" target = null");
             buf.append(StringValue.Semicolon);
-            appendCRLF(buf);
+            appender.appendLineBreak(buf);
         } else {
             int len = constructorMeta.argTypes.size();
             for (int i = 0; i < len; i++) {
@@ -69,11 +75,11 @@ class ConstructorGeneratorImpl implements ConstructorGenerator {
                             }
                             // pre-assign
                             if (ins.preAssignCode != null && ins.preAssignCode.trim().length() > 0) {
-                                appendExtensionSourceCode(buf, ins.preAssignCode);
+                                appender.appendExtensionSourceCode(buf, ins.preAssignCode);
                             }
                             // assign
                             // \t\tBean bean =
-                            appendTabs(buf, 2);
+                            appender.appendTabs(buf, 2);
                             buf.append(typeName);
                             buf.append(" ");
                             buf.append(constructorMeta.argNames.get(i));
@@ -82,10 +88,10 @@ class ConstructorGeneratorImpl implements ConstructorGenerator {
                             if (!ins.assignCode.endsWith(StringValue.Semicolon)) {
                                 buf.append(StringValue.Semicolon);
                             }
-                            appendCRLF(buf);
+                            appender.appendLineBreak(buf);
                             // post-assign
                             if (ins.postAssignCode != null && ins.postAssignCode.trim().length() > 0) {
-                                appendExtensionPostAssignSourceCode(buf, ins.postAssignCode,
+                                appender.appendExtensionPostAssignSourceCode(buf, ins.postAssignCode,
                                         new String[] { "\\{instance\\}" }, constructorMeta.argNames.get(i));
                             }
                             isAssigned = true;
@@ -94,7 +100,7 @@ class ConstructorGeneratorImpl implements ConstructorGenerator {
                 }
 
                 if (!isAssigned) {
-                    appendTabs(buf, 2);
+                    appender.appendTabs(buf, 2);
                     buf.append(typeName);
                     buf.append(" ");
                     buf.append(constructorMeta.argNames.get(i));
@@ -105,10 +111,10 @@ class ConstructorGeneratorImpl implements ConstructorGenerator {
                         buf.append("null");
                     }
                     buf.append(StringValue.Semicolon);
-                    appendCRLF(buf);
+                    appender.appendLineBreak(buf);
                 }
             }
-            appendTabs(buf, 2);
+            appender.appendTabs(buf, 2);
             buf.append(classMeta.name);
             buf.append(" target = new ");
             buf.append(classMeta.name);
@@ -125,7 +131,7 @@ class ConstructorGeneratorImpl implements ConstructorGenerator {
             }
             buf.append(")");
             buf.append(StringValue.Semicolon);
-            appendCRLF(buf);
+            appender.appendLineBreak(buf);
         }
         return buf.toString();
     }

@@ -20,11 +20,14 @@ import java.util.List;
 
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.JUnitVersion;
+import org.junithelper.core.extractor.CurrentLineBreakDetector;
 import org.junithelper.core.file.FileReader;
 import org.junithelper.core.file.FileReaderFactory;
 import org.junithelper.core.file.FileWriterFactory;
+import org.junithelper.core.generator.LineBreakProvider;
 import org.junithelper.core.generator.TestCaseGenerator;
 import org.junithelper.core.generator.TestCaseGeneratorFactory;
+import org.junithelper.core.meta.CurrentLineBreak;
 import org.junithelper.core.util.Stdout;
 
 public class ForceJUnitVersion3Command extends AbstractCommand {
@@ -36,7 +39,7 @@ public class ForceJUnitVersion3Command extends AbstractCommand {
 
     public static void main(String[] args) throws Exception {
 
-        initializeConfiguration(config);
+        config = getUpdatedConfig(config);
 
         config.junitVersion = JUnitVersion.version3;
         boolean hasFirstArg = (args != null && args.length > 0 && args[0] != null);
@@ -52,7 +55,6 @@ public class ForceJUnitVersion3Command extends AbstractCommand {
         }
 
         // Execute re-writing tests
-        TestCaseGenerator testCaseGenerator = TestCaseGeneratorFactory.create(config);
         FileReader fileReader = FileReaderFactory.create();
         for (File javaFile : javaFiles) {
             File testFile = null;
@@ -65,6 +67,10 @@ public class ForceJUnitVersion3Command extends AbstractCommand {
                 currentTestCaseSourceCode = fileReader.readAsString(testFile);
             } catch (Exception e) {
             }
+            CurrentLineBreak currentLineBreak = CurrentLineBreakDetector.detect(currentTestCaseSourceCode);
+            LineBreakProvider lineBreakProvider = new LineBreakProvider(config, currentLineBreak);
+            TestCaseGenerator testCaseGenerator = TestCaseGeneratorFactory.create(config, lineBreakProvider);
+
             String targetSourceCodeString = fileReader.readAsString(javaFile);
             testCaseGenerator.initialize(targetSourceCodeString);
             String testCodeString = null;
@@ -74,10 +80,10 @@ public class ForceJUnitVersion3Command extends AbstractCommand {
             } else {
                 testCodeString = testCaseGenerator.getNewTestCaseSourceCode();
             }
+            testCodeString = standardizeLineBreak(config, testCodeString);
             FileWriterFactory.create(testFile).writeText(testCodeString);
             Stdout.p("  Forced JUnit 3.x: " + testFile.getAbsolutePath());
         }
 
     }
-
 }

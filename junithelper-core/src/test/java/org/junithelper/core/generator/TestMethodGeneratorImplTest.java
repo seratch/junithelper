@@ -13,9 +13,9 @@ import org.junithelper.core.config.MockObjectFramework;
 import org.junithelper.core.config.TestingPatternExplicitComment;
 import org.junithelper.core.exception.JUnitHelperCoreException;
 import org.junithelper.core.extractor.ClassMetaExtractor;
-import org.junithelper.core.generator.TestMethodGeneratorImpl;
 import org.junithelper.core.meta.ArgTypeMeta;
 import org.junithelper.core.meta.ClassMeta;
+import org.junithelper.core.meta.CurrentLineBreak;
 import org.junithelper.core.meta.ExceptionMeta;
 import org.junithelper.core.meta.MethodMeta;
 import org.junithelper.core.meta.TestMethodMeta;
@@ -23,7 +23,8 @@ import org.junithelper.core.meta.TestMethodMeta;
 public class TestMethodGeneratorImplTest {
 
     Configuration config = new Configuration();
-    TestMethodGeneratorImpl generator = new TestMethodGeneratorImpl(config);
+    LineBreakProvider lineBreakProvider = new LineBreakProvider(config, CurrentLineBreak.CRLF);
+    TestMethodGeneratorImpl generator = new TestMethodGeneratorImpl(config, lineBreakProvider);
     ClassMetaExtractor classMetaExtractor = new ClassMetaExtractor(config);
 
     @Test
@@ -34,7 +35,7 @@ public class TestMethodGeneratorImplTest {
     @Test
     public void instantiation() throws Exception {
         Configuration config = null;
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         assertNotNull(target);
     }
 
@@ -139,7 +140,7 @@ public class TestMethodGeneratorImplTest {
         Configuration config = new Configuration();
         config.junitVersion = JUnitVersion.version3;
         config.testingPatternExplicitComment = TestingPatternExplicitComment.ArrangeActAssert;
-        TestMethodGeneratorImpl localGenerator = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl localGenerator = new TestMethodGeneratorImpl(config, lineBreakProvider);
         String sourceCodeString = "package hoge.foo; import java.util.List; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\") } }";
         ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
         localGenerator.initialize(targetClassMeta);
@@ -158,7 +159,7 @@ public class TestMethodGeneratorImplTest {
         Configuration config = new Configuration();
         config.junitVersion = JUnitVersion.version3;
         config.testingPatternExplicitComment = TestingPatternExplicitComment.GivenWhenThen;
-        TestMethodGeneratorImpl localGenerator = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl localGenerator = new TestMethodGeneratorImpl(config, lineBreakProvider);
         String sourceCodeString = "package hoge.foo; import java.util.List; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\") } }";
         ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
         localGenerator.initialize(targetClassMeta);
@@ -177,7 +178,7 @@ public class TestMethodGeneratorImplTest {
         Configuration config = new Configuration();
         config.junitVersion = JUnitVersion.version3;
         config.testingPatternExplicitComment = TestingPatternExplicitComment.GivenWhenThen;
-        TestMethodGeneratorImpl localGenerator = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl localGenerator = new TestMethodGeneratorImpl(config, lineBreakProvider);
         String sourceCodeString = "package hoge.foo; import java.util.List; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\") } }";
         ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
         localGenerator.initialize(targetClassMeta);
@@ -195,7 +196,7 @@ public class TestMethodGeneratorImplTest {
         // given
         Configuration config = new Configuration();
         config.testingPatternExplicitComment = TestingPatternExplicitComment.ArrangeActAssert;
-        TestMethodGeneratorImpl localGenerator = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl localGenerator = new TestMethodGeneratorImpl(config, lineBreakProvider);
         String sourceCodeString = "package hoge.foo; import java.util.List; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\") } }";
         ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
         localGenerator.initialize(targetClassMeta);
@@ -213,7 +214,7 @@ public class TestMethodGeneratorImplTest {
         // given
         Configuration config = new Configuration();
         config.testingPatternExplicitComment = TestingPatternExplicitComment.GivenWhenThen;
-        TestMethodGeneratorImpl localGenerator = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl localGenerator = new TestMethodGeneratorImpl(config, lineBreakProvider);
         String sourceCodeString = "package hoge.foo; import java.util.List; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\") } }";
         ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
         localGenerator.initialize(targetClassMeta);
@@ -278,7 +279,7 @@ public class TestMethodGeneratorImplTest {
     public void appendMockChecking_A$StringBuilder$int_EasyMock() throws Exception {
         Configuration config = new Configuration();
         config.mockObjectFramework = MockObjectFramework.EasyMock;
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         // given
         StringBuilder buf = new StringBuilder();
         int depth = 2;
@@ -294,7 +295,7 @@ public class TestMethodGeneratorImplTest {
     public void appendMockChecking_A$StringBuilder$int_JMock2() throws Exception {
         Configuration config = new Configuration();
         config.mockObjectFramework = MockObjectFramework.JMock2;
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         // given
         StringBuilder buf = new StringBuilder();
         int depth = 2;
@@ -311,7 +312,7 @@ public class TestMethodGeneratorImplTest {
     public void appendMockChecking_A$StringBuilder$int_JMockit() throws Exception {
         Configuration config = new Configuration();
         config.mockObjectFramework = MockObjectFramework.JMockit;
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         // given
         StringBuilder buf = new StringBuilder();
         int depth = 2;
@@ -327,7 +328,7 @@ public class TestMethodGeneratorImplTest {
     public void appendMockChecking_A$StringBuilder$int_Mockito() throws Exception {
         Configuration config = new Configuration();
         config.mockObjectFramework = MockObjectFramework.Mockito;
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         // given
         StringBuilder buf = new StringBuilder();
         int depth = 2;
@@ -426,7 +427,7 @@ public class TestMethodGeneratorImplTest {
     public void getMockedFieldsForJMockit_A$TestMethodMeta() throws Exception {
         // given
         config.mockObjectFramework = MockObjectFramework.JMockit;
-        generator = new TestMethodGeneratorImpl(config);
+        generator = new TestMethodGeneratorImpl(config, lineBreakProvider);
         String sourceCodeString = "package hoge.foo; import java.util.List;import fuga.Bean; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue, Bean bean) throws Throwable { System.out.println(\"aaaa\") } }";
         ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
         generator.initialize(targetClassMeta);
@@ -470,7 +471,7 @@ public class TestMethodGeneratorImplTest {
         // given
         Configuration config = new Configuration();
         config.mockObjectFramework = MockObjectFramework.Mockito;
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         ClassMetaExtractor classMetaExtractor = new ClassMetaExtractor(config);
         String sourceCodeString = "package hoge.foo; import java.util.List; import java.util.Map; public class Sample { public int doSomething(String str, long longValue, List<String> list, Map<String,Object> map, java.util.HashMap<String, String> hashMap) throws Throwable { System.out.println(\"aaaa\") } }";
         ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
@@ -496,7 +497,7 @@ public class TestMethodGeneratorImplTest {
         // given
         Configuration config = new Configuration();
         config.mockObjectFramework = MockObjectFramework.EasyMock;
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         ClassMetaExtractor classMetaExtractor = new ClassMetaExtractor(config);
         String sourceCodeString = "package hoge.foo; import java.util.List; import java.util.Map; public class Sample { public int doSomething(String str, long longValue, List<String> list, Map<String,Object> map, java.util.HashMap<String, String> hashMap) throws Throwable { System.out.println(\"aaaa\") } }";
         ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
@@ -522,7 +523,7 @@ public class TestMethodGeneratorImplTest {
         // given
         Configuration config = new Configuration();
         config.mockObjectFramework = MockObjectFramework.JMock2;
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         ClassMetaExtractor classMetaExtractor = new ClassMetaExtractor(config);
         String sourceCodeString = "package hoge.foo; import java.util.List; import java.util.Map; public class Sample { public int doSomething(String str, long longValue, List<String> list, Map<String,Object> map, java.util.HashMap<String, String> hashMap) throws Throwable { System.out.println(\"aaaa\") } }";
         ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
@@ -548,7 +549,7 @@ public class TestMethodGeneratorImplTest {
         // given
         Configuration config = new Configuration();
         config.mockObjectFramework = MockObjectFramework.JMockit;
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         ClassMetaExtractor classMetaExtractor = new ClassMetaExtractor(config);
         String sourceCodeString = "package hoge.foo; import java.util.List; import java.util.Map; public class Sample { public int doSomething(String str, long longValue, List<String> list, Map<String,Object> map, java.util.HashMap<String, String> hashMap) throws Throwable { System.out.println(\"aaaa\") } }";
         ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
@@ -574,7 +575,7 @@ public class TestMethodGeneratorImplTest {
         // Arrange
         Configuration config = new Configuration();
         config.testingPatternExplicitComment = TestingPatternExplicitComment.ArrangeActAssert;
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         StringBuilder buf = new StringBuilder();
         String value = "Act";
         int depth = 0;
@@ -589,7 +590,7 @@ public class TestMethodGeneratorImplTest {
         // Arrange
         Configuration config = new Configuration();
         config.testingPatternExplicitComment = TestingPatternExplicitComment.GivenWhenThen;
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         StringBuilder buf = new StringBuilder();
         String value = "Act";
         int depth = 0;
@@ -601,7 +602,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void appendMockChecking_A$StringBuilder$int_intIsMinus1() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         StringBuilder buf = new StringBuilder();
         int depth = -1;
         target.appendMockChecking(buf, depth);
@@ -609,7 +610,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void appendMockChecking_A$StringBuilder$int_intIs0() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         StringBuilder buf = new StringBuilder();
         int depth = 0;
         target.appendMockChecking(buf, depth);
@@ -617,7 +618,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void appendMockChecking_A$StringBuilder$int_intIs1() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         StringBuilder buf = new StringBuilder();
         int depth = 1;
         target.appendMockChecking(buf, depth);
@@ -625,7 +626,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void appendMockChecking_A$StringBuilder$int_intIs2() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         StringBuilder buf = new StringBuilder();
         int depth = 2;
         target.appendMockChecking(buf, depth);
@@ -633,7 +634,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void appendMockVerifying_A$StringBuilder$int_intIsMinus1() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         StringBuilder buf = new StringBuilder();
         int depth = -1;
         target.appendMockVerifying(buf, depth);
@@ -641,7 +642,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void appendMockVerifying_A$StringBuilder$int_intIs0() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         StringBuilder buf = new StringBuilder();
         int depth = 0;
         target.appendMockVerifying(buf, depth);
@@ -649,7 +650,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void appendMockVerifying_A$StringBuilder$int_intIs1() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         StringBuilder buf = new StringBuilder();
         int depth = 1;
         target.appendMockVerifying(buf, depth);
@@ -657,7 +658,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void appendMockVerifying_A$StringBuilder$int_intIs2() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         StringBuilder buf = new StringBuilder();
         int depth = 2;
         target.appendMockVerifying(buf, depth);
@@ -665,7 +666,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void appendBDDMockitoComment_A$StringBuilder$String$int_intIsMinus1() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         StringBuilder buf = new StringBuilder();
         String value = null;
         int depth = -1;
@@ -674,7 +675,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void appendBDDMockitoComment_A$StringBuilder$String$int_intIs0() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         StringBuilder buf = new StringBuilder();
         String value = null;
         int depth = 0;
@@ -683,7 +684,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void appendBDDMockitoComment_A$StringBuilder$String$int_intIs1() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         StringBuilder buf = new StringBuilder();
         String value = null;
         int depth = 1;
@@ -692,7 +693,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void appendBDDMockitoComment_A$StringBuilder$String$int_intIs2() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         StringBuilder buf = new StringBuilder();
         String value = null;
         int depth = 2;
@@ -701,7 +702,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void appendBDDMockitoComment_A$StringBuilder$String$int_StringIsNull() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         StringBuilder buf = new StringBuilder();
         String value = null;
         int depth = 0;
@@ -710,7 +711,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void appendBDDMockitoComment_A$StringBuilder$String$int_StringIsEmpty() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         StringBuilder buf = new StringBuilder();
         String value = "";
         int depth = 0;
@@ -719,7 +720,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void appendTestingPatternExplicitComment_A$StringBuilder$String$int_intIsMinus1() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         StringBuilder buf = new StringBuilder();
         String value = null;
         int depth = -1;
@@ -728,7 +729,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void appendTestingPatternExplicitComment_A$StringBuilder$String$int_intIs0() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         StringBuilder buf = new StringBuilder();
         String value = null;
         int depth = 0;
@@ -737,7 +738,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void appendTestingPatternExplicitComment_A$StringBuilder$String$int_intIs1() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         StringBuilder buf = new StringBuilder();
         String value = null;
         int depth = 1;
@@ -746,7 +747,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void appendTestingPatternExplicitComment_A$StringBuilder$String$int_intIs2() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         StringBuilder buf = new StringBuilder();
         String value = null;
         int depth = 2;
@@ -755,7 +756,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void appendTestingPatternExplicitComment_A$StringBuilder$String$int_StringIsNull() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         StringBuilder buf = new StringBuilder();
         String value = null;
         int depth = 0;
@@ -764,7 +765,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void appendTestingPatternExplicitComment_A$StringBuilder$String$int_StringIsEmpty() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         StringBuilder buf = new StringBuilder();
         String value = "";
         int depth = 0;
@@ -773,7 +774,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void getArgValue_A$TestMethodMeta$ArgTypeMeta$String_StringIsNull() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         TestMethodMeta testMethodMeta = new TestMethodMeta();
         ArgTypeMeta argTypeMeta = new ArgTypeMeta();
         argTypeMeta.name = "java.lang.String";
@@ -785,7 +786,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void getArgValue_A$TestMethodMeta$ArgTypeMeta$String_StringIsEmpty() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         TestMethodMeta testMethodMeta = new TestMethodMeta();
         ArgTypeMeta argTypeMeta = new ArgTypeMeta();
         argTypeMeta.name = "";
@@ -799,7 +800,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void getArgValue_A$TestMethodMeta$ArgTypeMeta$String_PrimitiveValue() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         TestMethodMeta testMethodMeta = new TestMethodMeta();
         ArgTypeMeta argTypeMeta = new ArgTypeMeta();
         argTypeMeta.name = "int";
@@ -811,7 +812,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void appendMockChecking_A$StringBuilder$int_intIsMinValue() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         StringBuilder buf = new StringBuilder();
         int depth = Integer.MIN_VALUE;
         target.appendMockChecking(buf, depth);
@@ -819,7 +820,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void appendMockChecking_A$StringBuilder$int_intIsMaxValue() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         StringBuilder buf = new StringBuilder();
         int depth = Integer.MAX_VALUE;
         target.appendMockChecking(buf, depth);
@@ -827,7 +828,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void appendMockVerifying_A$StringBuilder$int_intIsMinValue() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         StringBuilder buf = new StringBuilder();
         int depth = Integer.MIN_VALUE;
         target.appendMockVerifying(buf, depth);
@@ -835,7 +836,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void appendMockVerifying_A$StringBuilder$int_intIsMaxValue() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         StringBuilder buf = new StringBuilder();
         int depth = Integer.MAX_VALUE;
         target.appendMockVerifying(buf, depth);
@@ -843,7 +844,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void appendBDDMockitoComment_A$StringBuilder$String$int_intIsMinValue() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         StringBuilder buf = new StringBuilder();
         String value = "when";
         int depth = Integer.MIN_VALUE;
@@ -852,7 +853,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void appendBDDMockitoComment_A$StringBuilder$String$int_intIsMaxValue() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         StringBuilder buf = new StringBuilder();
         String value = "when";
         int depth = Integer.MAX_VALUE;
@@ -861,7 +862,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void appendTestingPatternExplicitComment_A$StringBuilder$String$int_intIsMinValue() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         StringBuilder buf = new StringBuilder();
         String value = "when";
         int depth = Integer.MIN_VALUE;
@@ -870,7 +871,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void appendTestingPatternExplicitComment_A$StringBuilder$String$int_intIsMaxValue() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         StringBuilder buf = new StringBuilder();
         String value = "when";
         int depth = Integer.MAX_VALUE;
@@ -879,7 +880,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void appendMockChecking_A$StringBuilder$int_intIsRandom() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         StringBuilder buf = new StringBuilder();
         int depth = new Random().nextInt(10);
         target.appendMockChecking(buf, depth);
@@ -887,7 +888,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void appendMockVerifying_A$StringBuilder$int_intIsRandom() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         StringBuilder buf = new StringBuilder();
         int depth = new Random().nextInt(10);
         target.appendMockVerifying(buf, depth);
@@ -895,7 +896,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void appendBDDMockitoComment_A$StringBuilder$String$int_intIsRandom() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         StringBuilder buf = new StringBuilder();
         String value = "tmp";
         int depth = new Random().nextInt(10);
@@ -904,7 +905,7 @@ public class TestMethodGeneratorImplTest {
 
     @Test
     public void appendTestingPatternExplicitComment_A$StringBuilder$String$int_intIsRandom() throws Exception {
-        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config);
+        TestMethodGeneratorImpl target = new TestMethodGeneratorImpl(config, lineBreakProvider);
         StringBuilder buf = new StringBuilder();
         String value = "test";
         int depth = new Random().nextInt(10);

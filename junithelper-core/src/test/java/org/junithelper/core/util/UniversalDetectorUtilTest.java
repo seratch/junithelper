@@ -1,7 +1,6 @@
 package org.junithelper.core.util;
 
 import static org.junit.Assert.*;
-import static org.mockito.BDDMockito.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
@@ -47,7 +46,7 @@ public class UniversalDetectorUtilTest {
         // given
         InputStream is = mock(InputStream.class);
         // e.g. : given(mocked.called()).willReturn(1);
-        given(is.read(any(byte[].class))).willThrow(new IOException());
+        when(is.read(any(byte[].class))).thenThrow(new IOException());
         try {
             // when
             UniversalDetectorUtil.getDetectedEncoding(is);

@@ -25,6 +25,8 @@ public class Configuration {
 
     public ExtConfiguration extConfiguration = new ExtConfiguration(this);
 
+    public LineBreakPolicy lineBreakPolicy = LineBreakPolicy.forceNewFileCRLF;
+
     public String language = "en";
 
     public String outputFileEncoding = "UTF-8";

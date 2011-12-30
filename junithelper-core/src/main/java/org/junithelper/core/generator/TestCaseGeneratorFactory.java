@@ -22,8 +22,8 @@ public class TestCaseGeneratorFactory {
     private TestCaseGeneratorFactory() {
     }
 
-    public static TestCaseGenerator create(Configuration config) {
-        return new TestCaseGeneratorImpl(config);
+    public static TestCaseGenerator create(Configuration config, LineBreakProvider lineBreakProvider) {
+        return new TestCaseGeneratorImpl(config, lineBreakProvider);
     }
 
 }

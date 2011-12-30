@@ -9,7 +9,6 @@ import java.util.List;
 import org.junit.Test;
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.exception.JUnitHelperCoreException;
-import org.junithelper.core.extractor.ClassMetaExtractor;
 import org.junithelper.core.meta.AccessModifier;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.util.IOUtil;
@@ -78,8 +77,8 @@ public class ClassMetaExtractorTest {
     @Test
     public void extract_A$String_Slim3_AbstractModelRef() throws Exception {
         ClassMetaExtractor target = new ClassMetaExtractor(config);
-        String sourceCodeString = IOUtil.readAsString(IOUtil
-                .getResourceAsStream("parser/impl/Slim3_AbstractModelRef.txt"), "UTF-8");
+        String sourceCodeString = IOUtil.readAsString(IOUtil.getResourceAsStream("inputs/Slim3_AbstractModelRef.txt"),
+                "UTF-8");
         ClassMeta actual = target.extract(sourceCodeString);
         assertEquals("org.slim3.datastore", actual.packageName);
         assertEquals(false, actual.isAbstract);
@@ -89,8 +88,7 @@ public class ClassMetaExtractorTest {
     @Test
     public void extract_A$String_Slim3_HtmlUtil() throws Exception {
         ClassMetaExtractor target = new ClassMetaExtractor(config);
-        String sourceCodeString = IOUtil.readAsString(IOUtil.getResourceAsStream("parser/impl/Slim3_HtmlUtil.txt"),
-                "UTF-8");
+        String sourceCodeString = IOUtil.readAsString(IOUtil.getResourceAsStream("inputs/Slim3_HtmlUtil.txt"), "UTF-8");
         ClassMeta actual = target.extract(sourceCodeString);
         assertEquals("org.slim3.util", actual.packageName);
         assertEquals("HtmlUtil", actual.name);
@@ -103,8 +101,8 @@ public class ClassMetaExtractorTest {
     public void extract_A$String_Slim3_GlobalTransaction() throws Exception {
         config.target.isExceptionPatternRequired = false;
         ClassMetaExtractor target = new ClassMetaExtractor(config);
-        String sourceCodeString = IOUtil.readAsString(IOUtil
-                .getResourceAsStream("parser/impl/Slim3_GlobalTransaction.txt"), "UTF-8");
+        String sourceCodeString = IOUtil.readAsString(IOUtil.getResourceAsStream("inputs/Slim3_GlobalTransaction.txt"),
+                "UTF-8");
         ClassMeta actual = target.extract(sourceCodeString);
         assertEquals("org.slim3.datastore", actual.packageName);
         assertEquals("GlobalTransaction", actual.name);
@@ -116,7 +114,7 @@ public class ClassMetaExtractorTest {
     @Test
     public void extract_A$String_Enum_ContentType() throws Exception {
         ClassMetaExtractor target = new ClassMetaExtractor(config);
-        String sourceCodeString = IOUtil.readAsString(IOUtil.getResourceAsStream("parser/impl/Enum_ContentType.txt"),
+        String sourceCodeString = IOUtil.readAsString(IOUtil.getResourceAsStream("inputs/Enum_ContentType.txt"),
                 "UTF-8");
         ClassMeta actual = target.extract(sourceCodeString);
         assertEquals("a.b.c", actual.packageName);

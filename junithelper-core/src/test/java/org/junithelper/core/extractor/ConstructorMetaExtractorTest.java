@@ -8,8 +8,6 @@ import java.util.List;
 
 import org.junit.Test;
 import org.junithelper.core.config.Configuration;
-import org.junithelper.core.extractor.ClassMetaExtractor;
-import org.junithelper.core.extractor.ConstructorMetaExtractor;
 import org.junithelper.core.meta.AccessModifier;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.ConstructorMeta;
@@ -103,8 +101,7 @@ public class ConstructorMetaExtractorTest {
         Configuration config = new Configuration();
         ConstructorMetaExtractor target = new ConstructorMetaExtractor(config);
         // given
-        String sourceCodeString = IOUtil.readAsString(IOUtil.getResourceAsStream("parser/impl/Slim3_HtmlUtil.txt"),
-                "UTF-8");
+        String sourceCodeString = IOUtil.readAsString(IOUtil.getResourceAsStream("inputs/Slim3_HtmlUtil.txt"), "UTF-8");
         target.initialize(sourceCodeString);
         // e.g. : given(mocked.called()).willReturn(1);
         // when

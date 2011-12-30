@@ -25,8 +25,8 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.junithelper.core.config.Configuration;
-import org.junithelper.core.constant.StringValue;
 
 public final class IOUtil {
 
@@ -45,20 +45,7 @@ public final class IOUtil {
         if (encoding == null) {
             encoding = DEFAULT_OUTPUT_FILE_ENCODING;
         }
-        BufferedReader br = null;
-        try {
-            br = new BufferedReader(new InputStreamReader(is, encoding));
-            StringBuilder sb = new StringBuilder();
-            String line = null;
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-                sb.append(StringValue.CarriageReturn);
-                sb.append(StringValue.LineFeed);
-            }
-            return sb.toString();
-        } finally {
-            IOUtil.close(br);
-        }
+        return IOUtils.toString(is);
     }
 
     public static final List<String> readAsLineList(InputStream is) throws IOException {

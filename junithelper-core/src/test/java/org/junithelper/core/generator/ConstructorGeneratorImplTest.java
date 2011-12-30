@@ -7,12 +7,13 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junithelper.core.config.Configuration;
+import org.junithelper.core.config.LineBreakPolicy;
 import org.junithelper.core.config.extension.ExtInstantiation;
 import org.junithelper.core.extractor.ClassMetaExtractor;
-import org.junithelper.core.generator.ConstructorGeneratorImpl;
 import org.junithelper.core.meta.ArgTypeMeta;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.ConstructorMeta;
+import org.junithelper.core.meta.CurrentLineBreak;
 
 public class ConstructorGeneratorImplTest {
 
@@ -25,7 +26,8 @@ public class ConstructorGeneratorImplTest {
     public void setUp() {
         String sourceCodeString = "package hoge.foo; import java.util.List; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\") } }";
         targetClassMeta = classMetaExtractor.extract(sourceCodeString);
-        target = new ConstructorGeneratorImpl();
+        LineBreakProvider lineBreakProvider = new LineBreakProvider(config, CurrentLineBreak.CRLF);
+        target = new ConstructorGeneratorImpl(config, lineBreakProvider);
     }
 
     @Test
@@ -35,44 +37,60 @@ public class ConstructorGeneratorImplTest {
 
     @Test
     public void instantiation() throws Exception {
-        ConstructorGeneratorImpl target = new ConstructorGeneratorImpl();
+        LineBreakProvider lineBreakProvider = new LineBreakProvider(config, CurrentLineBreak.CRLF);
+        target = new ConstructorGeneratorImpl(config, lineBreakProvider);
         assertNotNull(target);
     }
 
     @Test
     public void getAllInstantiationSourceCodeList_A$Configuration$ClassMeta() throws Exception {
-        // given
         ClassMeta classMeta = targetClassMeta;
-        // e.g. : given(mocked.called()).willReturn(1);
-        // when
         List<String> actual = target.getAllInstantiationSourceCodeList(config, classMeta);
-        // then
-        // e.g. : verify(mocked).called();
-        assertEquals("		Sample target = new Sample();\r\n", actual.get(0));
+        assertEquals("\t\tSample target = new Sample();\r\n", actual.get(0));
+    }
+
+    @Test
+    public void getAllInstantiationSourceCodeList_A$Configuration$ClassMeta_FORCE_LF() throws Exception {
+        ClassMeta classMeta = targetClassMeta;
+        config.lineBreakPolicy = LineBreakPolicy.forceLF;
+        LineBreakProvider lineBreakProvider = new LineBreakProvider(config, CurrentLineBreak.CRLF);
+        target = new ConstructorGeneratorImpl(config, lineBreakProvider);
+        List<String> actual = target.getAllInstantiationSourceCodeList(config, classMeta);
+        assertEquals("\t\tSample target = new Sample();\n", actual.get(0));
+    }
+
+    @Test
+    public void getAllInstantiationSourceCodeList_A$Configuration$ClassMeta_NEW_FILE_ONLY_newFIle() throws Exception {
+        ClassMeta classMeta = targetClassMeta;
+        config.lineBreakPolicy = LineBreakPolicy.forceNewFileLF;
+        LineBreakProvider lineBreakProvider = new LineBreakProvider(config, null);
+        target = new ConstructorGeneratorImpl(config, lineBreakProvider);
+        List<String> actual = target.getAllInstantiationSourceCodeList(config, classMeta);
+        assertEquals("\t\tSample target = new Sample();\n", actual.get(0));
+    }
+
+    @Test
+    public void getAllInstantiationSourceCodeList_A$Configuration$ClassMeta_NEW_FILE_ONLY() throws Exception {
+        ClassMeta classMeta = targetClassMeta;
+        config.lineBreakPolicy = LineBreakPolicy.forceNewFileLF;
+        LineBreakProvider lineBreakProvider = new LineBreakProvider(config, CurrentLineBreak.CRLF);
+        target = new ConstructorGeneratorImpl(config, lineBreakProvider);
+        List<String> actual = target.getAllInstantiationSourceCodeList(config, classMeta);
+        assertEquals("\t\tSample target = new Sample();\r\n", actual.get(0));
     }
 
     @Test
     public void getFirstInstantiationSourceCode_A$Configuration$ClassMeta() throws Exception {
-        // given
         ClassMeta classMeta = targetClassMeta;
-        // e.g. : given(mocked.called()).willReturn(1);
-        // when
         String actual = target.getFirstInstantiationSourceCode(config, classMeta);
-        // then
-        // e.g. : verify(mocked).called();
         assertEquals("		Sample target = new Sample();\r\n", actual);
     }
 
     @Test
     public void getInstantiationSourceCode_A$Configuration$ClassMeta$ConstructorMeta() throws Exception {
-        // given
         ClassMeta classMeta = targetClassMeta;
         ConstructorMeta constructorMeta = target.getFirstConstructor(classMeta);
-        // e.g. : given(mocked.called()).willReturn(1);
-        // when
         String actual = target.getInstantiationSourceCode(config, classMeta, constructorMeta);
-        // then
-        // e.g. : verify(mocked).called();
         assertEquals("		Sample target = new Sample();\r\n", actual);
     }
 
@@ -103,13 +121,8 @@ public class ConstructorGeneratorImplTest {
 
     @Test
     public void getFirstConstructor_A$ClassMeta() throws Exception {
-        // given
         ClassMeta classMeta = targetClassMeta;
-        // e.g. : given(mocked.called()).willReturn(1);
-        // when
         ConstructorMeta actual = target.getFirstConstructor(classMeta);
-        // then
-        // e.g. : verify(mocked).called();
         assertNotNull(actual);
     }
 

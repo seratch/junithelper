@@ -19,11 +19,14 @@ import java.io.File;
 import java.util.List;
 
 import org.junithelper.core.config.Configuration;
+import org.junithelper.core.extractor.CurrentLineBreakDetector;
 import org.junithelper.core.file.FileReader;
 import org.junithelper.core.file.FileReaderFactory;
 import org.junithelper.core.file.FileWriterFactory;
+import org.junithelper.core.generator.LineBreakProvider;
 import org.junithelper.core.generator.TestCaseGenerator;
 import org.junithelper.core.generator.TestCaseGeneratorFactory;
+import org.junithelper.core.meta.CurrentLineBreak;
 import org.junithelper.core.util.Stdout;
 
 public class MakeTestCommand extends AbstractCommand {
@@ -35,7 +38,7 @@ public class MakeTestCommand extends AbstractCommand {
 
     public static void main(String[] args) throws Exception {
 
-        initializeConfiguration(config);
+        config = getUpdatedConfig(config);
 
         boolean hasFirstArg = (args != null && args.length > 0 && args[0] != null);
         String dirOrFile = hasFirstArg ? args[0] : config.directoryPathOfProductSourceCode;
@@ -54,7 +57,6 @@ public class MakeTestCommand extends AbstractCommand {
 
         // Execute making tests
         FileReader fileReader = FileReaderFactory.create();
-        TestCaseGenerator testCaseGenerator = TestCaseGeneratorFactory.create(config);
         for (File javaFile : javaFiles) {
             if (isNeedToExclude(javaFile)) {
                 continue;
@@ -69,6 +71,10 @@ public class MakeTestCommand extends AbstractCommand {
                 currentTestCaseSourceCode = fileReader.readAsString(testFile);
             } catch (Exception e) {
             }
+            CurrentLineBreak currentLineBreak = CurrentLineBreakDetector.detect(currentTestCaseSourceCode);
+            LineBreakProvider lineBreakProvider = new LineBreakProvider(config, currentLineBreak);
+            TestCaseGenerator testCaseGenerator = TestCaseGeneratorFactory.create(config, lineBreakProvider);
+
             String targetSourceCodeString = fileReader.readAsString(javaFile);
             testCaseGenerator.initialize(targetSourceCodeString);
             String testCodeString = null;
@@ -76,13 +82,14 @@ public class MakeTestCommand extends AbstractCommand {
                 testCodeString = testCaseGenerator
                         .getTestCaseSourceCodeWithLackingTestMethod(currentTestCaseSourceCode);
                 if (!testCodeString.equals(currentTestCaseSourceCode)) {
-                    Stdout.p("  Modified: " + testFile.getAbsolutePath());
+                    testCodeString = standardizeLineBreak(config, testCodeString);
                     FileWriterFactory.create(testFile).writeText(testCodeString);
+                    Stdout.p("  Modified: " + testFile.getAbsolutePath());
                 }
             } else {
                 testCodeString = testCaseGenerator.getNewTestCaseSourceCode();
-                Stdout.p("  Created: " + testFile.getAbsolutePath());
                 FileWriterFactory.create(testFile).writeText(testCodeString);
+                Stdout.p("  Created: " + testFile.getAbsolutePath());
             }
         }
 

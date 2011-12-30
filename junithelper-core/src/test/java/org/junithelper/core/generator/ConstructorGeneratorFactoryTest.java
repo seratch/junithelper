@@ -4,6 +4,8 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+import org.junithelper.core.config.Configuration;
+import org.junithelper.core.meta.CurrentLineBreak;
 
 public class ConstructorGeneratorFactoryTest {
 
@@ -13,8 +15,10 @@ public class ConstructorGeneratorFactoryTest {
     }
 
     @Test
-    public void create_A$() throws Exception {
-        ConstructorGenerator actual = ConstructorGeneratorFactory.create();
+    public void create_A$Configuration$LineBreakProvider() throws Exception {
+        Configuration config = new Configuration();
+        LineBreakProvider lineBreakProvider = new LineBreakProvider(config, CurrentLineBreak.CRLF);
+        ConstructorGenerator actual = ConstructorGeneratorFactory.create(config, lineBreakProvider);
         assertThat(actual, is(notNullValue()));
     }
 

@@ -29,7 +29,7 @@ public class TrimFilterUtilTest {
 
     @Test
     public void doAllFilters_A$String_Enum_ContentType() throws Exception {
-        String src = IOUtil.readAsString(IOUtil.getResourceAsStream("parser/impl/Enum_ContentType.txt"), "UTF-8");
+        String src = IOUtil.readAsString(IOUtil.getResourceAsStream("inputs/Enum_ContentType.txt"), "UTF-8");
         String actual = TrimFilterUtil.doAllFilters(src);
         String expected = "package a.b.c;  public enum ContentType {  	relax(), 	nurturing(), 	word();  	private String name; 	 	public String lable;  	private ContentType(String name) {}  	public String toString() {} 	 	public String toLable() {}  } ";
         assertEquals(expected, actual);

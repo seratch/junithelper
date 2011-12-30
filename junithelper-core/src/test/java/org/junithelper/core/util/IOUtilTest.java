@@ -25,7 +25,7 @@ public class IOUtilTest {
 
     @Test
     public void getResourceAsStream_A$String() throws Exception {
-        String name = "parser/impl/Sample.txt";
+        String name = "inputs/Sample.txt";
         InputStream actual = IOUtil.getResourceAsStream(name);
         assertNotNull(actual);
         IOUtil.close(actual);
@@ -39,7 +39,7 @@ public class IOUtilTest {
 
     @Test
     public void readAsString_A$InputStream$String() throws Exception {
-        String name = "parser/impl/Sample.txt";
+        String name = "inputs/Sample.txt";
         InputStream is = IOUtil.getResourceAsStream(name);
         String actual = IOUtil.readAsString(is, "UTF-8");
         String expected = "package org.junithelper.core.parser.impl;\r\n\r\npublic class Sample {\r\n\r\n	public String doSomething(String arg) throws Exception {\r\n		// do something\r\n	}\r\n\r\n}\r\n";

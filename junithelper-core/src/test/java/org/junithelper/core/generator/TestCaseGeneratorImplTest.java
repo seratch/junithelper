@@ -14,11 +14,10 @@ import org.junithelper.core.config.JUnitVersion;
 import org.junithelper.core.config.extension.ExtConfigurationLoader;
 import org.junithelper.core.exception.JUnitHelperCoreException;
 import org.junithelper.core.extractor.ClassMetaExtractor;
-import org.junithelper.core.generator.TestCaseGeneratorImpl;
-import org.junithelper.core.generator.TestMethodGeneratorImpl;
 import org.junithelper.core.meta.AccessModifier;
 import org.junithelper.core.meta.ArgTypeMeta;
 import org.junithelper.core.meta.ClassMeta;
+import org.junithelper.core.meta.CurrentLineBreak;
 import org.junithelper.core.meta.ReturnTypeMeta;
 import org.junithelper.core.meta.TestCaseMeta;
 import org.junithelper.core.meta.TestMethodMeta;
@@ -28,13 +27,15 @@ import org.junithelper.core.util.UniversalDetectorUtil;
 public class TestCaseGeneratorImplTest {
 
     Configuration config;
+    LineBreakProvider lineBreakProvider;
     TestCaseGeneratorImpl target;
     ClassMetaExtractor classMetaExtractor;
 
     @Before
     public void setUp() {
         config = new Configuration();
-        target = new TestCaseGeneratorImpl(config);
+        lineBreakProvider = new LineBreakProvider(config, CurrentLineBreak.CRLF);
+        target = new TestCaseGeneratorImpl(config, lineBreakProvider);
         classMetaExtractor = new ClassMetaExtractor(config);
     }
 
@@ -45,8 +46,9 @@ public class TestCaseGeneratorImplTest {
 
     @Test
     public void instantiation() throws Exception {
-        Configuration config = null;
-        TestCaseGeneratorImpl target = new TestCaseGeneratorImpl(config);
+        Configuration config = new Configuration();
+        lineBreakProvider = new LineBreakProvider(config, CurrentLineBreak.CRLF);
+        TestCaseGeneratorImpl target = new TestCaseGeneratorImpl(config, lineBreakProvider);
         assertNotNull(target);
     }
 
@@ -96,9 +98,9 @@ public class TestCaseGeneratorImplTest {
     @Test
     public void getNewTestCaseMeta_A$_2() throws Exception {
         String encoding = UniversalDetectorUtil.getDetectedEncoding(IOUtil
-                .getResourceAsStream("parser/impl/DefaultTestCaseGenerator.txt"));
-        String sourceCodeString = IOUtil.readAsString(IOUtil
-                .getResourceAsStream("parser/impl/DefaultTestCaseGenerator.txt"), encoding);
+                .getResourceAsStream("inputs/DefaultTestCaseGenerator.txt"));
+        String sourceCodeString = IOUtil.readAsString(
+                IOUtil.getResourceAsStream("inputs/DefaultTestCaseGenerator.txt"), encoding);
         ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
         target.initialize(targetClassMeta);
         TestCaseMeta actual = target.getNewTestCaseMeta();
@@ -110,9 +112,8 @@ public class TestCaseGeneratorImplTest {
     @Test
     public void getNewTestCaseMeta_A$_3() throws Exception {
         String encoding = UniversalDetectorUtil.getDetectedEncoding(IOUtil
-                .getResourceAsStream("parser/impl/DefaultTestCaseGenerator.txt"));
-        String sourceCodeString = IOUtil.readAsString(IOUtil.getResourceAsStream("parser/impl/ObjectUtil.txt"),
-                encoding);
+                .getResourceAsStream("inputs/DefaultTestCaseGenerator.txt"));
+        String sourceCodeString = IOUtil.readAsString(IOUtil.getResourceAsStream("inputs/ObjectUtil.txt"), encoding);
         ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
         target.initialize(targetClassMeta);
         TestCaseMeta actual = target.getNewTestCaseMeta();
@@ -125,9 +126,9 @@ public class TestCaseGeneratorImplTest {
     @Test
     public void getNewTestCaseMeta_A$_Log() throws Exception {
         String encoding = UniversalDetectorUtil.getDetectedEncoding(IOUtil
-                .getResourceAsStream("parser/impl/DefaultTestCaseGenerator_Log.txt"));
+                .getResourceAsStream("inputs/DefaultTestCaseGenerator_Log.txt"));
         String sourceCodeString = IOUtil.readAsString(IOUtil
-                .getResourceAsStream("parser/impl/DefaultTestCaseGenerator_Log.txt"), encoding);
+                .getResourceAsStream("inputs/DefaultTestCaseGenerator_Log.txt"), encoding);
         ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
         target.initialize(targetClassMeta);
         TestCaseMeta actual = target.getNewTestCaseMeta();
@@ -141,9 +142,9 @@ public class TestCaseGeneratorImplTest {
     @Test
     public void getNewTestCaseSourceCode_A$_SimpleHttpClient() throws Exception {
         String encoding = UniversalDetectorUtil.getDetectedEncoding(IOUtil
-                .getResourceAsStream("parser/impl/DefaultTestCaseGenerator_SimpleHttpClient.txt"));
+                .getResourceAsStream("inputs/DefaultTestCaseGenerator_SimpleHttpClient.txt"));
         String sourceCodeString = IOUtil.readAsString(IOUtil
-                .getResourceAsStream("parser/impl/DefaultTestCaseGenerator_SimpleHttpClient.txt"), encoding);
+                .getResourceAsStream("inputs/DefaultTestCaseGenerator_SimpleHttpClient.txt"), encoding);
         ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
         target.initialize(targetClassMeta);
         String actual = target.getNewTestCaseSourceCode();
@@ -153,9 +154,9 @@ public class TestCaseGeneratorImplTest {
     @Test
     public void getNewTestCaseSourceCode_A$_Slim3_AbstractModelRef() throws Exception {
         String encoding = UniversalDetectorUtil.getDetectedEncoding(IOUtil
-                .getResourceAsStream("parser/impl/Slim3_AbstractModelRef.txt"));
-        String sourceCodeString = IOUtil.readAsString(IOUtil
-                .getResourceAsStream("parser/impl/Slim3_AbstractModelRef.txt"), encoding);
+                .getResourceAsStream("inputs/Slim3_AbstractModelRef.txt"));
+        String sourceCodeString = IOUtil.readAsString(IOUtil.getResourceAsStream("inputs/Slim3_AbstractModelRef.txt"),
+                encoding);
         ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
         target.initialize(targetClassMeta);
         String actual = target.getNewTestCaseSourceCode();
@@ -165,13 +166,13 @@ public class TestCaseGeneratorImplTest {
     @Test
     public void getLackingTestMethodMetaList_A$String_AnsiDialect() throws Exception {
         String encoding = UniversalDetectorUtil.getDetectedEncoding(IOUtil
-                .getResourceAsStream("parser/impl/DefaultTestCaseGenerator_AnsiDialect.txt"));
+                .getResourceAsStream("inputs/DefaultTestCaseGenerator_AnsiDialect.txt"));
         String sourceCodeString = IOUtil.readAsString(IOUtil
-                .getResourceAsStream("parser/impl/DefaultTestCaseGenerator_AnsiDialect.txt"), encoding);
+                .getResourceAsStream("inputs/DefaultTestCaseGenerator_AnsiDialect.txt"), encoding);
         ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
         target.initialize(targetClassMeta);
         String currentTestCaseSourceCode = IOUtil.readAsString(IOUtil
-                .getResourceAsStream("parser/impl/DefaultTestCaseGenerator_AnsiDialectTest.txt"), encoding);
+                .getResourceAsStream("inputs/DefaultTestCaseGenerator_AnsiDialectTest.txt"), encoding);
         List<TestMethodMeta> actual = target.getLackingTestMethodMetaList(currentTestCaseSourceCode);
         assertEquals("", 0, actual.size());
     }
@@ -179,13 +180,13 @@ public class TestCaseGeneratorImplTest {
     @Test
     public void getLackingTestMethodMetaList_A$String_TrimFilterManager() throws Exception {
         String encoding = UniversalDetectorUtil.getDetectedEncoding(IOUtil
-                .getResourceAsStream("parser/impl/TrimFilterManager.txt"));
-        String sourceCodeString = IOUtil.readAsString(IOUtil.getResourceAsStream("parser/impl/TrimFilterManager.txt"),
+                .getResourceAsStream("inputs/TrimFilterManager.txt"));
+        String sourceCodeString = IOUtil.readAsString(IOUtil.getResourceAsStream("inputs/TrimFilterManager.txt"),
                 encoding);
         ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
         target.initialize(targetClassMeta);
         String currentTestCaseSourceCode = IOUtil.readAsString(IOUtil
-                .getResourceAsStream("parser/impl/TrimFilterManagerTest.txt"), encoding);
+                .getResourceAsStream("inputs/TrimFilterManagerTest.txt"), encoding);
         List<TestMethodMeta> actual = target.getLackingTestMethodMetaList(currentTestCaseSourceCode);
         assertEquals("", 0, actual.size());
     }
@@ -296,7 +297,8 @@ public class TestCaseGeneratorImplTest {
         assertEquals(true, actual.get(0).isTypeTest);
         assertEquals(true, actual.get(1).isInstantiationTest);
         assertEquals("doSomething", actual.get(2).methodMeta.name);
-        String testSourceCode = new TestMethodGeneratorImpl(config).getTestMethodSourceCode(actual.get(4));
+        String testSourceCode = new TestMethodGeneratorImpl(config, lineBreakProvider).getTestMethodSourceCode(actual
+                .get(4));
         assertEquals(
                 "	@Test\r\n	public void doSomething_A$Object$String$String$long_StringIsHoge() throws Throwable {\r\n		// TODO auto-generated by JUnit Helper.\r\n		Sample target = new Sample();\r\n		Object something = null;\r\n		String str = \"hoge\";\r\n		String str2 = \"hoge\";\r\n		long longValue = 0L;\r\n		int actual = target.doSomething(something, str, str2, longValue);\r\n		int expected = 0;\r\n		assertThat(actual, is(equalTo(expected)));\r\n	}\r\n",
                 testSourceCode);
@@ -305,9 +307,9 @@ public class TestCaseGeneratorImplTest {
     @Test
     public void getLackingTestMethodMetaList_A$String_Slim3_AbstractModelRef() throws Exception {
         String encoding = UniversalDetectorUtil.getDetectedEncoding(IOUtil
-                .getResourceAsStream("parser/impl/Slim3_AbstractModelRef.txt"));
-        String sourceCodeString = IOUtil.readAsString(IOUtil
-                .getResourceAsStream("parser/impl/Slim3_AbstractModelRef.txt"), encoding);
+                .getResourceAsStream("inputs/Slim3_AbstractModelRef.txt"));
+        String sourceCodeString = IOUtil.readAsString(IOUtil.getResourceAsStream("inputs/Slim3_AbstractModelRef.txt"),
+                encoding);
         ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
         target.initialize(targetClassMeta);
         String currentTestCaseSourceCode = "";
@@ -317,9 +319,8 @@ public class TestCaseGeneratorImplTest {
 
     @Test
     public void getLackingTestMethodMetaList_A$String_IOUtil() throws Exception {
-        String encoding = UniversalDetectorUtil.getDetectedEncoding(IOUtil
-                .getResourceAsStream("parser/impl/IOUtil.txt"));
-        String sourceCodeString = IOUtil.readAsString(IOUtil.getResourceAsStream("parser/impl/IOUtil.txt"), encoding);
+        String encoding = UniversalDetectorUtil.getDetectedEncoding(IOUtil.getResourceAsStream("inputs/IOUtil.txt"));
+        String sourceCodeString = IOUtil.readAsString(IOUtil.getResourceAsStream("inputs/IOUtil.txt"), encoding);
         ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
         target.initialize(targetClassMeta);
         String currentTestCaseSourceCode = "";
@@ -359,7 +360,7 @@ public class TestCaseGeneratorImplTest {
     public void getNewTestCaseSourceCode_A$_JUnit3() throws Exception {
         Configuration config = new Configuration();
         config.junitVersion = JUnitVersion.version3;
-        TestCaseGeneratorImpl target = new TestCaseGeneratorImpl(config);
+        TestCaseGeneratorImpl target = new TestCaseGeneratorImpl(config, lineBreakProvider);
         String sourceCodeString = "package hoge.foo; import java.util.List;\r\nimport java.util.Map; public class Sample { public Sample() {}\r\n public int doSomething(String str, long longValue) throws Throwable { System.out.println(\"aaaa\"); } public void doSomething(List<Map<String, String>> nested, Map<String,Map<String,String>> nested2) { } }";
         ClassMeta targetClassMeta = classMetaExtractor.extract(sourceCodeString);
         target.initialize(targetClassMeta);
@@ -449,7 +450,7 @@ public class TestCaseGeneratorImplTest {
 
     @Test
     public void initialize_A$String_StringIsNull() throws Exception {
-        TestCaseGeneratorImpl target = new TestCaseGeneratorImpl(config);
+        TestCaseGeneratorImpl target = new TestCaseGeneratorImpl(config, lineBreakProvider);
         String targetSourceCodeString = null;
         try {
             target.initialize(targetSourceCodeString);
@@ -460,7 +461,7 @@ public class TestCaseGeneratorImplTest {
 
     @Test
     public void initialize_A$String_StringIsEmpty() throws Exception {
-        TestCaseGeneratorImpl target = new TestCaseGeneratorImpl(config);
+        TestCaseGeneratorImpl target = new TestCaseGeneratorImpl(config, lineBreakProvider);
         String targetSourceCodeString = "";
         TestCaseGeneratorImpl actual = target.initialize(targetSourceCodeString);
         assertThat(actual, notNullValue());
@@ -468,7 +469,7 @@ public class TestCaseGeneratorImplTest {
 
     @Test
     public void getLackingTestMethodMetaList_A$String_StringIsNull() throws Exception {
-        TestCaseGeneratorImpl target = new TestCaseGeneratorImpl(config);
+        TestCaseGeneratorImpl target = new TestCaseGeneratorImpl(config, lineBreakProvider);
         String currentTestCaseSourceCode = null;
         try {
             target.getLackingTestMethodMetaList(currentTestCaseSourceCode);
@@ -479,7 +480,7 @@ public class TestCaseGeneratorImplTest {
 
     @Test
     public void getLackingTestMethodMetaList_A$String_StringIsEmpty() throws Exception {
-        TestCaseGeneratorImpl target = new TestCaseGeneratorImpl(config);
+        TestCaseGeneratorImpl target = new TestCaseGeneratorImpl(config, lineBreakProvider);
         String currentSourceCode = "public class Sample {}";
         target.initialize(new ClassMetaExtractor(config).extract(currentSourceCode));
         String currentTestCaseSourceCode = "";
@@ -489,7 +490,7 @@ public class TestCaseGeneratorImplTest {
 
     @Test
     public void getTestCaseSourceCodeWithLackingTestMethod_A$String_StringIsNull() throws Exception {
-        TestCaseGeneratorImpl target = new TestCaseGeneratorImpl(config);
+        TestCaseGeneratorImpl target = new TestCaseGeneratorImpl(config, lineBreakProvider);
         String currentTestCaseSourceCode = null;
         try {
             target.getTestCaseSourceCodeWithLackingTestMethod(currentTestCaseSourceCode);
@@ -500,7 +501,7 @@ public class TestCaseGeneratorImplTest {
 
     @Test
     public void getTestCaseSourceCodeWithLackingTestMethod_A$String_StringIsEmpty() throws Exception {
-        TestCaseGeneratorImpl target = new TestCaseGeneratorImpl(config);
+        TestCaseGeneratorImpl target = new TestCaseGeneratorImpl(config, lineBreakProvider);
         String currentTestCaseSourceCode = "";
         try {
             target.getTestCaseSourceCodeWithLackingTestMethod(currentTestCaseSourceCode);
@@ -511,7 +512,7 @@ public class TestCaseGeneratorImplTest {
 
     @Test
     public void getUnifiedVersionTestCaseSourceCode_A$String$JUnitVersion_StringIsNull() throws Exception {
-        TestCaseGeneratorImpl target = new TestCaseGeneratorImpl(config);
+        TestCaseGeneratorImpl target = new TestCaseGeneratorImpl(config, lineBreakProvider);
         String currentTestCaseSourceCode = null;
         JUnitVersion version = null;
         try {
@@ -523,7 +524,7 @@ public class TestCaseGeneratorImplTest {
 
     @Test
     public void getUnifiedVersionTestCaseSourceCode_A$String$JUnitVersion_StringIsEmpty() throws Exception {
-        TestCaseGeneratorImpl target = new TestCaseGeneratorImpl(config);
+        TestCaseGeneratorImpl target = new TestCaseGeneratorImpl(config, lineBreakProvider);
         String currentTestCaseSourceCode = "";
         JUnitVersion version = null;
         String actual = target.getUnifiedVersionTestCaseSourceCode(currentTestCaseSourceCode, version);
@@ -533,19 +534,20 @@ public class TestCaseGeneratorImplTest {
 
     @Test
     public void appendRequiredImportListToSourceCode_A$String$ClassMeta$Configuration() throws Exception {
+        TestCaseGeneratorImpl target = new TestCaseGeneratorImpl(config, lineBreakProvider);
         String sourceCode = "public class Sample {}";
         ClassMeta targetClassMeta = new ClassMeta();
-        String actual = TestCaseGeneratorImpl.appendRequiredImportListToSourceCode(sourceCode, targetClassMeta,
-                config);
+        String actual = target.appendRequiredImportListToSourceCode(sourceCode, targetClassMeta, config);
         assertThat(actual, notNullValue());
     }
 
     @Test
     public void appendRequiredImportListToSourceCode_A$String$ClassMeta$Configuration_StringIsNull() throws Exception {
+        TestCaseGeneratorImpl target = new TestCaseGeneratorImpl(config, lineBreakProvider);
         String sourceCode = null;
         ClassMeta targetClassMeta = new ClassMeta();
         try {
-            TestCaseGeneratorImpl.appendRequiredImportListToSourceCode(sourceCode, targetClassMeta, config);
+            target.appendRequiredImportListToSourceCode(sourceCode, targetClassMeta, config);
             fail();
         } catch (JUnitHelperCoreException e) {
         }
@@ -553,10 +555,10 @@ public class TestCaseGeneratorImplTest {
 
     @Test
     public void appendRequiredImportListToSourceCode_A$String$ClassMeta$Configuration_StringIsEmpty() throws Exception {
+        TestCaseGeneratorImpl target = new TestCaseGeneratorImpl(config, lineBreakProvider);
         String sourceCode = "";
         ClassMeta targetClassMeta = new ClassMeta();
-        String actual = TestCaseGeneratorImpl.appendRequiredImportListToSourceCode(sourceCode, targetClassMeta,
-                config);
+        String actual = target.appendRequiredImportListToSourceCode(sourceCode, targetClassMeta, config);
         assertThat(actual, notNullValue());
     }
 

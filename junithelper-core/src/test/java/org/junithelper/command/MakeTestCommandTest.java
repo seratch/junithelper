@@ -1,9 +1,17 @@
 package org.junithelper.command;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junithelper.core.file.FileWriter;
+import org.junithelper.core.file.FileWriterFactory;
+import org.junithelper.core.util.IOUtil;
 
 public class MakeTestCommandTest {
 
@@ -23,17 +31,145 @@ public class MakeTestCommandTest {
     }
 
     @Test
-    @Ignore
-    public void main_A$StringArray_T$Exception() throws Exception {
-        // given
-        String[] args = new String[] {};
+    public void main_A$StringArray_forceLF() throws Exception {
+
         try {
+
+            // given
+            File testFile = new File("src/test/java/org/junithelper/core/config/LineBreakPolicyTest.java");
+            FileWriter writer = FileWriterFactory.create(testFile);
+            String preparedSource = IOUtil.readAsString(IOUtil.getResourceAsStream("LineBreakPolicyTestBefore.txt"),
+                    "UTF-8");
+            writer.writeText(preparedSource);
+
             // when
+            String[] args = new String[] { "src/main/java/org/junithelper/core/config/LineBreakPolicy.java" };
+            System.setProperty("junithelper.skipConfirming", "true");
+            System.setProperty("junithelper.configProperties",
+                    "src/test/resources/junithelper-config_forceLF.properties");
             MakeTestCommand.main(args);
-            fail("Expected exception was not thrown!");
-        } catch (Exception e) {
+
             // then
+            Thread.sleep(100L);
+
+            InputStream is = new FileInputStream(testFile);
+            String source = IOUtil.readAsString(is, "UTF-8");
+            assertThat(source.contains("\r"), is(false)); // TEST
+
+        } finally {
+
+            File testFile = new File("src/test/java/org/junithelper/core/config/LineBreakPolicyTest.java");
+            FileWriter writer = FileWriterFactory.create(testFile);
+            String preparedSource = IOUtil.readAsString(IOUtil.getResourceAsStream("LineBreakPolicyTest.txt"), "UTF-8");
+            writer.writeText(preparedSource);
+
         }
     }
 
+    @Test
+    public void main_A$StringArray_forceCRLF() throws Exception {
+
+        try {
+
+            // given
+            File testFile = new File("src/test/java/org/junithelper/core/config/LineBreakPolicyTest.java");
+            FileWriter writer = FileWriterFactory.create(testFile);
+            String preparedSource = IOUtil.readAsString(IOUtil.getResourceAsStream("LineBreakPolicyTestBefore.txt"),
+                    "UTF-8");
+            writer.writeText(preparedSource);
+
+            // when
+            String[] args = new String[] { "src/main/java/org/junithelper/core/config/LineBreakPolicy.java" };
+            System.setProperty("junithelper.skipConfirming", "true");
+            System.setProperty("junithelper.configProperties",
+                    "src/test/resources/junithelper-config_forceCRLF.properties");
+            MakeTestCommand.main(args);
+
+            // then
+            Thread.sleep(100L);
+
+            InputStream is = new FileInputStream(testFile);
+            String source = IOUtil.readAsString(is, "UTF-8");
+            assertThat(source.contains("\r"), is(true)); // TEST
+
+        } finally {
+
+            File testFile = new File("src/test/java/org/junithelper/core/config/LineBreakPolicyTest.java");
+            FileWriter writer = FileWriterFactory.create(testFile);
+            String preparedSource = IOUtil.readAsString(IOUtil.getResourceAsStream("LineBreakPolicyTest.txt"), "UTF-8");
+            writer.writeText(preparedSource);
+
+        }
+    }
+
+    @Test
+    public void main_A$StringArray_forceNewFileCRLF() throws Exception {
+
+        try {
+
+            // given
+            File testFile = new File("src/test/java/org/junithelper/core/config/LineBreakPolicyTest.java");
+            FileWriter writer = FileWriterFactory.create(testFile);
+            String preparedSource = IOUtil.readAsString(IOUtil.getResourceAsStream("LineBreakPolicyTestBefore.txt"),
+                    "UTF-8");
+            writer.writeText(preparedSource);
+
+            // when
+            String[] args = new String[] { "src/main/java/org/junithelper/core/config/LineBreakPolicy.java" };
+            System.setProperty("junithelper.skipConfirming", "true");
+            System.setProperty("junithelper.configProperties", "src/test/resources/junithelper-config.properties");
+            MakeTestCommand.main(args);
+
+            // then
+            Thread.sleep(100L);
+
+            InputStream is = new FileInputStream(testFile);
+            String source = IOUtil.readAsString(is, "UTF-8");
+            assertThat(source.contains("\r"), is(true)); // TEST
+
+        } finally {
+
+            File testFile = new File("src/test/java/org/junithelper/core/config/LineBreakPolicyTest.java");
+            FileWriter writer = FileWriterFactory.create(testFile);
+            String preparedSource = IOUtil.readAsString(IOUtil.getResourceAsStream("LineBreakPolicyTest.txt"), "UTF-8");
+            writer.writeText(preparedSource);
+
+        }
+    }
+
+    @Test
+    public void main_A$StringArray_forceNewFileLF() throws Exception {
+
+        try {
+
+            // given
+            File testFile = new File("src/test/java/org/junithelper/core/config/LineBreakPolicyTest.java");
+            FileWriter writer = FileWriterFactory.create(testFile);
+            String preparedSource = IOUtil.readAsString(IOUtil.getResourceAsStream("LineBreakPolicyTestBefore.txt"),
+                    "UTF-8");
+            writer.writeText(preparedSource);
+
+            // when
+            String[] args = new String[] { "src/main/java/org/junithelper/core/config/LineBreakPolicy.java" };
+            System.setProperty("junithelper.skipConfirming", "true");
+            System.setProperty("junithelper.configProperties",
+                    "src/test/resources/junithelper-config_forceNewFileLF.properties");
+            MakeTestCommand.main(args);
+
+            // then
+            Thread.sleep(100L);
+
+            InputStream is = new FileInputStream(testFile);
+            String source = IOUtil.readAsString(is, "UTF-8");
+            assertThat(source.contains("\r"), is(true)); // TEST
+
+        } finally {
+
+            File testFile = new File("src/test/java/org/junithelper/core/config/LineBreakPolicyTest.java");
+            FileWriter writer = FileWriterFactory.create(testFile);
+            String preparedSource = IOUtil.readAsString(IOUtil.getResourceAsStream("LineBreakPolicyTest.txt"), "UTF-8");
+            writer.writeText(preparedSource);
+
+        }
+    }
 }
