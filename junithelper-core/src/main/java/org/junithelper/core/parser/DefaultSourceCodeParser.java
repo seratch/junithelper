@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language 
  * governing permissions and limitations under the License. 
  */
-package org.junithelper.core.parser.impl;
+package org.junithelper.core.parser;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,10 +27,9 @@ import org.junithelper.core.meta.MethodMeta;
 import org.junithelper.core.meta.extractor.ClassMetaExtractor;
 import org.junithelper.core.meta.extractor.ConstructorMetaExtractor;
 import org.junithelper.core.meta.extractor.MethodMetaExtractor;
-import org.junithelper.core.parser.SourceCodeParser;
 import org.junithelper.core.util.IOUtil;
 
-public class DefaultSourceCodeParser implements SourceCodeParser {
+class DefaultSourceCodeParser implements SourceCodeParser {
 
     private ClassMetaExtractor classMetaExtractor;
     private MethodMetaExtractor methodMetaExtractor;

@@ -13,9 +13,9 @@
  * either express or implied. See the License for the specific language 
  * governing permissions and limitations under the License. 
  */
-package org.junithelper.core.generator.impl;
+package org.junithelper.core.generator;
 
-import static org.junithelper.core.generator.impl.DefaultGeneratorUtil.*;
+import static org.junithelper.core.generator.DefaultGeneratorUtil.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,6 @@ import org.junithelper.core.config.extension.ExtArgPattern;
 import org.junithelper.core.config.extension.ExtInstantiation;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
-import org.junithelper.core.generator.TestMethodGenerator;
 import org.junithelper.core.meta.ArgTypeMeta;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.ExceptionMeta;
@@ -39,7 +38,7 @@ import org.junithelper.core.parser.detect.AvailableTypeDetector;
 import org.junithelper.core.util.Assertion;
 import org.junithelper.core.util.PrimitiveTypeUtil;
 
-public class DefaultTestMethodGenerator implements TestMethodGenerator {
+class DefaultTestMethodGenerator implements TestMethodGenerator {
 
     private Configuration config;
     private ClassMeta targetClassMeta;

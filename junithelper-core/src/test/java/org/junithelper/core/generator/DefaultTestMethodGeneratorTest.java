@@ -1,4 +1,4 @@
-package org.junithelper.core.generator.impl;
+package org.junithelper.core.generator;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
@@ -12,6 +12,7 @@ import org.junithelper.core.config.JUnitVersion;
 import org.junithelper.core.config.MockObjectFramework;
 import org.junithelper.core.config.TestingPatternExplicitComment;
 import org.junithelper.core.exception.JUnitHelperCoreException;
+import org.junithelper.core.generator.DefaultTestMethodGenerator;
 import org.junithelper.core.meta.ArgTypeMeta;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.ExceptionMeta;

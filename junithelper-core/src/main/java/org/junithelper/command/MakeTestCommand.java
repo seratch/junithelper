@@ -23,7 +23,7 @@ import org.junithelper.core.file.FileReader;
 import org.junithelper.core.file.FileReaderFactory;
 import org.junithelper.core.file.FileWriterFactory;
 import org.junithelper.core.generator.TestCaseGenerator;
-import org.junithelper.core.generator.impl.DefaultTestCaseGenerator;
+import org.junithelper.core.generator.TestCaseGeneratorFactory;
 import org.junithelper.core.util.Stdout;
 
 public class MakeTestCommand extends AbstractCommand {
@@ -49,7 +49,7 @@ public class MakeTestCommand extends AbstractCommand {
             return;
         }
         FileReader fileReader = FileReaderFactory.create();
-        TestCaseGenerator testCaseGenerator = new DefaultTestCaseGenerator(config);
+        TestCaseGenerator testCaseGenerator = TestCaseGeneratorFactory.create(config);
         for (File javaFile : javaFiles) {
             if (isNeedToExclude(javaFile)) {
                 continue;

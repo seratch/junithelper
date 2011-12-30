@@ -13,9 +13,9 @@
  * either express or implied. See the License for the specific language 
  * governing permissions and limitations under the License. 
  */
-package org.junithelper.core.generator.impl;
+package org.junithelper.core.generator;
 
-import static org.junithelper.core.generator.impl.DefaultGeneratorUtil.*;
+import static org.junithelper.core.generator.DefaultGeneratorUtil.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +32,6 @@ import org.junithelper.core.config.extension.ExtReturn;
 import org.junithelper.core.constant.RegExp;
 import org.junithelper.core.constant.StringValue;
 import org.junithelper.core.filter.TrimFilterUtil;
-import org.junithelper.core.generator.TestCaseGenerator;
-import org.junithelper.core.generator.TestMethodGenerator;
 import org.junithelper.core.meta.AccessModifier;
 import org.junithelper.core.meta.ArgTypeMeta;
 import org.junithelper.core.meta.ClassMeta;
@@ -47,7 +45,7 @@ import org.junithelper.core.util.Assertion;
 import org.junithelper.core.util.ObjectUtil;
 import org.junithelper.core.util.Stderr;
 
-public class DefaultTestCaseGenerator implements TestCaseGenerator {
+class DefaultTestCaseGenerator implements TestCaseGenerator {
 
     private Configuration config;
     private ClassMeta targetClassMeta;

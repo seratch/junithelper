@@ -1,4 +1,4 @@
-package org.junithelper.core.parser.impl;
+package org.junithelper.core.parser;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
@@ -15,6 +15,7 @@ import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.ConstructorMeta;
 import org.junithelper.core.meta.MethodMeta;
 import org.junithelper.core.meta.extractor.ClassMetaExtractor;
+import org.junithelper.core.parser.DefaultSourceCodeParser;
 import org.junithelper.core.util.IOUtil;
 import org.junithelper.core.util.UniversalDetectorUtil;
 

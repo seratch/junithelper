@@ -1,4 +1,4 @@
-package org.junithelper.core.generator.impl;
+package org.junithelper.core.generator;
 
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.TestingTarget;

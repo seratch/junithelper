@@ -1,4 +1,4 @@
-package org.junithelper.core.generator.impl;
+package org.junithelper.core.generator;
 
 import static org.junit.Assert.*;
 
@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.extension.ExtInstantiation;
+import org.junithelper.core.generator.DefaultConstructorGenerator;
 import org.junithelper.core.meta.ArgTypeMeta;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.ConstructorMeta;

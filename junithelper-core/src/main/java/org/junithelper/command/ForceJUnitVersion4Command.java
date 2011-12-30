@@ -24,7 +24,7 @@ import org.junithelper.core.file.FileReader;
 import org.junithelper.core.file.FileReaderFactory;
 import org.junithelper.core.file.FileWriterFactory;
 import org.junithelper.core.generator.TestCaseGenerator;
-import org.junithelper.core.generator.impl.DefaultTestCaseGenerator;
+import org.junithelper.core.generator.TestCaseGeneratorFactory;
 import org.junithelper.core.util.Stdout;
 
 public class ForceJUnitVersion4Command extends AbstractCommand {
@@ -47,7 +47,7 @@ public class ForceJUnitVersion4Command extends AbstractCommand {
         if (confirmToExecute() > 0) {
             return;
         }
-        TestCaseGenerator testCaseGenerator = new DefaultTestCaseGenerator(config);
+        TestCaseGenerator testCaseGenerator = TestCaseGeneratorFactory.create(config);
         FileReader fileReader = FileReaderFactory.create();
         for (File javaFile : javaFiles) {
             File testFile = null;

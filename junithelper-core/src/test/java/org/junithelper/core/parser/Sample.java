@@ -1,4 +1,4 @@
-package org.junithelper.core.parser.impl;
+package org.junithelper.core.parser;
 
 public class Sample {
 

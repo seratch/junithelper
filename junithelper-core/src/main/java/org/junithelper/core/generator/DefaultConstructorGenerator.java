@@ -13,9 +13,9 @@
  * either express or implied. See the License for the specific language 
  * governing permissions and limitations under the License. 
  */
-package org.junithelper.core.generator.impl;
+package org.junithelper.core.generator;
 
-import static org.junithelper.core.generator.impl.DefaultGeneratorUtil.*;
+import static org.junithelper.core.generator.DefaultGeneratorUtil.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,13 +23,12 @@ import java.util.List;
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.extension.ExtInstantiation;
 import org.junithelper.core.constant.StringValue;
-import org.junithelper.core.generator.ConstructorGenerator;
 import org.junithelper.core.meta.AccessModifier;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.ConstructorMeta;
 import org.junithelper.core.util.PrimitiveTypeUtil;
 
-public class DefaultConstructorGenerator implements ConstructorGenerator {
+class DefaultConstructorGenerator implements ConstructorGenerator {
 
     @Override
     public List<String> getAllInstantiationSourceCodeList(Configuration config, ClassMeta classMeta) {

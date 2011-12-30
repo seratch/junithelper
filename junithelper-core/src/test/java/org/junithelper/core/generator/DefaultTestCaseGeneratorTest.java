@@ -1,4 +1,4 @@
-package org.junithelper.core.generator.impl;
+package org.junithelper.core.generator;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
@@ -13,6 +13,8 @@ import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.JUnitVersion;
 import org.junithelper.core.config.extension.ExtConfigurationLoader;
 import org.junithelper.core.exception.JUnitHelperCoreException;
+import org.junithelper.core.generator.DefaultTestCaseGenerator;
+import org.junithelper.core.generator.DefaultTestMethodGenerator;
 import org.junithelper.core.meta.AccessModifier;
 import org.junithelper.core.meta.ArgTypeMeta;
 import org.junithelper.core.meta.ClassMeta;
