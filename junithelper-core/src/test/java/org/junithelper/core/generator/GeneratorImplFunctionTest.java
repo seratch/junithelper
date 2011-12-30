@@ -20,7 +20,9 @@ import org.junithelper.core.meta.TestMethodMeta;
 public class GeneratorImplFunctionTest {
 
     Configuration config = new Configuration();
-    SourceCodeAppender appender = new SourceCodeAppender(new LineBreakProvider(config, CurrentLineBreak.CRLF));
+    LineBreakProvider lineBreakProvider = new LineBreakProvider(config, CurrentLineBreak.CRLF);
+    IndentationProvider indentationProvider = new IndentationProvider(config);
+    SourceCodeAppender appender = new SourceCodeAppender(lineBreakProvider, indentationProvider);
 
     @Test
     public void type() throws Exception {

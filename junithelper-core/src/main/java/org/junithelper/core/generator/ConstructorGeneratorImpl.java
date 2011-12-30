@@ -33,7 +33,8 @@ class ConstructorGeneratorImpl implements ConstructorGenerator {
     private SourceCodeAppender appender;
 
     public ConstructorGeneratorImpl(Configuration config, LineBreakProvider lineBreakProvider) {
-        appender = new SourceCodeAppender(lineBreakProvider);
+        IndentationProvider indentationProvider = new IndentationProvider(config);
+        appender = new SourceCodeAppender(lineBreakProvider, indentationProvider);
     }
 
     @Override

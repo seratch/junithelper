@@ -22,13 +22,19 @@ import org.junithelper.core.util.Assertion;
 class SourceCodeAppender {
 
     private LineBreakProvider lineBreakProvider;
+    private IndentationProvider indentationProvider;
 
     LineBreakProvider getLineBreakProvider() {
         return lineBreakProvider;
     }
 
-    SourceCodeAppender(LineBreakProvider lineBreakProvider) {
+    IndentationProvider getIndentationProvider() {
+        return indentationProvider;
+    }
+
+    SourceCodeAppender(LineBreakProvider lineBreakProvider, IndentationProvider indentationProvider) {
         this.lineBreakProvider = lineBreakProvider;
+        this.indentationProvider = indentationProvider;
     }
 
     void appendExtensionSourceCode(StringBuilder buf, String code) {
@@ -123,7 +129,7 @@ class SourceCodeAppender {
         Assertion.on("times").mustBeGreaterThanOrEqual(times, 0);
 
         for (int i = 0; i < times; i++) {
-            buf.append(StringValue.Tab);
+            buf.append(indentationProvider.getIndentation());
         }
     }
 

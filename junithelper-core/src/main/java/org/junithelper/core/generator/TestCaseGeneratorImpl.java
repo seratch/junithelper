@@ -57,7 +57,8 @@ class TestCaseGeneratorImpl implements TestCaseGenerator {
 
     public TestCaseGeneratorImpl(Configuration config, LineBreakProvider lineBreakProvider) {
         this.config = config;
-        appender = new SourceCodeAppender(lineBreakProvider);
+        IndentationProvider indentationProvider = new IndentationProvider(config);
+        appender = new SourceCodeAppender(lineBreakProvider, indentationProvider);
         testMethodGenerator = new TestMethodGeneratorImpl(config, lineBreakProvider);
     }
 

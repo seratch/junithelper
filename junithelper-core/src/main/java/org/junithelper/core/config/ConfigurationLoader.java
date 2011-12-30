@@ -52,6 +52,8 @@ public class ConfigurationLoader {
                 } else {
                     if (f.getType() == boolean.class) {
                         f.set(config, Boolean.valueOf(String.valueOf(props.get(key))));
+                    } else if (f.getType() == int.class) {
+                        f.set(config, Integer.valueOf(String.valueOf(props.get(key))));
                     } else {
                         f.set(config, props.get(key));
                     }
@@ -70,5 +72,4 @@ public class ConfigurationLoader {
         }
         return config;
     }
-
 }

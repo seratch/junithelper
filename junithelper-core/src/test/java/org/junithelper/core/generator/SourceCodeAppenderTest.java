@@ -13,8 +13,10 @@ import org.junithelper.core.meta.CurrentLineBreak;
 
 public class SourceCodeAppenderTest {
 
-    Configuration config = new Configuration();
     CurrentLineBreak currentLineBreak = CurrentLineBreak.CRLF;
+    Configuration config = new Configuration();
+    LineBreakProvider lineBreakProvider = new LineBreakProvider(config, currentLineBreak);
+    IndentationProvider indentationProvider = new IndentationProvider(config);
 
     @Test
     public void type() throws Exception {
@@ -23,15 +25,13 @@ public class SourceCodeAppenderTest {
 
     @Test
     public void instantiation() throws Exception {
-        LineBreakProvider lineBreakProvider = null;
-        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider);
+        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider, indentationProvider);
         assertThat(target, notNullValue());
     }
 
     @Test
     public void appendExtensionSourceCode_A$StringBuilder$String() throws Exception {
-        LineBreakProvider lineBreakProvider = new LineBreakProvider(config, currentLineBreak);
-        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider);
+        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider, indentationProvider);
         StringBuilder buf = new StringBuilder();
         String code = "foo";
         target.appendExtensionSourceCode(buf, code);
@@ -44,7 +44,7 @@ public class SourceCodeAppenderTest {
         config.lineBreakPolicy = LineBreakPolicy.forceLF;
         {
             LineBreakProvider lineBreakProvider = new LineBreakProvider(config, CurrentLineBreak.CRLF);
-            SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider);
+            SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider, indentationProvider);
             StringBuilder buf = new StringBuilder();
             String code = "foo";
             target.appendExtensionSourceCode(buf, code);
@@ -52,7 +52,7 @@ public class SourceCodeAppenderTest {
         }
         {
             LineBreakProvider lineBreakProvider = new LineBreakProvider(config, CurrentLineBreak.LF);
-            SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider);
+            SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider, indentationProvider);
             StringBuilder buf = new StringBuilder();
             String code = "foo";
             target.appendExtensionSourceCode(buf, code);
@@ -60,7 +60,7 @@ public class SourceCodeAppenderTest {
         }
         {
             LineBreakProvider lineBreakProvider = new LineBreakProvider(config, null);
-            SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider);
+            SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider, indentationProvider);
             StringBuilder buf = new StringBuilder();
             String code = "foo";
             target.appendExtensionSourceCode(buf, code);
@@ -74,7 +74,7 @@ public class SourceCodeAppenderTest {
         config.lineBreakPolicy = LineBreakPolicy.forceCRLF;
         {
             LineBreakProvider lineBreakProvider = new LineBreakProvider(config, CurrentLineBreak.CRLF);
-            SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider);
+            SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider, indentationProvider);
             StringBuilder buf = new StringBuilder();
             String code = "foo";
             target.appendExtensionSourceCode(buf, code);
@@ -82,7 +82,7 @@ public class SourceCodeAppenderTest {
         }
         {
             LineBreakProvider lineBreakProvider = new LineBreakProvider(config, CurrentLineBreak.LF);
-            SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider);
+            SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider, indentationProvider);
             StringBuilder buf = new StringBuilder();
             String code = "foo";
             target.appendExtensionSourceCode(buf, code);
@@ -90,7 +90,7 @@ public class SourceCodeAppenderTest {
         }
         {
             LineBreakProvider lineBreakProvider = new LineBreakProvider(config, null);
-            SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider);
+            SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider, indentationProvider);
             StringBuilder buf = new StringBuilder();
             String code = "foo";
             target.appendExtensionSourceCode(buf, code);
@@ -104,7 +104,7 @@ public class SourceCodeAppenderTest {
         config.lineBreakPolicy = LineBreakPolicy.forceNewFileCRLF;
         {
             LineBreakProvider lineBreakProvider = new LineBreakProvider(config, CurrentLineBreak.CRLF);
-            SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider);
+            SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider, indentationProvider);
             StringBuilder buf = new StringBuilder();
             String code = "foo";
             target.appendExtensionSourceCode(buf, code);
@@ -112,7 +112,7 @@ public class SourceCodeAppenderTest {
         }
         {
             LineBreakProvider lineBreakProvider = new LineBreakProvider(config, CurrentLineBreak.LF);
-            SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider);
+            SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider, indentationProvider);
             StringBuilder buf = new StringBuilder();
             String code = "foo";
             target.appendExtensionSourceCode(buf, code);
@@ -120,7 +120,7 @@ public class SourceCodeAppenderTest {
         }
         {
             LineBreakProvider lineBreakProvider = new LineBreakProvider(config, null);
-            SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider);
+            SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider, indentationProvider);
             StringBuilder buf = new StringBuilder();
             String code = "foo";
             target.appendExtensionSourceCode(buf, code);
@@ -134,7 +134,7 @@ public class SourceCodeAppenderTest {
         config.lineBreakPolicy = LineBreakPolicy.forceNewFileLF;
         {
             LineBreakProvider lineBreakProvider = new LineBreakProvider(config, CurrentLineBreak.CRLF);
-            SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider);
+            SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider, indentationProvider);
             StringBuilder buf = new StringBuilder();
             String code = "foo";
             target.appendExtensionSourceCode(buf, code);
@@ -142,7 +142,7 @@ public class SourceCodeAppenderTest {
         }
         {
             LineBreakProvider lineBreakProvider = new LineBreakProvider(config, CurrentLineBreak.LF);
-            SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider);
+            SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider, indentationProvider);
             StringBuilder buf = new StringBuilder();
             String code = "foo";
             target.appendExtensionSourceCode(buf, code);
@@ -150,7 +150,7 @@ public class SourceCodeAppenderTest {
         }
         {
             LineBreakProvider lineBreakProvider = new LineBreakProvider(config, null);
-            SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider);
+            SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider, indentationProvider);
             StringBuilder buf = new StringBuilder();
             String code = "foo";
             target.appendExtensionSourceCode(buf, code);
@@ -161,7 +161,7 @@ public class SourceCodeAppenderTest {
     @Test
     public void appendExtensionSourceCode_A$StringBuilder$String_StringIsNull() throws Exception {
         LineBreakProvider lineBreakProvider = new LineBreakProvider(config, currentLineBreak);
-        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider);
+        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider, indentationProvider);
         StringBuilder buf = new StringBuilder();
         String code = "foo";
         target.appendExtensionSourceCode(buf, code);
@@ -171,7 +171,7 @@ public class SourceCodeAppenderTest {
     @Test
     public void appendExtensionSourceCode_A$StringBuilder$String_StringIsEmpty() throws Exception {
         LineBreakProvider lineBreakProvider = new LineBreakProvider(config, currentLineBreak);
-        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider);
+        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider, indentationProvider);
         StringBuilder buf = new StringBuilder();
         String code = "";
         target.appendExtensionSourceCode(buf, code);
@@ -180,7 +180,7 @@ public class SourceCodeAppenderTest {
     @Test
     public void appendExtensionPostAssignSourceCode_A$StringBuilder$String$StringArray$String() throws Exception {
         LineBreakProvider lineBreakProvider = new LineBreakProvider(config, currentLineBreak);
-        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider);
+        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider, indentationProvider);
         StringBuilder buf = new StringBuilder();
         String code = "foo";
         String[] fromList = new String[] {};
@@ -193,7 +193,7 @@ public class SourceCodeAppenderTest {
     public void appendExtensionPostAssignSourceCode_A$StringBuilder$String$StringArray$String_StringIsNull()
             throws Exception {
         LineBreakProvider lineBreakProvider = new LineBreakProvider(config, currentLineBreak);
-        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider);
+        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider, indentationProvider);
         StringBuilder buf = new StringBuilder();
         String code = "foo";
         String[] fromList = new String[] {};
@@ -206,7 +206,7 @@ public class SourceCodeAppenderTest {
     public void appendExtensionPostAssignSourceCode_A$StringBuilder$String$StringArray$String_StringIsEmpty()
             throws Exception {
         LineBreakProvider lineBreakProvider = new LineBreakProvider(config, currentLineBreak);
-        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider);
+        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider, indentationProvider);
         StringBuilder buf = new StringBuilder();
         String code = "";
         String[] fromList = new String[] {};
@@ -218,7 +218,7 @@ public class SourceCodeAppenderTest {
     @Test
     public void appendIfNotExists_A$StringBuilder$String$String() throws Exception {
         LineBreakProvider lineBreakProvider = new LineBreakProvider(config, currentLineBreak);
-        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider);
+        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider, indentationProvider);
         StringBuilder buf = new StringBuilder();
         String src = "foo";
         String importLine = "";
@@ -229,7 +229,7 @@ public class SourceCodeAppenderTest {
     @Test(expected = JUnitHelperCoreException.class)
     public void appendIfNotExists_A$StringBuilder$String$String_StringIsNull() throws Exception {
         LineBreakProvider lineBreakProvider = new LineBreakProvider(config, currentLineBreak);
-        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider);
+        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider, indentationProvider);
         StringBuilder buf = new StringBuilder();
         String src = null;
         String importLine = null;
@@ -239,7 +239,7 @@ public class SourceCodeAppenderTest {
     @Test
     public void appendIfNotExists_A$StringBuilder$String$String_StringIsEmpty() throws Exception {
         LineBreakProvider lineBreakProvider = new LineBreakProvider(config, currentLineBreak);
-        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider);
+        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider, indentationProvider);
         StringBuilder buf = new StringBuilder();
         String src = "";
         String importLine = "";
@@ -249,7 +249,7 @@ public class SourceCodeAppenderTest {
     @Test
     public void appendIfNotExists_A$StringBuilder$String$String_alradyExists() throws Exception {
         LineBreakProvider lineBreakProvider = new LineBreakProvider(config, currentLineBreak);
-        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider);
+        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider, indentationProvider);
         StringBuilder buf = new StringBuilder();
         String src = "package hoge.foo;\r\nimport junit.framework.TestCase;\r\n\r\npublic class Sample {\r\n\r\n}";
         String importLine = "import junit.framework.TestCase;";
@@ -260,7 +260,7 @@ public class SourceCodeAppenderTest {
     @Test
     public void appendIfNotExists_A$StringBuilder$String$String_notExists() throws Exception {
         LineBreakProvider lineBreakProvider = new LineBreakProvider(config, currentLineBreak);
-        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider);
+        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider, indentationProvider);
         StringBuilder buf = new StringBuilder();
         String src = "package hoge.foo;\r\nimport junit.framework.TestCase;\r\n\r\npublic class Sample {\r\n\r\n}";
         String importLine = "import org.junit.Test;";
@@ -272,7 +272,7 @@ public class SourceCodeAppenderTest {
     @Test
     public void appendIfNotExists_A$StringBuilder$String$String_staticImportAsssert() throws Exception {
         LineBreakProvider lineBreakProvider = new LineBreakProvider(config, currentLineBreak);
-        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider);
+        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider, indentationProvider);
         StringBuilder buf = new StringBuilder();
         String src = "package hoge.foo;\r\nimport static org.junit.Assert.assertNotNull;\r\nimport junit.framework.TestCase;\r\n\r\npublic class Sample {\r\n\r\n}";
         String importLine = "import static org.junit.Assert.*;";
@@ -283,7 +283,7 @@ public class SourceCodeAppenderTest {
     @Test
     public void appendLineBreak_A$StringBuilder() throws Exception {
         LineBreakProvider lineBreakProvider = new LineBreakProvider(config, currentLineBreak);
-        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider);
+        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider, indentationProvider);
         StringBuilder buf = new StringBuilder();
         target.appendLineBreak(buf);
     }
@@ -291,7 +291,7 @@ public class SourceCodeAppenderTest {
     @Test
     public void appendTabs_A$StringBuilder$int() throws Exception {
         LineBreakProvider lineBreakProvider = new LineBreakProvider(config, currentLineBreak);
-        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider);
+        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider, indentationProvider);
         StringBuilder buf = new StringBuilder();
         int times = 2;
         target.appendTabs(buf, times);
@@ -301,7 +301,7 @@ public class SourceCodeAppenderTest {
     @Test(expected = JUnitHelperCoreException.class)
     public void appendTabs_A$StringBuilder$int_intIsMinus1() throws Exception {
         LineBreakProvider lineBreakProvider = new LineBreakProvider(config, currentLineBreak);
-        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider);
+        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider, indentationProvider);
         StringBuilder buf = new StringBuilder();
         int times = -1;
         target.appendTabs(buf, times);
@@ -310,7 +310,7 @@ public class SourceCodeAppenderTest {
     @Test
     public void appendTabs_A$StringBuilder$int_intIs0() throws Exception {
         LineBreakProvider lineBreakProvider = new LineBreakProvider(config, currentLineBreak);
-        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider);
+        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider, indentationProvider);
         StringBuilder buf = new StringBuilder();
         int times = 0;
         target.appendTabs(buf, times);
@@ -319,7 +319,7 @@ public class SourceCodeAppenderTest {
     @Test
     public void appendTabs_A$StringBuilder$int_intIs1() throws Exception {
         LineBreakProvider lineBreakProvider = new LineBreakProvider(config, currentLineBreak);
-        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider);
+        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider, indentationProvider);
         StringBuilder buf = new StringBuilder();
         int times = 1;
         target.appendTabs(buf, times);
@@ -328,7 +328,7 @@ public class SourceCodeAppenderTest {
     @Test
     public void appendTabs_A$StringBuilder$int_intIs2() throws Exception {
         LineBreakProvider lineBreakProvider = new LineBreakProvider(config, currentLineBreak);
-        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider);
+        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider, indentationProvider);
         StringBuilder buf = new StringBuilder();
         int times = 2;
         target.appendTabs(buf, times);
@@ -337,7 +337,7 @@ public class SourceCodeAppenderTest {
     @Test
     public void appendTabs_A$StringBuilder$int_intIsRandom() throws Exception {
         LineBreakProvider lineBreakProvider = new LineBreakProvider(config, currentLineBreak);
-        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider);
+        SourceCodeAppender target = new SourceCodeAppender(lineBreakProvider, indentationProvider);
         StringBuilder buf = new StringBuilder();
         int times = new Random().nextInt(10);
         target.appendTabs(buf, times);

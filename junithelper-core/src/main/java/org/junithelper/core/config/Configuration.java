@@ -27,6 +27,10 @@ public class Configuration {
 
     public LineBreakPolicy lineBreakPolicy = LineBreakPolicy.forceNewFileCRLF;
 
+    public boolean useSoftTabs = false;
+
+    public int softTabSize = 4;
+
     public String language = "en";
 
     public String outputFileEncoding = "UTF-8";

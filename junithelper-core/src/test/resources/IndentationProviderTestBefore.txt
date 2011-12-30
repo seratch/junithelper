@@ -1,0 +1,23 @@
+package org.junithelper.core.generator;
+
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+import org.junithelper.core.config.Configuration;
+
+public class IndentationProviderTest {
+
+    @Test
+    public void type() throws Exception {
+        assertThat(IndentationProvider.class, notNullValue());
+    }
+
+    @Test
+    public void instantiation() throws Exception {
+        Configuration config = null;
+        IndentationProvider target = new IndentationProvider(config);
+        assertThat(target, notNullValue());
+    }
+
+}

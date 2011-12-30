@@ -48,7 +48,8 @@ class TestMethodGeneratorImpl implements TestMethodGenerator {
 
     public TestMethodGeneratorImpl(Configuration config, LineBreakProvider lineBreakProvider) {
         this.config = config;
-        appender = new SourceCodeAppender(lineBreakProvider);
+        IndentationProvider indentationProvider = new IndentationProvider(config);
+        appender = new SourceCodeAppender(lineBreakProvider, indentationProvider);
     }
 
     @Override
