@@ -8,11 +8,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.extension.ExtInstantiation;
+import org.junithelper.core.extractor.ClassMetaExtractor;
 import org.junithelper.core.generator.DefaultConstructorGenerator;
 import org.junithelper.core.meta.ArgTypeMeta;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.ConstructorMeta;
-import org.junithelper.core.meta.extractor.ClassMetaExtractor;
 
 public class DefaultConstructorGeneratorTest {
 

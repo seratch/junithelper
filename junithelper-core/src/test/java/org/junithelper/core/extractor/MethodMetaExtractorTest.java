@@ -1,4 +1,4 @@
-package org.junithelper.core.meta.extractor;
+package org.junithelper.core.extractor;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
@@ -9,6 +9,8 @@ import java.util.List;
 import org.junit.Test;
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.exception.JUnitHelperCoreException;
+import org.junithelper.core.extractor.ClassMetaExtractor;
+import org.junithelper.core.extractor.MethodMetaExtractor;
 import org.junithelper.core.meta.AccessModifier;
 import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.MethodMeta;

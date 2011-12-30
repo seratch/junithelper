@@ -1,4 +1,4 @@
-package org.junithelper.core.meta.extractor;
+package org.junithelper.core.extractor;
 
 import java.util.ArrayList;
 import java.util.List;

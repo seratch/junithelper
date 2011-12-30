@@ -13,6 +13,7 @@ import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.JUnitVersion;
 import org.junithelper.core.config.extension.ExtConfigurationLoader;
 import org.junithelper.core.exception.JUnitHelperCoreException;
+import org.junithelper.core.extractor.ClassMetaExtractor;
 import org.junithelper.core.generator.DefaultTestCaseGenerator;
 import org.junithelper.core.generator.DefaultTestMethodGenerator;
 import org.junithelper.core.meta.AccessModifier;
@@ -21,7 +22,6 @@ import org.junithelper.core.meta.ClassMeta;
 import org.junithelper.core.meta.ReturnTypeMeta;
 import org.junithelper.core.meta.TestCaseMeta;
 import org.junithelper.core.meta.TestMethodMeta;
-import org.junithelper.core.meta.extractor.ClassMetaExtractor;
 import org.junithelper.core.util.IOUtil;
 import org.junithelper.core.util.UniversalDetectorUtil;
 
