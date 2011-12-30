@@ -35,10 +35,10 @@ public class ForceJUnitVersion4Command extends AbstractCommand {
     public static Configuration config = new Configuration();
 
     public static void main(String[] args) throws Exception {
-        config = overrideConfiguration(config);
+        initializeConfiguration(config);
         config.junitVersion = JUnitVersion.version4;
-        String dirOrFile = (args != null && args.length > 0 && args[0] != null) ? args[0]
-                : config.directoryPathOfProductSourceCode;
+        boolean hasFirstArg = (args != null && args.length > 0 && args[0] != null);
+        String dirOrFile = hasFirstArg ? args[0] : config.directoryPathOfProductSourceCode;
         List<File> javaFiles = findTargets(config, dirOrFile);
         for (File javaFile : javaFiles) {
             Stdout.p("  Target: " + javaFile.getAbsolutePath());
@@ -53,9 +53,10 @@ public class ForceJUnitVersion4Command extends AbstractCommand {
             File testFile = null;
             String currentTestCaseSourceCode = null;
             try {
-                testFile = new File(javaFile.getAbsolutePath().replaceAll("\\\\", "/").replaceFirst(
+                String testFilePath = javaFile.getAbsolutePath().replaceAll("\\\\", "/").replaceFirst(
                         getDirectoryPathOfProductSourceCode(config), getDirectoryPathOfTestSourceCode(config))
-                        .replaceFirst("\\.java", "Test.java"));
+                        .replaceFirst("\\.java", "Test.java");
+                testFile = new File(testFilePath);
                 currentTestCaseSourceCode = fileReader.readAsString(testFile);
             } catch (Exception e) {
             }

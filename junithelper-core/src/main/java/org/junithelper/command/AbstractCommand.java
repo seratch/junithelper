@@ -36,7 +36,7 @@ import org.junithelper.core.util.UniversalDetectorUtil;
 
 public abstract class AbstractCommand {
 
-    protected static Configuration overrideConfiguration(Configuration config) throws Exception {
+    protected static void initializeConfiguration(Configuration config) throws Exception {
         String configFile = System.getProperty("junithelper.configProperties");
         if (configFile != null) {
             config = new ConfigurationLoader().load(configFile);
@@ -47,7 +47,6 @@ public abstract class AbstractCommand {
         } else if (new File(config.extensionConfigXML).exists()) {
             config.extConfiguration = new ExtConfigurationLoader().load(config.extensionConfigXML);
         }
-        return config;
     }
 
     protected static boolean skipConfirming() {
