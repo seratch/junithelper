@@ -247,10 +247,6 @@ public void search_A$SearchCondition() throws Exception {
 
  http://marketplace.eclipse.org/content/junit-helper
 
-* Zip archive (junithelper-eclipse-plugin-X.X.X.zip)
-
- http://code.google.com/p/junithelper/downloads/list
-
 ## How to use
 
 It is very simple, only two shortcut-commands.The following commands are available on Java Editor, Package Explorer and Navigator.
@@ -334,7 +330,7 @@ extensionConfigXML:junithelper-extension.xml
 
 * Zip archive (junithelper-core-X.X.X.zip)
 
- http://code.google.com/p/junithelper/downloads/list
+ https://github.com/seratch/junithelper/downloads
 
 ## How to use
 
@@ -448,15 +444,6 @@ extensionConfigXML:junithelper-extension.xml
  * pom.xml
 
 ```xml
-<pluginRepositories>
-    ...
-    <pluginRepository>
-        <id>junithelper.org releases</id>
-        <url>http://junithelper.googlecode.com/svn/trunk/mvn-repo/releases</url>
-    </pluginRepository>
-    ...
-</pluginRepositories>
-
 <build>
     <plugins>
         ...
