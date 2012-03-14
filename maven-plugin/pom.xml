@@ -40,21 +40,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <!-- TODO delete -->
-    <repositories>
-        <repository>
-            <id>releases</id>
-            <url>http://junithelper.googlecode.com/svn/trunk/mvn-repo/releases</url>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>junithelper.org releases</id>
-            <url>http://junithelper.googlecode.com/svn/trunk/mvn-repo/releases</url>
-        </pluginRepository>
-    </pluginRepositories>
-
     <build>
         <plugins>
             <plugin>
@@ -89,7 +74,6 @@
                 <executions>
                     <execution>
                         <id>attach-sources</id>
-                        <phase>verify</phase>
                         <goals>
                             <goal>jar</goal>
                         </goals>
