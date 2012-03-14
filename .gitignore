@@ -1,0 +1,13 @@
+.settings
+.classpath
+.project
+*.iml
+*.ipr
+*.iws
+*.log
+dist/
+lib_managed/
+project/boot/
+project/plugins/project/
+target/
+

@@ -2,46 +2,59 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.junithelper</groupId>
-  <artifactId>junithelper-core</artifactId>
-  <version>1.10</version>
-  <packaging>jar</packaging>
+    <groupId>org.junithelper</groupId>
+    <artifactId>junithelper-core</artifactId>
+    <version>1.11</version>
+    <packaging>jar</packaging>
 
     <name>junithelper-core</name>
     <url>http://junithelper.org</url>
+
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:git@github.com:seratch/junithelper.git</connection>
+        <developerConnection>scm:git:git@github.com:seratch/junithelper.git</developerConnection>
+        <url>git@github.com:seratch/junithelper.git</url>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>seratch</id>
+            <name>Kazuhiro Sera</name>
+            <email>seratch@gmail.com</email>
+        </developer>
+    </developers>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <!-- TODO delete -->
     <repositories>
         <repository>
             <id>releases</id>
             <url>http://junithelper.googlecode.com/svn/trunk/mvn-repo/releases</url>
         </repository>
-        <repository>
-            <id>snapshots</id>
-            <url>http://junithelper.googlecode.com/svn/trunk/mvn-repo/snapshots</url>
-        </repository>
     </repositories>
-
     <pluginRepositories>
         <pluginRepository>
             <id>junithelper.org releases</id>
             <url>http://junithelper.googlecode.com/svn/trunk/mvn-repo/releases</url>
         </pluginRepository>
     </pluginRepositories>
-
-    <distributionManagement>
-        <repository>
-            <id>repo</id>
-            <url>https://seratch.github.com/mvn-repo/releases</url>
-        </repository>
-        <snapshotRepository>
-            <id>snapshot-repo</id>
-            <url>https://seratch.github.com/mvn-repo/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
 
     <build>
         <resources>
@@ -56,6 +69,19 @@
             </resource>
         </resources>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-idea-plugin</artifactId>
@@ -96,6 +122,18 @@
                 <configuration>
                     <encoding>UTF-8</encoding>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -146,30 +184,18 @@
     </build>
 
     <dependencies>
-        <!-- juniversalchardet -->
-        <!--
         <dependency>
-            <groupId>juniversalchardet</groupId>
-            <artifactId>juniversalchardet</artifactId>
-            <version>1.0.3</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/juniversalchardet-1.0.3.jar</systemPath>
-        </dependency>
-        -->
-        <dependency>
-            <groupId>org.mozilla</groupId>
+            <groupId>com.googlecode.juniversalchardet</groupId>
             <artifactId>juniversalchardet</artifactId>
             <version>1.0.3</version>
             <scope>compile</scope>
         </dependency>
-        <!-- Commons IO -->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.0</version>
             <scope>compile</scope>
         </dependency>
-        <!-- JUnit -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -182,7 +208,6 @@
             <version>1.4</version>
             <scope>test</scope>
         </dependency>
-        <!-- Mockito -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>

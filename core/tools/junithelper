@@ -3,7 +3,7 @@ dir=`dirname $0`
 java \
     -Djunithelper.configProperties=${dir}/junithelper-config.properties \
     -Djunithelper.extensionConfigXML=${dir}/junithelper-extension.xml \
-    -jar ${dir}/junithelper-core-1.10.jar \
+    -jar ${dir}/junithelper-core-1.11.jar \
     $1 \
     $2
 

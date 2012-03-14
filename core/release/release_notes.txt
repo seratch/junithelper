@@ -3,6 +3,10 @@
 	http://junithelper.org/
 ------------------------------------------
 
+* Release Notes - 1.11
+
+Just moved to sonatype oss.
+
 * Release Notes - 1.10
 
 ** Feature Request
