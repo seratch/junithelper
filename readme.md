@@ -286,7 +286,7 @@ It is very simple, only two shortcut-commands.The following commands are availab
 
 * Window > Preferences > JUnit Helper
 
-![preference](http://junithelper.org/img/preferences_1.11.png)
+![preference](http://junithelper.org/img/preferences_1.10.png)
 
  If you need a project-specific configuration, put "junithelper-config.properties" in the project root directory. It will be put above global configuration in Eclipse.
 
