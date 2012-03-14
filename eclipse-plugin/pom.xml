@@ -5,7 +5,7 @@
 
 	<groupId>org.junithelper</groupId>
 	<artifactId>junithelper-plugin</artifactId>
-	<version>1.10.0</version>
+	<version>1.11.0</version>
 
 	<name>${project.artifactId}</name>
 	<description>JUnit Helper Eclipse Plugin</description>
@@ -63,20 +63,18 @@
 
 		<!-- JUnit Helper Core -->
 		<dependency>
-			<groupId>junithelper-core</groupId>
+			<groupId>org.junithelper</groupId>
 			<artifactId>junithelper-core</artifactId>
-			<version>1.6</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/junithelper-core-1.10.jar</systemPath>
+			<version>1.11</version>
+			<scope>compile</scope>
 		</dependency>
 
 		<!-- juniversalchardet -->
 		<dependency>
-			<groupId>juniversalchardet</groupId>
+			<groupId>com.googlecode.juniversalchardet</groupId>
 			<artifactId>juniversalchardet</artifactId>
 			<version>1.0.3</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/juniversalchardet-1.0.3.jar</systemPath>
+			<scope>compile</scope>
 		</dependency>
 
 		<!-- Commons IO -->
@@ -91,7 +89,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.5</version>
+			<version>4.10</version>
 			<scope>provided</scope>
 		</dependency>
         <dependency>
@@ -104,7 +102,7 @@
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
-			<version>1.8.2</version>
+			<version>1.8.5</version>
 			<scope>provided</scope>
 		</dependency>
 		<!-- JMock2 -->
@@ -144,36 +142,6 @@
 			<version>2.5.1</version>
 			<scope>provided</scope>
 		</dependency>
-		<!-- JMockit -->
-<!-- 
-		<dependency>
-			<groupId>mockit</groupId>
-			<artifactId>jmockit</artifactId>
-			<version>${jmockit.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>mockit</groupId>
-			<artifactId>jmockit-coverage</artifactId>
-			<version>${jmockit.version}</version>
-			<scope>runtime</scope>
-		</dependency>
- -->
-		<!-- EasyMock -->
-<!-- 
-		<dependency>
-			<groupId>easymock</groupId>
-			<artifactId>easymock</artifactId>
-			<version>2.0</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>easymock</groupId>
-			<artifactId>easymockclassextension</artifactId>
-			<version>2.2</version>
-			<scope>test</scope>
-		</dependency>
- -->
 	</dependencies>
 
 	<build>
