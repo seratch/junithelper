@@ -22,6 +22,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -193,8 +194,13 @@ public class CreateNewTestCaseAction extends AbstractAction implements IActionDe
                 // write test case
                 outputStream = new FileOutputStream(testCaseCreateDirPath + StringValue.DirectorySeparator.General
                         + testCaseFileName);
-                writer = new OutputStreamWriter(outputStream, getDetectedEncodingFrom(targetClassFile,
-                        config.outputFileEncoding));
+                String charset = null;
+                if (config.outputFileEncoding != null) {
+                    charset = config.outputFileEncoding;
+                } else {
+                    charset = getDetectedCharsetFrom(targetClassFile, config.outputFileEncoding);
+                }
+                writer = new OutputStreamWriter(outputStream, charset);
                 writer.write(generator.getNewTestCaseSourceCode());
 
             } catch (InvalidPreferenceException ipe) {
@@ -204,15 +210,15 @@ public class CreateNewTestCaseAction extends AbstractAction implements IActionDe
             } catch (FileNotFoundException fnfe) {
                 fnfe.printStackTrace();
             } finally {
-                IOUtil.close(writer);
-                IOUtil.close(outputStream);
+                IOUtils.closeQuietly(writer);
+                IOUtils.closeQuietly(outputStream);
             }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            IOUtil.close(inputStream);
-            IOUtil.close(outputStream);
-            IOUtil.close(writer);
+            IOUtils.closeQuietly(inputStream);
+            IOUtils.closeQuietly(outputStream);
+            IOUtils.closeQuietly(writer);
         }
 
         // ---------------

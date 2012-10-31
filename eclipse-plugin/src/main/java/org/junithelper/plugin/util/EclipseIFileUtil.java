@@ -18,11 +18,11 @@ package org.junithelper.plugin.util;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.ide.IDE;
-import org.junithelper.core.util.IOUtil;
 import org.junithelper.core.util.Stderr;
 import org.junithelper.plugin.exception.InvalidPreferenceException;
 import org.mozilla.universalchardet.UniversalDetector;
@@ -40,25 +40,26 @@ public final class EclipseIFileUtil {
         return is;
     }
 
-    public static String getDetectedEncodingFrom(IFile file, String defaultEncoding) {
+    public static String getDetectedCharsetFrom(IFile file, String defaultCharset) {
         InputStream is = null;
-        String encoding = defaultEncoding == null ? Charset.defaultCharset().name() : defaultEncoding;
+        String encoding = defaultCharset == null ? Charset.defaultCharset().name() : defaultCharset;
         try {
             is = EclipseIFileUtil.getInputStreamFrom(file);
             UniversalDetector detector = new UniversalDetector(null);
             byte[] buf = new byte[4096];
             int nread;
-            while ((nread = is.read(buf)) > 0 && !detector.isDone())
+            while ((nread = is.read(buf)) > 0 && !detector.isDone()) {
                 detector.handleData(buf, 0, nread);
+            }
             detector.dataEnd();
             encoding = detector.getDetectedCharset();
         } catch (Exception e) {
-            Stderr.p("EclipseIFileUtil.getDetectedEncodingFrom(IFile): " + e.getClass().getName() + ","
+            Stderr.p("EclipseIFileUtil.getDetectedCharsetFrom(IFile): " + e.getClass().getName() + ","
                     + e.getLocalizedMessage());
         } finally {
-            IOUtil.close(is);
+            IOUtils.closeQuietly(is);
             if (encoding == null) {
-                return defaultEncoding;
+                return defaultCharset;
             }
         }
         return encoding;

@@ -1,66 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry including="**/*.java" kind="src" output="target/test-classes" path="src/test/java"/>
+	<classpathentry including="**/*.java" kind="src" path="src/main/java"/>
 	<classpathentry excluding="**/*.java" kind="src" path="src/main/resources"/>
-	<classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
-	<classpathentry exported="true" kind="lib" path="lib/junithelper-core-1.11.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/commons-io-2.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/juniversalchardet-1.0.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/junithelper-core-1.12.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="var" path="M2_REPO/cglib/cglib-full/2.0/cglib-full-2.0.jar"/>
-	<classpathentry kind="var" path="M2_REPO/cglib/cglib-nodep/2.1_3/cglib-nodep-2.1_3.jar" sourcepath="M2_REPO/cglib/cglib-nodep/2.1_3/cglib-nodep-2.1_3-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/googlecode/juniversalchardet/juniversalchardet/1.0.3/juniversalchardet-1.0.3.jar" sourcepath="M2_REPO/com/googlecode/juniversalchardet/juniversalchardet/1.0.3/juniversalchardet-1.0.3-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/Users/seratch/.m2/repository/com/googlecode/juniversalchardet/juniversalchardet/1.0.3/juniversalchardet-1.0.3-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="var" path="M2_REPO/commons-io/commons-io/2.0/commons-io-2.0.jar" sourcepath="M2_REPO/commons-io/commons-io/2.0/commons-io-2.0-sources.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/k-sera/m2/repository/commons-io/commons-io/2.0/commons-io-2.0-javadoc.jar!/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="var" path="M2_REPO/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1.jar" sourcepath="M2_REPO/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/hamcrest/hamcrest-library/1.1/hamcrest-library-1.1.jar" sourcepath="M2_REPO/org/hamcrest/hamcrest-library/1.1/hamcrest-library-1.1-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/jmock/jmock/1.0.1/jmock-1.0.1.jar" sourcepath="M2_REPO/jmock/jmock/1.0.1/jmock-1.0.1-sources.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/k-sera/m2/repository/jmock/jmock/1.0.1/jmock-1.0.1-javadoc.jar!/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="var" path="M2_REPO/org/jmock/jmock/2.5.1/jmock-2.5.1.jar" sourcepath="M2_REPO/org/jmock/jmock/2.5.1/jmock-2.5.1-sources.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/k-sera/m2/repository/org/jmock/jmock/2.5.1/jmock-2.5.1-javadoc.jar!/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="var" path="M2_REPO/jmock/jmock-cglib/1.0.1/jmock-cglib-1.0.1.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/jmock/jmock-junit3/2.5.1/jmock-junit3-2.5.1.jar" sourcepath="M2_REPO/org/jmock/jmock-junit3/2.5.1/jmock-junit3-2.5.1-sources.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/k-sera/m2/repository/org/jmock/jmock-junit3/2.5.1/jmock-junit3-2.5.1-javadoc.jar!/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="var" path="M2_REPO/org/jmock/jmock-legacy/2.5.1/jmock-legacy-2.5.1.jar" sourcepath="M2_REPO/org/jmock/jmock-legacy/2.5.1/jmock-legacy-2.5.1-sources.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/k-sera/m2/repository/org/jmock/jmock-legacy/2.5.1/jmock-legacy-2.5.1-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:file:/Users/seratch/.m2/repository/commons-io/commons-io/2.0/commons-io-2.0-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="var" path="M2_REPO/junit/junit/4.10/junit-4.10.jar" sourcepath="M2_REPO/junit/junit/4.10/junit-4.10-sources.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/k-sera/m2/repository/junit/junit/4.10/junit-4.10-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:file:/Users/seratch/.m2/repository/junit/junit/4.10/junit-4.10-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="var" path="M2_REPO/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1.jar" sourcepath="M2_REPO/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/junit-addons/junit-addons/1.4/junit-addons-1.4.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/junithelper/junithelper-core/1.11/junithelper-core-1.11.jar" sourcepath="M2_REPO/org/junithelper/junithelper-core/1.11/junithelper-core-1.11-sources.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/k-sera/m2/repository/org/junithelper/junithelper-core/1.11/junithelper-core-1.11-javadoc.jar!/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="var" path="M2_REPO/com/googlecode/juniversalchardet/juniversalchardet/1.0.3/juniversalchardet-1.0.3.jar" sourcepath="M2_REPO/com/googlecode/juniversalchardet/juniversalchardet/1.0.3/juniversalchardet-1.0.3-sources.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/k-sera/m2/repository/com/googlecode/juniversalchardet/juniversalchardet/1.0.3/juniversalchardet-1.0.3-javadoc.jar!/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="var" path="M2_REPO/org/mockito/mockito-all/1.8.5/mockito-all-1.8.5.jar" sourcepath="M2_REPO/org/mockito/mockito-all/1.8.5/mockito-all-1.8.5-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/objenesis/objenesis/1.0/objenesis-1.0.jar" sourcepath="M2_REPO/org/objenesis/objenesis/1.0/objenesis-1.0-sources.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/k-sera/m2/repository/org/objenesis/objenesis/1.0/objenesis-1.0-javadoc.jar!/"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="var" path="M2_REPO/xerces/xercesImpl/2.6.2/xercesImpl-2.6.2.jar" sourcepath="M2_REPO/xerces/xercesImpl/2.6.2/xercesImpl-2.6.2-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/xerces/xmlParserAPIs/2.6.2/xmlParserAPIs-2.6.2.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/mockito/mockito-all/1.8.5/mockito-all-1.8.5.jar" sourcepath="M2_REPO/org/mockito/mockito-all/1.8.5/mockito-all-1.8.5-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/jmock/jmock-junit3/2.5.1/jmock-junit3-2.5.1.jar" sourcepath="M2_REPO/org/jmock/jmock-junit3/2.5.1/jmock-junit3-2.5.1-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/Users/seratch/.m2/repository/org/jmock/jmock-junit3/2.5.1/jmock-junit3-2.5.1-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="M2_REPO/org/jmock/jmock/2.5.1/jmock-2.5.1.jar" sourcepath="M2_REPO/org/jmock/jmock/2.5.1/jmock-2.5.1-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/Users/seratch/.m2/repository/org/jmock/jmock/2.5.1/jmock-2.5.1-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="M2_REPO/org/hamcrest/hamcrest-library/1.1/hamcrest-library-1.1.jar" sourcepath="M2_REPO/org/hamcrest/hamcrest-library/1.1/hamcrest-library-1.1-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/jmock/jmock-cglib/1.0.1/jmock-cglib-1.0.1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/jmock/jmock/1.0.1/jmock-1.0.1.jar" sourcepath="M2_REPO/jmock/jmock/1.0.1/jmock-1.0.1-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/Users/seratch/.m2/repository/jmock/jmock/1.0.1/jmock-1.0.1-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="M2_REPO/cglib/cglib-full/2.0/cglib-full-2.0.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/jmock/jmock-legacy/2.5.1/jmock-legacy-2.5.1.jar" sourcepath="M2_REPO/org/jmock/jmock-legacy/2.5.1/jmock-legacy-2.5.1-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/Users/seratch/.m2/repository/org/jmock/jmock-legacy/2.5.1/jmock-legacy-2.5.1-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="M2_REPO/org/objenesis/objenesis/1.0/objenesis-1.0.jar" sourcepath="M2_REPO/org/objenesis/objenesis/1.0/objenesis-1.0-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/Users/seratch/.m2/repository/org/objenesis/objenesis/1.0/objenesis-1.0-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="M2_REPO/cglib/cglib-nodep/2.1_3/cglib-nodep-2.1_3.jar" sourcepath="M2_REPO/cglib/cglib-nodep/2.1_3/cglib-nodep-2.1_3-sources.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/core"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
