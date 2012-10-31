@@ -4,7 +4,7 @@
 
     <groupId>org.junithelper</groupId>
     <artifactId>junithelper-core</artifactId>
-    <version>1.11</version>
+    <version>1.12</version>
     <packaging>jar</packaging>
 
     <name>junithelper-core</name>
@@ -196,7 +196,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
-            <version>1.8.5</version>
+            <version>1.9.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>

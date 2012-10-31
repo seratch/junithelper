@@ -3,6 +3,10 @@
 	http://junithelper.org/
 ------------------------------------------
 
+* Release Notes - 1.12
+
+	* GH Issue 1: Character corruption on MacOS X when updating test case via Eclipse plugin
+
 * Release Notes - 1.11
 
 Just moved to sonatype oss.
