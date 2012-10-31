@@ -340,7 +340,7 @@ $ ./tools/junithelper.bat
    /   _  ._/_/_/_  /_  _  _
 (_//_// // / / //_'//_//_'/
                    /
-JUnit Helper version 1.11
+JUnit Helper version 1.12
 
 
 Usage:
@@ -367,7 +367,7 @@ $ ./tools/junithelper.bat make ./src/main/java/org/junithelper/core/util/
    /   _  ._/_/_/_  /_  _  _
 (_//_// // / / //_'//_//_'/
                    /
-JUnit Helper version 1.11
+JUnit Helper version 1.12
 
 
   Target: C:/workspace/junithelper-core/./src/main/java/org/junithelper/core/util/IOUtil.java
@@ -536,7 +536,7 @@ $ mvn junithelper:make
    /   _  ._/_/_/_  /_  _  _
 (_//_// // / / //_'//_//_'/
                    /
-JUnit Helper version 1.11
+JUnit Helper version 1.12
 
 
   Target: /Users/seratch/IdeaProjects/sample/src/main/java/sample/SampleBean.java
