@@ -22,6 +22,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.junithelper.core.config.Configuration;
 import org.junithelper.core.config.ConfigurationLoader;
 import org.junithelper.core.config.LineBreakPolicy;
@@ -81,7 +82,7 @@ public abstract class AbstractCommand {
             }
         } catch (Exception e) {
         } finally {
-            IOUtil.close(reader);
+        	IOUtils.closeQuietly(reader);
         }
         return 0;
     }

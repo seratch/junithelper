@@ -15,13 +15,10 @@
  */
 package org.junithelper.core.util;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +34,7 @@ public final class IOUtil {
 
     public static InputStream getResourceAsStream(String name) {
         Assertion.on("name").mustNotBeNull(name);
-        return new IOUtil().getClass().getClassLoader().getResourceAsStream(name);
+        return IOUtil.class.getClassLoader().getResourceAsStream(name);
     }
 
     public static final String readAsString(InputStream is, String encoding) throws IOException {
@@ -45,7 +42,7 @@ public final class IOUtil {
         if (encoding == null) {
             encoding = DEFAULT_OUTPUT_FILE_ENCODING;
         }
-        return IOUtils.toString(is);
+        return IOUtils.toString(is, encoding);
     }
 
     public static final List<String> readAsLineList(InputStream is) throws IOException {
@@ -59,55 +56,7 @@ public final class IOUtil {
             }
             return dest;
         } finally {
-            IOUtil.close(br);
-        }
-    }
-
-    public static final void close(InputStream is) {
-        try {
-            if (is != null)
-                is.close();
-        } catch (Exception ignore) {
-        }
-    }
-
-    public static final void close(InputStreamReader isr) {
-        try {
-            if (isr != null)
-                isr.close();
-        } catch (Exception ignore) {
-        }
-    }
-
-    public static final void close(BufferedReader br) {
-        try {
-            if (br != null)
-                br.close();
-        } catch (Exception ignore) {
-        }
-    }
-
-    public static final void close(BufferedInputStream bis) {
-        try {
-            if (bis != null)
-                bis.close();
-        } catch (Exception ignore) {
-        }
-    }
-
-    public static final void close(FileOutputStream fos) {
-        try {
-            if (fos != null)
-                fos.close();
-        } catch (Exception ignore) {
-        }
-    }
-
-    public static final void close(OutputStreamWriter osw) {
-        try {
-            if (osw != null)
-                osw.close();
-        } catch (Exception ignore) {
+            IOUtils.closeQuietly(br);
         }
     }
 

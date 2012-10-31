@@ -22,8 +22,8 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.junithelper.core.util.Assertion;
-import org.junithelper.core.util.IOUtil;
 import org.mozilla.universalchardet.UniversalDetector;
 
 class FileReaderCommonsIOImpl implements FileReader {
@@ -57,7 +57,7 @@ class FileReaderCommonsIOImpl implements FileReader {
         } catch (IOException e) {
             // nothing to do
         } finally {
-            IOUtil.close(is);
+            IOUtils.closeQuietly(is);
             if (encoding == null) {
                 return Charset.defaultCharset().name();
             }
