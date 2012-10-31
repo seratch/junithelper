@@ -863,3 +863,8 @@ Add customized assertions to each type of return value.
 </junithelper-extension>
 ```
 
+## JUnit Helper User Group
+
+https://groups.google.com/group/junit-helper-group
+
+
