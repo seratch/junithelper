@@ -4,7 +4,7 @@
     <groupId>org.junithelper</groupId>
     <artifactId>maven-junithelper-plugin</artifactId>
     <packaging>maven-plugin</packaging>
-    <version>1.11</version>
+    <version>1.12</version>
     <name>maven-junithelper-plugin Maven Mojo</name>
     <url>http://junithelper.org</url>
 
@@ -39,6 +39,16 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>sonatype oss releases</id>
+            <url>http://oss.sonatype.org/content/repositories/releases</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <build>
         <plugins>
@@ -111,7 +121,7 @@
         <dependency>
             <groupId>org.junithelper</groupId>
             <artifactId>junithelper-core</artifactId>
-            <version>1.11</version>
+            <version>1.12</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
