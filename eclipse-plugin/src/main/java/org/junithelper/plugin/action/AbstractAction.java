@@ -81,12 +81,13 @@ public abstract class AbstractAction extends Action {
 
     // -------------------
     // String value
+
     protected String getTestClassNameFromClassName(String className) {
         return className + StringValue.JUnit.TestClassNameSuffix + StringValue.FileExtension.JavaFile;
     }
 
-    protected String getDetectedEncodingFrom(IFile file, String defaultEncoding) {
-        return EclipseIFileUtil.getDetectedEncodingFrom(file, defaultEncoding);
+    protected String getDetectedCharsetFrom(IFile file, String defaultCharset) {
+        return EclipseIFileUtil.getDetectedCharsetFrom(file, defaultCharset);
     }
 
     protected String getClassNameFromResourcePathForTargetClassFile(String resourcePathForTargetClassFile) {
@@ -123,9 +124,10 @@ public abstract class AbstractAction extends Action {
         for (int i = 2; i < len; i++) {
             resourcePathForTargetClassFile += dirArrFromProjectRoot[i] + StringValue.DirectorySeparator.General;
         }
-        resourcePathForTargetClassFile = resourcePathForTargetClassFile.replaceAll(RegExp.CRLF, StringValue.Empty)
-                .replaceFirst("\\.java.+", ".java").replace(
-                        StringValue.JUnit.TestClassNameSuffix + StringValue.FileExtension.JavaFile,
+        resourcePathForTargetClassFile = resourcePathForTargetClassFile
+                .replaceAll(RegExp.CRLF, StringValue.Empty)
+                .replaceFirst("\\.java.+", ".java")
+                .replace(StringValue.JUnit.TestClassNameSuffix + StringValue.FileExtension.JavaFile,
                         StringValue.FileExtension.JavaFile);
         return resourcePathForTargetClassFile;
     }
@@ -180,8 +182,8 @@ public abstract class AbstractAction extends Action {
     }
 
     protected void openWarningForResourceRefreshError(PropertiesLoader props) {
-        MessageDialog.openWarning(new Shell(), props.get(Dialog.Common.title), props
-                .get(Dialog.Common.resourceRefreshError));
+        MessageDialog.openWarning(new Shell(), props.get(Dialog.Common.title),
+                props.get(Dialog.Common.resourceRefreshError));
     }
 
     protected void openWarningForSelectOneOnly(PropertiesLoader props) {
