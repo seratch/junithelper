@@ -102,8 +102,10 @@ public class CreateNewTestCaseAction extends AbstractAction implements IActionDe
             // get project path, resource path
             projectName = getProjectName(structuredSelection);
             resourcePathForTargetClassFile = getResourcePathForTargetClassFile(structuredSelection);
-            String projectRootAbsolutePath = getWorkspaceRootAbsolutePath(getIWorkspaceRoot())
-                    + StringValue.DirectorySeparator.General + projectName + StringValue.DirectorySeparator.General;
+            String projectRootAbsolutePath = //getWorkspaceRootAbsolutePath(getIWorkspaceRoot())
+                    //+ StringValue.DirectorySeparator.General + projectName + StringValue.DirectorySeparator.General;
+                    getIWorkspaceRoot().findMember(projectName).getLocationURI().getPath()
+                    + StringValue.DirectorySeparator.General;
 
             resourcePathForTestClassFile = resourcePathForTargetClassFile.replaceFirst(
                     config.directoryPathOfProductSourceCode, config.directoryPathOfTestSourceCode).replace(

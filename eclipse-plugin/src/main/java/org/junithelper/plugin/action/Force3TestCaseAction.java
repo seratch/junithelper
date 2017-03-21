@@ -74,8 +74,10 @@ public class Force3TestCaseAction extends AbstractAction implements IActionDeleg
                     config.directoryPathOfProductSourceCode, config.directoryPathOfTestSourceCode).replaceFirst(
                     "[^(Test)]\\.java$", StringValue.JUnit.TestClassNameSuffix + StringValue.FileExtension.JavaFile);
             String projectName = getProjectName(structuredSelection);
-            String projectRootAbsolutePath = getWorkspaceRootAbsolutePath(getIWorkspaceRoot())
-                    + StringValue.DirectorySeparator.General + projectName + StringValue.DirectorySeparator.General;
+            String projectRootAbsolutePath = //getWorkspaceRootAbsolutePath(getIWorkspaceRoot())
+                    //+ StringValue.DirectorySeparator.General + projectName + StringValue.DirectorySeparator.General;
+                    getIWorkspaceRoot().findMember(projectName).getLocationURI().getPath()
+                    + StringValue.DirectorySeparator.General;
 
             // ----------------------------------------
             // check selection
