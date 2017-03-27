@@ -46,9 +46,7 @@ public abstract class AbstractAction extends Action {
         }
         if (!isNotSelected(structuredSelection) && !isSelectedSeveral(structuredSelection)) {
             String projectName = getProjectName(structuredSelection);
-            String projectRootPath = //getWorkspaceRootAbsolutePath(getIWorkspaceRoot())
-                    //+ StringValue.DirectorySeparator.General + projectName + StringValue.DirectorySeparator.General;
-                    getIWorkspaceRoot().findMember(projectName).getLocationURI().getPath()
+            String projectRootPath = getIWorkspaceRoot().findMember(projectName).getLocationURI().getPath()
                     + StringValue.DirectorySeparator.General;
             String configFilepath = projectRootPath + "junithelper-config.properties";
             File configProperites = new File(configFilepath);
@@ -109,10 +107,6 @@ public abstract class AbstractAction extends Action {
     protected String getPathFromProjectRoot(StructuredSelection structuredSelection) {
         return ResourcePathUtil.getPathStartsFromProjectRoot(structuredSelection);
     }
-
-//    protected String getWorkspaceRootAbsolutePath(IWorkspaceRoot workspaceRoot) {
-//        return workspaceRoot.getLocation().toString();
-//    }
 
     protected String getResourcePathForTargetClassFile(StructuredSelection structuredSelection) {
         // path started from project root
